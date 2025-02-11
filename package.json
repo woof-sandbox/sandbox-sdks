@@ -1,0 +1,39 @@
+{
+  "name": "sandbox-sdks",
+  "version": "0.0.1",
+  "description": "Contains SDKs for Sandbox",
+  "author": "misha.h@woof.software",
+  "license": "ISC",
+  "type": "module",
+  "packageManager": "pnpm@10.3.0+sha512.ee592eda8815a8a293c206bb0917c4bb0ff274c50def7cbc17be05ec641fc2d1b02490ce660061356bd0d126a4d7eb2ec8830e6959fb8a447571c631d5a2442d",
+  "homepage": "https://github.com/woof-compound/sandbox-sdks#readme",
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/woof-compound/sandbox-sdks/issues"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "lint": "biome check && $npm_execpath lint:address",
+    "format": "biome check --write",
+    "lint:address": "node --no-warnings=ExperimentalWarning scripts/lint/checksum-address.js",
+    "test": "dotenv -- vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@vitest/coverage-v8": "^3.0.5",
+    "dotenv-cli": "^8.0.0",
+    "ethers": "^6.13.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  },
+  "keywords": ["sandbox", "sdk", "compound"]
+}
