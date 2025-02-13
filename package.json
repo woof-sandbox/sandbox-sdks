@@ -1,5 +1,5 @@
 {
-  "name": "sandbox-sdks",
+  "name": "@sandbox/sdks",
   "version": "0.0.1",
   "description": "Contains SDKs for Sandbox",
   "author": "misha.h@woof.software",

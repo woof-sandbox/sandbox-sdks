@@ -1,0 +1,29 @@
+{
+  "name": "@sandbox/comet-sdk-ethers",
+  "description": "Ethers-based augmentation of `@sandbox/comet-sdk` that exports (and optionally injects) ethers-based fetch methods.",
+  "version": "2.0.0",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "files": ["lib"],
+  "scripts": {
+    "prepublish": "$npm_execpath build",
+    "build": "tsc --build tsconfig.build.json"
+  },
+  "dependencies": {
+    "rxjs": "^7.8.1"
+  },
+  "peerDependencies": {
+    "@sandbox/comet-sdk": "workspace:^",
+    "ethers": "^6.0.0"
+  },
+  "devDependencies": {
+    "@sandbox/comet-sdk": "workspace:^",
+    "ethers": "^6.13.5",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.5"
+  },
+  "publishConfig": {
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts"
+  }
+}
