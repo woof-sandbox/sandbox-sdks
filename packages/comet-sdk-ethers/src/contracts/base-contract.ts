@@ -1,7 +1,7 @@
 import { Contract, Interface, InterfaceAbi, JsonRpcProvider } from 'ethers';
 
 export class BaseContract {
-    protected readonly contract: Contract;
+    protected readonly contract: any;
 
     constructor(
         protected readonly provider: JsonRpcProvider,

@@ -1,17 +1,21 @@
-import { JsonRpcProvider } from "ethers";
+import {Interface, JsonRpcProvider} from "ethers";
 import { MulticallAbi } from "../abis";
 import { MULTICALL_ADDRESS } from "../constants";
 import { BaseContract } from "./base-contract";
 import { ContractCall } from "./contract-call";
 
-interface SplitData { tags: string[], callDatas: string[] }
+interface SplitData { tags: string[], calls: ContractCall[] }
 type Unit = [string, ContractCall];
 type Result = [string, unknown];
+
+type Response = [success: boolean, rawData: string];
+const isSuccess = (responses: Response[]) => responses.every(el => el[0]);
+
 
 export class MulticallContract extends BaseContract {
     private units: Unit[] = [];
     private results: Result[] = [];
-    private data: Map<string, unknown> = new Map();
+    private rawData: Map<string, string> = new Map();
 
     constructor(provider: JsonRpcProvider) {
         super(provider, MULTICALL_ADDRESS, MulticallAbi);
@@ -22,32 +26,45 @@ export class MulticallContract extends BaseContract {
         return tag;
     }
 
-    get result() {
+    get rawResults(): Result[] {
         return this.results;
     }
 
-    getData<T>(tag: string): T {
-        return this.data.get(tag) as T;
+    getRaw(tag: string): string | undefined {
+        return this.rawData.get(tag);
     }
 
-    async run<T>(): Promise<T> {
+    getSingle<T>(tag: string, methodName: string, contractInterface: Interface): T | undefined {
+        const raw = this.rawData.get(tag);
+        if (!raw) return;
+        return contractInterface.decodeFunctionResult(
+            methodName,
+            raw,
+        )[0] as T;
+    }
+
+    async run(): Promise<boolean> {
         const split = this.units.reduce((acc, [tag, call]) => {
             acc.tags.push(tag);
-            acc.callDatas.push(call.callData);
+            acc.calls.push(call);
             return acc;
         }, {
             tags: [],
-            callDatas: [],
+            calls: [],
         } as SplitData);
-        const [isSuccess, returnData] = await this.contract.aggregate!(split.callDatas);
+
+        const response: Response[] = await this.contract.aggregate3.staticCall(split.calls);
+
+        if (!isSuccess(response)) return false;
 
         this.results = split.tags.reduce((acc, tag, index) => {
-            const data = returnData[index];
-            this.data.set(tag, data)
+            const data = response[index];
+            if (!data) return acc;
+            this.rawData.set(tag, data[1])
             acc.push([tag, data]);
             return acc;
         }, [] as Result[]);
 
-        return returnData;
+        return true;
     }
 }

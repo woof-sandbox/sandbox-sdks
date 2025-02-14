@@ -1,11 +1,13 @@
 import { IMarket } from "./IMarket";
-import { MarketHelpers } from "./MarketMethods";
+import { MarketMethods } from "./MarketMethods";
+
+const missFieldErr = (fieldName: string) => new Error(`Missing field ${fieldName}`);
 
 export class Market implements IMarket {
-    cometAddress: string;
-    utilization?: bigint;
-    supplyRate: bigint;
-    borrowRate: bigint;
+    public cometAddress: string;
+    public utilization?: bigint;
+    public supplyRate?: bigint;
+    public borrowRate?: bigint;
 
     constructor({cometAddress, utilization, supplyRate, borrowRate}: IMarket) {
         this.cometAddress = cometAddress;
@@ -14,11 +16,13 @@ export class Market implements IMarket {
         this.borrowRate = borrowRate;
     }
 
-    get borrowApr() {
-        return MarketHelpers.getAprCoefficient(this.borrowRate);
+    get borrowApr(): string {
+        if (!this.borrowRate) throw missFieldErr('borrowRate');
+        return MarketMethods.getAprPercents(this.borrowRate);
     }
 
-    get supplyApr() {
-        return MarketHelpers.getAprCoefficient(this.supplyRate);
+    get supplyApr(): string {
+        if (!this.supplyRate) throw missFieldErr('supplyRate');
+        return MarketMethods.getAprPercents(this.supplyRate);
     }
 }
