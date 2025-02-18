@@ -16,9 +16,10 @@ export class MulticallContract extends BaseContract {
     private units: Unit[] = [];
     private results: Result[] = [];
     private rawData: Map<string, string> = new Map();
+    private lastSuccess?: boolean;
 
     constructor(provider: JsonRpcProvider) {
-        super(provider, MULTICALL_ADDRESS, MulticallAbi);
+        super(MulticallAbi, MULTICALL_ADDRESS, provider);
     }
 
     add(tag: string, contractCall: ContractCall): string {
@@ -28,6 +29,10 @@ export class MulticallContract extends BaseContract {
 
     get rawResults(): Result[] {
         return this.results;
+    }
+
+    get success(): boolean | undefined {
+        return this.lastSuccess;
     }
 
     getRaw(tag: string): string | undefined {
@@ -53,9 +58,8 @@ export class MulticallContract extends BaseContract {
             calls: [],
         } as SplitData);
 
+        if (!this.contract.aggregate3) throw new Error("Fatal: aggregate3 doesn't exists!");
         const response: Response[] = await this.contract.aggregate3.staticCall(split.calls);
-
-        if (!isSuccess(response)) return false;
 
         this.results = split.tags.reduce((acc, tag, index) => {
             const data = response[index];
@@ -65,6 +69,7 @@ export class MulticallContract extends BaseContract {
             return acc;
         }, [] as Result[]);
 
-        return true;
+        this.lastSuccess = isSuccess(response);
+        return this.lastSuccess;
     }
 }

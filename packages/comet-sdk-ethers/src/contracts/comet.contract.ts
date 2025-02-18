@@ -5,8 +5,8 @@ import { BaseContract } from "./base-contract";
 import { ContractCall } from "./contract-call";
 
 export class CometContract extends BaseContract {
-    constructor(provider: JsonRpcProvider, address: string) {
-        super(provider, address, CometAbi);
+    constructor(provider?: JsonRpcProvider, address?: string) {
+        super(CometAbi, address, provider);
     }
 
     async getUtilization(): Promise<bigint> {
