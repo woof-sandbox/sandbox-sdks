@@ -5,6 +5,7 @@ import {
   type InterfaceAbi,
   JsonRpcProvider,
   type Wallet,
+  type WebSocketProvider,
 } from "ethers";
 import { MULTICALL_ALLOW_FAILURE } from "../constants";
 import { CONTRACTS_ERRORS } from "../errors/contracts";
@@ -12,14 +13,14 @@ import type { ContractCall, StateMutability } from "./entities";
 import { isStaticMethod } from "./helpers";
 
 export class BaseContract {
-  protected readonly contract: Contract;
+  public readonly contract: Contract;
   public readonly isCallable: boolean;
   public readonly isReadonly: boolean;
 
   constructor(
     abi: Interface | InterfaceAbi,
     readonly address: string = "0x0000000000000000000000000000000000000000",
-    protected readonly driver?: JsonRpcProvider | Wallet,
+    protected readonly driver?: JsonRpcProvider | WebSocketProvider | Wallet,
   ) {
     this.isCallable = !!address && !!driver;
     this.isReadonly = !this.isCallable || driver instanceof JsonRpcProvider;

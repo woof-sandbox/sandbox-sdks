@@ -6,7 +6,7 @@ export async function fetchMarket(
   cometProxyAddress: string,
   provider: JsonRpcProvider,
 ): Promise<Market> {
-  const comet = new CometContract(provider, cometProxyAddress);
+  const comet = new CometContract(cometProxyAddress, provider);
   const multicall = new MulticallContract(provider);
 
   const utilization = await comet.getUtilization();
