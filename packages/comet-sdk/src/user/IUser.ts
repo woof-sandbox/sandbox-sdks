@@ -1,5 +1,5 @@
 export interface IUser {
-    address: string;
-    borrowMarkets?: string[];
-    landMarkets?: string[];
+  address: string;
+  borrowMarkets?: string[];
+  landMarkets?: string[];
 }

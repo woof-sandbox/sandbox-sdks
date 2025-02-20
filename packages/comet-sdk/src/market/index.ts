@@ -1,3 +1,3 @@
-export * from './IMarket';
-export * from './MarketMethods';
-export * from './Market';
+export * from "./IMarket";
+export * from "./MarketMethods";
+export * from "./Market";

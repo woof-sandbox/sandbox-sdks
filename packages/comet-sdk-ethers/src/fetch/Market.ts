@@ -1,41 +1,49 @@
 import { Market } from "@sandbox/comet-sdk";
-import { JsonRpcProvider } from "ethers";
+import type { JsonRpcProvider } from "ethers";
 import { CometContract, MulticallContract } from "../contracts";
 
 export async function fetchMarket(
-    cometProxyAddress: string,
-    provider: JsonRpcProvider,
+  cometProxyAddress: string,
+  provider: JsonRpcProvider,
 ): Promise<Market> {
-    const comet = new CometContract(provider, cometProxyAddress);
-    const multicall = new MulticallContract(provider);
+  const comet = new CometContract(provider, cometProxyAddress);
+  const multicall = new MulticallContract(provider);
 
-    const utilization = await comet.getUtilization();
+  const utilization = await comet.getUtilization();
 
-    const borrowRateCall = comet.getBorrowRateCall(utilization!);
-    const supplyRateCall = comet.getSupplyRateCall(utilization!);
+  const borrowRateCall = comet.getBorrowRateCall(utilization!);
+  const supplyRateCall = comet.getSupplyRateCall(utilization!);
 
-    const borrowRateTag = 'borrowRate';
-    multicall.add(borrowRateTag, borrowRateCall);
+  const borrowRateTag = "borrowRate";
+  multicall.add(borrowRateTag, borrowRateCall);
 
-    const supplyRateTag = 'supplyRate';
-    multicall.add(supplyRateTag, supplyRateCall);
+  const supplyRateTag = "supplyRate";
+  multicall.add(supplyRateTag, supplyRateCall);
 
-    const success: boolean = await multicall.run();
+  const success: boolean = await multicall.run();
 
-    let borrowRate;
-    let supplyRate;
+  let borrowRate;
+  let supplyRate;
 
-    if (success) {
-        borrowRate = multicall.getSingle<bigint>(borrowRateTag, borrowRateCall.method, comet.interface);
-        supplyRate = multicall.getSingle<bigint>(supplyRateTag, supplyRateCall.method, comet.interface);
-    }
+  if (success) {
+    borrowRate = multicall.getSingle<bigint>(
+      borrowRateTag,
+      borrowRateCall.method,
+      comet.interface,
+    );
+    supplyRate = multicall.getSingle<bigint>(
+      supplyRateTag,
+      supplyRateCall.method,
+      comet.interface,
+    );
+  }
 
-    const data = {
-        cometAddress: cometProxyAddress,
-        utilization,
-        borrowRate,
-        supplyRate,
-    };
+  const data = {
+    cometAddress: cometProxyAddress,
+    utilization,
+    borrowRate,
+    supplyRate,
+  };
 
-    return new Market(data);
+  return new Market(data);
 }

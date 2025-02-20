@@ -1,4 +1,4 @@
 export interface ContractResult {
-    tag: string;
-    data: unknown;
+  tag: string;
+  data: unknown;
 }
