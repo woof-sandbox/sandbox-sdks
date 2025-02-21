@@ -63,6 +63,7 @@ export class BaseContract {
       allowFailure: MULTICALL_ALLOW_FAILURE,
       callData: this.interface.encodeFunctionData(methodName, args),
       stateMutability: functionFragment.stateMutability as StateMutability,
+      contractInterface: this.interface,
     };
   }
 }

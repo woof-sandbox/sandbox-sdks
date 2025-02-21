@@ -3,37 +3,37 @@ import { Erc20Contract } from "../../contracts";
 import { SERVICES_ERRORS } from "../../errors/services";
 
 export class CollateralService {
-    private readonly provider: ethers.JsonRpcProvider;
-    private readonly signer?: ethers.Wallet;
+  private readonly provider: ethers.JsonRpcProvider;
+  private readonly signer?: ethers.Wallet;
 
-    constructor(rpcUrl: string, privateKey?: string) {
-        this.provider = new ethers.JsonRpcProvider(rpcUrl);
-        if (privateKey) {
-            this.signer = new ethers.Wallet(privateKey, this.provider);
-        }
+  constructor(rpcUrl: string, privateKey?: string) {
+    this.provider = new ethers.JsonRpcProvider(rpcUrl);
+    if (privateKey) {
+      this.signer = new ethers.Wallet(privateKey, this.provider);
     }
+  }
 
-    getDriver(): JsonRpcProvider | Wallet {
-        if (this.signer) return this.signer;
-        return this.provider;
-    }
+  getDriver(): JsonRpcProvider | Wallet {
+    return this.signer || this.provider;
+  }
 
-    getSigner(): Wallet {
-        if (this.signer) return this.signer;
-        throw SERVICES_ERRORS.SIGNER_IS_NOT_PROVIDED;
-    }
+  getSigner(): Wallet {
+    if (this.signer) return this.signer;
+    throw SERVICES_ERRORS.SIGNER_IS_NOT_PROVIDED;
+  }
 
-    async approveCollateral(
-        tokenAddress: string,
-        spender: string,
-        amount: bigint,
-    ): Promise<ethers.TransactionResponse> {
-        const erc20Contract = new Erc20Contract(tokenAddress, this.getSigner());
-        const tx = await erc20Contract.approve(spender, amount);
-        return tx;
-    }
+  async approveCollateral(
+    tokenAddress: string,
+    spender: string,
+    amount: bigint,
+  ): Promise<ethers.TransactionResponse> {
+    const erc20Contract = new Erc20Contract(tokenAddress, this.getSigner());
+    const tx = await erc20Contract.approve(spender, amount);
+    return tx;
+  }
 
-    /*async supplyCollateral(
+  // todo
+  /*async supplyCollateral(
         bulkerAddress: string,
         cometAddress: string,
         tokenAddress: string,
@@ -67,5 +67,4 @@ export class CollateralService {
 
         return tx;
     }*/
-
 }

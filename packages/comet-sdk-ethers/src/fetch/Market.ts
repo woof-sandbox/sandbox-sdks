@@ -11,30 +11,22 @@ export async function fetchMarket(
 
   const utilization = await comet.getUtilization();
 
-  const borrowRateCall = comet.getBorrowRateCall(utilization!);
-  const supplyRateCall = comet.getSupplyRateCall(utilization!);
-
   const borrowRateTag = "borrowRate";
-  multicall.add(borrowRateTag, borrowRateCall);
+  multicall.add(borrowRateTag, comet.getBorrowRateCall(utilization));
 
   const supplyRateTag = "supplyRate";
-  multicall.add(supplyRateTag, supplyRateCall);
+  multicall.add(supplyRateTag, comet.getSupplyRateCall(utilization));
 
   const success: boolean = await multicall.run();
 
   let borrowRate;
   let supplyRate;
-
   if (success) {
     borrowRate = multicall.getSingle<bigint>(
       borrowRateTag,
-      borrowRateCall.method,
-      comet.interface,
     );
     supplyRate = multicall.getSingle<bigint>(
       supplyRateTag,
-      supplyRateCall.method,
-      comet.interface,
     );
   }
 

@@ -1,97 +1,122 @@
-import type {
-  Interface,
-  JsonRpcProvider,
-  Wallet,
-  WebSocketProvider,
-} from "ethers";
+import type { JsonRpcProvider, Wallet, WebSocketProvider } from "ethers";
 import { MulticallAbi } from "../abis";
 import { MULTICALL_ADDRESS } from "../constants";
 import { CONTRACTS_ERRORS } from "../errors/contracts";
+import { MULTICALL_ERRORS } from "../errors/multicall";
 import { BaseContract } from "./base-contract";
 import type { ContractCall } from "./entities";
 import { isStaticMethod } from "./helpers";
 
-interface SplitData {
-  tags: string[];
-  calls: ContractCall[];
-}
-type Unit = [string, ContractCall];
-type Result = [string, unknown];
-
+type Tag = string;
 type Response = [success: boolean, rawData: string];
-const isSuccess = (responses: Response[]) => responses.every((el) => el[0]);
+interface PreparedData {
+  call: ContractCall;
+  rawData: string;
+}
 
 export class MulticallContract extends BaseContract {
-  private units: Unit[] = [];
-  private results: Result[] = [];
-  private rawData: Map<string, string> = new Map();
-  private lastSuccess?: boolean;
+  _units: Map<Tag, ContractCall> = new Map();
+  _response: Response[] = [];
+  _rawData: Map<Tag, string> = new Map();
+  _callsSuccess: Map<Tag, boolean> = new Map();
+  _lastSuccess?: boolean;
 
   constructor(driver: JsonRpcProvider | WebSocketProvider | Wallet) {
     super(MulticallAbi, MULTICALL_ADDRESS, driver);
   }
 
-  add(tag: string, contractCall: ContractCall): string {
-    this.units.push([tag, contractCall]);
+  public clear() {
+    this._units = new Map();
+    this._response = [];
+    this._rawData = new Map();
+    this._callsSuccess = new Map();
+    this._lastSuccess = undefined;
+  }
+
+  public add(tag: Tag, contractCall: ContractCall): string {
+    this._units.set(tag, contractCall);
     return tag;
   }
 
-  get rawResults(): Result[] {
-    return this.results;
+  get tags(): Tag[] {
+    return Array.from(this._units.keys());
+  }
+  get calls(): ContractCall[] {
+    return Array.from(this._units.values());
+  }
+
+  get response(): Response[] {
+    return this._response;
   }
   get success(): boolean | undefined {
-    return this.lastSuccess;
+    return this._lastSuccess;
   }
   get static(): boolean {
-    return !this.units.some((unit) => !isStaticMethod(unit[1].stateMutability));
+    return !this.calls.some((call) => !isStaticMethod(call.stateMutability));
   }
 
-  getRaw(tag: string): string | undefined {
-    return this.rawData.get(tag);
+  public getRaw(tag: string): string | undefined {
+    return this._rawData.get(tag);
+  }
+  public isSuccess(tag: Tag): boolean | undefined {
+    return this._callsSuccess.get(tag);
   }
 
-  getSingle<T>(
-    tag: string,
-    methodName: string,
-    contractInterface: Interface,
-  ): T | undefined {
-    const raw = this.rawData.get(tag);
-    if (!raw) return;
-    return contractInterface.decodeFunctionResult(methodName, raw)[0] as T;
+  private getPreparedData(tag: Tag): PreparedData | null {
+    const rawData = this._rawData.get(tag);
+    const call = this._units.get(tag);
+    if (!rawData || !call || !this.isSuccess(tag)) return null;
+    return {
+      call,
+      rawData,
+    };
   }
 
-  async run(): Promise<boolean> {
-    const split = this.units.reduce(
-      (acc, [tag, call]) => {
-        acc.tags.push(tag);
-        acc.calls.push(call);
-        return acc;
-      },
-      {
-        tags: [],
-        calls: [],
-      } as SplitData,
-    );
+  public getSingle<T>(tag: string): T | undefined {
+    const data = this.getPreparedData(tag);
+    if (!data) return;
+    return data.call.contractInterface.decodeFunctionResult(
+      data.call.method,
+      data.rawData,
+    )[0] as T;
+  }
 
-    if (!this.contract.aggregate3)
+  public getArray<T>(tag: Tag): T | undefined {
+    const data = this.getPreparedData(tag);
+    if (!data) return;
+    return Object.values(
+      data.call.contractInterface.decodeFunctionResult(
+        data.call.method,
+        data.rawData,
+      )[0],
+    ) as T;
+  }
+
+  public async run(): Promise<boolean> {
+    if (!this.contract.aggregate3) {
       throw CONTRACTS_ERRORS.METHOD_NOT_FOUND("aggregate3");
-    let response: Response[];
+    }
 
+    const tags = this.tags;
+    const calls = this.calls;
+
+    let response: Response[];
     if (this.static) {
-      response = await this.contract.aggregate3.staticCall(split.calls);
+      response = await this.contract.aggregate3.staticCall(calls);
     } else {
       if (this.isReadonly) throw CONTRACTS_ERRORS.TRY_TO_CALL_READ_ONLY;
-      response = await this.contract.aggregate3(split.calls);
+      response = await this.contract.aggregate3(calls);
     }
-    this.results = split.tags.reduce((acc, tag, index) => {
-      const data = response[index];
-      if (!data) return acc;
-      this.rawData.set(tag, data[1]);
-      acc.push([tag, data]);
-      return acc;
-    }, [] as Result[]);
 
-    this.lastSuccess = isSuccess(response);
-    return this.lastSuccess;
+    this._response = response;
+    this._lastSuccess = true;
+    response.forEach(([success, data], index) => {
+      const tag = tags[index];
+      if (!tag) throw MULTICALL_ERRORS.TAG_NOT_FOUND;
+      if (!success) this._lastSuccess = false;
+      this._rawData.set(tag, data);
+      this._callsSuccess.set(tag, success);
+    });
+    return this._lastSuccess;
   }
 }

@@ -14,8 +14,7 @@ export class LendingService {
   }
 
   getDriver(): JsonRpcProvider | Wallet {
-    if (this.signer) return this.signer;
-    return this.provider;
+    return this.signer || this.provider;
   }
 
   getSigner(): Wallet {
@@ -62,7 +61,7 @@ export class LendingService {
   }
 
   async getGasPrice(): Promise<bigint> {
-    // todo: move
+    // todo: move to tools
     const feeData = await this.provider.getFeeData();
     return feeData.maxFeePerGas || BigInt(0);
   }

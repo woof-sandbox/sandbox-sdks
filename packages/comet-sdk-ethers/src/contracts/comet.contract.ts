@@ -46,4 +46,16 @@ export class CometContract extends BaseContract {
   allowCall(bulker: string, status: boolean): ContractCall {
     return this.getCall("allow", [bulker, status]);
   }
+
+  //
+
+  getBorrowBalanceOfCall(userAddress: string): ContractCall {
+    return this.getCall("borrowBalanceOf", [userAddress]);
+  }
+  getCollateralBalanceOfCall(userAddress: string): ContractCall {
+    return this.getCall("collateralBalanceOf", [userAddress]);
+  }
+  getLiquidationFactorCall(): ContractCall {
+    return this.getCall("getLiquidationFactor");
+  }
 }

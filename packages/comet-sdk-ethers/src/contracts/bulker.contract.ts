@@ -1,8 +1,4 @@
-import type {
-  JsonRpcProvider,
-  Wallet,
-  WebSocketProvider,
-} from "ethers";
+import type { JsonRpcProvider, Wallet, WebSocketProvider } from "ethers";
 import { BulkerAbi } from "../abis";
 import { BaseContract } from "./base-contract";
 
