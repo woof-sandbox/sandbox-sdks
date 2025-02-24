@@ -59,10 +59,4 @@ export class LendingService {
     const tx = await cometContract.allow(bulker, status);
     return tx;
   }
-
-  async getGasPrice(): Promise<bigint> {
-    // todo: move to tools
-    const feeData = await this.provider.getFeeData();
-    return feeData.maxFeePerGas || BigInt(0);
-  }
 }

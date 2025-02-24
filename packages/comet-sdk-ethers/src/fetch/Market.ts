@@ -19,15 +19,11 @@ export async function fetchMarket(
 
   const success: boolean = await multicall.run();
 
-  let borrowRate;
-  let supplyRate;
+  let borrowRate: bigint | undefined;
+  let supplyRate: bigint | undefined;
   if (success) {
-    borrowRate = multicall.getSingle<bigint>(
-      borrowRateTag,
-    );
-    supplyRate = multicall.getSingle<bigint>(
-      supplyRateTag,
-    );
+    borrowRate = multicall.getSingle<bigint>(borrowRateTag);
+    supplyRate = multicall.getSingle<bigint>(supplyRateTag);
   }
 
   const data = {

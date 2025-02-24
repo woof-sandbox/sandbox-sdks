@@ -44,10 +44,14 @@ export class BorrowingService {
     await multicall.run();
 
     const borrowBalance = multicall.getSingle<bigint>(borrowBalanceTag);
-    const collateralBalance = multicall.getSingle<bigint>(collateralBalanceOfTag);
-    const liquidationFactor = multicall.getSingle<bigint>(getLiquidationFactorTag);
+    const collateralBalance = multicall.getSingle<bigint>(
+      collateralBalanceOfTag,
+    );
+    const liquidationFactor = multicall.getSingle<bigint>(
+      getLiquidationFactorTag,
+    );
     if (!borrowBalance || !collateralBalance || !liquidationFactor) {
-        throw SERVICES_ERRORS.CALL_WAS_UNSUCCESSFUL;
+      throw SERVICES_ERRORS.CALL_WAS_UNSUCCESSFUL;
     }
 
     const maxBorrowCapacity =

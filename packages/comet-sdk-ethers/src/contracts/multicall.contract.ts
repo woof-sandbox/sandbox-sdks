@@ -72,7 +72,7 @@ export class MulticallContract extends BaseContract {
     };
   }
 
-  public getSingle<T>(tag: string): T | undefined {
+  public getSingle<T>(tag: Tag): T | undefined {
     const data = this.getPreparedData(tag);
     if (!data) return;
     return data.call.contractInterface.decodeFunctionResult(
