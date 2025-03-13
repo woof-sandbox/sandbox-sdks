@@ -7,7 +7,6 @@ export enum ProviderType {
 
 export interface InitialEndpoint {
   rpcUrl: string;
-  isWs: boolean;
   chainId: number;
   priority?: number;
   weight?: number;
@@ -50,7 +49,7 @@ export class NetworkService {
    */
   public constructor(initialEndpoints: InitialEndpoint[]) {
     initialEndpoints.forEach((endpoint) => {
-      const providerType = endpoint.isWs ? ProviderType.Websocket : ProviderType.JsonRpc;
+      const providerType = endpoint.rpcUrl.startsWith("wss") ? ProviderType.Websocket : ProviderType.JsonRpc;
       const chainId = endpoint.chainId;
       const newEp: EndpointConfig = {
         rpcUrl: endpoint.rpcUrl,

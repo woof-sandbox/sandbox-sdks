@@ -12,9 +12,9 @@ describe("NetworkService", () => {
 
   beforeEach(() => {
     initialEndpoints = [
-      { rpcUrl: "https://mainnet.infura.io/v3/test", isWs: false, chainId: 1, priority: 1 },
-      { rpcUrl: "https://mainnet.alchemyapi.io/v2/test", isWs: false, chainId: 1, priority: 2 },
-      { rpcUrl: "wss://mainnet.infura.io/ws/v3/test", isWs: true, chainId: 1, priority: 1 },
+      { rpcUrl: "https://mainnet.infura.io/v3/test", chainId: 1, priority: 1 },
+      { rpcUrl: "https://mainnet.alchemyapi.io/v2/test", chainId: 1, priority: 2 },
+      { rpcUrl: "wss://mainnet.infura.io/ws/v3/test", chainId: 1, priority: 1 },
     ];
     networkService = new NetworkService(initialEndpoints);
   });
