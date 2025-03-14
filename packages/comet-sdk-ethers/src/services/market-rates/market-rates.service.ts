@@ -1,6 +1,7 @@
 import { JsonRpcProvider, formatUnits } from "ethers";
 
 // TODO: move to constants
+const PRICE_FEED_MANTISSA = 8;
 const DAYS_IN_THE_YEAR = 365;
 const SECONDS_PER_YEAR = 60 * 60 * 24 * 365;
 
@@ -50,5 +51,30 @@ export class MarketRatesService {
 
     private calcTotalAll(totalEarning: number, totalBorrowed: number): number {
         return totalEarning + totalBorrowed;
+    }
+
+    // TODO: move to tokens
+    private calcTokenPrice(symbol: string, tokenPrice: number, marketPrice: number): number {
+        if (symbol === 'ETH' || symbol === 'wstETH') {
+            return Number(formatUnits(tokenPrice, PRICE_FEED_MANTISSA)) * marketPrice;
+        }
+        return Number(formatUnits(tokenPrice, PRICE_FEED_MANTISSA));
+    }
+
+    // TODO: move to user
+    private calcTotalSuppliedUSD(collaterals: {totalSupply: bigint, decimals: number, liquidationFactor: bigint, price: number, marketData: {asset: string, price: number}}[]) {
+        return collaterals.map((c) => {
+            const collateralsSupply = Number(formatUnits(c.totalSupply, c.decimals));
+
+            const liqFactor = Number(formatUnits(c.liquidationFactor, 18));
+
+            const collateralPrice = this.calcTokenPrice(c.marketData.asset, c.price, c.marketData.price);
+
+            // liquidationFactors.push(liqFactor);
+            return collateralsSupply * collateralPrice;
+        })
+    }
+    private calcHealthFactor(totalSuppliedUSD: number, borrowAmountUSD: number, midlLiquidationFactors: number): number {
+        return (totalSuppliedUSD * midlLiquidationFactors) / borrowAmountUSD;
     }
 }
