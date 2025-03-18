@@ -3,7 +3,7 @@ import type {
   JsonRpcProvider,
   Wallet,
   WebSocketProvider,
-  ethers,
+  ethers, Signer, Provider,
 } from "ethers";
 import { CometAbi } from "../abis";
 import { BaseContract } from "./base-contract";
@@ -12,7 +12,7 @@ import type { ContractCall } from "./entities";
 export class CometContract extends BaseContract {
   constructor(
     address?: string,
-    driver?: JsonRpcProvider | WebSocketProvider | Wallet,
+    driver?: Provider | Signer,
   ) {
     super(CometAbi, address, driver);
   }
@@ -20,12 +20,24 @@ export class CometContract extends BaseContract {
   async getUtilization(): Promise<bigint> {
     return this.call<bigint>("getUtilization");
   }
-
   getBorrowRateCall(utilization: BigNumberish): ContractCall {
     return this.getCall("getBorrowRate", [utilization]);
   }
   getSupplyRateCall(utilization: BigNumberish): ContractCall {
     return this.getCall("getSupplyRate", [utilization]);
+  }
+  //
+  getTotalBorrowCall(): ContractCall {
+    return this.getCall("totalBorrow");
+  }
+  getTotalSupplyCall(): ContractCall {
+    return this.getCall("totalSupply");
+  }
+  getTotalReservesCall(): ContractCall {
+    return this.getCall("totalReserves");
+  }
+  getBaseTokenCall(): ContractCall {
+    return this.getCall("baseToken");
   }
 
   //

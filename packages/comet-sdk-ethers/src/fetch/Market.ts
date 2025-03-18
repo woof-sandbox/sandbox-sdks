@@ -1,13 +1,13 @@
 import { Market } from "@sandbox/comet-sdk";
-import type { JsonRpcProvider } from "ethers";
+import type {JsonRpcProvider, Provider, Signer} from "ethers";
 import { CometContract, MulticallContract } from "../contracts";
 
 export async function fetchMarket(
   cometProxyAddress: string,
-  provider: JsonRpcProvider,
+  driver: Provider | Signer,
 ): Promise<Market> {
-  const comet = new CometContract(cometProxyAddress, provider);
-  const multicall = new MulticallContract(provider);
+  const comet = new CometContract(cometProxyAddress, driver);
+  const multicall = new MulticallContract(driver);
 
   const utilization = await comet.getUtilization();
 
@@ -15,6 +15,8 @@ export async function fetchMarket(
   multicall.add(borrowRateTag, comet.getBorrowRateCall(utilization));
 
   const supplyRateTag = "supplyRate";
+  multicall.add(supplyRateTag, comet.getSupplyRateCall(utilization));
+
   multicall.add(supplyRateTag, comet.getSupplyRateCall(utilization));
 
   const success: boolean = await multicall.run();
@@ -31,6 +33,8 @@ export async function fetchMarket(
     utilization,
     borrowRate,
     supplyRate,
+    // TODO
+
   };
 
   return new Market(data);

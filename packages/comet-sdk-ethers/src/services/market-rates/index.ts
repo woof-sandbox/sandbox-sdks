@@ -1,1 +1,1 @@
-export * from './market-rates.service';
+export * from "./market-rates.service";
