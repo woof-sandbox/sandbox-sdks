@@ -1,6 +1,8 @@
+import { ethers } from "ethers";
+
 export class FormattingUtils {
   static formatTokenValue(value: bigint, decimals: number): string {
-    return (Number(value) / 10 ** decimals).toFixed(decimals);
+    return ethers.formatUnits(value, decimals);
   }
 
   static formatNumber(value: number | string, decimals: number = 2): string {
