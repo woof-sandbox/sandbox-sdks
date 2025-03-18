@@ -3,9 +3,9 @@ import {
   type ContractMethod,
   type Interface,
   type InterfaceAbi,
-  type JsonRpcProvider, type Provider, type Signer,
+  type Provider,
+  type Signer,
   Wallet,
-  type WebSocketProvider,
 } from "ethers";
 import { MULTICALL_ALLOW_FAILURE } from "../constants";
 import { CONTRACTS_ERRORS } from "../errors/contracts";

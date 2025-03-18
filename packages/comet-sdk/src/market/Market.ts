@@ -1,8 +1,7 @@
-import { formatUnits, parseUnits } from "ethers";
-import { ETH_SYMBOLS, PRICE_FEED_MANTISSA } from "../constants";
 import type { Curve } from "../curve";
 import type { Base, Collateral } from "../token";
 import type { IMarket } from "./IMarket";
+import type { IMarketProposalTx } from "./IMarketProposalTx";
 import { MarketMethods } from "./MarketMethods";
 
 export class Market implements IMarket {
@@ -20,10 +19,13 @@ export class Market implements IMarket {
   //
   public configControllerAddress: string;
   public owner: string;
+  public guardian: string;
   public curator: string;
   public feeDistribution: number;
   //
   public curvePreset: Curve;
+  //
+  public proposals: IMarketProposalTx[];
 
   constructor(marketData: IMarket) {
     this.cometAddress = marketData.cometAddress;
@@ -40,64 +42,71 @@ export class Market implements IMarket {
     //
     this.configControllerAddress = marketData.configControllerAddress;
     this.owner = marketData.owner;
+    this.guardian = marketData.guardian;
     this.curator = marketData.curator;
     this.feeDistribution = marketData.feeDistribution;
     //
     this.curvePreset = marketData.curvePreset;
+    //
+    this.proposals = marketData.proposals;
   }
 
-  get borrowApr(): string {
-    return MarketMethods.getAprPercents(this.borrowRate);
+  get borrowApr(): number {
+    return MarketMethods.calcApr(this.borrowRate);
   }
-  get supplyApr(): string {
-    return MarketMethods.getAprPercents(this.supplyRate);
+  get supplyApr(): number {
+    return MarketMethods.calcApr(this.supplyRate);
   }
 
   get marketPrice(): number {
-    return this.baseToken.price; // ?
+    return this.baseToken.price; // or specific for eth
   }
 
   get totalEarning(): bigint {
-    // If the base asset is ETH or wstETH, its value is converted to USD based on the current price (baseToken.price).
-    // For other assets, the value remains unchanged.
-    if (ETH_SYMBOLS.includes(this.baseToken.symbol)) {
-      return BigInt(
-        formatUnits(
-          this.totalSupply *
-            parseUnits(
-              this.baseToken.price.toFixed(PRICE_FEED_MANTISSA),
-              PRICE_FEED_MANTISSA,
-            ),
-          PRICE_FEED_MANTISSA,
-        ),
-      );
-    }
-    return this.totalSupply;
+    return MarketMethods.totalEarning(
+      this.baseToken.symbol,
+      this.baseToken.price,
+      this.totalSupply,
+    );
   }
   get totalBorrowed(): bigint {
-    // If the base asset is ETH or wstETH, its value is converted to USD based on the current price (baseToken.price).
-    // For other assets, the value remains unchanged.
-    if (ETH_SYMBOLS.includes(this.baseToken.symbol)) {
-      return BigInt(
-        formatUnits(
-          this.totalBorrow *
-            parseUnits(
-              this.baseToken.price.toFixed(PRICE_FEED_MANTISSA),
-              PRICE_FEED_MANTISSA,
-            ),
-          PRICE_FEED_MANTISSA,
-        ),
-      );
-    }
-    return this.totalBorrow;
+    return MarketMethods.totalBorrowed(
+      this.baseToken.symbol,
+      this.baseToken.price,
+      this.totalBorrow,
+    );
   }
 
-  get netEarnApr(): string {
-    // todo
-    return "";
+  get netEarnApr(): number {
+    const compToSuppliersPerDay = MarketMethods.compToSuppliersPerDay(
+      this.baseToken.baseTrackingSupplySpeed,
+      baseIndexScale,
+    );
+    const supplyCompRewardApr = MarketMethods.supplyCompRewardApr(
+      compPriceInUsd,
+      compDecimals,
+      compToSuppliersPerDay,
+      this.totalSupply,
+      this.baseToken.price,
+      this.baseToken.decimals,
+    );
+
+    return MarketMethods.netEarnApr(this.supplyApr, supplyCompRewardApr);
   }
-  get netBorrowApr(): string {
-    // todo
-    return "";
+  get netBorrowApr(): number {
+    const compToBorrowersPerDay = MarketMethods.compToBorrowersPerDay(
+      this.baseToken.baseTrackingBorrowSpeed,
+      baseIndexScale,
+    );
+    const borrowCompRewardApr = MarketMethods.borrowCompRewardApr(
+      compPriceInUsd,
+      compDecimals,
+      compToBorrowersPerDay,
+      this.totalBorrowed,
+      this.baseToken.price,
+      this.baseToken.decimals,
+    );
+
+    return MarketMethods.netBorrowApr(this.borrowApr, borrowCompRewardApr);
   }
 }

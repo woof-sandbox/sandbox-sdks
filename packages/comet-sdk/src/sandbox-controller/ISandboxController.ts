@@ -1,4 +1,3 @@
-import type { Curve } from "../curve";
 import type { Base, Collateral } from "../token";
 
 export interface ISandboxController {
@@ -6,6 +5,5 @@ export interface ISandboxController {
   baseWhitelist: Base[];
   collateralsWhitelist: Collateral[];
   priceFeedsAddresses: string[]; // ?
-  curvePresets: Curve[];
   storeFrontPriceFactor: number; // percents
 }

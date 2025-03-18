@@ -11,12 +11,12 @@ const market: IMarket = {
 
 describe("MarketMethods", () => {
   test("should calculate the correct borrow APR", () => {
-    const percents = MarketMethods.getAprPercents(market.borrowRate);
+    const percents = MarketMethods.calcApr(market.borrowRate);
     expect(percents).toEqual("5.84391");
   });
 
   test("should calculate the correct supply APR", () => {
-    const percents = MarketMethods.getAprPercents(market.supplyRate);
+    const percents = MarketMethods.calcApr(market.supplyRate);
     expect(percents).toEqual("4.69142");
   });
 });

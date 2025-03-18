@@ -1,4 +1,4 @@
-import type {JsonRpcProvider, Provider, Signer, Wallet, WebSocketProvider} from "ethers";
+import type { Provider, Signer } from "ethers";
 import { MulticallAbi } from "../abis";
 import { MULTICALL_ADDRESS } from "../constants";
 import { CONTRACTS_ERRORS } from "../errors/contracts";

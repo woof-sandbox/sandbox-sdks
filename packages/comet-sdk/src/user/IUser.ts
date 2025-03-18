@@ -1,4 +1,4 @@
-import type { IUserTransaction } from "./IUserTransaction";
+import type { IUserTransaction } from "../market/IMarketProposalTx";
 
 export interface IUser {
   address: string;

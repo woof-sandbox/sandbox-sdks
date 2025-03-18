@@ -1,5 +1,5 @@
 import { Market } from "@sandbox/comet-sdk";
-import type {JsonRpcProvider, Provider, Signer} from "ethers";
+import type { Provider, Signer } from "ethers";
 import { CometContract, MulticallContract } from "../contracts";
 
 export async function fetchMarket(
@@ -34,7 +34,6 @@ export async function fetchMarket(
     borrowRate,
     supplyRate,
     // TODO
-
   };
 
   return new Market(data);

@@ -1,5 +1,5 @@
+import type { IUserTransaction } from "../market/IMarketProposalTx";
 import type { IUser } from "./IUser";
-import type { IUserTransaction } from "./IUserTransaction";
 
 export class User implements IUser {
   public address: string;
