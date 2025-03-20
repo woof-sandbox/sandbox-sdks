@@ -1,5 +1,6 @@
 import type { Curve } from "../curve";
 import type { Base, Collateral } from "../token";
+import type { Token } from "../token/Token";
 import type { IMarket } from "./IMarket";
 import type { IMarketProposalTx } from "./IMarketProposalTx";
 import { MarketMethods } from "./MarketMethods";
@@ -26,6 +27,8 @@ export class Market implements IMarket {
   public curvePreset: Curve;
   //
   public proposals: IMarketProposalTx[];
+  //
+  public comp: Token;
 
   constructor(marketData: IMarket) {
     this.cometAddress = marketData.cometAddress;
@@ -49,6 +52,8 @@ export class Market implements IMarket {
     this.curvePreset = marketData.curvePreset;
     //
     this.proposals = marketData.proposals;
+    //
+    this.comp = marketData.comp;
   }
 
   get borrowApr(): number {
@@ -80,11 +85,11 @@ export class Market implements IMarket {
   get netEarnApr(): number {
     const compToSuppliersPerDay = MarketMethods.compToSuppliersPerDay(
       this.baseToken.baseTrackingSupplySpeed,
-      baseIndexScale,
+      this.baseToken.baseIndexScale,
     );
     const supplyCompRewardApr = MarketMethods.supplyCompRewardApr(
-      compPriceInUsd,
-      compDecimals,
+      this.comp.price, // in usd
+      this.comp.decimals,
       compToSuppliersPerDay,
       this.totalSupply,
       this.baseToken.price,
@@ -96,11 +101,11 @@ export class Market implements IMarket {
   get netBorrowApr(): number {
     const compToBorrowersPerDay = MarketMethods.compToBorrowersPerDay(
       this.baseToken.baseTrackingBorrowSpeed,
-      baseIndexScale,
+      this.baseToken.baseIndexScale,
     );
     const borrowCompRewardApr = MarketMethods.borrowCompRewardApr(
-      compPriceInUsd,
-      compDecimals,
+      this.comp.price,
+      this.comp.decimals,
       compToBorrowersPerDay,
       this.totalBorrowed,
       this.baseToken.price,

@@ -1,5 +1,6 @@
 import type { Curve } from "../curve";
 import type { Base, Collateral } from "../token";
+import type { Token } from "../token/Token";
 import type { IMarketProposalTx } from "./IMarketProposalTx";
 
 export interface IMarket {
@@ -24,4 +25,6 @@ export interface IMarket {
   curvePreset: Curve;
   //
   proposals: IMarketProposalTx[];
+  //
+  comp: Token;
 }
