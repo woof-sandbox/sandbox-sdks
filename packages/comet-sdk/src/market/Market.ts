@@ -1,6 +1,5 @@
-import type { Curve } from "../curve";
-import type { Base, Collateral } from "../token";
-import type { Token } from "../token/Token";
+import type { ICurve } from "../curve";
+import type { IBase, ICollateral, IToken } from "../token";
 import type { IMarket } from "./IMarket";
 import type { IMarketProposalTx } from "./IMarketProposalTx";
 import { MarketMethods } from "./MarketMethods";
@@ -14,8 +13,8 @@ export class Market implements IMarket {
   public totalBorrow: bigint;
   public totalSupply: bigint;
   public totalReserves: bigint;
-  public baseToken: Base;
-  public collaterals: Collateral[];
+  public baseToken: IBase;
+  public collaterals: ICollateral[];
   public availableLiquidity: bigint;
   //
   public configControllerAddress: string;
@@ -24,11 +23,11 @@ export class Market implements IMarket {
   public curator: string;
   public feeDistribution: number;
   //
-  public curvePreset: Curve;
+  public curvePreset: ICurve;
   //
   public proposals: IMarketProposalTx[];
   //
-  public comp: Token;
+  public comp: IToken;
 
   constructor(marketData: IMarket) {
     this.cometAddress = marketData.cometAddress;

@@ -1,6 +1,5 @@
-import type { Curve } from "../curve";
-import type { Base, Collateral } from "../token";
-import type { Token } from "../token/Token";
+import type { ICurve } from "../curve";
+import type { IBase, ICollateral, IToken } from "../token";
 import type { IMarketProposalTx } from "./IMarketProposalTx";
 
 export interface IMarket {
@@ -12,8 +11,8 @@ export interface IMarket {
   totalBorrow: bigint;
   totalSupply: bigint; // or base total supply. comet.totalSupply()
   totalReserves: bigint;
-  baseToken: Base;
-  collaterals: Collateral[];
+  baseToken: IBase;
+  collaterals: ICollateral[];
   availableLiquidity: bigint; // baseToken.balanceOf(CometAddress)
   // Config Controller
   configControllerAddress: string;
@@ -22,9 +21,9 @@ export interface IMarket {
   curator: string;
   feeDistribution: number; // percents
   //
-  curvePreset: Curve;
+  curvePreset: ICurve;
   //
   proposals: IMarketProposalTx[];
   //
-  comp: Token;
+  comp: IToken;
 }

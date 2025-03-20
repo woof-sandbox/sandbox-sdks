@@ -1,9 +1,8 @@
-import type { Base, Collateral } from "../token";
+import type { IBase, ICollateral } from "../token";
 
 export interface ISandboxController {
   address: string;
-  baseWhitelist: Base[];
-  collateralsWhitelist: Collateral[];
-  priceFeedsAddresses: string[]; // ?
+  baseWhitelist: IBase[];
+  collateralsWhitelist: ICollateral[];
   storeFrontPriceFactor: number; // percents
 }

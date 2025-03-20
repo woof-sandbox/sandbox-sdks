@@ -1,4 +1,4 @@
-import type { Curve } from "../../curve";
+import type { ICurve } from "../../curve";
 import { Token } from "../Token";
 import type { IBase } from "./IBase";
 
@@ -7,7 +7,7 @@ export class Base extends Token implements IBase {
   public baseTrackingBorrowSpeed: bigint;
   public baseTrackingSupplySpeed: bigint;
   public baseIndexScale: bigint;
-  public curvePresets: Curve[];
+  public curvePresets: ICurve[];
 
   constructor(baseData: IBase) {
     super(baseData);
