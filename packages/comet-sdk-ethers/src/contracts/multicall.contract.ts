@@ -1,4 +1,4 @@
-import type { JsonRpcProvider, Wallet, WebSocketProvider } from "ethers";
+import type { Provider, Signer } from "ethers";
 import { MulticallAbi } from "../abis";
 import { MULTICALL_ADDRESS } from "../constants";
 import { CONTRACTS_ERRORS } from "../errors/contracts";
@@ -21,7 +21,7 @@ export class MulticallContract extends BaseContract {
   _callsSuccess: Map<Tag, boolean> = new Map();
   _lastSuccess?: boolean;
 
-  constructor(driver: JsonRpcProvider | WebSocketProvider | Wallet) {
+  constructor(driver: Provider | Signer) {
     super(MulticallAbi, MULTICALL_ADDRESS, driver);
   }
 

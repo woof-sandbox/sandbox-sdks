@@ -1,0 +1,20 @@
+import type { ICurve } from "../../curve";
+import { Token } from "../Token";
+import type { IBase } from "./IBase";
+
+export class Base extends Token implements IBase {
+  public baseMinForRewards: bigint;
+  public baseTrackingBorrowSpeed: bigint;
+  public baseTrackingSupplySpeed: bigint;
+  public baseIndexScale: bigint;
+  public curvePresets: ICurve[];
+
+  constructor(baseData: IBase) {
+    super(baseData);
+    this.baseMinForRewards = baseData.baseMinForRewards;
+    this.baseTrackingBorrowSpeed = baseData.baseTrackingBorrowSpeed;
+    this.baseTrackingSupplySpeed = baseData.baseTrackingSupplySpeed;
+    this.baseIndexScale = baseData.baseIndexScale;
+    this.curvePresets = baseData.curvePresets;
+  }
+}

@@ -1,31 +1,34 @@
-import type {
-  BigNumberish,
-  JsonRpcProvider,
-  Wallet,
-  WebSocketProvider,
-  ethers,
-} from "ethers";
+import type { BigNumberish, Provider, Signer, ethers } from "ethers";
 import { CometAbi } from "../abis";
 import { BaseContract } from "./base-contract";
 import type { ContractCall } from "./entities";
 
 export class CometContract extends BaseContract {
-  constructor(
-    address?: string,
-    driver?: JsonRpcProvider | WebSocketProvider | Wallet,
-  ) {
+  constructor(address?: string, driver?: Provider | Signer) {
     super(CometAbi, address, driver);
   }
 
   async getUtilization(): Promise<bigint> {
     return this.call<bigint>("getUtilization");
   }
-
   getBorrowRateCall(utilization: BigNumberish): ContractCall {
     return this.getCall("getBorrowRate", [utilization]);
   }
   getSupplyRateCall(utilization: BigNumberish): ContractCall {
     return this.getCall("getSupplyRate", [utilization]);
+  }
+  //
+  getTotalBorrowCall(): ContractCall {
+    return this.getCall("totalBorrow");
+  }
+  getTotalSupplyCall(): ContractCall {
+    return this.getCall("totalSupply");
+  }
+  getTotalReservesCall(): ContractCall {
+    return this.getCall("totalReserves");
+  }
+  getBaseTokenCall(): ContractCall {
+    return this.getCall("baseToken");
   }
 
   //

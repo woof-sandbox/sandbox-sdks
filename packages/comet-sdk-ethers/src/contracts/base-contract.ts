@@ -3,9 +3,9 @@ import {
   type ContractMethod,
   type Interface,
   type InterfaceAbi,
-  type JsonRpcProvider,
+  type Provider,
+  type Signer,
   Wallet,
-  type WebSocketProvider,
 } from "ethers";
 import { MULTICALL_ALLOW_FAILURE } from "../constants";
 import { CONTRACTS_ERRORS } from "../errors/contracts";
@@ -20,7 +20,7 @@ export class BaseContract {
   constructor(
     abi: Interface | InterfaceAbi,
     readonly address: string = "0x0000000000000000000000000000000000000000",
-    protected readonly driver?: JsonRpcProvider | WebSocketProvider | Wallet,
+    protected readonly driver?: Provider | Signer,
   ) {
     this.isCallable = !!address && !!driver;
     this.isReadonly = !this.isCallable || !(driver instanceof Wallet);
