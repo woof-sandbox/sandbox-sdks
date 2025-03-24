@@ -2,14 +2,14 @@ import type { ICurve } from "./ICurve";
 
 export class Curve implements ICurve {
   public id: number;
-  public supplyKink: number; // percents
-  public supplyPerYearInterestRateSlopeLow: number; // percents
-  public supplyPerYearInterestRateSlopeHigh: number; // percents
-  public supplyPerYearInterestRateBase: number; // percents
-  public sorrowKink: number; // percents
-  public borrowPerYearInterestRateSlopeLow: number; // percents
-  public borrowPerYearInterestRateSlopeHigh: number; // percents
-  public borrowPerYearInterestRateBase: number; // percents
+  public supplyKink: bigint; // percents
+  public supplyPerYearInterestRateSlopeLow: bigint; // percents
+  public supplyPerYearInterestRateSlopeHigh: bigint; // percents
+  public supplyPerYearInterestRateBase: bigint; // percents
+  public borrowKink: bigint; // percents
+  public borrowPerYearInterestRateSlopeLow: bigint; // percents
+  public borrowPerYearInterestRateSlopeHigh: bigint; // percents
+  public borrowPerYearInterestRateBase: bigint; // percents
 
   constructor(curveData: ICurve) {
     this.id = curveData.id;
@@ -20,7 +20,7 @@ export class Curve implements ICurve {
       curveData.supplyPerYearInterestRateSlopeHigh;
     this.supplyPerYearInterestRateBase =
       curveData.supplyPerYearInterestRateBase;
-    this.sorrowKink = curveData.sorrowKink;
+    this.borrowKink = curveData.borrowKink;
     this.borrowPerYearInterestRateSlopeLow =
       curveData.borrowPerYearInterestRateSlopeLow;
     this.borrowPerYearInterestRateSlopeHigh =
