@@ -1,6 +1,6 @@
 {
   "name": "@sandbox/comet-sdk",
-  "description": "Framework-agnostic package that defines Comet-related entity classes (such as `Market`, `Token`, `Vault`).",
+  "description": "Framework-agnostic package that defines Comet-related entity classes (such as `Market`, `Token`).",
   "version": "0.0.1",
   "repository": {
     "type": "git",

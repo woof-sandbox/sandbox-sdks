@@ -1,12 +1,12 @@
 export interface ICurve {
-  id: number;
+  id: number; // will be in sandbox
   //
-  supplyKink: number; // percents
-  supplyPerYearInterestRateSlopeLow: number; // percents
-  supplyPerYearInterestRateSlopeHigh: number; // percents
-  supplyPerYearInterestRateBase: number; // percents
-  sorrowKink: number; // percents
-  borrowPerYearInterestRateSlopeLow: number; // percents
-  borrowPerYearInterestRateSlopeHigh: number; // percents
-  borrowPerYearInterestRateBase: number; // percents
+  supplyKink: bigint; // percents 900000000000000000 // todo: find factor + bigint
+  supplyPerYearInterestRateSlopeLow: bigint; // percents 1712328767 * SecPerYear
+  supplyPerYearInterestRateSlopeHigh: bigint; // percents 96207508878 * SecPerYear
+  supplyPerYearInterestRateBase: bigint; // percents 0
+  borrowKink: bigint; // percents 900000000000000000
+  borrowPerYearInterestRateSlopeLow: bigint; // percents 1585489599 * SecPerYear
+  borrowPerYearInterestRateSlopeHigh: bigint; // percents 107813292744 * SecPerYear
+  borrowPerYearInterestRateBase: bigint; // percents 475646879 * SecPerYear
 }
