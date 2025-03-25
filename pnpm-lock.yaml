@@ -55,6 +55,21 @@ importers:
       '@sandbox/comet-sdk':
         specifier: workspace:^
         version: link:../comet-sdk
+      '@sandbox/contracts-tools-sdk-ethers':
+        specifier: workspace:~
+        version: link:../contracts-tools-sdk-ethers
+      ethers:
+        specifier: ^6.13.5
+        version: 6.13.5
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.3
+      vitest:
+        specifier: ^3.0.5
+        version: 3.0.5(@types/node@22.7.5)(yaml@2.7.0)
+
+  packages/contracts-tools-sdk-ethers:
+    devDependencies:
       ethers:
         specifier: ^6.13.5
         version: 6.13.5

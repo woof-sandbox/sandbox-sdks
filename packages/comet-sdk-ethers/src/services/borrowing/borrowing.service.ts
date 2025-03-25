@@ -1,6 +1,7 @@
 import { type JsonRpcProvider, Wallet, ethers } from "ethers";
-import { CometContract, MulticallContract } from "../../contracts";
+import { CometContract } from "../../contracts";
 import { SERVICES_ERRORS } from "../../errors/services";
+import { MulticallContract }from "@sandbox/contracts-tools-sdk-ethers"
 
 export class BorrowingService {
   private readonly provider: JsonRpcProvider;

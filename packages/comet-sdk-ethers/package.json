@@ -14,10 +14,12 @@
   },
   "peerDependencies": {
     "@sandbox/comet-sdk": "workspace:^",
+    "@sandbox/contracts-tools-sdk-ethers": "workspace:~",
     "ethers": "^6.0.0"
   },
   "devDependencies": {
     "@sandbox/comet-sdk": "workspace:^",
+    "@sandbox/contracts-tools-sdk-ethers": "workspace:~",
     "ethers": "^6.13.5",
     "typescript": "^5.7.2",
     "vitest": "^3.0.5"

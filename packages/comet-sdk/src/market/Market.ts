@@ -1,4 +1,3 @@
-import type { ICurve } from "../curve";
 import type { IBase, ICollateral, IToken } from "../token";
 import type { IMarket } from "./IMarket";
 import type { IMarketProposalTx } from "./IMarketProposalTx";
@@ -18,16 +17,14 @@ export class Market implements IMarket {
   public availableLiquidity: bigint;
   //
   public configControllerAddress: string;
-  public owner: string;
-  public guardian: string;
-  public curator: string;
+  public ownerAddress: string;
+  public guardianAddress: string;
+  public curatorAddress: string;
   public feeDistribution: number;
-  //
-  public curvePreset: ICurve;
   //
   public proposals: IMarketProposalTx[];
   //
-  public comp: IToken;
+  public comp: IToken; // !: changed to reward token
 
   constructor(marketData: IMarket) {
     this.cometAddress = marketData.cometAddress;
@@ -43,12 +40,10 @@ export class Market implements IMarket {
     this.availableLiquidity = marketData.availableLiquidity;
     //
     this.configControllerAddress = marketData.configControllerAddress;
-    this.owner = marketData.owner;
-    this.guardian = marketData.guardian;
-    this.curator = marketData.curator;
+    this.ownerAddress = marketData.ownerAddress;
+    this.guardianAddress = marketData.guardianAddress;
+    this.curatorAddress = marketData.curatorAddress;
     this.feeDistribution = marketData.feeDistribution;
-    //
-    this.curvePreset = marketData.curvePreset;
     //
     this.proposals = marketData.proposals;
     //
@@ -82,6 +77,7 @@ export class Market implements IMarket {
   }
 
   get netEarnApr(): number {
+    // !: should be rethought
     const compToSuppliersPerDay = MarketMethods.compToSuppliersPerDay(
       this.baseToken.baseTrackingSupplySpeed,
       this.baseToken.baseIndexScale,
@@ -98,6 +94,7 @@ export class Market implements IMarket {
     return MarketMethods.netEarnApr(this.supplyApr, supplyCompRewardApr);
   }
   get netBorrowApr(): number {
+    // !: should be rethought
     const compToBorrowersPerDay = MarketMethods.compToBorrowersPerDay(
       this.baseToken.baseTrackingBorrowSpeed,
       this.baseToken.baseIndexScale,
