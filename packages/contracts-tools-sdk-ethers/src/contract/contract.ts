@@ -26,7 +26,7 @@ import { checkSignals, createTimeoutSignal, priorityCall, raceWithSignals, waitW
 
 export class Contract {
   readonly address: string;
-  readonly driver: JsonRpcProvider | FallbackProvider | WebSocketProvider | Wallet | undefined;
+  readonly driver: JsonRpcProvider | FallbackProvider | WebSocketProvider | Wallet |  undefined;
   readonly isCallable: boolean;
   readonly isReadonly: boolean;
   readonly contract: EthersContract;

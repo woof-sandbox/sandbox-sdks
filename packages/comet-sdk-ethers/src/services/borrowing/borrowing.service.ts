@@ -75,7 +75,7 @@ export class BorrowingService {
     cometAddress: string,
     bulkerAddress: string,
   ): Promise<ethers.TransactionResponse> {
-    const comet = new CometContract(cometAddress, this.getSigner());
+    const comet = new CometContract(cometAddress, this.getDriver());
     return comet.allow(bulkerAddress, true);
   }
 }

@@ -6,10 +6,10 @@ import type {
   ethers,
 } from "ethers";
 import { Erc20Abi } from "../abis";
-import { BaseContract } from "./base-contract";
 import type { ContractCall } from "./entities";
+import { Contract } from "@sandbox/contracts-tools-sdk-ethers";
 
-export class Erc20Contract extends BaseContract {
+export class Erc20Contract extends Contract {
   constructor(
     address: string,
     driver?: JsonRpcProvider | WebSocketProvider | Wallet,
