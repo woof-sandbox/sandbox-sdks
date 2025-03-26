@@ -1,10 +1,10 @@
-import type { BigNumberish, Provider, Signer, ethers } from "ethers";
+import {BigNumberish, ethers, JsonRpcProvider, Wallet, WebSocketProvider} from "ethers";
 import { CometAbi } from "../abis";
-import { BaseContract } from "./base-contract";
 import type { ContractCall } from "./entities";
+import { Contract } from "@sandbox/contracts-tools-sdk-ethers";
 
-export class CometContract extends BaseContract {
-  constructor(address?: string, driver?: Provider | Signer) {
+export class CometContract extends Contract {
+  constructor(address?: string, driver?: JsonRpcProvider | WebSocketProvider | Wallet) {
     super(CometAbi, address, driver);
   }
 
