@@ -50,11 +50,12 @@ export async function fetchMarketMock(
     ownerAddress,
     guardianAddress,
     curatorAddress,
-    feeDistribution,
+    curatorFee: feeDistribution,
     proposals,
     baseToken,
     collaterals,
-    comp,
+    compToken: comp,
+    rewardTokens: [], // todo: fullfill
   });
 }
 

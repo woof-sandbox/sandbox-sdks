@@ -3,5 +3,5 @@ export interface IToken {
   symbol: string;
   decimals: number;
   price: number;
-  priceFeedAddress: string;
+  priceFeedAddress: string; // ?: price service or entity
 }

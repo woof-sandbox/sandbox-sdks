@@ -10,7 +10,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 500000000000000000n,
       liquidationFactor: 700000000000000000n,
-      liquidationPenalty: 750000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 750000000000000000n,
       supplyCap: 100000000000000000000000n,
       //
       tokenAddress: "0xc00e94Cb662C3520282E6f5717214004A7f26888",
@@ -22,7 +22,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 830000000000000000n,
       liquidationFactor: 900000000000000000n,
-      liquidationPenalty: 950000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 950000000000000000n,
       supplyCap: 500000000000000000000000n,
       //
       tokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
@@ -34,7 +34,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 800000000000000000n,
       liquidationFactor: 850000000000000000n,
-      liquidationPenalty: 900000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 900000000000000000n,
       supplyCap: 140000000000n,
       //
       tokenAddress: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
@@ -46,7 +46,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 680000000000000000n,
       liquidationFactor: 740000000000000000n,
-      liquidationPenalty: 830000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 830000000000000000n,
       supplyCap: 1300000000000000000000000n,
       //
       tokenAddress: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
@@ -58,7 +58,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 730000000000000000n,
       liquidationFactor: 790000000000000000n,
-      liquidationPenalty: 830000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 830000000000000000n,
       supplyCap: 500000000000000000000000n,
       //
       tokenAddress: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
@@ -70,7 +70,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 800000000000000000n,
       liquidationFactor: 850000000000000000n,
-      liquidationPenalty: 950000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 950000000000000000n,
       supplyCap: 60000000000000000000000n,
       //
       tokenAddress: "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
@@ -82,7 +82,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 800000000000000000n,
       liquidationFactor: 850000000000000000n,
-      liquidationPenalty: 950000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 950000000000000000n,
       supplyCap: 100000000000n,
       //
       tokenAddress: "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
@@ -94,7 +94,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 760000000000000000n,
       liquidationFactor: 810000000000000000n,
-      liquidationPenalty: 900000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 900000000000000000n,
       supplyCap: 285000000000000000000n,
       //
       tokenAddress: "0x18084fbA666a33d37592fA2633fD49a74DD93a88",
@@ -106,7 +106,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 880000000000000000n,
       liquidationFactor: 900000000000000000n,
-      liquidationPenalty: 950000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 950000000000000000n,
       supplyCap: 6500000000000000000000000n,
       //
       tokenAddress: "0x57F5E098CaD7A3D1Eed53991D4d66C45C9AF7812",
@@ -118,7 +118,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 880000000000000000n,
       liquidationFactor: 900000000000000000n,
-      liquidationPenalty: 950000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 950000000000000000n,
       supplyCap: 30000000000000000000000000n,
       //
       tokenAddress: "0xA663B02CF0a4b149d2aD41910CB81e23e1c41c32",
@@ -130,7 +130,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 800000000000000000n,
       liquidationFactor: 850000000000000000n,
-      liquidationPenalty: 950000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 950000000000000000n,
       supplyCap: 4000000000000000000000n,
       //
       tokenAddress: "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa",
@@ -142,7 +142,7 @@ export async function fetchCollateralsMocks(
     new Collateral({
       collateralFactor: 750000000000000000n,
       liquidationFactor: 800000000000000000n,
-      liquidationPenalty: 900000000000000000n,
+      liquidationPenalty: BigInt(1e18) - 900000000000000000n,
       supplyCap: 12000000000000000000000n,
       //
       tokenAddress: "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
