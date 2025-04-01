@@ -1,6 +1,6 @@
 import { User } from "@sandbox/comet-sdk";
 import type { Provider, Signer } from "ethers";
-import { ELEMENTS_PER_PAGE_FOR_SUBGRAPH } from "../constants";
+import { SUBGRAPH_PAGE_SIZE } from "../constants";
 
 export async function fetchUserMock(
     userAddress?: string,
@@ -17,7 +17,7 @@ export async function fetchUserMock(
   });
 }
 
-export async function getUserActiveMarkets(
+export async function fetchUserActiveMarkets(
     address: string,
     subgraphUrl: string,
 ): Promise<[string[], string[]]> {
@@ -35,11 +35,11 @@ export async function getUserActiveMarkets(
   let flag = true;
   let prevPage = 0;
   while (flag) {
-    const skip = prevPage * ELEMENTS_PER_PAGE_FOR_SUBGRAPH;
+    const skip = prevPage * SUBGRAPH_PAGE_SIZE;
 
     const body = JSON.stringify({
       query: `{
-          users(where: { userAddress: ${address}, principal_not: "0" }, orderBy: createdAt, orderDirection: asc, skip: ${skip}, first: ${ELEMENTS_PER_PAGE_FOR_SUBGRAPH}) {
+          users(where: { userAddress: ${address}, principal_not: "0" }, orderBy: createdAt, orderDirection: asc, skip: ${skip}, first: ${SUBGRAPH_PAGE_SIZE}) {
             principal
             proxyCometAddress
           }
