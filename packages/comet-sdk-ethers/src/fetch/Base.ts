@@ -18,6 +18,7 @@ export async function fetchBaseMock(
   const curves = await fetchCurvesMocks(cometProxyAddress, driver);
 
   return new Base({
+    baseMinBorrow: 100000000n,
     baseMinForRewards: 900000000000000000n,
     baseTrackingBorrowSpeed: 1712328767n * secsPerYear,
     baseTrackingSupplySpeed: 96207508878n * secsPerYear,

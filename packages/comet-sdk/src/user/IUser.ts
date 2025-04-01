@@ -1,5 +1,6 @@
 export interface IUser {
   address: string;
+  // isLiquidatable ?
   borrowMarkets: string[];
-  landMarkets: string[];
+  lendMarkets: string[];
 }

@@ -1,4 +1,3 @@
-export const ETH_SYMBOLS = ["ETH", "wstETH"];
 export const ETH_DECIMALS = 18;
 export const PRICE_FEED_MANTISSA = 8;
 export const DAYS_PER_YEAR = 365;
