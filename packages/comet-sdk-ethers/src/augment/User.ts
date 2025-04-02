@@ -1,12 +1,14 @@
 import { User } from "@sandbox/comet-sdk";
-import { fetchUserMock } from "../fetch";
+import { fetchUserMock, fetchUserActiveMarkets } from "../fetch";
 
 declare module "@sandbox/comet-sdk" {
   namespace User {
     let fetchMock: typeof fetchUserMock;
+    let fetchActiveMarkets: typeof fetchUserActiveMarkets;
   }
 }
 
 User.fetchMock = fetchUserMock;
+User.fetchActiveMarkets = fetchUserActiveMarkets;
 
 export { User };
