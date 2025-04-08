@@ -1,8 +1,8 @@
-import { Contract, FeeData, Provider, TransactionRequest } from 'ethers';
-import { DEFAULT_PRIORITY_CALL_MULTIPLIER } from '../constant';
-import { PriorityCallOptions } from '../types';
-import { checkSignals } from './check-signals';
-import { createTimeoutSignal } from './create-timeout-signal';
+import type { Contract, FeeData, Provider, TransactionRequest } from "ethers";
+import { DEFAULT_PRIORITY_CALL_MULTIPLIER } from "../constant";
+import type { PriorityCallOptions } from "../types";
+import { checkSignals } from "./check-signals";
+import { createTimeoutSignal } from "./create-timeout-signal";
 
 export async function priorityCall(
   provider: Provider,
@@ -19,7 +19,8 @@ export async function priorityCall(
 
   const localSignals: AbortSignal[] = [];
   if (localOptions.signals) localSignals.push(...localOptions.signals);
-  if (localOptions.timeoutMs) localSignals.push(createTimeoutSignal(localOptions.timeoutMs));
+  if (localOptions.timeoutMs)
+    localSignals.push(createTimeoutSignal(localOptions.timeoutMs));
 
   checkSignals(localSignals);
 
@@ -32,17 +33,25 @@ export async function priorityCall(
     localSignals,
   );
 
-  const maxFeePerGas = Math.ceil(localOptions.multiplier * Number(originalFeeData.maxFeePerGas));
-  const maxPriorityFeePerGas = Math.ceil(localOptions.multiplier * Number(originalFeeData.maxPriorityFeePerGas));
+  const maxFeePerGas = Math.ceil(
+    localOptions.multiplier * Number(originalFeeData.maxFeePerGas),
+  );
+  const maxPriorityFeePerGas = Math.ceil(
+    localOptions.multiplier * Number(originalFeeData.maxPriorityFeePerGas),
+  );
 
-  const gasLimit = Math.ceil(localOptions.multiplier * Number(originalGasLimit));
+  const gasLimit = Math.ceil(
+    localOptions.multiplier * Number(originalGasLimit),
+  );
   checkSignals(localSignals);
 
-  const txn: TransactionRequest = await contract.getFunction(method).populateTransaction(...args, {
-    gasLimit,
-    maxFeePerGas,
-    maxPriorityFeePerGas,
-  });
+  const txn: TransactionRequest = await contract
+    .getFunction(method)
+    .populateTransaction(...args, {
+      gasLimit,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
+    });
 
   // Prevents conflicts when using signer.sendTransaction(txn), as the signer should determine the from address.
   // Avoids potential issues if from is incorrectly set or differs from the signer's address.

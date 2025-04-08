@@ -1,5 +1,5 @@
-import { isStaticMethod } from '../helpers';
-import { ContractCall, SplitCalls } from '../types';
+import { isStaticMethod } from "../helpers";
+import type { ContractCall, SplitCalls } from "../types";
 
 export const multicallSplitCalls = (calls: ContractCall[]): SplitCalls =>
   calls.reduce<SplitCalls>(

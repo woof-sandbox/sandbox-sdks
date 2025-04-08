@@ -1,5 +1,5 @@
-import { Interface } from 'ethers';
-import { StateMutability } from '../state-mutabiity';
+import type { Interface } from "ethers";
+import type { StateMutability } from "../state-mutabiity";
 
 export type ContractCall = {
   method: string;

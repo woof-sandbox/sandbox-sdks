@@ -1,4 +1,4 @@
-import { ContractCall } from './contract';
+import type { ContractCall } from "./contract";
 
 export interface SplitCalls {
   staticCalls: ContractCall[];

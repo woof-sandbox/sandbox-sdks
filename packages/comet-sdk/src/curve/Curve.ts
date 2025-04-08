@@ -1,7 +1,7 @@
 import type { ICurve } from "./ICurve";
 
 export class Curve implements ICurve {
-  public id: number;
+  public id: string;
   public supplyKink: bigint; // percents
   public supplyPerYearInterestRateSlopeLow: bigint; // percents
   public supplyPerYearInterestRateSlopeHigh: bigint; // percents

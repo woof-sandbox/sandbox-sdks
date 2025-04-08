@@ -59,7 +59,7 @@ export class Market implements IMarket {
     return MarketMethods.calcApr(this.supplyRate);
   }
 
-  get price(): number {
+  get price(): string {
     return this.baseToken.price;
   }
 
@@ -72,20 +72,20 @@ export class Market implements IMarket {
 
   get netEarnAprs(): number[] {
     return MarketMethods.netBorrowAprs(
-        this.baseToken,
-        this.totalEarned,
-        this.compToken,
-        this.rewardTokens,
-        this.borrowApr,
-    )
+      this.baseToken,
+      this.totalEarned,
+      this.compToken,
+      this.rewardTokens,
+      this.borrowApr,
+    );
   }
   get netBorrowAprs(): number[] {
     return MarketMethods.netBorrowAprs(
-        this.baseToken,
-        this.totalBorrowed,
-        this.compToken,
-        this.rewardTokens,
-        this.borrowApr,
-    )
+      this.baseToken,
+      this.totalBorrowed,
+      this.compToken,
+      this.rewardTokens,
+      this.borrowApr,
+    );
   }
 }

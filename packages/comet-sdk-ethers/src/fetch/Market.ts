@@ -1,7 +1,9 @@
-import { type IMarketProposalTx, Market } from "@sandbox/comet-sdk";
-import { Token } from "@sandbox/comet-sdk/src/token";
+import { type IMarketProposalTx, Market, Token } from "@sandbox/comet-sdk";
+import { MulticallContract } from "@sandbox/contracts-tools-sdk-ethers";
 import type { Provider, Signer } from "ethers";
-import { fetchBaseMock } from "./Base";
+import { CometContract, Erc20Contract } from "../contracts";
+import { MULTICALL_ERRORS } from "../errors/multicall";
+import { fetchBase, fetchBaseMock } from "./Base";
 import { fetchCollateralsMocks } from "./Collateral";
 
 export async function fetchMarketMock(
@@ -9,7 +11,6 @@ export async function fetchMarketMock(
   driver?: Provider | Signer,
 ): Promise<Market> {
   // USDt comet
-
   const cometAddress = "0x3Afdc9BCA9213A35503b077a6072F3D0d5AB0840";
   const utilization = 622155096290286592n;
   const supplyRate = 1065334068n;
@@ -20,10 +21,10 @@ export async function fetchMarketMock(
   const totalReserves = 1368714199302n;
   const availableLiquidity = 71294244719270n;
   // TODO: fulfill this block after adding new functionality to contracts
-  const configControllerAddress = "0xd0E4A05a84ce039be8647cA8089266117a7E96C5";
-  const ownerAddress = "0xd0E4A05a84ce039be8647cA8089266117a7E96C5";
-  const guardianAddress = "0xd0E4A05a84ce039be8647cA8089266117a7E96C5";
-  const curatorAddress = "0xd0E4A05a84ce039be8647cA8089266117a7E96C5";
+  const configControllerAddress = "0x0000000000000000000000000000000000000000";
+  const ownerAddress = "0x0000000000000000000000000000000000000000";
+  const guardianAddress = "0x0000000000000000000000000000000000000000";
+  const curatorAddress = "0x0000000000000000000000000000000000000000";
   const feeDistribution = 10;
   const proposals: IMarketProposalTx[] = [];
   //
@@ -32,8 +33,8 @@ export async function fetchMarketMock(
   const comp = new Token({
     tokenAddress: "0xc00e94Cb662C3520282E6f5717214004A7f26888",
     symbol: "COMP",
-    decimals: 18,
-    price: 42.59,
+    decimals: 18n,
+    price: "42.59",
     priceFeedAddress: "0xdbd020CAeF83eFd542f4De03e3cF0C28A4428bd5",
   });
   //
@@ -63,35 +64,80 @@ export async function fetchMarket(
   cometProxyAddress: string,
   driver: Provider | Signer,
 ): Promise<Market> {
-  /*const comet = new CometContract(cometProxyAddress, driver);
+  const comet = new CometContract(cometProxyAddress, driver);
   const multicall = new MulticallContract(driver);
 
   const utilization = await comet.getUtilization();
 
-  const borrowRateTag = "borrowRate";
-  multicall.add(borrowRateTag, comet.getBorrowRateCall(utilization));
+  const borrowRateTag = multicall.add(
+    "borrowRate",
+    comet.getBorrowRateCall(utilization),
+  );
+  const supplyRateTag = multicall.add(
+    "supplyRate",
+    comet.getSupplyRateCall(utilization),
+  );
+  //
+  const totalBorrowTag = multicall.add(
+    "totalBorrow",
+    comet.getTotalBorrowCall(),
+  );
+  const totalSupplyTag = multicall.add(
+    "totalSupply",
+    comet.getTotalSupplyCall(),
+  );
+  const totalReservesTag = multicall.add(
+    "totalReserves",
+    comet.getTotalReservesCall(),
+  );
+  //
+  const baseToken = await fetchBase(cometProxyAddress, driver);
+  const baseContract = new Erc20Contract(baseToken.tokenAddress, driver);
+  const availableLiquidityTag = multicall.add(
+    "availableLiquidity",
+    baseContract.getBalanceOfCall(cometProxyAddress),
+  );
 
-  const supplyRateTag = "supplyRate";
-  multicall.add(supplyRateTag, comet.getSupplyRateCall(utilization));
+  await multicall.run();
 
-  multicall.add(supplyRateTag, comet.getSupplyRateCall(utilization));
+  const borrowRate = multicall.getSingle<bigint>(borrowRateTag);
+  if (!borrowRate) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowRateTag);
+  const supplyRate = multicall.getSingle<bigint>(supplyRateTag);
+  if (!supplyRate) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateTag);
+  const totalBorrow = multicall.getSingle<bigint>(totalBorrowTag);
+  if (!totalBorrow) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalBorrowTag);
+  const totalSupply = multicall.getSingle<bigint>(totalSupplyTag);
+  if (!totalSupply) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalSupplyTag);
+  const totalReserves = multicall.getSingle<bigint>(totalReservesTag);
+  if (!totalReserves) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalReservesTag);
+  const availableLiquidity = multicall.getSingle<bigint>(availableLiquidityTag);
+  if (!availableLiquidity)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(availableLiquidityTag);
 
-  const success: boolean = await multicall.run();
+  const collaterals = await fetchCollateralsMocks(cometProxyAddress, driver);
 
-  let borrowRate: bigint | undefined;
-  let supplyRate: bigint | undefined;
-  if (success) {
-    borrowRate = multicall.getSingle<bigint>(borrowRateTag);
-    supplyRate = multicall.getSingle<bigint>(supplyRateTag);
-  }
-
-  const data = {
+  return new Market({
     cometAddress: cometProxyAddress,
     utilization,
-    borrowRate,
     supplyRate,
-    // TODO
-  };*/
-
-  return fetchMarketMock();
+    borrowRate,
+    //
+    totalBorrow,
+    totalSupply,
+    totalReserves,
+    baseToken,
+    collaterals,
+    availableLiquidity,
+    // TODO: update after contracts
+    configControllerAddress: "0x0000000000000000000000000000000000000000", // TODO
+    ownerAddress: "0x0000000000000000000000000000000000000000", // TODO
+    guardianAddress: "0x0000000000000000000000000000000000000000", // TODO
+    curatorAddress: "0x0000000000000000000000000000000000000000", // TODO
+    curatorFee: 0, // TODO
+    //
+    proposals: [], // TODO
+    //
+    compToken: await fetchBaseMock(), // TODO
+    rewardTokens: [], // TODO
+  });
 }

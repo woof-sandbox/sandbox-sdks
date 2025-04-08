@@ -1,6 +1,6 @@
+import { Contract } from "@sandbox/contracts-tools-sdk-ethers";
 import type { JsonRpcProvider, Wallet, WebSocketProvider } from "ethers";
 import { BulkerAbi } from "../abis";
-import { Contract } from "@sandbox/contracts-tools-sdk-ethers";
 
 export class BulkerContract extends Contract {
   constructor(

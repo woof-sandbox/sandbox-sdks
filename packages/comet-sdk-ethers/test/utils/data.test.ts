@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
-import { DataUtils } from "../../src/utils";
 import { describe, expect, test } from "vitest";
+import { DataUtils } from "../../src/utils";
 
 describe("DataUtils", () => {
   test("parseTokenInput", () => {
@@ -16,12 +16,20 @@ describe("DataUtils", () => {
   });
 
   test("toBigNumber", () => {
-    expect(DataUtils.toBigNumber("1.5", 18)).toEqual(ethers.parseUnits("1.5", 18));
-    expect(DataUtils.toBigNumber("0.00001234", 18)).toEqual(ethers.parseUnits("0.00001234", 18));
+    expect(DataUtils.toBigNumber("1.5", 18)).toEqual(
+      ethers.parseUnits("1.5", 18),
+    );
+    expect(DataUtils.toBigNumber("0.00001234", 18)).toEqual(
+      ethers.parseUnits("0.00001234", 18),
+    );
   });
 
   test("fromBigNumber", () => {
-    expect(DataUtils.fromBigNumber(ethers.parseUnits("1.5", 18), 18)).toBe("1.5");
-    expect(DataUtils.fromBigNumber(ethers.parseUnits("123456789.987654321", 18), 18)).toBe("123456789.987654321");
+    expect(DataUtils.fromBigNumber(ethers.parseUnits("1.5", 18), 18)).toBe(
+      "1.5",
+    );
+    expect(
+      DataUtils.fromBigNumber(ethers.parseUnits("123456789.987654321", 18), 18),
+    ).toBe("123456789.987654321");
   });
 });

@@ -1,19 +1,23 @@
-import { FallbackProvider, JsonRpcProvider, TransactionResponse, Wallet, WebSocketProvider } from 'ethers';
-import { MulticallAbi } from '../abis';
+import type { Provider, Signer, TransactionResponse } from "ethers";
+import { MulticallAbi } from "../abis";
 import {
   DEFAULT_MULTICALL_MUTABLE_CALLS_STACK_LIMIT,
   DEFAULT_MULTICALL_STATIC_CALLS_STACK_LIMIT,
   DEFAULT_WAIT_CALLS_TIMEOUT_MS,
-} from '../constant';
-import { MULTICALL_ADDRESS } from '../constant';
-import { Contract } from '../contract';
-import { MULTICALL_ERRORS } from '../errors';
-import { isStaticArray } from '../helpers';
-import { CallMutability, MulticallOptions, MulticallResponse } from '../types';
-import { ContractCall, MulticallTags, Tagable } from '../types';
-import { checkSignals, raceWithSignals } from '../utils';
-import { normalizeTags } from './multicall-normalize-tags';
-import { multicallSplitCalls } from './multicall-split-calls';
+} from "../constant";
+import { MULTICALL_ADDRESS } from "../constant";
+import { Contract } from "../contract";
+import { MULTICALL_ERRORS } from "../errors";
+import { isStaticArray } from "../helpers";
+import {
+  CallMutability,
+  type MulticallOptions,
+  type MulticallResponse,
+} from "../types";
+import type { ContractCall, MulticallTags, Tagable } from "../types";
+import { checkSignals, raceWithSignals } from "../utils";
+import { normalizeTags } from "./multicall-normalize-tags";
+import { multicallSplitCalls } from "./multicall-split-calls";
 
 export type Response = [success: boolean, rawData: string];
 export interface PreparedData {
@@ -21,7 +25,7 @@ export interface PreparedData {
   rawData: string;
 }
 
-const aggregate3 = 'aggregate3';
+const aggregate3 = "aggregate3";
 
 export class MulticallContract extends Contract {
   protected _units: Map<Tagable, ContractCall> = new Map();
@@ -29,11 +33,11 @@ export class MulticallContract extends Contract {
   protected _rawData: Map<Tagable, string> = new Map();
   protected _callsSuccess: Map<Tagable, boolean> = new Map();
   protected _lastSuccess: boolean | undefined;
-  protected _isExecuting: boolean = false;
+  protected _isExecuting = false;
   protected _multicallOptions: MulticallOptions = {};
 
   constructor(
-    driver: JsonRpcProvider | FallbackProvider | WebSocketProvider | Wallet,
+    driver: Signer | Provider,
     options: MulticallOptions = {},
     multicallAddress: string = MULTICALL_ADDRESS,
   ) {
@@ -65,9 +69,10 @@ export class MulticallContract extends Contract {
     this._lastSuccess = undefined;
   }
 
-  public add(tags: MulticallTags, contractCall: ContractCall): MulticallTags {
-    this._units.set(normalizeTags(tags), contractCall);
-    return tags;
+  public add(tags: MulticallTags, contractCall: ContractCall): Tagable {
+    const nTags = normalizeTags(tags);
+    this._units.set(nTags, contractCall);
+    return nTags;
   }
 
   public get tags(): Tagable[] {
@@ -117,28 +122,20 @@ export class MulticallContract extends Contract {
   public getSingle<T>(tags: MulticallTags): T | undefined {
     const data = this.getPreparedData(normalizeTags(tags));
     if (!data) return undefined;
-    const [value] = data.call.contractInterface.decodeFunctionResult(data.call.method, data.rawData);
+    const [value] = data.call.contractInterface.decodeFunctionResult(
+      data.call.method,
+      data.rawData,
+    );
     return value;
   }
 
-  public getArray<T>(tags: MulticallTags, deep: boolean = false): T | undefined {
+  public getArray<T>(tags: MulticallTags, deep = false): T | undefined {
     const data = this.getPreparedData(normalizeTags(tags));
     if (!data) return undefined;
-    const [array] = data.call.contractInterface.decodeFunctionResult(data.call.method, data.rawData).toArray(deep);
+    const [array] = data.call.contractInterface
+      .decodeFunctionResult(data.call.method, data.rawData)
+      .toArray(deep);
     return array;
-  }
-
-  private processResponse(response: Response[], tags: Tagable[]): boolean {
-    // Process response of view-function (static)
-    this._response = response;
-    this._lastSuccess = true;
-    response.forEach(([success, data]: [boolean, string], index: number) => {
-      const tag = tags[index];
-      if (!success) this._lastSuccess = false;
-      this._rawData.set(tag!, data);
-      this._callsSuccess.set(tag!, success);
-    });
-    return this._lastSuccess;
   }
 
   public async run(options: Partial<MulticallOptions> = {}): Promise<boolean> {
@@ -179,27 +176,47 @@ export class MulticallContract extends Contract {
       }
 
       // Process mutable
-      for (let i = 0; i < mutableCalls.length; i += runOptions.maxMutableCallsStack!) {
+      for (
+        let i = 0;
+        i < mutableCalls.length;
+        i += runOptions.maxMutableCallsStack!
+      ) {
         checkSignals(runOptions.signals);
 
-        const border = Math.min(i + runOptions.maxMutableCallsStack!, mutableCalls.length);
+        const border = Math.min(
+          i + runOptions.maxMutableCallsStack!,
+          mutableCalls.length,
+        );
         const iterationCalls = mutableCalls.slice(i, border);
         const iterationIndexes = mutableIndexes.slice(i, border);
 
-        const iterationResponse = await this.processMutableCalls(iterationCalls, runOptions);
+        const iterationResponse = await this.processMutableCalls(
+          iterationCalls,
+          runOptions,
+        );
 
         this.saveResponse(iterationResponse, iterationIndexes, tags);
       }
 
       // Process static
-      for (let i = 0; i < staticCalls.length; i += runOptions.maxStaticCallsStack!) {
+      for (
+        let i = 0;
+        i < staticCalls.length;
+        i += runOptions.maxStaticCallsStack!
+      ) {
         checkSignals(runOptions.signals);
 
-        const border = Math.min(i + runOptions.maxStaticCallsStack!, staticCalls.length);
+        const border = Math.min(
+          i + runOptions.maxStaticCallsStack!,
+          staticCalls.length,
+        );
         const iterationCalls = staticCalls.slice(i, border);
         const iterationIndexes = staticIndexes.slice(i, border);
 
-        const iterationResponse = (await this.processStaticCalls(iterationCalls, runOptions)) as MulticallResponse[];
+        const iterationResponse = (await this.processStaticCalls(
+          iterationCalls,
+          runOptions,
+        )) as MulticallResponse[];
 
         this.saveResponse(iterationResponse, iterationIndexes, tags);
       }
@@ -212,7 +229,10 @@ export class MulticallContract extends Contract {
     return this._lastSuccess ?? false;
   }
 
-  private async processStaticCalls(iterationCalls: ContractCall[], runOptions: MulticallOptions) {
+  private async processStaticCalls(
+    iterationCalls: ContractCall[],
+    runOptions: MulticallOptions,
+  ) {
     const result = await this.call(aggregate3, [iterationCalls], {
       forceMutability: CallMutability.Static,
       signals: runOptions.signals,
@@ -228,7 +248,7 @@ export class MulticallContract extends Contract {
     runOptions: MulticallOptions,
   ): Promise<MulticallResponse[]> {
     let result;
-    const tx = (await this.call('aggregate3', [iterationCalls], {
+    const tx = (await this.call("aggregate3", [iterationCalls], {
       forceMutability: CallMutability.Mutable,
       highPriorityTx: runOptions.highPriorityTxs,
       priorityOptions: runOptions.priorityOptions,
@@ -236,7 +256,10 @@ export class MulticallContract extends Contract {
       timeoutMs: runOptions.mutableCallsTimeoutMs,
     })) as TransactionResponse;
     if (runOptions.waitForTxs) {
-      const receipt = await raceWithSignals(() => tx.wait(), runOptions.signals);
+      const receipt = await raceWithSignals(
+        () => tx.wait(),
+        runOptions.signals,
+      );
       if (!receipt) {
         result = Array(iterationCalls.length).fill([false, null]);
         this._lastSuccess = false;
@@ -261,7 +284,7 @@ export class MulticallContract extends Contract {
       const globalIndex = iterationIndexes[index];
       const tag = globalTags[globalIndex!]; // Normalized
       if (!success) this._lastSuccess = false;
-      if (typeof data === 'string') {
+      if (typeof data === "string") {
         this._rawData.set(tag!, data);
       }
       if (success) {
