@@ -21,12 +21,12 @@ describe("MarketMethods", () => {
   });
 
   test("should calculate the correct borrow APR", async () => {
-    const percents = market.borrowApr;
+    const percents = market.borrowApr.toFixed(PERCENT_PRECISION);
     expect(percents).to.be.match(percentsReg);
   });
 
   test("should calculate the correct supply APR", () => {
-    const percents = market.supplyApr;
+    const percents = market.supplyApr.toFixed(PERCENT_PRECISION);
     expect(percents).to.be.match(percentsReg);
   });
 });
