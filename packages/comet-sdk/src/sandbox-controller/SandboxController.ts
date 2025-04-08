@@ -21,8 +21,10 @@ export class SandboxController implements ISandboxController {
 
     this.daoAddress = controllerData.daoAddress;
     this.multisigAddress = controllerData.multisigAddress;
-    this.suggestedAmountOfSeedReserves = controllerData.suggestedAmountOfSeedReserves;
-    this.suggestedLockTimeOfSeedReserves = controllerData.suggestedLockTimeOfSeedReserves;
+    this.suggestedAmountOfSeedReserves =
+      controllerData.suggestedAmountOfSeedReserves;
+    this.suggestedLockTimeOfSeedReserves =
+      controllerData.suggestedLockTimeOfSeedReserves;
     this.minUpdateTime = controllerData.minUpdateTime;
     this.feeEnabled = controllerData.feeEnabled;
     this.treasuryAddress = controllerData.treasuryAddress;

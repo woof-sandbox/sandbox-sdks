@@ -1,16 +1,29 @@
-import {BigNumberish, ethers, JsonRpcProvider, Wallet, WebSocketProvider} from "ethers";
+import { Contract } from "@sandbox/contracts-tools-sdk-ethers";
+import type { BigNumberish, Provider, Signer, ethers } from "ethers";
 import { CometAbi } from "../abis";
 import type { ContractCall } from "./entities";
-import { Contract } from "@sandbox/contracts-tools-sdk-ethers";
 
 export class CometContract extends Contract {
-  constructor(address?: string, driver?: JsonRpcProvider | WebSocketProvider | Wallet) {
+  constructor(address?: string, driver?: Provider | Signer) {
     super(CometAbi, address, driver);
   }
 
-  async getUtilization(): Promise<bigint> {
-    return this.call<bigint>("getUtilization");
+  getUtilization(): Promise<bigint> {
+    return this.call("getUtilization");
   }
+  getUtilizationCall(): ContractCall {
+    return this.getCall("getUtilization");
+  }
+  numAssets(): Promise<bigint> {
+    return this.call("numAssets");
+  }
+  getNumAssetsCall(): ContractCall {
+    return this.getCall("numAssets");
+  }
+  getAssetInfoCall(index: number): ContractCall {
+    return this.getCall("getAssetInfo", [index]);
+  }
+
   getBorrowRateCall(utilization: BigNumberish): ContractCall {
     return this.getCall("getBorrowRate", [utilization]);
   }
@@ -30,16 +43,13 @@ export class CometContract extends Contract {
   getBaseTokenCall(): ContractCall {
     return this.getCall("baseToken");
   }
-
   //
-
   async isAllowed(owner: string, bulker: string): Promise<boolean> {
     return this.call<boolean>("isAllowed", [owner, bulker]);
   }
   isAllowedCall(owner: string, bulker: string): ContractCall {
     return this.getCall("isAllowed", [owner, bulker]);
   }
-
   async allow(
     bulker: string,
     status: boolean,
@@ -49,9 +59,7 @@ export class CometContract extends Contract {
   allowCall(bulker: string, status: boolean): ContractCall {
     return this.getCall("allow", [bulker, status]);
   }
-
   //
-
   getBorrowBalanceOfCall(userAddress: string): ContractCall {
     return this.getCall("borrowBalanceOf", [userAddress]);
   }
@@ -60,5 +68,55 @@ export class CometContract extends Contract {
   }
   getLiquidationFactorCall(): ContractCall {
     return this.getCall("getLiquidationFactor");
+  }
+
+  // CURVE
+
+  getSupplyKinkCall(): ContractCall {
+    return this.getCall("supplyKink");
+  }
+  getSupplyPerSecondInterestRateSlopeLowCall(): ContractCall {
+    return this.getCall("supplyPerSecondInterestRateSlopeLow");
+  }
+  getSupplyPerSecondInterestRateSlopeHighCall(): ContractCall {
+    return this.getCall("supplyPerSecondInterestRateSlopeHigh");
+  }
+  getSupplyPerSecondInterestRateBaseCall(): ContractCall {
+    return this.getCall("supplyPerSecondInterestRateSlopeBase");
+  }
+
+  getBorrowKinkCall(): ContractCall {
+    return this.getCall("borrowKink");
+  }
+  getBorrowPerSecondInterestRateSlopeLowCall(): ContractCall {
+    return this.getCall("borrowPerSecondInterestRateSlopeLow");
+  }
+  getBorrowPerSecondInterestRateSlopeHighCall(): ContractCall {
+    return this.getCall("borrowPerSecondInterestRateSlopeHigh");
+  }
+  getBorrowPerSecondInterestRateBaseCall(): ContractCall {
+    return this.getCall("borrowPerSecondInterestRateSlopeBase");
+  }
+
+  // BASE
+
+  getBaseTokenPriceFeedCall(): ContractCall {
+    return this.getCall("baseTokenPriceFeed");
+  }
+  getPriceCall(priceFeedAddress: string): ContractCall {
+    return this.getCall("getPrice", [priceFeedAddress]);
+  }
+  getBaseMinForRewardsCall(): ContractCall {
+    return this.getCall("baseMinForRewards");
+  }
+  getBaseTrackingBorrowSpeedCall(): ContractCall {
+    return this.getCall("baseTrackingBorrowSpeed");
+  }
+  getBaseTrackingSupplySpeedCall(): ContractCall {
+    return this.getCall("baseTrackingSupplySpeed");
+  }
+  getBaseIndexScaleCall(): ContractCall {
+    // Requires additional ABI. Works while it is not showing on scan
+    return this.getCall("baseIndexScale");
   }
 }

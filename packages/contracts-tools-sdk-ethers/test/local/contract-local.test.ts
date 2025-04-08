@@ -1,17 +1,22 @@
-import { describe, expect, test } from 'vitest';
-import { waitForAddressTxs } from '../../src/helpers';
-import { MulticallContract } from '../../src';
-import { AsyncAbortController, MULTICALL_ADDRESS, SimpleStorage, WALLET } from './local.stub';
+import { describe, expect, test } from "vitest";
+import { MulticallContract } from "../../src";
+import { waitForAddressTxs } from "../../src/helpers";
+import {
+  AsyncAbortController,
+  MULTICALL_ADDRESS,
+  SimpleStorage,
+  WALLET,
+} from "./local.stub";
 
 const storage = new SimpleStorage(WALLET);
 
 // noinspection t
-describe('Local Test of Contract', () => {
-  test('Test of listenEvent', async () => {
+describe("Local Test of Contract", () => {
+  test("Test of listenEvent", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
     let counter = 0;
     storage
-      .listenEvent('FirstChanged', () => {
+      .listenEvent("FirstChanged", () => {
         counter++;
       })
       .catch(console.error);
@@ -35,14 +40,14 @@ describe('Local Test of Contract', () => {
     expect(counter).to.be.gte(10);
   });
 
-  test('Test of logs', async () => {
+  test("Test of logs", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
     const logs = await storage.getLogs(-10);
 
     expect(logs.length).to.be.gt(0);
   });
 
-  test('Test of calls abort - timeout', async () => {
+  test("Test of calls abort - timeout", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
     let error;
     try {
@@ -55,7 +60,7 @@ describe('Local Test of Contract', () => {
     }
     expect((error as Error).message).to.match(/aborted/);
   });
-  test('Test of calls abort - signals', async () => {
+  test("Test of calls abort - signals", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
     const controller = new AsyncAbortController();
     let error;
@@ -69,7 +74,7 @@ describe('Local Test of Contract', () => {
     }
     expect((error as Error).message).to.match(/aborted/);
   });
-  test('Test of logs abort - signals', async () => {
+  test("Test of logs abort - signals", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
     const controller = new AsyncAbortController();
     let error;

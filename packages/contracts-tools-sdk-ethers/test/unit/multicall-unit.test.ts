@@ -1,13 +1,14 @@
-import { describe, expect, test } from 'vitest';
-import { CONTRACTS_ERRORS, MULTICALL_ERRORS } from '../../src/errors';
-import { MulticallContract } from '../../src';
-import { JSON_PROVIDER, RegistryContract } from '../stub';
+import { describe, expect, test } from "vitest";
+import { MulticallContract } from "../../src";
+import { CONTRACTS_ERRORS, MULTICALL_ERRORS } from "../../src/errors";
+import { JSON_PROVIDER, RegistryContract } from "../stub";
+
 
 const registryProvider = new RegistryContract(JSON_PROVIDER);
 const multicallProvider = new MulticallContract(JSON_PROVIDER);
 
-describe('Test Multicall Unit', () => {
-  test('Multicall should recognize static properly', () => {
+describe("Test Multicall Unit", () => {
+  test("Multicall should recognize static properly", () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(multicallProvider.static).to.be.true;
     multicallProvider.add(0, registryProvider.getOwnerCall());
@@ -18,7 +19,7 @@ describe('Test Multicall Unit', () => {
     expect(multicallProvider.static).to.be.false;
   });
 
-  test('Provider should not process write call', async () => {
+  test("Provider should not process write call", async () => {
     let error;
     try {
       multicallProvider.add(1, registryProvider.getRenounceOwnershipCall());
@@ -31,7 +32,7 @@ describe('Test Multicall Unit', () => {
     expect(multicallProvider.static).to.be.false;
   });
 
-  test('Should be cleared completely', () => {
+  test("Should be cleared completely", () => {
     multicallProvider.clear();
     expect(multicallProvider.calls.length).to.be.equal(0);
     expect(multicallProvider.tags.length).to.be.equal(0);
@@ -39,7 +40,7 @@ describe('Test Multicall Unit', () => {
     expect(multicallProvider.success).to.be.undefined;
   });
 
-  test('Should not allow simultaneous run', async () => {
+  test("Should not allow simultaneous run", async () => {
     let error;
     try {
       multicallProvider.add(1, registryProvider.getOwnerCall());

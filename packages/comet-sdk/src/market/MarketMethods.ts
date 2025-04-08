@@ -28,31 +28,23 @@ export namespace MarketMethods {
   }
   //
   export function totalEarned(
-    baseTokenPrice: number,
+    baseTokenPrice: string,
     marketTotalSupply: bigint, // or base total supply (takes from market)
   ): bigint {
     return BigInt(
       formatUnits(
-        marketTotalSupply *
-          parseUnits(
-            baseTokenPrice.toFixed(PRICE_FEED_MANTISSA),
-            PRICE_FEED_MANTISSA,
-          ),
+        marketTotalSupply * parseUnits(baseTokenPrice, PRICE_FEED_MANTISSA),
         PRICE_FEED_MANTISSA,
       ),
     );
   }
   export function totalBorrowed(
-    baseTokenPrice: number,
+    baseTokenPrice: string,
     marketTotalBorrow: bigint,
   ): bigint {
     return BigInt(
       formatUnits(
-        marketTotalBorrow *
-          parseUnits(
-            baseTokenPrice.toFixed(PRICE_FEED_MANTISSA),
-            PRICE_FEED_MANTISSA,
-          ),
+        marketTotalBorrow * parseUnits(baseTokenPrice, PRICE_FEED_MANTISSA),
         PRICE_FEED_MANTISSA,
       ),
     );
@@ -70,11 +62,11 @@ export namespace MarketMethods {
   function tokenRewardApr(
     // supply or borrow, comp or just token
     tokenPrice: number, // USD
-    tokenDecimals: number,
+    tokenDecimals: bigint,
     tokenToUsersPerDay: bigint, // "toUsers" means "toBorrowers" or "toSuppliers"
     baseTotalBorrowOrSupply: bigint, // comet total supply or borrow
     basePriceInUsd: number,
-    baseDecimals: number,
+    baseDecimals: bigint,
   ): number {
     // returns percents
     const nTokenToUsersPerDay = Number(
@@ -118,28 +110,27 @@ export namespace MarketMethods {
     rewardTokens: IToken[],
     borrowOrSupplyApr: number,
   ): number[] {
-
     const tokenToUsers = tokensToUsersPerDay(
       baseTrackingBorrowOrSupplySpeed,
       baseToken.baseIndexScale,
     ); // ?: same for rewards and comp?
 
     const compApr = tokenRewardApr(
-      compToken.price,
+      Number(compToken.price),
       compToken.decimals,
       tokenToUsers,
       baseTotalBorrowOrSupply,
-      baseToken.price,
+      Number(baseToken.price),
       baseToken.decimals,
     );
 
     const tokenRewardAprs = rewardTokens.map((token) =>
       tokenRewardApr(
-        token.price,
+        Number(token.price),
         token.decimals,
         tokenToUsers,
         baseTotalBorrowOrSupply,
-        baseToken.price,
+        Number(baseToken.price),
         baseToken.decimals,
       ),
     );
@@ -168,7 +159,14 @@ export namespace MarketMethods {
     rewardTokens: IToken[],
     supplyApr: number,
   ): number[] {
-    return calcNetAprs(baseToken, baseToken.baseTrackingSupplySpeed, totalSupplied, compToken, rewardTokens, supplyApr);
+    return calcNetAprs(
+      baseToken,
+      baseToken.baseTrackingSupplySpeed,
+      totalSupplied,
+      compToken,
+      rewardTokens,
+      supplyApr,
+    );
   }
   /**
    * Calculates the net earned APR for borrowed tokens, including the compound token and reward tokens.
@@ -185,12 +183,19 @@ export namespace MarketMethods {
    *   - The subsequent elements are the APRs for each reward token (tokenRewardAprs[]).
    */
   export function netBorrowAprs(
-      baseToken: IBase,
-      totalBorrowed: bigint,
-      compToken: IToken,
-      rewardTokens: IToken[],
-      borrowApr: number,
+    baseToken: IBase,
+    totalBorrowed: bigint,
+    compToken: IToken,
+    rewardTokens: IToken[],
+    borrowApr: number,
   ): number[] {
-    return calcNetAprs(baseToken, baseToken.baseTrackingSupplySpeed, totalBorrowed, compToken, rewardTokens, borrowApr);
+    return calcNetAprs(
+      baseToken,
+      baseToken.baseTrackingSupplySpeed,
+      totalBorrowed,
+      compToken,
+      rewardTokens,
+      borrowApr,
+    );
   }
 }

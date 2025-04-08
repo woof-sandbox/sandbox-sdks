@@ -1,5 +1,5 @@
-import { CallMutability } from '../call-mutability';
-import { PriorityCallOptions } from '../priority-call-options';
+import type { CallMutability } from "../call-mutability";
+import type { PriorityCallOptions } from "../priority-call-options";
 
 export interface MulticallOptions {
   forceMutability?: CallMutability;

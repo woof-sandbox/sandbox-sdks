@@ -1,5 +1,5 @@
-import { Signer } from 'ethers';
+import type { Signer } from "ethers";
 
 export const isSigner = (driver: Signer) => {
-  return typeof driver?.getAddress === 'function';
+  return typeof driver?.getAddress === "function";
 };
