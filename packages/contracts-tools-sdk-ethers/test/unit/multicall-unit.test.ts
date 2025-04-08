@@ -3,6 +3,7 @@ import { MulticallContract } from "../../src";
 import { CONTRACTS_ERRORS, MULTICALL_ERRORS } from "../../src/errors";
 import { JSON_PROVIDER, RegistryContract } from "../stub";
 
+
 const registryProvider = new RegistryContract(JSON_PROVIDER);
 const multicallProvider = new MulticallContract(JSON_PROVIDER);
 
