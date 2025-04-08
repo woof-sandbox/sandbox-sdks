@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { CONTRACTS_ERRORS, MULTICALL_ERRORS } from "../../src/errors";
 import { MulticallContract } from "../../src";
+import { CONTRACTS_ERRORS, MULTICALL_ERRORS } from "../../src/errors";
 import { JSON_PROVIDER, RegistryContract } from "../stub";
 
 const registryProvider = new RegistryContract(JSON_PROVIDER);

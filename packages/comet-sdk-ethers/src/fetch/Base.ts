@@ -1,7 +1,8 @@
-import { Base } from "@sandbox/comet-sdk/src/token";
+import { Base } from "@sandbox/comet-sdk";
+import { MulticallContract } from "@sandbox/contracts-tools-sdk-ethers";
 import { type Provider, type Signer, formatUnits } from "ethers";
 import { PRICE_FEED_FACTOR_UNITS } from "../constants";
-import { CometContract, Erc20Contract, MulticallContract } from "../contracts";
+import { CometContract, Erc20Contract } from "../contracts";
 import { MULTICALL_ERRORS } from "../errors/multicall";
 import { fetchCurves, fetchCurvesMocks } from "./Curve";
 
