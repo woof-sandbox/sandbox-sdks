@@ -20,11 +20,12 @@ export class Market implements IMarket {
   public ownerAddress: string;
   public guardianAddress: string;
   public curatorAddress: string;
-  public feeDistribution: number;
+  public curatorFee: number;
   //
   public proposals: IMarketProposalTx[];
-  //
-  public comp: IToken; // !: changed to reward token
+  //  added reward tokens (always several tokens (from DAO one (decide itself with inner mechanics) & owner of Config Controller decision))
+  public compToken: IToken;
+  public rewardTokens: IToken[];
 
   constructor(marketData: IMarket) {
     this.cometAddress = marketData.cometAddress;
@@ -43,11 +44,12 @@ export class Market implements IMarket {
     this.ownerAddress = marketData.ownerAddress;
     this.guardianAddress = marketData.guardianAddress;
     this.curatorAddress = marketData.curatorAddress;
-    this.feeDistribution = marketData.feeDistribution;
+    this.curatorFee = marketData.curatorFee;
     //
     this.proposals = marketData.proposals;
     //
-    this.comp = marketData.comp;
+    this.compToken = marketData.compToken;
+    this.rewardTokens = marketData.rewardTokens;
   }
 
   get borrowApr(): number {
@@ -57,57 +59,33 @@ export class Market implements IMarket {
     return MarketMethods.calcApr(this.supplyRate);
   }
 
-  get marketPrice(): number {
-    return this.baseToken.price; // or specific for eth
+  get price(): string {
+    return this.baseToken.price;
   }
 
-  get totalEarning(): bigint {
-    return MarketMethods.totalEarning(
-      this.baseToken.symbol,
-      this.baseToken.price,
-      this.totalSupply,
-    );
+  get totalEarned(): bigint {
+    return MarketMethods.totalEarned(this.baseToken.price, this.totalSupply);
   }
   get totalBorrowed(): bigint {
-    return MarketMethods.totalBorrowed(
-      this.baseToken.symbol,
-      this.baseToken.price,
-      this.totalBorrow,
-    );
+    return MarketMethods.totalBorrowed(this.baseToken.price, this.totalBorrow);
   }
 
-  get netEarnApr(): number {
-    // !: should be rethought
-    const compToSuppliersPerDay = MarketMethods.compToSuppliersPerDay(
-      this.baseToken.baseTrackingSupplySpeed,
-      this.baseToken.baseIndexScale,
+  get netEarnAprs(): number[] {
+    return MarketMethods.netBorrowAprs(
+      this.baseToken,
+      this.totalEarned,
+      this.compToken,
+      this.rewardTokens,
+      this.borrowApr,
     );
-    const supplyCompRewardApr = MarketMethods.supplyCompRewardApr(
-      this.comp.price, // in usd
-      this.comp.decimals,
-      compToSuppliersPerDay,
-      this.totalSupply,
-      this.baseToken.price,
-      this.baseToken.decimals,
-    );
-
-    return MarketMethods.netEarnApr(this.supplyApr, supplyCompRewardApr);
   }
-  get netBorrowApr(): number {
-    // !: should be rethought
-    const compToBorrowersPerDay = MarketMethods.compToBorrowersPerDay(
-      this.baseToken.baseTrackingBorrowSpeed,
-      this.baseToken.baseIndexScale,
-    );
-    const borrowCompRewardApr = MarketMethods.borrowCompRewardApr(
-      this.comp.price,
-      this.comp.decimals,
-      compToBorrowersPerDay,
+  get netBorrowAprs(): number[] {
+    return MarketMethods.netBorrowAprs(
+      this.baseToken,
       this.totalBorrowed,
-      this.baseToken.price,
-      this.baseToken.decimals,
+      this.compToken,
+      this.rewardTokens,
+      this.borrowApr,
     );
-
-    return MarketMethods.netBorrowApr(this.borrowApr, borrowCompRewardApr);
   }
 }

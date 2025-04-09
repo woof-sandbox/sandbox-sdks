@@ -19,9 +19,10 @@ export interface IMarket {
   ownerAddress: string; // address, mock: --
   guardianAddress: string; // address, mock: --
   curatorAddress: string; // mock: --
-  feeDistribution: number; // percents, mock: --
+  curatorFee: number; // percents, (if == 0, then all fee goes to the owner)
   //
   proposals: IMarketProposalTx[];
   //
-  comp: IToken; // --
+  compToken: IToken; // --
+  rewardTokens: IToken[];
 }

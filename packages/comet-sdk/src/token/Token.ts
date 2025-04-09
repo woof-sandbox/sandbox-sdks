@@ -3,8 +3,8 @@ import type { IToken } from "./IToken";
 export class Token implements IToken {
   public tokenAddress: string;
   public symbol: string;
-  public decimals: number;
-  public price: number;
+  public decimals: bigint; // number
+  public price: string; // number
   public priceFeedAddress: string;
 
   constructor(tokenData: IToken) {

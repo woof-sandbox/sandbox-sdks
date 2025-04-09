@@ -2,17 +2,17 @@ import { formatUnits, parseUnits } from "ethers";
 import {
   COMET_FACTOR_DECIMALS,
   DAYS_PER_YEAR,
-  ETH_SYMBOLS,
   PRICE_FEED_MANTISSA,
   SECONDS_PER_DAY,
   SECONDS_PER_YEAR,
 } from "../constants";
+import type { IBase, IToken } from "../token";
 
 /**
  * Namespace of utility functions to ease market-related calculations.
  */
 export namespace MarketMethods {
-  export function getAprCoef(rate = 0n): number {
+  function getAprCoef(rate = 0n): number {
     // Returns 0.xx format value
     // Borrow APR(%)= Borrow Rate / (10 ^ 18) * Seconds Per Year * 100
     // https://docs.compound.finance/interest-rates/
@@ -27,122 +27,175 @@ export namespace MarketMethods {
     return getAprCoef(rate) * 100;
   }
   //
-  export function totalEarning(
-    baseTokenSymbol: string,
-    baseTokenPrice: number,
-    marketTotalSupply: bigint,
+  export function totalEarned(
+    baseTokenPrice: string,
+    marketTotalSupply: bigint, // or base total supply (takes from market)
   ): bigint {
-    // If the base asset is ETH or wstETH, its value is converted to USD based on the current price (baseToken.price).
-    // For other assets, the value remains unchanged.
-    if (ETH_SYMBOLS.includes(baseTokenSymbol)) {
-      return BigInt(
-        formatUnits(
-          marketTotalSupply *
-            parseUnits(
-              baseTokenPrice.toFixed(PRICE_FEED_MANTISSA),
-              PRICE_FEED_MANTISSA,
-            ),
-          PRICE_FEED_MANTISSA,
-        ),
-      );
-    }
-    return marketTotalSupply;
+    return BigInt(
+      formatUnits(
+        marketTotalSupply * parseUnits(baseTokenPrice, PRICE_FEED_MANTISSA),
+        PRICE_FEED_MANTISSA,
+      ),
+    );
   }
   export function totalBorrowed(
-    baseTokenSymbol: string,
-    baseTokenPrice: number,
+    baseTokenPrice: string,
     marketTotalBorrow: bigint,
   ): bigint {
-    // If the base asset is ETH or wstETH, its value is converted to USD based on the current price (baseToken.price).
-    // For other assets, the value remains unchanged.
-    if (ETH_SYMBOLS.includes(baseTokenSymbol)) {
-      return BigInt(
-        formatUnits(
-          marketTotalBorrow *
-            parseUnits(
-              baseTokenPrice.toFixed(PRICE_FEED_MANTISSA),
-              PRICE_FEED_MANTISSA,
-            ),
-          PRICE_FEED_MANTISSA,
-        ),
-      );
-    }
-    return marketTotalBorrow;
+    return BigInt(
+      formatUnits(
+        marketTotalBorrow * parseUnits(baseTokenPrice, PRICE_FEED_MANTISSA),
+        PRICE_FEED_MANTISSA,
+      ),
+    );
   }
-  // netEarnAPR
-  export function compToSuppliersPerDay(
-    baseTrackingSupplySpeed: bigint,
+  //
+  //// NET calculations
+  //
+  function tokensToUsersPerDay(
+    baseTrackingSpeed: bigint, // baseTrackingSupplySpeed or baseTrackingBorrowSpeed
     baseIndexScale: bigint,
   ): bigint {
-    return (baseTrackingSupplySpeed / baseIndexScale) * BigInt(SECONDS_PER_DAY);
+    // "toUsers" means "toBorrowers" or "toSuppliers"
+    return (baseTrackingSpeed / baseIndexScale) * BigInt(SECONDS_PER_DAY);
   }
-  export function supplyCompRewardApr(
-    compPriceInUsd: number, // ?: rename
-    compDecimals: number,
-    compToSuppliersPerDay: bigint,
-    baseTotalSupply: bigint, // comet total supply
-    basePriceInUsd: number, // ?: rename
-    baseDecimals: number,
+  function tokenRewardApr(
+    // supply or borrow, comp or just token
+    tokenPrice: number, // USD
+    tokenDecimals: bigint,
+    tokenToUsersPerDay: bigint, // "toUsers" means "toBorrowers" or "toSuppliers"
+    baseTotalBorrowOrSupply: bigint, // comet total supply or borrow
+    basePriceInUsd: number,
+    baseDecimals: bigint,
   ): number {
     // returns percents
-    const nCompToSuppliersPerDay = Number(
-      formatUnits(compToSuppliersPerDay, compDecimals),
+    const nTokenToUsersPerDay = Number(
+      formatUnits(tokenToUsersPerDay, tokenDecimals),
     );
-    const nBaseTotalSupply = Number(formatUnits(baseTotalSupply, baseDecimals));
-
-    if (nBaseTotalSupply === 0 || basePriceInUsd === 0) {
-      return 0;
-    }
-
-    const coefficient =
-      ((compPriceInUsd * nCompToSuppliersPerDay) /
-        (nBaseTotalSupply * basePriceInUsd)) *
-      DAYS_PER_YEAR;
-    return coefficient * 100;
-  }
-  export function netEarnApr(
-    supplyApr: number,
-    supplyCompRewardApr: number,
-  ): number {
-    // returns percents
-    return supplyApr + supplyCompRewardApr;
-  }
-  // netBorrowApr
-  export function compToBorrowersPerDay(
-    baseTrackingBorrowSpeed: bigint,
-    baseIndexScale: bigint,
-  ): bigint {
-    return (baseTrackingBorrowSpeed / baseIndexScale) * BigInt(SECONDS_PER_DAY);
-  }
-  export function borrowCompRewardApr(
-    compPriceInUsd: number, // ?: rename
-    compDecimals: number,
-    compToBorrowersPerDay: bigint,
-    baseTotalBorrow: bigint, // comet total supply
-    basePriceInUsd: number, // ?: rename
-    baseDecimals: number,
-  ): number {
-    // returns percents
-    const nCompToBorrowersPerDay = Number(
-      formatUnits(compToBorrowersPerDay, compDecimals),
+    const nBaseTotalBorrow = Number(
+      formatUnits(baseTotalBorrowOrSupply, baseDecimals),
     );
-    const nBaseTotalBorrow = Number(formatUnits(baseTotalBorrow, baseDecimals));
 
     if (nBaseTotalBorrow === 0 || basePriceInUsd === 0) {
       return 0;
     }
 
     const coefficient =
-      ((compPriceInUsd * nCompToBorrowersPerDay) /
+      ((tokenPrice * nTokenToUsersPerDay) /
         (nBaseTotalBorrow * basePriceInUsd)) *
       DAYS_PER_YEAR;
     return coefficient * 100;
   }
-  export function netBorrowApr(
+
+  /**
+   * Calculates the APRs for borrow/supply, comp, and reward tokens.
+   *
+   * @param baseToken - The base token (e.g., the token being borrowed or supplied).
+   * @param baseTrackingBorrowOrSupplySpeed - The tracking speed for borrowing or supplying.
+   * @param baseTotalBorrowOrSupply - The total amount borrowed or supplied in the market.
+   * @param compToken - The compound token used for rewards.
+   * @param rewardTokens - Array of reward tokens (could be either supply or borrow tokens).
+   * @param borrowOrSupplyApr - The APR for borrowing or supplying taken from the market.
+   *
+   * @returns An array where:
+   *   - The first element is the APR for borrowing or supplying.
+   *   - The second element is the APR for the compound token (compApr).
+   *   - The subsequent elements are the APRs for each reward token (tokenRewardAprs[]).
+   */
+  export function calcNetAprs(
+    baseToken: IBase,
+    baseTrackingBorrowOrSupplySpeed: bigint,
+    baseTotalBorrowOrSupply: bigint, // Market totalBorrowed or totalSupplied
+    compToken: IToken,
+    rewardTokens: IToken[],
+    borrowOrSupplyApr: number,
+  ): number[] {
+    const tokenToUsers = tokensToUsersPerDay(
+      baseTrackingBorrowOrSupplySpeed,
+      baseToken.baseIndexScale,
+    ); // ?: same for rewards and comp?
+
+    const compApr = tokenRewardApr(
+      Number(compToken.price),
+      compToken.decimals,
+      tokenToUsers,
+      baseTotalBorrowOrSupply,
+      Number(baseToken.price),
+      baseToken.decimals,
+    );
+
+    const tokenRewardAprs = rewardTokens.map((token) =>
+      tokenRewardApr(
+        Number(token.price),
+        token.decimals,
+        tokenToUsers,
+        baseTotalBorrowOrSupply,
+        Number(baseToken.price),
+        baseToken.decimals,
+      ),
+    );
+
+    return [borrowOrSupplyApr, compApr, ...tokenRewardAprs];
+  }
+
+  /**
+   * Calculates the net earned APR for supplied tokens, including the compound token and reward tokens.
+   *
+   * @param baseToken - The base token (e.g., the token being supplied).
+   * @param totalSupplied - The total amount supplied in the market.
+   * @param compToken - The compound token used for rewards.
+   * @param rewardTokens - Array of reward tokens (supply tokens).
+   * @param supplyApr - The APR for supplying tokens taken from the market.
+   *
+   * @returns An array where:
+   *   - The first element is the APR for supplying tokens.
+   *   - The second element is the APR for the compound token (compApr).
+   *   - The subsequent elements are the APRs for each reward token (tokenRewardAprs[]).
+   */
+  export function netEarnAprs(
+    baseToken: IBase,
+    totalSupplied: bigint,
+    compToken: IToken,
+    rewardTokens: IToken[],
+    supplyApr: number,
+  ): number[] {
+    return calcNetAprs(
+      baseToken,
+      baseToken.baseTrackingSupplySpeed,
+      totalSupplied,
+      compToken,
+      rewardTokens,
+      supplyApr,
+    );
+  }
+  /**
+   * Calculates the net earned APR for borrowed tokens, including the compound token and reward tokens.
+   *
+   * @param baseToken - The base token (e.g., the token being borrowed).
+   * @param totalBorrowed - The total amount borrowed in the market.
+   * @param compToken - The compound token used for rewards.
+   * @param rewardTokens - Array of reward tokens (borrow tokens).
+   * @param borrowApr - The APR for borrowing tokens taken from the market.
+   *
+   * @returns An array where:
+   *   - The first element is the APR for borrowing tokens.
+   *   - The second element is the APR for the compound token (compApr).
+   *   - The subsequent elements are the APRs for each reward token (tokenRewardAprs[]).
+   */
+  export function netBorrowAprs(
+    baseToken: IBase,
+    totalBorrowed: bigint,
+    compToken: IToken,
+    rewardTokens: IToken[],
     borrowApr: number,
-    borrowCompRewardApr: number,
-  ): number {
-    // returns percents
-    return borrowApr + borrowCompRewardApr;
+  ): number[] {
+    return calcNetAprs(
+      baseToken,
+      baseToken.baseTrackingSupplySpeed,
+      totalBorrowed,
+      compToken,
+      rewardTokens,
+      borrowApr,
+    );
   }
 }

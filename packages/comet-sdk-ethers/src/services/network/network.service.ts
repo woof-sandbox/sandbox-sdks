@@ -1,4 +1,9 @@
-import { AbstractProvider, FallbackProvider, JsonRpcProvider, WebSocketProvider } from "ethers/providers";
+import {
+  type AbstractProvider,
+  FallbackProvider,
+  JsonRpcProvider,
+  WebSocketProvider,
+} from "ethers/providers";
 
 export enum ProviderType {
   JsonRpc = "jsonrpc",
@@ -35,11 +40,21 @@ export interface FallbackRPCConfig {
   stallTimeout?: number;
 }
 
-export type RPCChangeCallback = (rpcUrl: string, chainId: number, providerType: ProviderType) => void;
+export type RPCChangeCallback = (
+  rpcUrl: string,
+  chainId: number,
+  providerType: ProviderType,
+) => void;
 
 export class NetworkService {
-  private rpcConfigs: Record<number, Partial<Record<ProviderType, InternalRPCConfig>>> = {};
-  private fallbackProviders: Record<number, Partial<Record<ProviderType, FallbackProvider>>> = {};
+  private rpcConfigs: Record<
+    number,
+    Partial<Record<ProviderType, InternalRPCConfig>>
+  > = {};
+  private fallbackProviders: Record<
+    number,
+    Partial<Record<ProviderType, FallbackProvider>>
+  > = {};
   private rpcChangeCallbacks: RPCChangeCallback[] = [];
 
   /*
@@ -49,7 +64,9 @@ export class NetworkService {
    */
   public constructor(initialEndpoints: InitialEndpoint[]) {
     initialEndpoints.forEach((endpoint) => {
-      const providerType = endpoint.rpcUrl.startsWith("wss") ? ProviderType.Websocket : ProviderType.JsonRpc;
+      const providerType = endpoint.rpcUrl.startsWith("wss")
+        ? ProviderType.Websocket
+        : ProviderType.JsonRpc;
       const chainId = endpoint.chainId;
       const newEp: EndpointConfig = {
         rpcUrl: endpoint.rpcUrl,
@@ -72,7 +89,7 @@ export class NetworkService {
     });
 
     Object.keys(this.rpcConfigs).forEach((chainIdStr) => {
-      const chainId = parseInt(chainIdStr, 10);
+      const chainId = Number.parseInt(chainIdStr, 10);
       const types = Object.keys(this.rpcConfigs[chainId]!) as ProviderType[];
       types.forEach((pt) => {
         this.updateFallbackProvider(chainId, pt);
@@ -83,7 +100,10 @@ export class NetworkService {
   /**
    * Utility: Creates an ethers provider instance based on the provider type.
    */
-  private createProvider(url: string, providerType: ProviderType): AbstractProvider {
+  private createProvider(
+    url: string,
+    providerType: ProviderType,
+  ): AbstractProvider {
     if (providerType === ProviderType.JsonRpc) {
       return new JsonRpcProvider(url);
     } else if (providerType === ProviderType.Websocket) {
@@ -97,7 +117,10 @@ export class NetworkService {
    * Rebuilds the ethers FallbackProvider for a given chain and provider type
    * based on the current internal configuration.
    */
-  private updateFallbackProvider(chainId: number, providerType: ProviderType): void {
+  private updateFallbackProvider(
+    chainId: number,
+    providerType: ProviderType,
+  ): void {
     const config = this.rpcConfigs[chainId]?.[providerType];
     if (!config) return;
     const endpoints = config.endpoints.map((ep) => ({
@@ -110,13 +133,18 @@ export class NetworkService {
     if (!this.fallbackProviders[chainId]) {
       this.fallbackProviders[chainId] = {};
     }
-    this.fallbackProviders[chainId]![providerType] = new FallbackProvider(endpoints);
+    this.fallbackProviders[chainId]![providerType] = new FallbackProvider(
+      endpoints,
+    );
   }
 
   /**
    * Returns the current RPC URL (active endpoint) for the specified chain and provider type.
    */
-  public getCurrentRPC(chainId: number, providerType: ProviderType): string | undefined {
+  public getCurrentRPC(
+    chainId: number,
+    providerType: ProviderType,
+  ): string | undefined {
     return this.rpcConfigs[chainId]?.[providerType]?.current.rpcUrl;
   }
 
@@ -129,17 +157,26 @@ export class NetworkService {
     rpcUrl: string,
     chainId: number,
     providerType: ProviderType,
-    priority: number = 1,
-    weight: number = 1,
-    stallTimeout: number = 1000
+    priority = 1,
+    weight = 1,
+    stallTimeout = 1000,
   ): void {
     if (!this.rpcConfigs[chainId]) {
       this.rpcConfigs[chainId] = {};
     }
-    const newPrimary: EndpointConfig = { rpcUrl, priority, weight, stallTimeout };
+    const newPrimary: EndpointConfig = {
+      rpcUrl,
+      priority,
+      weight,
+      stallTimeout,
+    };
 
     if (!this.rpcConfigs[chainId]![providerType]) {
-      this.rpcConfigs[chainId]![providerType] = { default: newPrimary, current: newPrimary, endpoints: [newPrimary] };
+      this.rpcConfigs[chainId]![providerType] = {
+        default: newPrimary,
+        current: newPrimary,
+        endpoints: [newPrimary],
+      };
     } else {
       const config = this.rpcConfigs[chainId]![providerType]!;
       config.current = newPrimary;
@@ -175,7 +212,7 @@ export class NetworkService {
       priority?: number;
       weight?: number;
       stallTimeout?: number;
-    }[]
+    }[],
   ): void {
     rpcs.forEach((fallback) => {
       const { rpcUrl, chainId, providerType } = fallback;
@@ -216,15 +253,24 @@ export class NetworkService {
    * When an RPC failure is detected, this method selects the next endpoint in the sorted list (if available)
    * as the new current endpoint, rebuilds the fallback provider, and notifies subscribers.
    */
-  public async handleRPCFailure(chainId: number, providerType: ProviderType): Promise<void> {
+  public async handleRPCFailure(
+    chainId: number,
+    providerType: ProviderType,
+  ): Promise<void> {
     const config = this.rpcConfigs[chainId]?.[providerType];
     if (!config) {
-      console.warn(`No configuration found for chain ${chainId} and type ${providerType}`);
+      console.warn(
+        `No configuration found for chain ${chainId} and type ${providerType}`,
+      );
       return;
     }
-    const currentIndex = config.endpoints.findIndex((ep) => ep.rpcUrl === config.current.rpcUrl);
+    const currentIndex = config.endpoints.findIndex(
+      (ep) => ep.rpcUrl === config.current.rpcUrl,
+    );
     if (currentIndex === -1) {
-      console.warn(`Current endpoint not found in endpoints list for chain ${chainId} and type ${providerType}`);
+      console.warn(
+        `Current endpoint not found in endpoints list for chain ${chainId} and type ${providerType}`,
+      );
       return;
     }
 
@@ -235,7 +281,9 @@ export class NetworkService {
       this.updateFallbackProvider(chainId, providerType);
       this.notifyRPCChange(config.current.rpcUrl, chainId, providerType);
     } else {
-      console.warn(`No further fallback RPC available for chain ${chainId} and type ${providerType}`);
+      console.warn(
+        `No further fallback RPC available for chain ${chainId} and type ${providerType}`,
+      );
     }
     return Promise.resolve();
   }
@@ -243,7 +291,10 @@ export class NetworkService {
   /**
    * Returns all RPC configurations.
    */
-  public getAllRPCConfigs(): Record<number, Partial<Record<ProviderType, InternalRPCConfig>>> {
+  public getAllRPCConfigs(): Record<
+    number,
+    Partial<Record<ProviderType, InternalRPCConfig>>
+  > {
     return this.rpcConfigs;
   }
 
@@ -258,7 +309,13 @@ export class NetworkService {
   /**
    * Notifies all subscribers about an RPC configuration change.
    */
-  private notifyRPCChange(rpcUrl: string, chainId: number, providerType: ProviderType): void {
-    this.rpcChangeCallbacks.forEach((callback) => callback(rpcUrl, chainId, providerType));
+  private notifyRPCChange(
+    rpcUrl: string,
+    chainId: number,
+    providerType: ProviderType,
+  ): void {
+    this.rpcChangeCallbacks.forEach((callback) =>
+      callback(rpcUrl, chainId, providerType),
+    );
   }
 }

@@ -1,4 +1,4 @@
-export const MULTICALL_ADDRESS = "0xcA11bde05977b3631167028862bE2a173976CA11";
+export const MULTICALL_ADDRESS = '0xcA11bde05977b3631167028862bE2a173976CA11';
 
 export const DEFAULT_MULTICALL_WAIT_FOR_TXS = true; // The safest way to handle nonce in transactions
 export const DEFAULT_MULTICALL_ALLOW_FAILURE = false;
@@ -14,3 +14,5 @@ export const DEFAULT_LOGS_DELAY_MS = 1000;
 export const DEFAULT_STATIC_CALLS_TIMEOUT_MS = 10000;
 export const DEFAULT_MUTABLE_CALLS_TIMEOUT_MS = 20000;
 export const DEFAULT_WAIT_CALLS_TIMEOUT_MS = 30000;
+////
+export const SUBGRAPH_PAGE_SIZE = 1000;
