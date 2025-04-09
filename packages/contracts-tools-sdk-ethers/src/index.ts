@@ -2,3 +2,4 @@ export * from "./contract";
 export * from "./multicall";
 export * from "./config";
 export * from "./subgraph";
+export * from "./helpers";
