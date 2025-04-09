@@ -49,10 +49,10 @@ export class BaseContract {
     return class extends this {
       constructor(args: any) {
         super(
-          args.abi ?? abi,
-          args.address ?? address,
-          args.driver ?? driver,
-          args.options ?? options,
+          args?.abi || abi,
+          args?.address || address,
+          args?.driver || driver,
+          args?.options || options,
         );
 
         for (const fragment of Object.values(this.interface.fragments)) {

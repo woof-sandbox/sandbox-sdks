@@ -77,7 +77,7 @@ export class MulticallUnit extends BaseContract {
     this._lastSuccess = undefined;
   }
 
-  public add(tags: MulticallTags, contractCall: ContractCall): MulticallTags {
+  public add(contractCall: ContractCall, tags: MulticallTags): MulticallTags {
     this._units.set(multicallNormalizeTags(tags), contractCall);
     return tags;
   }
