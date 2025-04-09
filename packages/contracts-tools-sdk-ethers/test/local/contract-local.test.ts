@@ -1,54 +1,57 @@
-import { describe, expect, test } from "vitest";
-import { MulticallUnit } from "../../src";
-import { waitForAddressTxs } from "../../src/helpers";
+import { describe, expect, test } from 'vitest';
+import { MulticallUnit, waitForAddressTxs } from '../../src/';
 import {
   AsyncAbortController,
   MULTICALL_ADDRESS,
   SimpleStorage,
   WALLET,
-} from "./local.stub";
+} from './local.mock.js';
 
 const storage = new SimpleStorage(WALLET);
 
-// noinspection t
-describe("Local Test of BaseContract", () => {
-  test("Test of listenEvent", async () => {
+describe('Local BaseContract Tests', () => {
+  test('listens to FirstChanged events emitted during multiple txs', async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
-    let counter = 0;
+
+    let eventCount = 0;
     storage
-      .listenEvent("FirstChanged", () => {
-        counter++;
-      })
-      .catch(console.error);
+        .listenEvent('FirstChanged', () => {
+          eventCount++;
+        })
+        .catch(console.error);
+
     const unit = new MulticallUnit(
-      WALLET,
-      {
-        maxMutableCallsStack: 2,
-        highPriorityTxs: true,
-      },
-      MULTICALL_ADDRESS,
+        WALLET,
+        {
+          maxMutableCallsStack: 2,
+          highPriorityTxs: true,
+        },
+        MULTICALL_ADDRESS
     );
 
     for (let i = 0; i < 10; i++) {
-      unit.add([i], storage.setFirstCall(i));
-      unit.add([i, i], storage.setSecondCall(i));
+      unit.add(storage.setFirstCall(i), [i]);
+      unit.add(storage.setSecondCall(i), [i, i]);
     }
-    const result = await unit.run();
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    expect(result).to.be.true;
 
-    expect(counter).to.be.gte(10);
+    const result = await unit.run();
+    expect(result).to.be.true;
+    expect(eventCount).to.be.gte(10);
   });
 
-  test("Test of logs", async () => {
+  test('writes a value and reads logs from the past 10 blocks', async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
-    const logs = await storage.getLogs(-10);
 
+    const tx: any = await storage.setFirst(90);
+    await tx.wait();
+
+    const logs = await storage.getLogs(-10);
     expect(logs.length).to.be.gt(0);
   });
 
-  test("Test of calls abort - timeout", async () => {
+  test('aborts transaction due to timeout', async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
+
     let error;
     try {
       await storage.setFirst(90, {
@@ -58,29 +61,37 @@ describe("Local Test of BaseContract", () => {
     } catch (err) {
       error = err;
     }
+
     expect((error as Error).message).to.match(/aborted/);
   });
-  test("Test of calls abort - signals", async () => {
+
+  test('aborts transaction using an aborted signal', async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
+
     const controller = new AsyncAbortController();
+    controller.abort();
+
     let error;
     try {
-      controller.abort();
       await storage.setFirst(90, {
         signals: [controller.signal],
       });
     } catch (err) {
       error = err;
     }
+
     expect((error as Error).message).to.match(/aborted/);
   });
-  test("Test of logs abort - signals", async () => {
+
+  test('aborts log fetching using signal during async race', async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
+
     const controller = new AsyncAbortController();
     let error;
+
     try {
       await Promise.all([
-        storage.getLogs(-1000, [], 0, {
+        storage.getLogs(-10, [], 0, {
           signals: [controller.signal],
         }),
         controller.abortAsync(10),
@@ -88,6 +99,7 @@ describe("Local Test of BaseContract", () => {
     } catch (err) {
       error = err;
     }
+
     expect((error as Error).message).to.match(/aborted/);
   });
 });

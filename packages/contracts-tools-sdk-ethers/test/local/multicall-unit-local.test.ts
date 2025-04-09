@@ -1,227 +1,340 @@
-import { TransactionReceipt, TransactionResponse } from "ethers";
-import { describe, expect, test } from "vitest";
-import { MulticallUnit } from "../../src";
-import { waitForAddressTxs } from "../../src/helpers";
+import { TransactionReceipt, TransactionResponse } from 'ethers';
+import { describe, expect, test } from 'vitest';
+import { MulticallUnit, waitForAddressTxs } from '../../src/';
 import {
   AsyncAbortController,
   MULTICALL_ADDRESS,
   SimpleStorage,
+  SimpleStorageAutoClass,
+  SimpleStorageAutoInstance,
   WALLET,
-} from "./local.stub.js";
+} from './local.mock.js';
 
 const storage = new SimpleStorage(WALLET);
 
 // noinspection t
-describe("Local Test of MulticallUnit - Testnet", () => {
-  test("Test of write calls - do not waitWithSignals", async () => {
+describe('MulticallUnit - Local Test', () => {
+  test('does not wait for tx receipts (write calls with raw responses)', async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
+
     const unit = new MulticallUnit(
-      WALLET,
-      {
-        maxMutableCallsStack: 2, // Same requests will require more gas for replacing
-        waitForTxs: false,
-      },
-      MULTICALL_ADDRESS,
+        WALLET,
+        {
+          maxMutableCallsStack: 2,
+          waitForTxs: false,
+        },
+        MULTICALL_ADDRESS
     );
 
     for (let i = 0; i < 1; i++) {
-      // 1 because of non-waitWithSignals test - it will require replacement fee
-      unit.add([i], storage.setFirstCall(i));
-      unit.add([i, i], storage.setSecondCall(i));
+      unit.add(storage.setFirstCall(i), [i]);
+      unit.add(storage.setSecondCall(i), [i, i]);
     }
+
     const result = await unit.run();
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(result).to.be.true;
 
     for (let i = 0; i < 1; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(unit.isSuccess([i])).to.be.true;
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(unit.isSuccess([i, i])).to.be.true;
-      expect(unit.getRaw([i])).toBeInstanceOf(TransactionResponse);
-      expect(unit.getRaw([i, i])).toBeInstanceOf(TransactionResponse);
+      expect(unit.getTxResponse([i])).toBeInstanceOf(TransactionResponse);
+      expect(unit.getTxResponse([i, i])).toBeInstanceOf(TransactionResponse);
     }
+
+    // Wait manually after `waitForTxs: false`
+    const tx = unit.getTxResponseOrThrow([0]);
+    await tx.wait();
   });
 
-  test("Test of write calls - waitWithSignals", async () => {
+  test('waits for tx receipts automatically (write calls)', async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
+
     const unit = new MulticallUnit(
-      WALLET,
-      {
-        maxMutableCallsStack: 2, // Same requests will require more gas for replacing
-      },
-      MULTICALL_ADDRESS,
+        WALLET,
+        { maxMutableCallsStack: 2 },
+        MULTICALL_ADDRESS
     );
 
     for (let i = 0; i < 3; i++) {
-      unit.add([i], storage.setFirstCall(i));
-      unit.add([i, i], storage.setSecondCall(i));
+      unit.add(storage.setFirstCall(i), [i]);
+      unit.add(storage.setSecondCall(i), [i, i]);
     }
+
     const result = await unit.run();
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(result).to.be.true;
 
     for (let i = 0; i < 3; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(unit.isSuccess([i])).to.be.true;
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(unit.isSuccess([i, i])).to.be.true;
-      expect(unit.getRaw([i])).toBeInstanceOf(TransactionReceipt);
-      expect(unit.getRaw([i, i])).toBeInstanceOf(TransactionReceipt);
+      expect(unit.getTxReceipt([i])).toBeInstanceOf(TransactionReceipt);
+      expect(unit.getTxReceipt([i, i])).toBeInstanceOf(TransactionReceipt);
     }
   });
 
-  test("Test of write calls - priority", async () => {
+  test('executes write calls with highPriorityTxs', async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
+
     const unit = new MulticallUnit(
-      WALLET,
-      {
-        maxMutableCallsStack: 2, // Same requests will require more gas for replacing
-        highPriorityTxs: true,
-      },
-      MULTICALL_ADDRESS,
+        WALLET,
+        {
+          maxMutableCallsStack: 2,
+          highPriorityTxs: true,
+        },
+        MULTICALL_ADDRESS
     );
 
     for (let i = 0; i < 3; i++) {
-      unit.add([i], storage.setFirstCall(i));
-      unit.add([i, i], storage.setSecondCall(i));
+      unit.add(storage.setFirstCall(i), [i]);
+      unit.add(storage.setSecondCall(i), [i, i]);
     }
+
     const result = await unit.run();
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(result).to.be.true;
 
     for (let i = 0; i < 3; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(unit.isSuccess([i])).to.be.true;
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(unit.isSuccess([i, i])).to.be.true;
-      expect(unit.getRaw([i])).toBeInstanceOf(TransactionReceipt);
-      expect(unit.getRaw([i, i])).toBeInstanceOf(TransactionReceipt);
+      expect(unit.getTxReceipt([i])).toBeInstanceOf(TransactionReceipt);
+      expect(unit.getTxReceipt([i, i])).toBeInstanceOf(TransactionReceipt);
     }
 
-    const unique = new Set(unit.response);
-
-    expect(unique.size).to.be.eq(3);
+    const uniqueTxs = new Set(unit.response);
+    expect(uniqueTxs.size).to.be.eq(3);
   });
 
-  test("Test of mixed calls", async () => {
+  test('handles mixed static and mutable calls', async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
+
     const unit = new MulticallUnit(
-      WALLET,
-      {
-        maxStaticCallsStack: 5,
-        maxMutableCallsStack: 2,
-        highPriorityTxs: true,
-      },
-      MULTICALL_ADDRESS,
+        WALLET,
+        {
+          maxStaticCallsStack: 5,
+          maxMutableCallsStack: 2,
+          highPriorityTxs: true,
+        },
+        MULTICALL_ADDRESS
     );
 
     for (let i = 0; i < 3; i++) {
-      unit.add([i], storage.getFirstCall());
-      unit.add([i, i], storage.getSecondCall());
+      unit.add(storage.getFirstCall(), [i]);
+      unit.add(storage.getSecondCall(), [i, i]);
     }
-    unit.add(1, storage.setFirstCall(9));
-    unit.add(2, storage.setSecondCall(9));
+
+    unit.add(storage.setFirstCall(9), 1);
+    unit.add(storage.setSecondCall(9), 2);
+
     const result = await unit.run();
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(result).to.be.true;
 
     for (let i = 0; i < 3; i++) {
       expect(unit.getSingle([i])).to.be.eq(9n);
       expect(unit.getSingle([i, i])).to.be.eq(9n);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    expect(unit.getSingle(1)).to.be.undefined;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    expect(unit.getSingle(2)).to.be.undefined;
-    expect(unit.getRaw(1)).to.be.instanceOf(TransactionReceipt);
-    expect(unit.getRaw(2)).to.be.instanceOf(TransactionReceipt);
+
+    expect(unit.getSingle(1)).to.be.null;
+    expect(unit.getSingle(2)).to.be.null;
+    expect(unit.getTxReceipt(1)).to.be.instanceOf(TransactionReceipt);
+    expect(unit.getTxReceipt(2)).to.be.instanceOf(TransactionReceipt);
   });
 
-  test("Read data", async () => {
+  test('reads static data successfully', async () => {
     const unit = new MulticallUnit(
-      WALLET,
-      {
-        maxStaticCallsStack: 2,
-      },
-      MULTICALL_ADDRESS,
+        WALLET,
+        { maxStaticCallsStack: 2 },
+        MULTICALL_ADDRESS
     );
 
-    for (let i = 0; i < 1; i++) {
-      unit.add([i], storage.getFirstCall());
-      unit.add([i, i], storage.getSecondCall());
-    }
+    unit.add(storage.getFirstCall(), [0]);
+    unit.add(storage.getSecondCall(), [0, 0]);
+
     const result = await unit.run();
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(result).to.be.true;
 
-    for (let i = 0; i < 1; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      expect(unit.isSuccess([i])).to.be.true;
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      expect(unit.isSuccess([i, i])).to.be.true;
-      const first = unit.getSingle([i]);
-      const second = unit.getSingle([i, i]);
-      expect(first).to.be.eq(9n);
-      expect(second).to.be.eq(9n);
-    }
+    expect(unit.isSuccess([0])).to.be.true;
+    expect(unit.isSuccess([0, 0])).to.be.true;
+    expect(unit.getSingle([0])).to.be.eq(9n);
+    expect(unit.getSingle([0, 0])).to.be.eq(9n);
   });
 
-  // Sync operations are too fast
-  test("Read data - timeout", async () => {
+  test('fails static call due to timeout', async () => {
     const unit = new MulticallUnit(
-      WALLET,
-      {
-        staticCallsTimeoutMs: 1,
-        maxStaticCallsStack: 1,
-      },
-      MULTICALL_ADDRESS,
+        WALLET,
+        {
+          staticCallsTimeoutMs: 1,
+          maxStaticCallsStack: 1,
+        },
+        MULTICALL_ADDRESS
     );
 
-    for (let i = 0; i < 1; i++) {
-      unit.add([i], storage.getFirstCall());
-      unit.add([i, i], storage.getSecondCall());
-    }
-    let error;
+    unit.add(storage.getFirstCall(), [0]);
+    unit.add(storage.getSecondCall(), [0, 0]);
 
+    let error;
     try {
       await unit.run();
     } catch (err) {
       error = err;
     }
 
-    expect(error).to.be.match(new RegExp(/aborted/));
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    expect(error).to.be.match(/aborted/);
     expect(unit.success).to.be.false;
   });
 
-  test("Read data - signal", async () => {
+  test('aborts static call with signal', async () => {
     const controller = new AsyncAbortController();
 
     const unit = new MulticallUnit(
-      WALLET,
-      {
-        highPriorityTxs: true,
-        signals: [controller.signal],
-        maxStaticCallsStack: 2,
-      },
-      MULTICALL_ADDRESS,
+        WALLET,
+        {
+          highPriorityTxs: true,
+          signals: [controller.signal],
+          maxStaticCallsStack: 2,
+        },
+        MULTICALL_ADDRESS
     );
 
-    for (let i = 0; i < 1; i++) {
-      unit.add([i], storage.getFirstCall());
-      unit.add([i, i], storage.getSecondCall());
-    }
+    unit.add(storage.getFirstCall(), [0]);
+    unit.add(storage.getSecondCall(), [0, 0]);
+
+    controller.abort();
 
     let error;
     try {
-      controller.abort();
       await unit.run();
     } catch (err) {
       error = err;
     }
-    expect(error).to.be.match(new RegExp(/aborted/));
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+
+    expect(error).to.be.match(/aborted/);
     expect(unit.success).to.be.false;
+  });
+
+  test('gets decoded object (named)', async () => {
+    const unit = new MulticallUnit(
+        WALLET,
+        {
+          highPriorityTxs: true,
+          maxStaticCallsStack: 2,
+        },
+        MULTICALL_ADDRESS
+    );
+
+    unit.add(storage.setFirstCall(0), 0);
+    unit.add(storage.setSecondCall(1), 1);
+    unit.add(storage.getBothCall(), 2);
+
+    const result = await unit.run();
+    const both: any = unit.getObjectOrThrow(2);
+
+    expect(both!['first']).to.be.eq(0n);
+    expect(both['second']).to.be.eq(1n);
+    expect(result).to.be.true;
+  });
+
+  test('gets both object and single values', async () => {
+    const unit = new MulticallUnit(
+        WALLET,
+        {
+          highPriorityTxs: true,
+          maxStaticCallsStack: 2,
+        },
+        MULTICALL_ADDRESS
+    );
+
+    unit.add(storage.setFirstCall(0), 0);
+    unit.add(storage.setSecondCall(1), 1);
+    unit.add(storage.getBothCall(), 2);
+    unit.add(storage.getFirstCall(), 3);
+
+    const result = await unit.run();
+
+    const both: any = unit.get(2);
+    const first = unit.get(3);
+
+    expect(both['first']).to.be.eq(0n);
+    expect(both['second']).to.be.eq(1n);
+    expect(first).to.be.eq(0n);
+    expect(result).to.be.true;
+  });
+
+  test('using auto instance', async () => {
+    const unit = new MulticallUnit(
+        WALLET,
+        {
+          maxStaticCallsStack: 2,
+        },
+        MULTICALL_ADDRESS
+    );
+
+    unit.add(SimpleStorageAutoInstance.getSetFirstCall!([33]), 0);
+    unit.add(SimpleStorageAutoInstance.getSetSecondCall!([32]), 1);
+    unit.add(SimpleStorageAutoInstance.getBothCall!(), 2);
+    unit.add(SimpleStorageAutoInstance.getFirstCall!(), 3);
+
+    const result = await unit.run();
+
+    const both: any = unit.get(2);
+    const first = unit.get(3);
+
+    expect(both['first']).to.be.eq(33n);
+    expect(both['second']).to.be.eq(32n);
+    expect(first).to.be.eq(33n);
+    expect(result).to.be.true;
+  });
+
+  test('using auto class', async () => {
+    const unit = new MulticallUnit(
+        WALLET,
+        {
+          maxStaticCallsStack: 2,
+        },
+        MULTICALL_ADDRESS
+    );
+
+    const instance = new SimpleStorageAutoClass();
+
+    unit.add(instance.getSetFirstCall!([32]), 0);
+    unit.add(instance.getSetSecondCall!([31]), 1);
+    unit.add(instance.getBothCall!(), 2);
+    unit.add(instance.getFirstCall!(), 3);
+
+    const result = await unit.run();
+
+    const both: any = unit.get(2);
+    const first = unit.get(3);
+
+    expect(both['first']).to.be.eq(32n);
+    expect(both['second']).to.be.eq(31n);
+    expect(first).to.be.eq(32n);
+    expect(result).to.be.true;
+  });
+
+  test('using waitFor', async () => {
+    const unit = new MulticallUnit(
+        WALLET,
+        {
+          maxStaticCallsStack: 2,
+        },
+        MULTICALL_ADDRESS
+    );
+
+    const instance = new SimpleStorageAutoClass();
+
+    unit.add(instance.getSetFirstCall!([40]), 0);
+    unit.add(instance.getSetSecondCall!([41]), 1);
+    unit.add(instance.getBothCall!(), 2);
+    unit.add(instance.getFirstCall!(), 'first');
+
+    const [first, result] = await Promise.all([
+      unit.waitFor('first'),
+      unit.run(),
+    ]);
+
+    const both: any = unit.get(2);
+
+    expect(both['first']).to.be.eq(40n);
+    expect(both['second']).to.be.eq(41n);
+    expect(first).to.be.eq(40n);
+    expect(result).to.be.true;
   });
 });
