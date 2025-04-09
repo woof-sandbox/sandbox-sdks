@@ -1,4 +1,4 @@
 export enum CallMutability {
-  Static = 'STATIC',
-  Mutable = 'MUTABLE',
+  Static = "STATIC",
+  Mutable = "MUTABLE",
 }

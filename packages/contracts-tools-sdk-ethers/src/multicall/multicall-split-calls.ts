@@ -1,7 +1,10 @@
-import { isStaticMethod } from '../helpers';
-import { ContractCall, SplitCalls } from '../types';
+import { isStaticMethod } from "../helpers";
+import type { ContractCall, SplitCalls, Tagable } from "../types";
 
-export const multicallSplitCalls = (calls: ContractCall[]): SplitCalls =>
+export const multicallSplitCalls = (
+  calls: ContractCall[],
+  tags: Tagable[],
+): SplitCalls =>
   calls.reduce<SplitCalls>(
     (acc, call, index) => {
       if (isStaticMethod(call.stateMutability)) {
@@ -9,6 +12,7 @@ export const multicallSplitCalls = (calls: ContractCall[]): SplitCalls =>
         acc.staticIndexes.push(index);
       } else {
         acc.mutableCalls.push(call);
+        acc.mutableTags.push(tags[index]!);
         acc.mutableIndexes.push(index);
       }
       return acc;
@@ -17,6 +21,7 @@ export const multicallSplitCalls = (calls: ContractCall[]): SplitCalls =>
       staticCalls: [],
       staticIndexes: [],
       mutableCalls: [],
+      mutableTags: [],
       mutableIndexes: [],
     },
   );

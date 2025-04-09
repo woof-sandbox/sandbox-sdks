@@ -1,16 +1,21 @@
-import { TransactionReceipt, TransactionResponse } from 'ethers';
-import { describe, expect, test } from 'vitest';
-import { waitForAddressTxs } from '../../src/helpers';
-import { MulticallContract } from '../../src';
-import { AsyncAbortController, MULTICALL_ADDRESS, SimpleStorage, WALLET } from './local.stub.js';
+import { TransactionReceipt, TransactionResponse } from "ethers";
+import { describe, expect, test } from "vitest";
+import { MulticallUnit } from "../../src";
+import { waitForAddressTxs } from "../../src/helpers";
+import {
+  AsyncAbortController,
+  MULTICALL_ADDRESS,
+  SimpleStorage,
+  WALLET,
+} from "./local.stub.js";
 
 const storage = new SimpleStorage(WALLET);
 
 // noinspection t
-describe('Local Test of MulticallUnit - Testnet', () => {
-  test('Test of write calls - do not waitWithSignals', async () => {
+describe("Local Test of MulticallUnit - Testnet", () => {
+  test("Test of write calls - do not waitWithSignals", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
-    const unit = new MulticallContract(
+    const unit = new MulticallUnit(
       WALLET,
       {
         maxMutableCallsStack: 2, // Same requests will require more gas for replacing
@@ -38,9 +43,9 @@ describe('Local Test of MulticallUnit - Testnet', () => {
     }
   });
 
-  test('Test of write calls - waitWithSignals', async () => {
+  test("Test of write calls - waitWithSignals", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
-    const unit = new MulticallContract(
+    const unit = new MulticallUnit(
       WALLET,
       {
         maxMutableCallsStack: 2, // Same requests will require more gas for replacing
@@ -66,9 +71,9 @@ describe('Local Test of MulticallUnit - Testnet', () => {
     }
   });
 
-  test('Test of write calls - priority', async () => {
+  test("Test of write calls - priority", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
-    const unit = new MulticallContract(
+    const unit = new MulticallUnit(
       WALLET,
       {
         maxMutableCallsStack: 2, // Same requests will require more gas for replacing
@@ -99,9 +104,9 @@ describe('Local Test of MulticallUnit - Testnet', () => {
     expect(unique.size).to.be.eq(3);
   });
 
-  test('Test of mixed calls', async () => {
+  test("Test of mixed calls", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
-    const unit = new MulticallContract(
+    const unit = new MulticallUnit(
       WALLET,
       {
         maxStaticCallsStack: 5,
@@ -133,8 +138,8 @@ describe('Local Test of MulticallUnit - Testnet', () => {
     expect(unit.getRaw(2)).to.be.instanceOf(TransactionReceipt);
   });
 
-  test('Read data', async () => {
-    const unit = new MulticallContract(
+  test("Read data", async () => {
+    const unit = new MulticallUnit(
       WALLET,
       {
         maxStaticCallsStack: 2,
@@ -163,8 +168,8 @@ describe('Local Test of MulticallUnit - Testnet', () => {
   });
 
   // Sync operations are too fast
-  test('Read data - timeout', async () => {
-    const unit = new MulticallContract(
+  test("Read data - timeout", async () => {
+    const unit = new MulticallUnit(
       WALLET,
       {
         staticCallsTimeoutMs: 1,
@@ -190,10 +195,10 @@ describe('Local Test of MulticallUnit - Testnet', () => {
     expect(unit.success).to.be.false;
   });
 
-  test('Read data - signal', async () => {
+  test("Read data - signal", async () => {
     const controller = new AsyncAbortController();
 
-    const unit = new MulticallContract(
+    const unit = new MulticallUnit(
       WALLET,
       {
         highPriorityTxs: true,

@@ -1,4 +1,4 @@
-import { TransactionReceipt, TransactionResponse } from 'ethers';
+import type { TransactionReceipt, TransactionResponse } from "ethers";
 
 export type MulticallResponse = [
   success: boolean | undefined,

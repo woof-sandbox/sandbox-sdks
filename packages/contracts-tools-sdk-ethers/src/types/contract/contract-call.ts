@@ -1,11 +1,11 @@
-import { Interface } from 'ethers';
-import { StateMutability } from '../state-mutabiity';
+import type { Interface } from "ethers";
+import type { StateMutability } from "../state-mutabiity";
 
-export type ContractCall = {
-  method: string;
+export interface ContractCall {
+  method?: string; // Optional params are using for the result parsing
+  contractInterface?: Interface;
   target: string;
   allowFailure: boolean;
   callData: string;
   stateMutability: StateMutability;
-  contractInterface: Interface;
-};
+}

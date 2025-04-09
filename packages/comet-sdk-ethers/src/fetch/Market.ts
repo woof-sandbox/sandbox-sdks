@@ -63,7 +63,7 @@ export async function fetchMarket(
   driver: Provider | Signer,
 ): Promise<Market> {
   /*const comet = new CometContract(cometProxyAddress, driver);
-  const multicall = new MulticallContract(driver);
+  const multicall = new MulticallUnit(driver);
 
   const utilization = await comet.getUtilization();
 

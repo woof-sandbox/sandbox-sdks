@@ -1,16 +1,24 @@
-import { describe, expect, test } from 'vitest';
-import { RegistryContract, WSS_PROVIDER } from '../stub';
+import { describe, expect, test } from "vitest";
+import { RegistryContract, WSS_PROVIDER } from "../stub";
 
 export const registry = new RegistryContract(WSS_PROVIDER);
 
-describe('E2E Test Contract', () => {
-  test('Test of Logs', async () => {
-    const logs = await registry.getLogs(16291006, ['OwnershipTransferred'], 16291281);
+describe("E2E Test BaseContract", () => {
+  test("Test of Logs", async () => {
+    const logs = await registry.getLogs(
+      16291006,
+      ["OwnershipTransferred"],
+      16291281,
+    );
     expect(logs.length).toEqual(4);
   });
-  test('Test of Logs stream', async () => {
+  test("Test of Logs stream", async () => {
     const data = new Set();
-    for await (const log of registry.getLogsStream(-1, ['AddressesProviderRegistered'], 20713917)) {
+    for await (const log of registry.getLogsStream(
+      -1,
+      ["AddressesProviderRegistered"],
+      20713917,
+    )) {
       data.add(log);
     }
     expect(data.size).toEqual(1);
