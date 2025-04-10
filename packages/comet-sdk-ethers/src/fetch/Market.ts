@@ -1,7 +1,7 @@
 import {type IMarketProposalTx, Market, Token} from "@sandbox/comet-sdk";
 import {MulticallContract} from "@sandbox/contracts-tools-sdk-ethers/src/multicall";
 import type {Provider, Signer} from "ethers";
-import {CometContract, Erc20Contract} from "../contracts";
+import {BulkerContract, CometContract, Erc20Contract} from "../contracts";
 import {MULTICALL_ERRORS} from "../errors/multicall";
 import {fetchBase, fetchBaseMock} from "./Base";
 import {fetchCollateralsMocks} from "./Collateral";
@@ -141,3 +141,4 @@ export async function fetchMarket(
         rewardTokens: [], // TODO
     });
 }
+

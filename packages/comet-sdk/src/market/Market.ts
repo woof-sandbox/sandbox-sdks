@@ -95,8 +95,9 @@ export class Market implements IMarket {
     get supplyData() {
         return {
             baseToken: this.baseToken,
-            totalSupply: this.totalSupply,
-            totalBorrow: this.totalBorrow
+            // userData: fetchUserMock()  // userMarketData !
         }
     }
+
+
 }
