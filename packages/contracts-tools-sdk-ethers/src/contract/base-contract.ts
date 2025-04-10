@@ -45,7 +45,7 @@ export class BaseContract {
     address?: string,
     driver?: Provider | Signer,
     options?: ContractOptions,
-  ): DynamicContractConstructor {
+  ) {
     return class extends this {
       constructor(args: any) {
         super(
@@ -89,9 +89,9 @@ export class BaseContract {
     address?: string,
     driver?: Provider | Signer,
     options?: ContractOptions,
-  ): DynamicContract {
+  )  {
     const AutoClass = this.createAutoClass(abi, address, driver, options);
-    return new AutoClass({ abi, address, driver, options }) as DynamicContract;
+    return new AutoClass({ abi, address, driver, options });
   }
 
   constructor(
@@ -112,15 +112,14 @@ export class BaseContract {
     };
   }
 
-  public get provider(): Provider | undefined {
-    if (!this.driver) return undefined;
-    if (this.driver instanceof Wallet) return this.driver.provider as Provider;
-    return this.driver as Provider;
+  public get provider(): Provider | null {
+    if (!this.driver) return null;
+    return this.driver.provider;
   }
 
-  public get signer(): Wallet | undefined {
-    if (isSigner(this.driver as Signer)) return this.driver as Wallet;
-    return undefined;
+  public get signer(): Signer | null {
+    if (isSigner(this.driver as Signer)) return this.driver as Signer;
+    return null;
   }
 
   public get interface(): Interface {
