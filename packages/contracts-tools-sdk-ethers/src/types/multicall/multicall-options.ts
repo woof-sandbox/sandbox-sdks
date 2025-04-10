@@ -12,4 +12,5 @@ export interface MulticallOptions {
   staticCallsTimeoutMs?: number;
   mutableCallsTimeoutMs?: number;
   waitCallsTimeoutMs?: number;
+  batchDelayMs?: number;
 }

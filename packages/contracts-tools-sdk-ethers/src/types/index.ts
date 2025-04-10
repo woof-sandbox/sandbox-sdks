@@ -1,5 +1,5 @@
-export * from "./contract/index";
-export * from "./multicall/index";
+export * from "./contract";
+export * from "./multicall";
 export * from "./split-calls";
 export * from "./state-mutabiity";
 export * from "./call-mutability";

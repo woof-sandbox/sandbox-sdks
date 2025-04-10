@@ -1,5 +1,5 @@
 import { type IMarketProposalTx, Market, Token } from "@sandbox/comet-sdk";
-import { MulticallContract } from "@sandbox/contracts-tools-sdk-ethers";
+import { MulticallUnit } from "@sandbox/contracts-tools-sdk-ethers";
 import type { Provider, Signer } from "ethers";
 import { CometContract, Erc20Contract } from "../contracts";
 import { MULTICALL_ERRORS } from "../errors/multicall";
@@ -65,7 +65,7 @@ export async function fetchMarket(
   driver: Provider | Signer,
 ): Promise<Market> {
   const comet = new CometContract(cometProxyAddress, driver);
-  const multicall = new MulticallContract(driver);
+  const multicall = new MulticallUnit(driver);
 
   const utilization = await comet.getUtilization();
 

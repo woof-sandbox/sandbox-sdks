@@ -1,5 +1,5 @@
 import { Collateral } from "@sandbox/comet-sdk/src/token";
-import { MulticallContract } from "@sandbox/contracts-tools-sdk-ethers";
+import { MulticallUnit } from "@sandbox/contracts-tools-sdk-ethers";
 import { type Provider, type Signer, formatUnits } from "ethers";
 import { PRICE_FEED_FACTOR_UNITS } from "../constants";
 import { CometContract, Erc20Contract } from "../contracts";
@@ -165,7 +165,7 @@ export async function fetchCollaterals(
   const comet = new CometContract(cometProxyAddress, driver);
   const numAssets = Number(await comet.numAssets());
 
-  const multicall = new MulticallContract(driver);
+  const multicall = new MulticallUnit(driver);
 
   // Collaterals
   for (let i = 0; i < numAssets; i++) {
