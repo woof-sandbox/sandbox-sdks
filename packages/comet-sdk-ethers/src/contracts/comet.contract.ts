@@ -42,7 +42,7 @@ export class CometContract extends BaseContract {
     return this.getCall("getReserves") as ContractCall;
   }
   getBaseTokenCall(): ContractCall {
-    return this.getCall("baseToken") as  ContractCall;
+    return this.getCall("baseToken") as ContractCall;
   }
   //
   async isAllowed(owner: string, bulker: string): Promise<boolean> {
@@ -62,7 +62,7 @@ export class CometContract extends BaseContract {
   }
   //
   getBorrowBalanceOfCall(userAddress: string): ContractCall {
-    return this.getCall("borrowBalanceOf", [userAddress])  as ContractCall;
+    return this.getCall("borrowBalanceOf", [userAddress]) as ContractCall;
   }
   getCollateralBalanceOfCall(userAddress: string): ContractCall {
     return this.getCall("collateralBalanceOf", [userAddress]) as ContractCall;

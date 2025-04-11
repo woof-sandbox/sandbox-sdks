@@ -1,5 +1,8 @@
 import { Curve } from "@sandbox/comet-sdk";
-import { MulticallUnit, Tagable } from "@sandbox/contracts-tools-sdk-ethers";
+import {
+  MulticallUnit,
+  type Tagable,
+} from "@sandbox/contracts-tools-sdk-ethers";
 import type { Provider, Signer } from "ethers";
 import { CometContract } from "../contracts";
 import { MULTICALL_ERRORS } from "../errors/multicall";
@@ -63,7 +66,8 @@ export async function fetchCurves(
   await multicall.run();
 
   const supplyKink = multicall.getSingle<bigint>(supplyKinkTag);
-  if (supplyKink === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyKinkTag as Tagable);
+  if (supplyKink === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyKinkTag as Tagable);
   const supplySlopeLow = multicall.getSingle<bigint>(supplySlopeLowTag);
   if (supplySlopeLow === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplySlopeLowTag as Tagable);
@@ -75,7 +79,8 @@ export async function fetchCurves(
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateBaseTag as Tagable);
 
   const borrowKink = multicall.getSingle<bigint>(borrowKinkTag);
-  if (borrowKink === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowKinkTag as Tagable);
+  if (borrowKink === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowKinkTag as Tagable);
   const borrowSlopeLow = multicall.getSingle<bigint>(borrowSlopeLowTag);
   if (borrowSlopeLow === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowSlopeLowTag as Tagable);

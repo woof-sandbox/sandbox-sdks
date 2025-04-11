@@ -1,29 +1,27 @@
-import {BulkerAbi} from "../abis";
-import {createConfig, getWalletClient, http} from "@wagmi/core";
-import {arbitrum, mainnet, sepolia} from '@wagmi/core/chains'
+import { http, createConfig, getWalletClient } from "@wagmi/core";
+import { arbitrum, mainnet, sepolia } from "@wagmi/core/chains";
+import { BulkerAbi } from "../abis";
 
 export const config = createConfig({
-    chains: [mainnet, sepolia, arbitrum],
-    transports: {
-        [mainnet.id]: http(),
-        [arbitrum.id]: http(),
-        [sepolia.id]: http(),
-    },
-})
+  chains: [mainnet, sepolia, arbitrum],
+  transports: {
+    [mainnet.id]: http(),
+    [arbitrum.id]: http(),
+    [sepolia.id]: http(),
+  },
+});
 
 export class BulkerContract {
-    constructor() {
-    }
+  constructor() {}
 
-    async invokeBulker(bulkerAddress: `0x${string}`, args: any): Promise<any> {
-        const walletClient = await getWalletClient(config)
+  async invokeBulker(bulkerAddress: `0x${string}`, args: any): Promise<any> {
+    const walletClient = await getWalletClient(config);
 
-        return walletClient.writeContract({
-            abi: BulkerAbi,
-            address: bulkerAddress,
-            functionName: 'invoke',
-            args,
-        });
-    }
-
+    return walletClient.writeContract({
+      abi: BulkerAbi,
+      address: bulkerAddress,
+      functionName: "invoke",
+      args,
+    });
+  }
 }

@@ -1,5 +1,8 @@
 import { Base } from "@sandbox/comet-sdk";
-import { MulticallUnit, Tagable } from "@sandbox/contracts-tools-sdk-ethers";
+import {
+  MulticallUnit,
+  type Tagable,
+} from "@sandbox/contracts-tools-sdk-ethers";
 import { type Provider, type Signer, formatUnits } from "ethers";
 import { PRICE_FEED_FACTOR_UNITS } from "../constants";
 import { CometContract, Erc20Contract } from "../contracts";
@@ -56,7 +59,8 @@ export async function fetchBase(
   await multicall.run();
 
   const tokenAddress = multicall.getSingle<string>(tokenAddressTag);
-  if (!tokenAddress) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(tokenAddressTag as Tagable);
+  if (!tokenAddress)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(tokenAddressTag as Tagable);
   const priceFeedAddress = multicall.getSingle<string>(priceFeedAddressTag);
   if (!priceFeedAddress)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceFeedAddressTag as Tagable);
@@ -88,11 +92,14 @@ export async function fetchBase(
   await multicall.run();
 
   const priceRaw = multicall.getSingle<bigint>(priceTag);
-  if (priceRaw === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceTag as Tagable);
+  if (priceRaw === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceTag as Tagable);
   const decimals = multicall.getSingle<bigint>(decimalsTag);
-  if (decimals === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(decimalsTag as Tagable);
+  if (decimals === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(decimalsTag as Tagable);
   const symbol = multicall.getSingle<string>(symbolTag);
-  if (symbol === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(symbolTag as Tagable);
+  if (symbol === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(symbolTag as Tagable);
   //
   const baseMinForRewards = multicall.getSingle<bigint>(baseMinForRewardsTag);
   if (baseMinForRewards === null)
@@ -101,12 +108,16 @@ export async function fetchBase(
     baseTrackingBorrowSpeedTag,
   );
   if (baseTrackingBorrowSpeed === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseTrackingBorrowSpeedTag as Tagable);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(
+      baseTrackingBorrowSpeedTag as Tagable,
+    );
   const baseTrackingSupplySpeed = multicall.getSingle<bigint>(
     baseTrackingSupplySpeedTag,
   );
   if (baseTrackingSupplySpeed === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseTrackingSupplySpeedTag as Tagable);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(
+      baseTrackingSupplySpeedTag as Tagable,
+    );
   const baseIndexScale = multicall.getSingle<bigint>(baseIndexScaleTag);
   if (baseIndexScale === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseIndexScaleTag as Tagable);

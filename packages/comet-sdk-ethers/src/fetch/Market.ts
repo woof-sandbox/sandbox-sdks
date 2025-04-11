@@ -1,5 +1,8 @@
 import { type IMarketProposalTx, Market, Token } from "@sandbox/comet-sdk";
-import { MulticallUnit, Tagable } from "@sandbox/contracts-tools-sdk-ethers";
+import {
+  MulticallUnit,
+  type Tagable,
+} from "@sandbox/contracts-tools-sdk-ethers";
 import type { Provider, Signer } from "ethers";
 import { CometContract, Erc20Contract } from "../contracts";
 import { MULTICALL_ERRORS } from "../errors/multicall";
@@ -101,15 +104,20 @@ export async function fetchMarket(
   await multicall.run();
 
   const borrowRate = multicall.getSingle<bigint>(borrowRateTag);
-  if (borrowRate === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowRateTag as Tagable);
+  if (borrowRate === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowRateTag as Tagable);
   const supplyRate = multicall.getSingle<bigint>(supplyRateTag);
-  if (supplyRate === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateTag as Tagable);
+  if (supplyRate === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateTag as Tagable);
   const totalBorrow = multicall.getSingle<bigint>(totalBorrowTag);
-  if (totalBorrow === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalBorrowTag as Tagable);
+  if (totalBorrow === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalBorrowTag as Tagable);
   const totalSupply = multicall.getSingle<bigint>(totalSupplyTag);
-  if (totalSupply === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalSupplyTag as Tagable);
+  if (totalSupply === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalSupplyTag as Tagable);
   const totalReserves = multicall.getSingle<bigint>(totalReservesTag);
-  if (totalReserves === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalReservesTag as Tagable);
+  if (totalReserves === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalReservesTag as Tagable);
   const availableLiquidity = multicall.getSingle<bigint>(availableLiquidityTag);
   if (availableLiquidity === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(availableLiquidityTag as Tagable);
