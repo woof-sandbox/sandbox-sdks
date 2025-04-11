@@ -53,7 +53,7 @@ export class UserMarketWrapper extends UserMarket {
 
 
         try {
-            return await bulker.invokeFunc(bulkerAddress, [[ACTION_SUPPLY_NATIVE_TOKEN], abiEncodeData]) //if need update data after implement then and refetch userMarket
+            return await bulker.invokeBulker(bulkerAddress, [[ACTION_SUPPLY_NATIVE_TOKEN], abiEncodeData]) //if need update data after implement then and refetch userMarket
         } catch (e) {
             return 'supply error'
         }
@@ -103,7 +103,7 @@ export class UserMarketWrapper extends UserMarket {
 
 
         try {
-            return await bulker.invokeFunc(bulkerAddress, [[ACTION_WITHDRAW_ASSET], abiEncodeData]) //if need update data after implement then and refetch userMarket
+            return await bulker.invokeBulker(bulkerAddress, [[ACTION_WITHDRAW_ASSET], abiEncodeData]) //if need update data after implement then and refetch userMarket
         } catch (e) {
             return 'borrow error'
         }
@@ -137,7 +137,7 @@ export class UserMarketWrapper extends UserMarket {
 
 
         try {
-            return await bulker.invokeFunc(bulkerAddress, [[ACTION_WITHDRAW_ASSET], abiEncodeData]) //if need update data after implement then and refetch userMarket
+            return await bulker.invokeBulker(bulkerAddress, [[ACTION_WITHDRAW_ASSET], abiEncodeData]) //if need update data after implement then and refetch userMarket
         } catch (e) {
             return 'borrow error'
         }

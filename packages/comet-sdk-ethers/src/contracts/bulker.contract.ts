@@ -1,5 +1,5 @@
 import {BulkerAbi} from "../abis";
-import {createConfig, http, writeContract} from "@wagmi/core";
+import {createConfig, getWalletClient, http} from "@wagmi/core";
 import {mainnet, sepolia} from '@wagmi/core/chains'
 
 export const config = createConfig({
@@ -14,8 +14,10 @@ export class BulkerContract {
     constructor() {
     }
 
-    invokeFunc(bulkerAddress: `0x${string}`, args: any): Promise<any> {
-        return writeContract(config, {
+    async invokeBulker(bulkerAddress: `0x${string}`, args: any): Promise<any> {
+        const walletClient = await getWalletClient(config)
+
+        return walletClient.writeContract({
             abi: BulkerAbi,
             address: bulkerAddress,
             functionName: 'invoke',
