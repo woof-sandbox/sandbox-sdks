@@ -1,7 +1,6 @@
-import { BaseContract } from "@sandbox/contracts-tools-sdk-ethers";
+import { BaseContract, ContractCall } from "@sandbox/contracts-tools-sdk-ethers";
 import type { BigNumberish, Provider, Signer, ethers } from "ethers";
 import { CometAbi } from "../abis";
-import type { ContractCall } from "./entities";
 
 export class CometContract extends BaseContract {
   constructor(address?: string, driver?: Provider | Signer) {
@@ -13,43 +12,43 @@ export class CometContract extends BaseContract {
     return result as any;
   }
   getUtilizationCall(): ContractCall {
-    return this.getCall("getUtilization") as ContractCall;
+    return this.getCall("getUtilization");
   }
   numAssets(): Promise<bigint> {
     return this.call("numAssets");
   }
   getNumAssetsCall(): ContractCall {
-    return this.getCall("numAssets") as ContractCall;
+    return this.getCall("numAssets");
   }
   getAssetInfoCall(index: number): ContractCall {
-    return this.getCall("getAssetInfo", [index]) as ContractCall;
+    return this.getCall("getAssetInfo", [index]) ;
   }
 
   getBorrowRateCall(utilization: BigNumberish): ContractCall {
-    return this.getCall("getBorrowRate", [utilization]) as ContractCall;
+    return this.getCall("getBorrowRate", [utilization]);
   }
   getSupplyRateCall(utilization: BigNumberish): ContractCall {
-    return this.getCall("getSupplyRate", [utilization]) as ContractCall;
+    return this.getCall("getSupplyRate", [utilization]) ;
   }
   //
   getTotalBorrowCall(): ContractCall {
-    return this.getCall("totalBorrow") as ContractCall;
+    return this.getCall("totalBorrow");
   }
   getTotalSupplyCall(): ContractCall {
-    return this.getCall("totalSupply") as ContractCall;
+    return this.getCall("totalSupply");
   }
   getReservesCall(): ContractCall {
-    return this.getCall("getReserves") as ContractCall;
+    return this.getCall("getReserves");
   }
   getBaseTokenCall(): ContractCall {
-    return this.getCall("baseToken") as  ContractCall;
+    return this.getCall("baseToken");
   }
   //
   async isAllowed(owner: string, bulker: string): Promise<boolean> {
     return this.call<boolean>("isAllowed", [owner, bulker]);
   }
   isAllowedCall(owner: string, bulker: string): ContractCall {
-    return this.getCall("isAllowed", [owner, bulker]) as ContractCall;
+    return this.getCall("isAllowed", [owner, bulker]) ;
   }
   async allow(
     bulker: string,
@@ -58,66 +57,66 @@ export class CometContract extends BaseContract {
     return this.call<ethers.TransactionResponse>("allow", [bulker, status]);
   }
   allowCall(bulker: string, status: boolean): ContractCall {
-    return this.getCall("allow", [bulker, status]) as ContractCall;
+    return this.getCall("allow", [bulker, status]);
   }
   //
   getBorrowBalanceOfCall(userAddress: string): ContractCall {
-    return this.getCall("borrowBalanceOf", [userAddress])  as ContractCall;
+    return this.getCall("borrowBalanceOf", [userAddress]);
   }
   getCollateralBalanceOfCall(userAddress: string): ContractCall {
-    return this.getCall("collateralBalanceOf", [userAddress]) as ContractCall;
+    return this.getCall("collateralBalanceOf", [userAddress]);
   }
   getLiquidationFactorCall(): ContractCall {
-    return this.getCall("getLiquidationFactor") as ContractCall;
+    return this.getCall("getLiquidationFactor");
   }
 
   // CURVE
 
   getSupplyKinkCall(): ContractCall {
-    return this.getCall("supplyKink") as ContractCall;
+    return this.getCall("supplyKink");
   }
   getSupplyPerSecondInterestRateSlopeLowCall(): ContractCall {
-    return this.getCall("supplyPerSecondInterestRateSlopeLow") as ContractCall;
+    return this.getCall("supplyPerSecondInterestRateSlopeLow");
   }
   getSupplyPerSecondInterestRateSlopeHighCall(): ContractCall {
-    return this.getCall("supplyPerSecondInterestRateSlopeHigh") as ContractCall;
+    return this.getCall("supplyPerSecondInterestRateSlopeHigh");
   }
   getSupplyPerSecondInterestRateBaseCall(): ContractCall {
-    return this.getCall("supplyPerSecondInterestRateSlopeBase") as ContractCall;
+    return this.getCall("supplyPerSecondInterestRateSlopeBase");
   }
 
   getBorrowKinkCall(): ContractCall {
-    return this.getCall("borrowKink") as ContractCall;
+    return this.getCall("borrowKink") ;
   }
   getBorrowPerSecondInterestRateSlopeLowCall(): ContractCall {
-    return this.getCall("borrowPerSecondInterestRateSlopeLow") as ContractCall;
+    return this.getCall("borrowPerSecondInterestRateSlopeLow");
   }
   getBorrowPerSecondInterestRateSlopeHighCall(): ContractCall {
-    return this.getCall("borrowPerSecondInterestRateSlopeHigh") as ContractCall;
+    return this.getCall("borrowPerSecondInterestRateSlopeHigh");
   }
   getBorrowPerSecondInterestRateBaseCall(): ContractCall {
-    return this.getCall("borrowPerSecondInterestRateSlopeBase") as ContractCall;
+    return this.getCall("borrowPerSecondInterestRateSlopeBase");
   }
 
   // BASE
 
   getBaseTokenPriceFeedCall(): ContractCall {
-    return this.getCall("baseTokenPriceFeed") as ContractCall;
+    return this.getCall("baseTokenPriceFeed");
   }
   getPriceCall(priceFeedAddress: string): ContractCall {
-    return this.getCall("getPrice", [priceFeedAddress]) as ContractCall;
+    return this.getCall("getPrice", [priceFeedAddress]);
   }
   getBaseMinForRewardsCall(): ContractCall {
-    return this.getCall("baseMinForRewards") as ContractCall;
+    return this.getCall("baseMinForRewards");
   }
   getBaseTrackingBorrowSpeedCall(): ContractCall {
-    return this.getCall("baseTrackingBorrowSpeed") as ContractCall;
+    return this.getCall("baseTrackingBorrowSpeed");
   }
   getBaseTrackingSupplySpeedCall(): ContractCall {
-    return this.getCall("baseTrackingSupplySpeed") as ContractCall;
+    return this.getCall("baseTrackingSupplySpeed");
   }
   getBaseIndexScaleCall(): ContractCall {
     // Requires additional ABI. Works while it is not showing on scan
-    return this.getCall("baseIndexScale") as ContractCall;
+    return this.getCall("baseIndexScale");
   }
 }
