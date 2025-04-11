@@ -1,11 +1,12 @@
 import {ACTION_SUPPLY_NATIVE_TOKEN, ACTION_WITHDRAW_ASSET, UserMarket} from "@sandbox/comet-sdk";
 import {IUserMarket} from "@sandbox/comet-sdk/src/user/IUserMarket";
-import {BulkerContract} from "../contracts";
+import {BulkerContract, config} from "../contracts";
 import {DataUtils} from "../utils";
 import {AbiCoder} from "ethers";
 import {UserMarketWrapperMethods} from "./UserMarketWrapperMethods";
 import {BorrowingService} from "../services/borrowing";
 import {LendingService} from "../services/lending";
+import {getWalletClient} from "@wagmi/core";
 
 const rpcUrl = "https://rpc.example.com";
 const privateKey = "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
@@ -18,7 +19,9 @@ export class UserMarketWrapper extends UserMarket {
     }
 
     async supplyMarket(inputValue: string) {
-        const userAddress = '0x123'
+        const walletClient = await getWalletClient(config)
+
+        const userAddress = walletClient.account.address
 
         const bulker = new BulkerContract();
 
@@ -60,7 +63,9 @@ export class UserMarketWrapper extends UserMarket {
     }
 
     async borrowMarket(inputValue: string) {
-        const userAddress = '0x123'
+        const walletClient = await getWalletClient(config)
+
+        const userAddress = walletClient.account.address
 
         const bulker = new BulkerContract();
 
@@ -110,7 +115,9 @@ export class UserMarketWrapper extends UserMarket {
     }
 
     async withDrawMarket(inputValue: string, isMax: boolean) {
-        const userAddress = '0x123'
+        const walletClient = await getWalletClient(config)
+
+        const userAddress = walletClient.account.address
 
         const bulker = new BulkerContract();
 
