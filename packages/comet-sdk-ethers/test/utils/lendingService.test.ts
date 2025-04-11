@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { LendingService } from "../../src/services/lending";
 import { ethers } from "ethers";
-import { CometContract, Erc20Contract } from "../../src/contracts";
 import { SERVICES_ERRORS } from "../../src/errors/services";
 
 vi.mock("../../src/contracts", () => ({

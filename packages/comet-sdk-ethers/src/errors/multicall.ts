@@ -1,4 +1,4 @@
-import type { Tagable } from "@sandbox/contracts-tools-sdk-ethers/src/types";
+import type { Tagable } from "@sandbox/contracts-tools-sdk-ethers";
 
 const prefix = "Multicall error: ";
 export const MULTICALL_ERRORS = {

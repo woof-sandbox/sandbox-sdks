@@ -57,28 +57,25 @@ importers:
 
   packages/comet-sdk-ethers:
     dependencies:
-      '@wagmi/connectors':
-        specifier: ^5.7.12
-        version: 5.7.12(@wagmi/core@2.16.7(@tanstack/query-core@5.72.2)(react@18.3.1)(typescript@5.7.3)(use-sync-external-store@1.4.0(react@18.3.1))(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)))(bufferutil@4.0.9)(react@18.3.1)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))
-      '@wagmi/core':
-        specifier: ^2.16.7
-        version: 2.16.7(@tanstack/query-core@5.72.2)(react@18.3.1)(typescript@5.7.3)(use-sync-external-store@1.4.0(react@18.3.1))(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
       viem:
         specifier: 2.x
         version: 2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
-      wagmi:
-        specifier: ^2.14.16
-        version: 2.14.16(@tanstack/query-core@5.72.2)(@tanstack/react-query@5.72.2(react@18.3.1))(bufferutil@4.0.9)(react@18.3.1)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))
     devDependencies:
       '@sandbox/comet-sdk':
         specifier: workspace:^
         version: link:../comet-sdk
       '@sandbox/contracts-tools-sdk-ethers':
-        specifier: workspace:~
+        specifier: workspace:^
         version: link:../contracts-tools-sdk-ethers
+      '@wagmi/connectors':
+        specifier: ^5.7.12
+        version: 5.7.12(@wagmi/core@2.16.7(@tanstack/query-core@5.72.2)(react@18.3.1)(typescript@5.7.3)(use-sync-external-store@1.4.0(react@18.3.1))(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)))(bufferutil@4.0.9)(react@18.3.1)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))
+      '@wagmi/core':
+        specifier: ^2.16.7
+        version: 2.16.7(@tanstack/query-core@5.72.2)(react@18.3.1)(typescript@5.7.3)(use-sync-external-store@1.4.0(react@18.3.1))(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))
       ethers:
         specifier: ^6.13.5
         version: 6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -88,6 +85,9 @@ importers:
       vitest:
         specifier: ^3.0.5
         version: 3.0.5(@types/debug@4.1.12)(@types/node@22.7.5)(yaml@2.7.0)
+      wagmi:
+        specifier: ^2.14.16
+        version: 2.14.16(@tanstack/query-core@5.72.2)(@tanstack/react-query@5.72.2(react@18.3.1))(bufferutil@4.0.9)(react@18.3.1)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))
 
   packages/contracts-tools-sdk-ethers:
     devDependencies:

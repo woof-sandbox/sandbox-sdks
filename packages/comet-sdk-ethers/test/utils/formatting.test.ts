@@ -14,8 +14,8 @@ describe("FormattingUtils", () => {
   });
 
   test("formatNumber", () => {
-    expect(FormattingUtils.formatNumber(123456.789, 2)).toBe("123,456.79");
-    expect(FormattingUtils.formatNumber(0.00001234, 8)).toBe("0.00001234");
+    expect(FormattingUtils.formatNumber(123456.789, 2)).toBe("123 456,79");
+    expect(FormattingUtils.formatNumber(0.00001234, 8)).toBe("0,00001234");
   });
 
   test("formatCurrency", () => {

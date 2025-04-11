@@ -39,7 +39,7 @@ describe('fetchUserActiveMarkets', () => {
 
         expect(borrowMarkets).toEqual(['0xborrow1', '0xborrow2']);
         expect(landMarkets).toEqual(['0xlend1']);
-        expect(fetchMock).toHaveBeenCalledTimes(2); // Убедились, что вызовы были
+        expect(fetchMock).toHaveBeenCalledTimes(2);
 
         const firstCallArgs = fetchMock.mock.calls[0];
         expect(firstCallArgs![0]).toBe(mockSubgraphUrl);
@@ -86,7 +86,7 @@ describe('fetchUserActiveMarkets', () => {
             mockSubgraphUrl,
         );
 
-        expect(fetchMock).toHaveBeenCalledTimes(3); // Убедились, что вызовы были
+        expect(fetchMock).toHaveBeenCalledTimes(3);
 
         const secondCallArgs = fetchMock.mock.calls[1];
         expect(JSON.parse(secondCallArgs![1]?.body as string).query).toContain(

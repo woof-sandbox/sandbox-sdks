@@ -1,4 +1,4 @@
-import {MulticallContract} from "@sandbox/contracts-tools-sdk-ethers/src";
+import {MulticallUnit} from "@sandbox/contracts-tools-sdk-ethers";
 import {type JsonRpcProvider, Wallet, ethers} from "ethers";
 import {CometContract} from "../../contracts";
 import {SERVICES_ERRORS} from "../../errors/services";
@@ -30,17 +30,17 @@ export class BorrowingService {
         userAddress: string,
     ): Promise<bigint> {
         const comet = new CometContract(cometAddress);
-        const multicall = new MulticallContract(this.getDriver());
+        const multicall = new MulticallUnit(this.getDriver());
 
         const borrowBalanceTag = "borrowBalance";
         const collateralBalanceOfTag = "collateralBalanceOf";
         const getLiquidationFactorTag = "getLiquidationFactor";
-        multicall.add(borrowBalanceTag, comet.getBorrowBalanceOfCall(userAddress));
+        multicall.add(comet.getBorrowBalanceOfCall(userAddress), borrowBalanceTag);
         multicall.add(
-            collateralBalanceOfTag,
             comet.getCollateralBalanceOfCall(userAddress),
+            collateralBalanceOfTag
         );
-        multicall.add(getLiquidationFactorTag, comet.getLiquidationFactorCall());
+        multicall.add(comet.getLiquidationFactorCall(), getLiquidationFactorTag);
 
         await multicall.run();
 

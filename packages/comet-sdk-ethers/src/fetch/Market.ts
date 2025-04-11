@@ -1,5 +1,5 @@
 import { type IMarketProposalTx, Market, Token } from "@sandbox/comet-sdk";
-import { MulticallUnit } from "@sandbox/contracts-tools-sdk-ethers";
+import { MulticallUnit, Tagable } from "@sandbox/contracts-tools-sdk-ethers";
 import type { Provider, Signer } from "ethers";
 import { CometContract, Erc20Contract } from "../contracts";
 import { MULTICALL_ERRORS } from "../errors/multicall";
@@ -70,49 +70,49 @@ export async function fetchMarket(
   const utilization = await comet.getUtilization();
 
   const borrowRateTag = multicall.add(
-    "borrowRate",
     comet.getBorrowRateCall(utilization),
+    "borrowRate",
   );
   const supplyRateTag = multicall.add(
-    "supplyRate",
     comet.getSupplyRateCall(utilization),
+    "supplyRate",
   );
   //
   const totalBorrowTag = multicall.add(
-    "totalBorrow",
     comet.getTotalBorrowCall(),
+    "totalBorrow",
   );
   const totalSupplyTag = multicall.add(
-    "totalSupply",
     comet.getTotalSupplyCall(),
+    "totalSupply",
   );
   const totalReservesTag = multicall.add(
+    comet.getReservesCall(),
     "totalReserves",
-    comet.getTotalReservesCall(),
   );
   //
   const baseToken = await fetchBase(cometProxyAddress, driver);
   const baseContract = new Erc20Contract(baseToken.tokenAddress, driver);
   const availableLiquidityTag = multicall.add(
-    "availableLiquidity",
     baseContract.getBalanceOfCall(cometProxyAddress),
+    "availableLiquidity",
   );
 
   await multicall.run();
 
   const borrowRate = multicall.getSingle<bigint>(borrowRateTag);
-  if (!borrowRate) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowRateTag);
+  if (borrowRate === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowRateTag as Tagable);
   const supplyRate = multicall.getSingle<bigint>(supplyRateTag);
-  if (!supplyRate) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateTag);
+  if (supplyRate === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateTag as Tagable);
   const totalBorrow = multicall.getSingle<bigint>(totalBorrowTag);
-  if (!totalBorrow) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalBorrowTag);
+  if (totalBorrow === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalBorrowTag as Tagable);
   const totalSupply = multicall.getSingle<bigint>(totalSupplyTag);
-  if (!totalSupply) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalSupplyTag);
+  if (totalSupply === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalSupplyTag as Tagable);
   const totalReserves = multicall.getSingle<bigint>(totalReservesTag);
-  if (!totalReserves) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalReservesTag);
+  if (totalReserves === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(totalReservesTag as Tagable);
   const availableLiquidity = multicall.getSingle<bigint>(availableLiquidityTag);
-  if (!availableLiquidity)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(availableLiquidityTag);
+  if (availableLiquidity === null)
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(availableLiquidityTag as Tagable);
 
   const collaterals = await fetchCollateralsMocks(cometProxyAddress, driver);
 
