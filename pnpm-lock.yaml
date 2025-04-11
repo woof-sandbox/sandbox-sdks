@@ -68,7 +68,7 @@ importers:
         specifier: workspace:^
         version: link:../comet-sdk
       '@sandbox/contracts-tools-sdk-ethers':
-        specifier: workspace:~
+        specifier: workspace:^
         version: link:../contracts-tools-sdk-ethers
       '@wagmi/connectors':
         specifier: ^5.7.12

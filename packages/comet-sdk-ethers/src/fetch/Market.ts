@@ -87,7 +87,7 @@ export async function fetchMarket(
     "totalSupply",
   );
   const totalReservesTag = multicall.add(
-    comet.getTotalReservesCall(),
+    comet.getReservesCall(),
     "totalReserves",
   );
   //

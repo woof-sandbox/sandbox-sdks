@@ -8,8 +8,9 @@ export class CometContract extends BaseContract {
     super(CometAbi, address, driver!);
   }
 
-  getUtilization(): Promise<bigint> {
-    return this.call("getUtilization");
+  async getUtilization(): Promise<bigint> {
+    const result = await this.call("getUtilization");
+    return result as any;
   }
   getUtilizationCall(): ContractCall {
     return this.getCall("getUtilization") as ContractCall;
@@ -37,8 +38,8 @@ export class CometContract extends BaseContract {
   getTotalSupplyCall(): ContractCall {
     return this.getCall("totalSupply") as ContractCall;
   }
-  getTotalReservesCall(): ContractCall {
-    return this.getCall("totalReserves") as ContractCall;
+  getReservesCall(): ContractCall {
+    return this.getCall("getReserves") as ContractCall;
   }
   getBaseTokenCall(): ContractCall {
     return this.getCall("baseToken") as  ContractCall;
