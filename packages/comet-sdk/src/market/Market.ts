@@ -20,7 +20,7 @@ export class Market implements IMarket {
   public ownerAddress: string;
   public guardianAddress: string;
   public curatorAddress: string;
-  public curatorFee: number;
+  public curatorFee: bigint;
   //
   public proposals: IMarketProposalTx[];
   //  added reward tokens (always several tokens (from DAO one (decide itself with inner mechanics) & owner of Config Controller decision))

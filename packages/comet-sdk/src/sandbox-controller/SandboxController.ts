@@ -16,6 +16,8 @@ export class SandboxController implements ISandboxController {
   collateralsWhitelist: ICollateral[];
   storeFrontPriceFactor: number; // percents (1e18 == 100%)
 
+  curvePresets: [];
+
   constructor(controllerData: ISandboxController) {
     this.address = controllerData.address;
 
@@ -32,5 +34,6 @@ export class SandboxController implements ISandboxController {
     this.baseWhitelist = controllerData.baseWhitelist;
     this.collateralsWhitelist = controllerData.collateralsWhitelist;
     this.storeFrontPriceFactor = controllerData.storeFrontPriceFactor;
+    this.curvePresets = controllerData.curvePresets;
   }
 }

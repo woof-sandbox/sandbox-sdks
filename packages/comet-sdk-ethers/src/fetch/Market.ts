@@ -4,7 +4,7 @@ import type { Provider, Signer } from "ethers";
 import { CometContract, Erc20Contract } from "../contracts";
 import { MULTICALL_ERRORS } from "../errors/multicall";
 import { fetchBase, fetchBaseMock } from "./Base";
-import { fetchCollateralsMocks } from "./Collateral";
+import { fetchCollaterals, fetchCollateralsMocks } from "./Collateral";
 
 export async function fetchMarketMock(
   cometProxyAddress?: string,
@@ -25,7 +25,7 @@ export async function fetchMarketMock(
   const ownerAddress = "0x0000000000000000000000000000000000000000";
   const guardianAddress = "0x0000000000000000000000000000000000000000";
   const curatorAddress = "0x0000000000000000000000000000000000000000";
-  const feeDistribution = 10;
+  const curatorFee = 10n;
   const proposals: IMarketProposalTx[] = [];
   //
   const baseToken = await fetchBaseMock(cometProxyAddress, driver);
@@ -51,7 +51,7 @@ export async function fetchMarketMock(
     ownerAddress,
     guardianAddress,
     curatorAddress,
-    curatorFee: feeDistribution,
+    curatorFee,
     proposals,
     baseToken,
     collaterals,
@@ -114,7 +114,7 @@ export async function fetchMarket(
   if (!availableLiquidity)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(availableLiquidityTag);
 
-  const collaterals = await fetchCollateralsMocks(cometProxyAddress, driver);
+  const collaterals = await fetchCollaterals(cometProxyAddress, driver);
 
   return new Market({
     cometAddress: cometProxyAddress,
@@ -133,7 +133,7 @@ export async function fetchMarket(
     ownerAddress: "0x0000000000000000000000000000000000000000", // TODO
     guardianAddress: "0x0000000000000000000000000000000000000000", // TODO
     curatorAddress: "0x0000000000000000000000000000000000000000", // TODO
-    curatorFee: 0, // TODO
+    curatorFee: 0n, // TODO
     //
     proposals: [], // TODO
     //

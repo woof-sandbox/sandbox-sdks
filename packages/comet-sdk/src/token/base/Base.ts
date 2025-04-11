@@ -8,7 +8,7 @@ export class Base extends Token implements IBase {
   public baseTrackingBorrowSpeed: bigint;
   public baseTrackingSupplySpeed: bigint;
   public baseIndexScale: bigint;
-  public curvePresets: ICurve[];
+  public curvePresets: ICurve;
 
   constructor(baseData: IBase) {
     super(baseData);

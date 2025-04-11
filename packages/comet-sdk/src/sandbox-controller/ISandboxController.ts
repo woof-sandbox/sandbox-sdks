@@ -14,4 +14,6 @@ export interface ISandboxController {
   baseWhitelist: IBase[];
   collateralsWhitelist: ICollateral[];
   storeFrontPriceFactor: number; // percents (1e18 == 100%)
+
+  curvePresets: [];
 }

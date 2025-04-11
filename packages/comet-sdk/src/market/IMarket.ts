@@ -15,11 +15,11 @@ export interface IMarket {
   collaterals: ICollateral[];
   availableLiquidity: bigint; // baseToken.balanceOf(CometAddress), mock: 71294244719270
   // Config Controller
-  configControllerAddress: string; // mock: --
-  ownerAddress: string; // address, mock: --
-  guardianAddress: string; // address, mock: --
-  curatorAddress: string; // mock: --
-  curatorFee: number; // percents, (if == 0, then all fee goes to the owner)
+  configControllerAddress: string; // market -> configControllerAddress, mock: --
+  ownerAddress: string; // ConfigController -> owner, mock: --
+  guardianAddress: string; // ConfigController -> guardian, mock: --
+  curatorAddress: string; // ConfigController -> curator, mock: --
+  curatorFee: bigint; // ConfigController -> curatorFee, (if == 0, then all fee goes to the owner)
   //
   proposals: IMarketProposalTx[];
   //
