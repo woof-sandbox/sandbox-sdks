@@ -3,7 +3,7 @@ import { BorrowingService } from "../../src/services/borrowing";
 import { JsonRpcProvider, Wallet, ethers } from "ethers";
 import { CometContract } from "../../src/contracts";
 import { SERVICES_ERRORS } from "../../src/errors/services";
-import { MulticallContract } from "@sandbox/contracts-tools-sdk-ethers";
+import { MulticallContract } from "@sandbox/contracts-tools-sdk-ethers/src";
 
 vi.mock("../../src/contracts", () => ({
     CometContract: vi.fn().mockImplementation(() => ({

@@ -1,14 +1,28 @@
-import { Contract } from "@sandbox/contracts-tools-sdk-ethers";
-import type { JsonRpcProvider, Wallet, WebSocketProvider } from "ethers";
-import { BulkerAbi } from "../abis";
+import {BulkerAbi} from "../abis";
+import {createConfig, getWalletClient, http} from "@wagmi/core";
+import {mainnet, sepolia} from '@wagmi/core/chains'
 
-export class BulkerContract extends Contract {
-  constructor(
-    address: string,
-    driver?: JsonRpcProvider | WebSocketProvider | Wallet,
-  ) {
-    super(BulkerAbi, address, driver);
-  }
+export const config = createConfig({
+    chains: [mainnet, sepolia],
+    transports: {
+        [mainnet.id]: http(),
+        [sepolia.id]: http(),
+    },
+})
 
-  // TODO
+export class BulkerContract {
+    constructor() {
+    }
+
+    async invokeBulker(bulkerAddress: `0x${string}`, args: any): Promise<any> {
+        const walletClient = await getWalletClient(config)
+
+        return walletClient.writeContract({
+            abi: BulkerAbi,
+            address: bulkerAddress,
+            functionName: 'invoke',
+            args,
+        });
+    }
+
 }

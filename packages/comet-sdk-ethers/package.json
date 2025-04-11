@@ -4,23 +4,32 @@
   "version": "2.0.0",
   "license": "MIT",
   "main": "src/index.ts",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "prepublish": "$npm_execpath build",
     "build": "tsc --build tsconfig.build.json",
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "viem": "2.x"
   },
   "peerDependencies": {
     "@sandbox/comet-sdk": "workspace:^",
     "@sandbox/contracts-tools-sdk-ethers": "workspace:~",
+    "@wagmi/connectors": "^5.7.12",
+    "@wagmi/core": "^2.16.7",
+    "wagmi": "^2.14.16",
     "ethers": "^6.0.0"
   },
   "devDependencies": {
     "@sandbox/comet-sdk": "workspace:^",
     "@sandbox/contracts-tools-sdk-ethers": "workspace:~",
+    "@wagmi/connectors": "^5.7.12",
+    "@wagmi/core": "^2.16.7",
+    "wagmi": "^2.14.16",
     "ethers": "^6.13.5",
     "typescript": "^5.7.2",
     "vitest": "^3.0.5"

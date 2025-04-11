@@ -1,4 +1,4 @@
-import { Contract } from "@sandbox/contracts-tools-sdk-ethers";
+import { Contract } from "@sandbox/contracts-tools-sdk-ethers/src";
 import type { BigNumberish, Provider, Signer, ethers } from "ethers";
 import { Erc20Abi } from "../abis";
 import type { ContractCall } from "./entities";

@@ -4,7 +4,7 @@ export class Token implements IToken {
   public tokenAddress: string;
   public symbol: string;
   public decimals: bigint; // number
-  public price: string; // number
+  public price: bigint; // number
   public priceFeedAddress: string;
 
   constructor(tokenData: IToken) {
