@@ -9,8 +9,7 @@ export class CometContract extends BaseContract {
   }
 
   async getUtilization(): Promise<bigint> {
-    const result = await this.call("getUtilization");
-    return result as any;
+    return await this.call("getUtilization");
   }
   getUtilizationCall(): ContractCall {
     return this.getCall("getUtilization");
