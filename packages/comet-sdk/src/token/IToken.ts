@@ -2,6 +2,6 @@ export interface IToken {
     tokenAddress: string;
     symbol: string;
     decimals: bigint;
-    price: bigint;
+    price: string;
     priceFeedAddress: string; // ?: price service or entity
 }
