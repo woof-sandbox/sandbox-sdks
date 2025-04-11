@@ -1,5 +1,5 @@
 import { Curve } from "@sandbox/comet-sdk";
-import { MulticallContract } from "@sandbox/contracts-tools-sdk-ethers";
+import { MulticallUnit, Tagable } from "@sandbox/contracts-tools-sdk-ethers";
 import type { Provider, Signer } from "ethers";
 import { CometContract } from "../contracts";
 import { MULTICALL_ERRORS } from "../errors/multicall";
@@ -30,61 +30,61 @@ export async function fetchCurves(
   driver: Provider | Signer,
 ): Promise<Curve[]> {
   const comet = new CometContract(cometProxyAddress, driver);
-  const multicall = new MulticallContract(driver);
+  const multicall = new MulticallUnit(driver);
 
-  const supplyKinkTag = multicall.add("supplyKink", comet.getSupplyKinkCall());
+  const supplyKinkTag = multicall.add(comet.getSupplyKinkCall(), "supplyKink");
   const supplySlopeLowTag = multicall.add(
-    "supplySlopeLow",
     comet.getSupplyPerSecondInterestRateSlopeLowCall(),
+    "supplySlopeLow",
   );
   const supplySlopeHighTag = multicall.add(
-    "supplySlopeHigh",
     comet.getSupplyPerSecondInterestRateSlopeHighCall(),
+    "supplySlopeHigh",
   );
   const supplyRateBaseTag = multicall.add(
-    "supplyRateBase",
     comet.getSupplyPerSecondInterestRateBaseCall(),
+    "supplyRateBase",
   );
 
-  const borrowKinkTag = multicall.add("borrowKink", comet.getBorrowKinkCall());
+  const borrowKinkTag = multicall.add(comet.getBorrowKinkCall(), "borrowKink");
   const borrowSlopeLowTag = multicall.add(
-    "borrowSlopeLow",
     comet.getBorrowPerSecondInterestRateSlopeLowCall(),
+    "borrowSlopeLow",
   );
   const borrowSlopeHighTag = multicall.add(
-    "borrowSlopeHigh",
     comet.getBorrowPerSecondInterestRateSlopeHighCall(),
+    "borrowSlopeHigh",
   );
   const borrowRateBaseTag = multicall.add(
-    "borrowRateBase",
     comet.getBorrowPerSecondInterestRateBaseCall(),
+    "borrowRateBase",
   );
 
   await multicall.run();
 
   const supplyKink = multicall.getSingle<bigint>(supplyKinkTag);
-  if (!supplyKink) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyKinkTag);
+  if (!supplyKink) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyKinkTag as Tagable);
   const supplySlopeLow = multicall.getSingle<bigint>(supplySlopeLowTag);
   if (!supplySlopeLow)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplySlopeLowTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplySlopeLowTag as Tagable);
   const supplySlopeHigh = multicall.getSingle<bigint>(supplySlopeHighTag);
   if (!supplySlopeHigh)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplySlopeHighTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplySlopeHighTag as Tagable);
   const supplyRateBase = multicall.getSingle<bigint>(supplyRateBaseTag);
   if (!supplyRateBase)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateBaseTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateBaseTag as Tagable);
 
   const borrowKink = multicall.getSingle<bigint>(borrowKinkTag);
-  if (!borrowKink) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowKinkTag);
+  if (!borrowKink) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowKinkTag as Tagable);
   const borrowSlopeLow = multicall.getSingle<bigint>(borrowSlopeLowTag);
   if (!borrowSlopeLow)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowSlopeLowTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowSlopeLowTag as Tagable);
   const borrowSlopeHigh = multicall.getSingle<bigint>(borrowSlopeHighTag);
   if (!borrowSlopeHigh)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowSlopeHighTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowSlopeHighTag as Tagable);
   const borrowRateBase = multicall.getSingle<bigint>(borrowRateBaseTag);
   if (!borrowRateBase)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowRateBaseTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowRateBaseTag as Tagable);
 
   return [
     new Curve({

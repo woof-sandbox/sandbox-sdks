@@ -1,5 +1,5 @@
 import { Base } from "@sandbox/comet-sdk";
-import { MulticallContract } from "@sandbox/contracts-tools-sdk-ethers/src";
+import { MulticallUnit, Tagable } from "@sandbox/contracts-tools-sdk-ethers";
 import { type Provider, type Signer, formatUnits } from "ethers";
 import { PRICE_FEED_FACTOR_UNITS } from "../constants";
 import { CometContract, Erc20Contract } from "../contracts";
@@ -41,75 +41,75 @@ export async function fetchBase(
   cometProxyAddress: string,
   driver: Provider | Signer,
 ): Promise<Base> {
-  const multicall = new MulticallContract(driver);
+  const multicall = new MulticallUnit(driver);
   const comet = new CometContract(cometProxyAddress, driver);
 
   const tokenAddressTag = multicall.add(
-    "tokenAddress",
     comet.getBaseTokenCall(),
+    "tokenAddress",
   );
   const priceFeedAddressTag = multicall.add(
-    "priceFeedAddress",
     comet.getBaseTokenPriceFeedCall(),
+    "priceFeedAddress",
   );
 
   await multicall.run();
 
   const tokenAddress = multicall.getSingle<string>(tokenAddressTag);
-  if (!tokenAddress) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(tokenAddressTag);
+  if (!tokenAddress) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(tokenAddressTag as Tagable);
   const priceFeedAddress = multicall.getSingle<string>(priceFeedAddressTag);
   if (!priceFeedAddress)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceFeedAddressTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceFeedAddressTag as Tagable);
 
   multicall.clear();
   const erc20 = new Erc20Contract(tokenAddress, driver);
 
-  const priceTag = multicall.add("price", comet.getPriceCall(priceFeedAddress));
-  const decimalsTag = multicall.add("decimals", erc20.getDecimalsCall());
-  const symbolTag = multicall.add("symbol", erc20.getSymbolCall());
+  const priceTag = multicall.add(comet.getPriceCall(priceFeedAddress), "price");
+  const decimalsTag = multicall.add(erc20.getDecimalsCall(), "decimals");
+  const symbolTag = multicall.add(erc20.getSymbolCall(), "symbol");
   //
   const baseMinForRewardsTag = multicall.add(
-    "baseMinForRewards",
     comet.getBaseMinForRewardsCall(),
+    "baseMinForRewards",
   );
   const baseTrackingBorrowSpeedTag = multicall.add(
-    "baseTrackingBorrowSpeed",
     comet.getBaseTrackingBorrowSpeedCall(),
+    "baseTrackingBorrowSpeed",
   );
   const baseTrackingSupplySpeedTag = multicall.add(
-    "baseTrackingSupplySpeed",
     comet.getBaseTrackingSupplySpeedCall(),
+    "baseTrackingSupplySpeed",
   );
   const baseIndexScaleTag = multicall.add(
-    "baseIndexScale",
     comet.getBaseIndexScaleCall(),
+    "baseIndexScale",
   );
 
   await multicall.run();
 
   const priceRaw = multicall.getSingle<bigint>(priceTag);
-  if (!priceRaw) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceTag);
+  if (!priceRaw) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceTag as Tagable);
   const decimals = multicall.getSingle<bigint>(decimalsTag);
-  if (!decimals) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(decimalsTag);
+  if (!decimals) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(decimalsTag as Tagable);
   const symbol = multicall.getSingle<string>(symbolTag);
-  if (!symbol) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(symbolTag);
+  if (!symbol) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(symbolTag as Tagable);
   //
   const baseMinForRewards = multicall.getSingle<bigint>(baseMinForRewardsTag);
   if (!baseMinForRewards)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseMinForRewardsTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseMinForRewardsTag as Tagable);
   const baseTrackingBorrowSpeed = multicall.getSingle<bigint>(
     baseTrackingBorrowSpeedTag,
   );
   if (!baseTrackingBorrowSpeed)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseTrackingBorrowSpeedTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseTrackingBorrowSpeedTag as Tagable);
   const baseTrackingSupplySpeed = multicall.getSingle<bigint>(
     baseTrackingSupplySpeedTag,
   );
   if (!baseTrackingSupplySpeed)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseTrackingSupplySpeedTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseTrackingSupplySpeedTag as Tagable);
   const baseIndexScale = multicall.getSingle<bigint>(baseIndexScaleTag);
   if (!baseIndexScale)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseIndexScaleTag);
+    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseIndexScaleTag as Tagable);
 
   const curves = await fetchCurves(cometProxyAddress, driver);
 

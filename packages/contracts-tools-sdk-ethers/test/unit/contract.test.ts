@@ -40,7 +40,7 @@ describe('RegistryContract Metadata & Behavior', () => {
     const fromProvider = registryProvider.signer;
     const fromWallet = registryWallet.signer;
 
-    expect(fromProvider).to.be.undefined;
+    expect(fromProvider).to.be.null;
     expect(fromWallet).toBeInstanceOf(Wallet);
   });
 

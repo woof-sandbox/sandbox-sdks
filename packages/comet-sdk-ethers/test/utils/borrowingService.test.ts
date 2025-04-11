@@ -1,9 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { BorrowingService } from "../../src/services/borrowing";
-import { JsonRpcProvider, Wallet, ethers } from "ethers";
-import { CometContract } from "../../src/contracts";
+import { Wallet } from "ethers";
 import { SERVICES_ERRORS } from "../../src/errors/services";
-import { MulticallContract } from "@sandbox/contracts-tools-sdk-ethers/src";
 
 vi.mock("../../src/contracts", () => ({
     CometContract: vi.fn().mockImplementation(() => ({
@@ -19,7 +17,7 @@ vi.mock("@sandbox/contracts-tools-sdk-ethers", () => {
     const originalModule = vi.importActual("@sandbox/contracts-tools-sdk-ethers");
     return {
         ...originalModule,
-        MulticallContract: vi.fn().mockImplementation(() => ({
+        MulticallUnit: vi.fn().mockImplementation(() => ({
             add: vi.fn(),
             run: vi.fn().mockResolvedValue(undefined),
             getSingle: vi.fn((tag) => {

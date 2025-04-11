@@ -1,5 +1,5 @@
 import {User} from "@sandbox/comet-sdk";
-import {type CollectionCallback, fetchCollection,} from "@sandbox/contracts-tools-sdk-ethers/src"; // Ensure the package is installed using `npm install @sandbox/contracts-tools-sdk-ethers`
+import {type CollectionCallback, fetchCollection,} from "@sandbox/contracts-tools-sdk-ethers"; // Ensure the package is installed using `npm install @sandbox/contracts-tools-sdk-ethers`
 import type {Provider, Signer} from "ethers";
 import type {IUser} from "../subgraph/entities";
 import {userActiveMarketQuery} from "../subgraph/queries";
