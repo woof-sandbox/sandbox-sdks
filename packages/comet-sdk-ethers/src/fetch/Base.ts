@@ -88,27 +88,27 @@ export async function fetchBase(
   await multicall.run();
 
   const priceRaw = multicall.getSingle<bigint>(priceTag);
-  if (!priceRaw) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceTag as Tagable);
+  if (priceRaw === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceTag as Tagable);
   const decimals = multicall.getSingle<bigint>(decimalsTag);
-  if (!decimals) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(decimalsTag as Tagable);
+  if (decimals === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(decimalsTag as Tagable);
   const symbol = multicall.getSingle<string>(symbolTag);
-  if (!symbol) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(symbolTag as Tagable);
+  if (symbol === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(symbolTag as Tagable);
   //
   const baseMinForRewards = multicall.getSingle<bigint>(baseMinForRewardsTag);
-  if (!baseMinForRewards)
+  if (baseMinForRewards === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseMinForRewardsTag as Tagable);
   const baseTrackingBorrowSpeed = multicall.getSingle<bigint>(
     baseTrackingBorrowSpeedTag,
   );
-  if (!baseTrackingBorrowSpeed)
+  if (baseTrackingBorrowSpeed === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseTrackingBorrowSpeedTag as Tagable);
   const baseTrackingSupplySpeed = multicall.getSingle<bigint>(
     baseTrackingSupplySpeedTag,
   );
-  if (!baseTrackingSupplySpeed)
+  if (baseTrackingSupplySpeed === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseTrackingSupplySpeedTag as Tagable);
   const baseIndexScale = multicall.getSingle<bigint>(baseIndexScaleTag);
-  if (!baseIndexScale)
+  if (baseIndexScale === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(baseIndexScaleTag as Tagable);
 
   const curves = await fetchCurves(cometProxyAddress, driver);

@@ -83,7 +83,7 @@ export class CometContract extends BaseContract {
     return this.getCall("supplyPerSecondInterestRateSlopeHigh") as ContractCall;
   }
   getSupplyPerSecondInterestRateBaseCall(): ContractCall {
-    return this.getCall("supplyPerSecondInterestRateSlopeBase") as ContractCall;
+    return this.getCall("supplyPerSecondInterestRateBase") as ContractCall;
   }
 
   getBorrowKinkCall(): ContractCall {
@@ -96,7 +96,7 @@ export class CometContract extends BaseContract {
     return this.getCall("borrowPerSecondInterestRateSlopeHigh") as ContractCall;
   }
   getBorrowPerSecondInterestRateBaseCall(): ContractCall {
-    return this.getCall("borrowPerSecondInterestRateSlopeBase") as ContractCall;
+    return this.getCall("borrowPerSecondInterestRateBase") as ContractCall;
   }
 
   // BASE

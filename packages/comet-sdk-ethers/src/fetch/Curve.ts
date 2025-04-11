@@ -63,27 +63,27 @@ export async function fetchCurves(
   await multicall.run();
 
   const supplyKink = multicall.getSingle<bigint>(supplyKinkTag);
-  if (!supplyKink) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyKinkTag as Tagable);
+  if (supplyKink === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyKinkTag as Tagable);
   const supplySlopeLow = multicall.getSingle<bigint>(supplySlopeLowTag);
-  if (!supplySlopeLow)
+  if (supplySlopeLow === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplySlopeLowTag as Tagable);
   const supplySlopeHigh = multicall.getSingle<bigint>(supplySlopeHighTag);
-  if (!supplySlopeHigh)
+  if (supplySlopeHigh === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplySlopeHighTag as Tagable);
   const supplyRateBase = multicall.getSingle<bigint>(supplyRateBaseTag);
-  if (!supplyRateBase)
+  if (supplyRateBase === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateBaseTag as Tagable);
 
   const borrowKink = multicall.getSingle<bigint>(borrowKinkTag);
-  if (!borrowKink) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowKinkTag as Tagable);
+  if (borrowKink === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowKinkTag as Tagable);
   const borrowSlopeLow = multicall.getSingle<bigint>(borrowSlopeLowTag);
-  if (!borrowSlopeLow)
+  if (borrowSlopeLow === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowSlopeLowTag as Tagable);
   const borrowSlopeHigh = multicall.getSingle<bigint>(borrowSlopeHighTag);
-  if (!borrowSlopeHigh)
+  if (borrowSlopeHigh === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowSlopeHighTag as Tagable);
   const borrowRateBase = multicall.getSingle<bigint>(borrowRateBaseTag);
-  if (!borrowRateBase)
+  if (borrowRateBase === null)
     throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowRateBaseTag as Tagable);
 
   return [
