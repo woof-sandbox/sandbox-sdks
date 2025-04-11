@@ -1,15 +1,11 @@
 import {ACTION_SUPPLY_NATIVE_TOKEN, ACTION_WITHDRAW_ASSET, UserMarket} from "@sandbox/comet-sdk";
 import {IUserMarket} from "@sandbox/comet-sdk/src/user/IUserMarket";
-import {BulkerContract, config} from "../contracts";
+import {BulkerContract, config, MarketContract, TokenContract} from "../contracts";
 import {DataUtils} from "../utils";
 import {AbiCoder} from "ethers";
 import {UserMarketWrapperMethods} from "./UserMarketWrapperMethods";
-import {BorrowingService} from "../services/borrowing";
-import {LendingService} from "../services/lending";
 import {getWalletClient} from "@wagmi/core";
 
-const rpcUrl = "https://rpc.example.com";
-const privateKey = "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 // Todo need to find where to get Bulker Address
 const bulkerAddress = '0x123'
 
@@ -25,9 +21,9 @@ export class UserMarketWrapper extends UserMarket {
 
         const bulker = new BulkerContract();
 
-        const lendingService = new LendingService(rpcUrl, privateKey);
+        const token = new TokenContract();
 
-        const allowance = await lendingService.getAllowance(this.baseToken.tokenAddress, userAddress, bulkerAddress)
+        const allowance = await token.getAllowance(this.baseToken.tokenAddress as `0x${string}`, userAddress, bulkerAddress)
 
         const supplyValue = DataUtils.toBigNumber(inputValue, Number(this.baseToken.decimals))
 
@@ -36,7 +32,7 @@ export class UserMarketWrapper extends UserMarket {
         }
 
 
-        const borrowBalance = DataUtils.toBigNumber(this.borrowBalance, Number(this.baseToken.decimals))
+        const borrowBalance = this.borrowBalance
 
         if (supplyValue <= borrowBalance) {
             console.log('we make a repay in this case')
@@ -69,10 +65,10 @@ export class UserMarketWrapper extends UserMarket {
 
         const bulker = new BulkerContract();
 
-        const borrowingService = new BorrowingService(rpcUrl, privateKey);
+        const market = new MarketContract();
 
-        const isAllowed = await borrowingService.isBorrowAllowed(
-            this.cometAddress,
+        const isAllowed = await market.getIsAllow(
+            this.cometAddress as `0x${string}`,
             userAddress,
             bulkerAddress
         );
@@ -84,7 +80,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const borrowValue = DataUtils.toBigNumber(inputValue, Number(this.baseToken.decimals))
 
-        const borrowBalance = DataUtils.toBigNumber(this.borrowBalance, Number(this.baseToken.decimals))
+        const borrowBalance = this.borrowBalance
 
 
         const availableToBorrow = DataUtils.toBigNumber(UserMarketWrapperMethods.availableToBorrow(borrowBalance, this.price, this.collaterals), Number(this.baseToken.decimals))
@@ -123,8 +119,8 @@ export class UserMarketWrapper extends UserMarket {
 
         const inputAmount = DataUtils.toBigNumber(inputValue, Number(this.baseToken.decimals))
 
-        const borrowBalance = DataUtils.toBigNumber(this.borrowBalance, Number(this.baseToken.decimals))
-        const supplyBalance = DataUtils.toBigNumber(this.supplyBalance, Number(this.baseToken.decimals))
+        const borrowBalance = this.borrowBalance
+        const supplyBalance = this.supplyBalance
 
 
         if (borrowBalance < inputAmount) {
