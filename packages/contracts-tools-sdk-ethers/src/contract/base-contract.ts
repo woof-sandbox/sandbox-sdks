@@ -1,5 +1,6 @@
 import {
   Contract as EthersContract,
+  type FunctionFragment,
   type Interface,
   type InterfaceAbi,
   type Listener,
@@ -9,21 +10,18 @@ import {
   Wallet,
   WebSocketProvider,
 } from "ethers";
-import {
-  DEFAULT_LOGS_BLOCKS_STEP,
-  DEFAULT_LOGS_DELAY_MS,
-  DEFAULT_MULTICALL_ALLOW_FAILURE,
-  DEFAULT_MUTABLE_CALLS_TIMEOUT_MS,
-  DEFAULT_STATIC_CALLS_TIMEOUT_MS,
-} from "../constant.js";
+import { config } from "../config";
 import { CONTRACTS_ERRORS } from "../errors";
-import { isStaticMethod } from "../helpers";
-import type { ContractCall, StateMutability } from "../types";
+import { isSigner, isStaticMethod } from "../helpers";
 import {
   CallMutability,
+  type ContractCall,
   type ContractCallOptions,
   type ContractGetLogsOptions,
   type ContractOptions,
+  type DynamicContract,
+  type DynamicContractConstructor,
+  type StateMutability,
 } from "../types";
 import {
   checkSignals,
@@ -32,19 +30,74 @@ import {
   raceWithSignals,
   waitWithSignals,
 } from "../utils";
+import { contractCreateCallName } from "./contract-create-call-name";
 
-export class Contract {
+export class BaseContract {
   readonly address: string;
-  readonly driver?: Provider | Signer;
+  readonly driver?: Signer | Provider;
   readonly isCallable: boolean;
   readonly isReadonly: boolean;
   readonly contract: EthersContract;
   readonly contractOptions: ContractOptions = {};
 
+  static createAutoClass(
+    abi: Interface | InterfaceAbi,
+    address?: string,
+    driver?: Provider | Signer,
+    options?: ContractOptions,
+  ) {
+    return class extends this {
+      constructor(args: any) {
+        super(
+          args?.abi || abi,
+          args?.address || address,
+          args?.driver || driver,
+          args?.options || options,
+        );
+
+        for (const fragment of Object.values(this.interface.fragments)) {
+          if (fragment.type === "function") {
+            const funcFragment = fragment as FunctionFragment;
+            const name = funcFragment.name;
+
+            if (!(name in this)) {
+              Object.defineProperty(this, name, {
+                value: async (args: any[] = [], options?: any) =>
+                  this.call(name, args, options),
+                writable: true,
+                enumerable: true,
+              });
+            }
+
+            const getCallName = contractCreateCallName(name);
+            if (!(getCallName in this)) {
+              Object.defineProperty(this, getCallName, {
+                value: (args: any[] = [], callData: any = {}) =>
+                  this.getCall(name, args, callData),
+                writable: true,
+                enumerable: true,
+              });
+            }
+          }
+        }
+      }
+    } as unknown as DynamicContractConstructor;
+  }
+
+  static createAutoInstance(
+    abi: Interface | InterfaceAbi,
+    address?: string,
+    driver?: Provider | Signer,
+    options?: ContractOptions,
+  )  {
+    const AutoClass = this.createAutoClass(abi, address, driver, options);
+    return new AutoClass({ abi, address, driver, options });
+  }
+
   constructor(
     abi: Interface | InterfaceAbi,
     address = "0x0000000000000000000000000000000000000000",
-    driver?: Provider | Signer,
+    driver: Signer | Provider,
     options: ContractOptions = {},
   ) {
     this.address = address;
@@ -53,8 +106,8 @@ export class Contract {
     this.isReadonly = !this.isCallable || !(driver instanceof Wallet);
     this.contract = new EthersContract(address, abi, driver);
     this.contractOptions = {
-      staticCallsTimeoutMs: DEFAULT_STATIC_CALLS_TIMEOUT_MS,
-      mutableCallsTimeoutMs: DEFAULT_MUTABLE_CALLS_TIMEOUT_MS,
+      staticCallsTimeoutMs: config.contract.staticCalls.timeoutMs,
+      mutableCallsTimeoutMs: config.contract.mutableCalls.timeoutMs,
       ...options,
     };
   }
@@ -64,9 +117,9 @@ export class Contract {
     return this.driver.provider;
   }
 
-  public get signer(): Wallet | undefined {
-    if (this.driver instanceof Wallet) return this.driver;
-    return undefined;
+  public get signer(): Signer | null {
+    if (isSigner(this.driver as Signer)) return this.driver as Signer;
+    return null;
   }
 
   public get interface(): Interface {
@@ -74,19 +127,18 @@ export class Contract {
   }
 
   public async call<T>(
-    methodName: string,
+    method: string,
     args: any[] = [],
     options: ContractCallOptions = {},
   ): Promise<Awaited<T>> {
     if (!this.isCallable)
       throw CONTRACTS_ERRORS.NON_CALLABLE_CONTRACT_INVOCATION;
-    const method = this.contract[methodName];
+    const methodFn = this.contract[method];
 
-    if (!method) throw CONTRACTS_ERRORS.METHOD_NOT_DEFINED(methodName);
+    if (!methodFn) throw CONTRACTS_ERRORS.METHOD_NOT_DEFINED(method);
 
-    const functionFragment = this.contract.interface.getFunction(methodName);
-    if (!functionFragment)
-      throw CONTRACTS_ERRORS.FRAGMENT_NOT_DEFINED(methodName);
+    const functionFragment = this.contract.interface.getFunction(method);
+    if (!functionFragment) throw CONTRACTS_ERRORS.FRAGMENT_NOT_DEFINED(method);
 
     const callOptions = {
       forceMutability: this.contractOptions.forceMutability,
@@ -105,7 +157,7 @@ export class Contract {
       localSignals.push(this.getTimeoutSignal(isStatic, callOptions.timeoutMs));
 
     if (isStatic) {
-      return raceWithSignals(() => method.staticCall(...args), localSignals);
+      return raceWithSignals(() => methodFn.staticCall(...args), localSignals);
     } else {
       if (this.isReadonly) throw CONTRACTS_ERRORS.READ_ONLY_CONTRACT_MUTATION;
 
@@ -118,7 +170,7 @@ export class Contract {
               provider as Provider,
               this.driver as Signer,
               this.contract,
-              methodName,
+              method,
               args,
               {
                 signals: localSignals,
@@ -128,7 +180,7 @@ export class Contract {
           localSignals,
         );
       } else {
-        tx = await raceWithSignals(() => method(...args), localSignals);
+        tx = await raceWithSignals(() => methodFn(...args), localSignals);
       }
 
       return tx;
@@ -149,7 +201,7 @@ export class Contract {
     return {
       method: methodName,
       target: this.address,
-      allowFailure: DEFAULT_MULTICALL_ALLOW_FAILURE,
+      allowFailure: config.multicallUnit.allowFailure,
       callData: this.interface.encodeFunctionData(methodName, args),
       stateMutability: functionFragment.stateMutability as StateMutability,
       contractInterface: this.interface,
@@ -196,8 +248,11 @@ export class Contract {
 
     const streamOptions = {
       blocksStep:
-        this.contractOptions.logsBlocksStep || DEFAULT_LOGS_BLOCKS_STEP,
-      delayMs: this.contractOptions.logsDelayMs || DEFAULT_LOGS_DELAY_MS,
+        this.contractOptions.logsBlocksStep ||
+        config.contract.logsGathering.blocksStep,
+      delayMs:
+        this.contractOptions.logsDelayMs ||
+        config.contract.logsGathering.delayMs,
       ...options,
     };
 

@@ -1,8 +1,7 @@
 import type { Contract, FeeData, Provider, TransactionRequest } from "ethers";
 import { DEFAULT_PRIORITY_CALL_MULTIPLIER } from "../constant";
 import type { PriorityCallOptions } from "../types";
-import { checkSignals } from "./check-signals";
-import { createTimeoutSignal } from "./create-timeout-signal";
+import { checkSignals, createTimeoutSignal } from "../utils";
 
 export async function priorityCall(
   provider: Provider,

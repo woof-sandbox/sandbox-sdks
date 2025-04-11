@@ -1,107 +1,103 @@
 import { describe, expect, test } from "vitest";
-import { MulticallContract } from "../../src";
-import { JSON_PROVIDER, RegistryContract } from "../stub";
+import { MulticallUnit } from "../../src";
+import {CometContract, JSON_PROVIDER, RegistryContract} from "../mock";
 
+// Instantiate contracts with a JSON RPC provider
 export const registry = new RegistryContract(JSON_PROVIDER);
 
-describe("E2E Test MulticallContract", () => {
-  let prevOwner: string;
-  let prevList: string[];
+describe('MulticallUnit E2E Tests', () => {
+  let cachedOwner: any;
+  let cachedList: any;
 
-  test("Test of MulticallContract", async () => {
-    const unit = new MulticallContract(JSON_PROVIDER);
+  test('executes multiple calls and retrieves results using tags', async () => {
+    const unit = new MulticallUnit(JSON_PROVIDER);
+
     const listCall = registry.getAddressesProvidersListCall();
-    const listCallTag = "listCall";
-    unit.add(listCallTag, listCall);
+    const listTag = unit.add(listCall, 0);
 
     const ownerCall = registry.getOwnerCall();
-    const ownerCallTag = "ownerCall";
-    unit.add(ownerCallTag, ownerCall);
+    const ownerTag = unit.add(ownerCall, 1);
 
     const result = await unit.run();
 
-    const list = unit.getArray(listCallTag) as string[];
-    const owner = unit.getSingle(ownerCallTag) as string;
+    const list = unit.getSingle(listTag) as string[];
+    const owner = unit.getSingle(ownerTag);
 
-    prevOwner = owner;
-    prevList = list;
+    cachedList = list;
+    cachedOwner = owner;
 
-    expect(list[0]).to.be.equal("0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e");
-    expect(owner).to.be.eq("0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A");
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    expect(list[0]).to.be.equal('0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e');
+    expect(owner).to.be.equal('0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A');
     expect(result).to.be.true;
   });
 
-  test("Test of MulticallTags", async () => {
-    const unit = new MulticallContract(JSON_PROVIDER);
-    const recTagsTemplate = {
-      protocol: "aave",
-      contract: "registry",
+  test('supports custom tags (object and array) when adding calls', async () => {
+    const unit = new MulticallUnit(JSON_PROVIDER);
+
+    const tagTemplateObj = {
+      protocol: 'aave',
+      contract: 'registry',
       nonce: 0,
       limit: 1000n,
-      call: "",
+      call: '',
     };
-    const arrTagsTemplate = ["aave", "registry", 0, 1000n];
+    const tagTemplateArr = ['aave', 'registry', 0, 1000n];
 
     const listCall = registry.getAddressesProvidersListCall();
-    const listCallTag = "listCall";
-    const listCallRecTags = { ...recTagsTemplate, call: listCallTag };
-    const listCallArrTags = [...arrTagsTemplate, listCallTag];
-    unit.add(listCallRecTags, listCall);
-    unit.add(listCallArrTags, listCall);
+    const listTagKey = 'listCall';
+
+    const listTagObj = { ...tagTemplateObj, call: listTagKey };
+    const listTagArr = [...tagTemplateArr, listTagKey];
+
+    unit.add(listCall, listTagObj);
+    unit.add(listCall, listTagArr);
 
     const ownerCall = registry.getOwnerCall();
-    const ownerCallTag = "ownerCall";
-    const ownerCallRecTags = { ...recTagsTemplate, call: ownerCallTag };
-    const ownerCallArrTags = [...arrTagsTemplate, ownerCallTag];
-    unit.add(ownerCallRecTags, ownerCall);
-    unit.add(ownerCallArrTags, ownerCall);
+    const ownerTagKey = 'ownerCall';
+
+    const ownerTagObj = { ...tagTemplateObj, call: ownerTagKey };
+    const ownerTagArr = [...tagTemplateArr, ownerTagKey];
+
+    unit.add(ownerCall, ownerTagObj);
+    unit.add(ownerCall, ownerTagArr);
 
     const result = await unit.run();
 
-    const listRec = unit.getArray(listCallRecTags);
-    const listArr = unit.getArray(listCallArrTags);
+    const listObjResult = unit.getSingle(listTagObj);
+    const listArrResult = unit.getSingle(listTagArr);
 
-    const ownerRec = unit.getSingle(ownerCallRecTags);
-    const ownerArr = unit.getSingle(ownerCallArrTags);
+    const ownerObjResult = unit.getSingle(ownerTagObj);
+    const ownerArrResult = unit.getSingle(ownerTagArr);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(result).to.be.true;
-    expect(JSON.stringify(prevList))
-      .to.be.eq(JSON.stringify(listRec))
-      .to.be.eq(JSON.stringify(listArr));
-    expect(prevOwner).to.be.eq(ownerRec).to.be.eq(ownerArr);
+    expect(JSON.stringify(cachedList))
+        .to.be.equal(JSON.stringify(listObjResult))
+        .to.be.equal(JSON.stringify(listArrResult));
+    expect(cachedOwner).to.be.equal(ownerObjResult).to.be.equal(ownerArrResult);
   });
 
-  test("Test of maxCallsStack", async () => {
-    const unit = new MulticallContract(JSON_PROVIDER, {
+  test('honors maxStaticCallsStack limit', async () => {
+    const unit = new MulticallUnit(JSON_PROVIDER, {
       maxStaticCallsStack: 3,
     });
+
     const listCall = registry.getAddressesProvidersListCall();
     const ownerCall = registry.getOwnerCall();
 
-    const listCallTag1 = "listCall";
-    unit.add(listCallTag1, listCall);
-
-    const ownerCallTag1 = "ownerCall1";
-    unit.add(ownerCallTag1, ownerCall);
-
-    const listCallTag2 = "listCall2";
-    unit.add(listCallTag2, listCall);
-
-    const ownerCallTag2 = "ownerCall2";
-    unit.add(ownerCallTag2, ownerCall);
+    const listTag1 = unit.add(listCall, 0);
+    const ownerTag1 = unit.add(ownerCall, 1);
+    const listTag2 = unit.add(listCall, 2);
+    const ownerTag2 = unit.add(ownerCall, 3);
 
     const result = await unit.run();
 
-    const list1 = unit.getArray(listCallTag1) as string[];
-    const owner1 = unit.getSingle(ownerCallTag1) as string;
-    const list2 = unit.getArray(listCallTag2) as string[];
-    const owner2 = unit.getSingle(ownerCallTag2) as string;
+    const list1 = unit.getSingle(listTag1) as string[];
+    const owner1 = unit.getSingle(ownerTag1);
+    const list2 = unit.getSingle(listTag2) as string[];
+    const owner2 = unit.getSingle(ownerTag2);
 
     expect(list1[0]).to.be.equal(list2[0]);
     expect(owner1).to.be.equal(owner2);
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(result).to.be.true;
   });
 });
