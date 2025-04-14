@@ -1,7 +1,6 @@
 import { BaseContract, ContractCall } from "@sandbox/contracts-tools-sdk-ethers";
 import type { BigNumberish, Provider, Signer, ethers } from "ethers";
 import { CometAbi } from "../abis";
-import type {  } from "./entities";
 
 export class CometContract extends BaseContract {
   constructor(address?: string, driver?: Provider | Signer) {
