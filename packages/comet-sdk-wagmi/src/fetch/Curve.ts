@@ -1,17 +1,14 @@
 import { Curve } from "@sandbox/comet-sdk";
-import {
-  MulticallUnit,
-  type Tagable,
-} from "@sandbox/contracts-tools-sdk-ethers";
-import type { Provider, Signer } from "ethers";
-import { CometContract } from "../contracts";
-import { MULTICALL_ERRORS } from "../errors/multicall";
+import {CometContract, WagmiConfig} from "../contracts";
+import {WagmiChainIds} from "../config/chains";
+import {multicall} from "@wagmi/core";
+import {WagmiUtils} from "../utils";
 
 const secsPerYear = 60n * 60n * 24n * 365n;
 
 export async function fetchCurvesMocks(
-  cometProxyAddress?: string,
-  driver?: Provider | Signer,
+    cometProxyAddress?: `0x${string}`,
+    chainId?: typeof WagmiChainIds[number],
 ): Promise<Curve[]> {
   return [
     new Curve({
@@ -29,67 +26,38 @@ export async function fetchCurvesMocks(
 }
 
 export async function fetchCurves(
-  cometProxyAddress: string,
-  driver: Provider | Signer,
+    cometProxyAddress: `0x${string}`,
+    chainId: typeof WagmiChainIds[number],
 ): Promise<Curve[]> {
-  const comet = new CometContract(cometProxyAddress, driver);
-  const multicall = new MulticallUnit(driver);
+  const comet = new CometContract(WagmiConfig, cometProxyAddress as `0x${string}`);
 
-  const supplyKinkTag = multicall.add(comet.getSupplyKinkCall(), "supplyKink");
-  const supplySlopeLowTag = multicall.add(
-    comet.getSupplyPerSecondInterestRateSlopeLowCall(),
-    "supplySlopeLow",
-  );
-  const supplySlopeHighTag = multicall.add(
-    comet.getSupplyPerSecondInterestRateSlopeHighCall(),
-    "supplySlopeHigh",
-  );
-  const supplyRateBaseTag = multicall.add(
-    comet.getSupplyPerSecondInterestRateBaseCall(),
-    "supplyRateBase",
-  );
+  const curveData= await multicall(
+      WagmiConfig,
+      {
+        chainId,
+        contracts: [
+          comet.getSupplyKinkCall(),
+          comet.getSupplyPerSecondInterestRateSlopeLowCall(),
+          comet.getSupplyPerSecondInterestRateSlopeHighCall(),
+          comet.getSupplyPerSecondInterestRateBaseCall(),
+          //
+          comet.getBorrowKinkCall(),
+          comet.getBorrowPerSecondInterestRateSlopeLowCall(),
+          comet.getBorrowPerSecondInterestRateSlopeHighCall(),
+          comet.getBorrowPerSecondInterestRateBaseCall(),
+        ]
+      }
+  )
 
-  const borrowKinkTag = multicall.add(comet.getBorrowKinkCall(), "borrowKink");
-  const borrowSlopeLowTag = multicall.add(
-    comet.getBorrowPerSecondInterestRateSlopeLowCall(),
-    "borrowSlopeLow",
-  );
-  const borrowSlopeHighTag = multicall.add(
-    comet.getBorrowPerSecondInterestRateSlopeHighCall(),
-    "borrowSlopeHigh",
-  );
-  const borrowRateBaseTag = multicall.add(
-    comet.getBorrowPerSecondInterestRateBaseCall(),
-    "borrowRateBase",
-  );
+  const supplyKink = WagmiUtils.resultOrThrow<bigint>(curveData[0]);
+  const supplySlopeLow = WagmiUtils.resultOrThrow<bigint>(curveData[1]);
+  const supplySlopeHigh = WagmiUtils.resultOrThrow<bigint>(curveData[2]);
+  const supplyRateBase = WagmiUtils.resultOrThrow<bigint>(curveData[3]);
 
-  await multicall.run();
-
-  const supplyKink = multicall.getSingle<bigint>(supplyKinkTag);
-  if (supplyKink === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyKinkTag as Tagable);
-  const supplySlopeLow = multicall.getSingle<bigint>(supplySlopeLowTag);
-  if (supplySlopeLow === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplySlopeLowTag as Tagable);
-  const supplySlopeHigh = multicall.getSingle<bigint>(supplySlopeHighTag);
-  if (supplySlopeHigh === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplySlopeHighTag as Tagable);
-  const supplyRateBase = multicall.getSingle<bigint>(supplyRateBaseTag);
-  if (supplyRateBase === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(supplyRateBaseTag as Tagable);
-
-  const borrowKink = multicall.getSingle<bigint>(borrowKinkTag);
-  if (borrowKink === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowKinkTag as Tagable);
-  const borrowSlopeLow = multicall.getSingle<bigint>(borrowSlopeLowTag);
-  if (borrowSlopeLow === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowSlopeLowTag as Tagable);
-  const borrowSlopeHigh = multicall.getSingle<bigint>(borrowSlopeHighTag);
-  if (borrowSlopeHigh === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowSlopeHighTag as Tagable);
-  const borrowRateBase = multicall.getSingle<bigint>(borrowRateBaseTag);
-  if (borrowRateBase === null)
-    throw MULTICALL_ERRORS.RESULT_NOT_FOUND(borrowRateBaseTag as Tagable);
+  const borrowKink = WagmiUtils.resultOrThrow<bigint>(curveData[4]);
+  const borrowSlopeLow = WagmiUtils.resultOrThrow<bigint>(curveData[5]);
+  const borrowSlopeHigh = WagmiUtils.resultOrThrow<bigint>(curveData[6]);
+  const borrowRateBase = WagmiUtils.resultOrThrow<bigint>(curveData[7]);
 
   return [
     new Curve({

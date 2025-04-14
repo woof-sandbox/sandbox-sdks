@@ -1,4 +1,4 @@
-import { Chain } from "../chain";
+import { Chain } from "./chains/chain";
 
 export const SubgraphUrls: Record<Chain, string> = {
   // Mainnets

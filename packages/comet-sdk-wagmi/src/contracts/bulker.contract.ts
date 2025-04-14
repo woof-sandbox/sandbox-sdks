@@ -1,7 +1,7 @@
 import { getWalletClient } from "@wagmi/core";
 import type { Address } from "viem";
 import { BulkerAbi } from "../abis";
-import {config} from "./config";
+import {WagmiConfig} from "./wagmiConfig";
 
 export class BulkerContract {
   public bulkerAddress: Address;
@@ -11,7 +11,7 @@ export class BulkerContract {
   }
 
   async invokeBulker(args: any): Promise<any> {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     return walletClient.writeContract({
       abi: BulkerAbi,

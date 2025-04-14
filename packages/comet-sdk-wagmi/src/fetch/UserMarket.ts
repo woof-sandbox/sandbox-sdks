@@ -2,7 +2,7 @@ import { UserMarket } from "@sandbox/comet-sdk";
 import { multicall } from "@wagmi/core";
 import type { Provider, Signer } from "ethers";
 import { cometAbi, erc20Abi } from "../abis";
-import { config } from "../contracts";
+import { WagmiConfig } from "../contracts";
 import { fetchBaseMock } from "./Base";
 import {WagmiUtils} from "../utils";
 
@@ -12,7 +12,7 @@ export async function fetchUserMarket(
   userAddress: `0x${string}`,
   driver?: Provider | Signer,
 ): Promise<UserMarket> {
-  const cometBaseData = await multicall(config, {
+  const cometBaseData = await multicall(WagmiConfig, {
     chainId,
     contracts: [
       {
@@ -60,7 +60,7 @@ export async function fetchUserMarket(
   const baseTokenPriceFeed = cometBaseData[1].result || "0x123";
   const utilization = cometBaseData[2].result || BigInt(0);
 
-  const fullData = await multicall(config, {
+  const fullData = await multicall(WagmiConfig, {
     chainId,
     contracts: [
       {
