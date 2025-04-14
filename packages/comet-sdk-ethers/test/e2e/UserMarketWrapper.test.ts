@@ -13,42 +13,6 @@ const data: Partial<IMarket> = {
 } as const;
 
 let market: UserMarketWrapper;
-// // let market: UserMarket;
-// describe("UserMarket", () => {
-//     beforeAll(async () => {
-//         market = await UserMarket.fetch(
-//             data.cometAddress as `0x${string}`,
-//             arbitrum.id,
-//             "0x23eEF61AB548a8852117561689886f583FC0E2B7",
-//             new ethers.JsonRpcProvider(RPC_URL),
-//         );
-//         console.log();
-//     });
-//
-//     test("check availableLiquidity", async () => {
-//         const availableLiquidity = Number(market.availableLiquidity);
-//         expect(availableLiquidity).to.be.greaterThan(0);
-//     });
-//     test("check supplyRate", async () => {
-//         const supplyRate = Number(market.supplyRate);
-//         expect(supplyRate).to.be.greaterThan(0);
-//     });
-//     test("check borrowRate", async () => {
-//         const borrowRate = Number(market.borrowRate);
-//         expect(borrowRate).to.be.greaterThan(0);
-//     });
-//
-//     test("check utilization", async () => {
-//         const utilization = Number(market.utilization);
-//         expect(utilization).to.be.greaterThan(0);
-//     });
-//
-//     test("check supply user", async () => {
-//         console.log("--market--", market);
-//         const userSupply = Number(market.supplyBalance);
-//         expect(userSupply).to.be.greaterThan(0);
-//     });
-// });
 
 describe("UserMarketWrapper", () => {
     beforeAll(async () => {

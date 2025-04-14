@@ -17,6 +17,11 @@ export class UserMarketWrapper extends UserMarket {
 
     }
 
+    // [{input: 'sting', 'address'}]
+
+    // TODO supply collaterals array
+    // TODO implement balance user check
+
     async supplyMarket(inputValue: string) {
         const walletClient = await getWalletClient(config);
 
