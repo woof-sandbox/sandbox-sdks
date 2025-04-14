@@ -27,7 +27,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract();
+        const bulker = new BulkerContract(bulkerAddress);
 
         const token = new TokenContract();
 
@@ -65,7 +65,7 @@ export class UserMarketWrapper extends UserMarket {
         ) as `0x${string}`;
 
         try {
-            return await bulker.invokeBulker(bulkerAddress, [
+            return await bulker.invokeBulker([
                 [ACTION_SUPPLY_NATIVE_TOKEN],
                 abiEncodeData,
             ]); //if need update data after implement then and refetch userMarket
@@ -79,7 +79,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract();
+        const bulker = new BulkerContract(bulkerAddress);
 
         const market = new MarketContract();
 
@@ -126,7 +126,7 @@ export class UserMarketWrapper extends UserMarket {
         ) as `0x${string}`;
 
         try {
-            return await bulker.invokeBulker(bulkerAddress, [
+            return await bulker.invokeBulker([
                 [ACTION_WITHDRAW_ASSET],
                 abiEncodeData,
             ]); //if need update data after implement then and refetch userMarket
@@ -140,7 +140,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract();
+        const bulker = new BulkerContract(bulkerAddress);
 
         const inputAmount = DataUtils.toBigNumber(
             inputValue,
@@ -165,7 +165,7 @@ export class UserMarketWrapper extends UserMarket {
         ) as `0x${string}`;
 
         try {
-            return await bulker.invokeBulker(bulkerAddress, [
+            return await bulker.invokeBulker([
                 [ACTION_WITHDRAW_ASSET],
                 abiEncodeData,
             ]); //if need update data after implement then and refetch userMarket
