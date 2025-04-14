@@ -111,4 +111,56 @@ describe('MarketMethods', () => {
     expect(result[1]).toBeGreaterThanOrEqual(0);
     expect(result[2]).toBeGreaterThanOrEqual(0);
   });
+
+  it('calculates correctly with basic values', () => {
+    const price = '2';
+    const supply = 1000n;
+
+    const result = MarketMethods.totalEarned(price, supply);
+    expect(result).toBe(2000n);
+  });
+
+  it('handles decimal price correctly', () => {
+    const price = '0.5';
+    const supply = 4000n;
+
+    const result = MarketMethods.totalEarned(price, supply);
+    expect(result).toBe(2000n);
+  });
+
+  it('returns 0 for zero supply', () => {
+    const result = MarketMethods.totalEarned('1.23', 0n);
+    expect(result).toBe(0n);
+  });
+
+  it('returns 0 for zero price', () => {
+    const result = MarketMethods.totalEarned('0', 1000n);
+    expect(result).toBe(0n);
+  });
+
+  it('calculates correctly with basic values', () => {
+    const price = '3';
+    const borrowed = 100n;
+
+    const result = MarketMethods.totalBorrowed(price, borrowed);
+    expect(result).toBe(300n);
+  });
+
+  it('handles decimal price correctly', () => {
+    const price = '0.25';
+    const borrowed = 8000n;
+
+    const result = MarketMethods.totalBorrowed(price, borrowed);
+    expect(result).toBe(2000n);
+  });
+
+  it('returns 0 for zero borrowed', () => {
+    const result = MarketMethods.totalBorrowed('4.56', 0n);
+    expect(result).toBe(0n);
+  });
+
+  it('returns 0 for zero price', () => {
+    const result = MarketMethods.totalBorrowed('0', 123n);
+    expect(result).toBe(0n);
+  });
 });
