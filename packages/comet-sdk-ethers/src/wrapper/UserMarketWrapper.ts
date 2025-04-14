@@ -6,6 +6,7 @@ import {BulkerContract, config, MarketContract, TokenContract,} from "../contrac
 import {DataUtils} from "../utils";
 import {UserMarketWrapperMethods} from "./UserMarketWrapperMethods";
 import {MultiAllowanceCallType} from "../contracts/entities/multi-allowance-call";
+import {Address} from "viem";
 
 // Todo need to find where to get Bulker Address
 const bulkerAddress = "0x123";
@@ -25,7 +26,7 @@ export class UserMarketWrapper extends UserMarket {
         const token = new TokenContract();
 
         const allowance = await token.getAllowance(
-            this.baseToken.tokenAddress as `0x${string}`,
+            this.baseToken.tokenAddress as Address,
             userAddress,
             bulkerAddress,
         );
@@ -49,7 +50,7 @@ export class UserMarketWrapper extends UserMarket {
             this.cometAddress,
             userAddress,
             this.baseToken.tokenAddress,
-            DataUtils.toBigNumber(inputValue, Number(this.baseToken.decimals)),
+            supplyValue,
         ];
 
         const abiEncodeData = AbiCoder.defaultAbiCoder().encode(
@@ -140,7 +141,7 @@ export class UserMarketWrapper extends UserMarket {
         const token = new TokenContract();
 
         const isAllowed = await market.getIsAllow(
-            this.cometAddress as `0x${string}`,
+            this.cometAddress as Address,
             userAddress,
             bulkerAddress,
         );
@@ -244,10 +245,9 @@ export class UserMarketWrapper extends UserMarket {
             Number(this.baseToken.decimals),
         );
 
-        const borrowBalance = this.borrowBalance;
         const supplyBalance = this.supplyBalance;
 
-        if (borrowBalance < inputAmount) {
+        if (supplyBalance < inputAmount) {
             return "user cant withdraw more that he borrow";
         }
         const data = [
@@ -265,9 +265,151 @@ export class UserMarketWrapper extends UserMarket {
             return await bulker.invokeBulker([
                 [ACTION_WITHDRAW_ASSET],
                 abiEncodeData,
-            ]); //if need update data after implement then and refetch userMarket
+            ]);
         } catch (e) {
             return "borrow error";
         }
     }
+
+    async supplyCollateral(collateralAmount: string, collateralAddress: Address) {
+        const walletClient = await getWalletClient(config);
+
+        const userAddress = walletClient.account.address;
+
+        const bulker = new BulkerContract(bulkerAddress);
+
+        const market = new MarketContract();
+
+        const token = new TokenContract();
+
+        const isAllowed = await market.getIsAllow(
+            this.cometAddress as `0x${string}`,
+            userAddress,
+            bulkerAddress,
+        );
+
+        if (!isAllowed) {
+            return "need to make allow on contract!";
+        }
+
+        const isCollateralsFromThisMarket = UserMarketWrapperMethods.isAllCollateralsFromMarket(this.collaterals, [{
+            tokenAddress: collateralAddress,
+            inputAmount: collateralAmount
+        }])
+
+        if (!isCollateralsFromThisMarket) {
+            return "you try to supply collaterals from other market"
+        }
+
+        const allowance = await token.getAllowance(
+            collateralAddress,
+            userAddress,
+            bulkerAddress,
+        );
+
+        const currentCollateralData = UserMarketWrapperMethods.findMarketCollateralByAddress(this.collaterals, collateralAddress)
+
+        const supplyValue = DataUtils.toBigNumber(
+            collateralAmount,
+            Number(currentCollateralData?.decimals || 18),
+        );
+
+        if (allowance < supplyValue) {
+            return "need approve token on input amount";
+        }
+
+        const data = [
+            this.cometAddress,
+            userAddress,
+            collateralAddress,
+            supplyValue,
+        ];
+
+        const abiEncodeData = AbiCoder.defaultAbiCoder().encode(
+            ["address", "address", "address", "uint"],
+            data,
+        ) as `0x${string}`;
+
+        try {
+            return await bulker.invokeBulker([
+                [ACTION_SUPPLY_TOKEN],
+                abiEncodeData,
+            ]);
+        } catch (e) {
+            return "supply error";
+        }
+    }
+
+    async withDrawCollateral(collateralAmount: string, collateralAddress: Address) {
+        const walletClient = await getWalletClient(config);
+
+        const userAddress = walletClient.account.address;
+
+        const bulker = new BulkerContract(bulkerAddress);
+
+        const market = new MarketContract();
+
+        const isAllowed = await market.getIsAllow(
+            this.cometAddress as Address,
+            userAddress,
+            bulkerAddress,
+        );
+
+        if (!isAllowed) {
+            return "need to make allow on contract!";
+        }
+
+        const isCollateralsFromThisMarket = UserMarketWrapperMethods.isAllCollateralsFromMarket(this.collaterals, [{
+            tokenAddress: collateralAddress,
+            inputAmount: collateralAmount
+        }])
+
+        if (!isCollateralsFromThisMarket) {
+            return "you try to withdraw collaterals from other market"
+        }
+
+        const currentCollateralData = UserMarketWrapperMethods.findMarketCollateralByAddress(this.collaterals, collateralAddress)
+
+        if (!currentCollateralData) {
+            return "you try to withdraw collaterals from other market"
+        }
+
+        const withDrawAmount = DataUtils.toBigNumber(
+            collateralAmount,
+            Number(currentCollateralData?.decimals || 18),
+        );
+
+        const maxWithDrawAmount = UserMarketWrapperMethods.maxWithDrawCollateralAmount(
+            this.supplyBalance,
+            this.borrowBalance,
+            this.collaterals,
+            this.price,
+            this.baseToken.decimals)
+
+        if (Number(collateralAmount) > Number(maxWithDrawAmount)) {
+            return "you try to withdraw more than you can"
+        }
+
+        const data = [
+            this.cometAddress,
+            userAddress,
+            withDrawAmount,
+        ];
+
+        const abiEncodeData = AbiCoder.defaultAbiCoder().encode(
+            ["address", "address", "uint"],
+            data,
+        ) as `0x${string}`;
+
+        try {
+            return await bulker.invokeBulker([
+                [ACTION_WITHDRAW_ASSET],
+                abiEncodeData,
+            ]);
+        } catch (e) {
+            return "borrow error";
+        }
+    }
+
+
 }

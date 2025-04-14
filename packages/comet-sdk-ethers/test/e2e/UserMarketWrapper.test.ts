@@ -27,11 +27,21 @@ describe("UserMarketWrapper", () => {
     });
 
     test("check supply collaterals", async () => {
-        const supplyCollaterals = market.borrowAndSupplyMarket("0.01", [{
+        const supplyCollaterals = market.supplyCollateral('0.01', '0x912ce59144191c1204e64559fe8253a0e49e6548');
+        console.log("--supplyCollaterals-", supplyCollaterals);
+    });
+
+    test("check withdraw collaterals", async () => {
+        const withdrawCollaterals = market.withDrawCollateral('0.01', '0x912ce59144191c1204e64559fe8253a0e49e6548');
+        console.log("--withdrawCollaterals-", withdrawCollaterals);
+    });
+
+    test("check borrow and supply collaterals", async () => {
+        const borrowAndSupplyCollaterals = market.borrowAndSupplyMarket("0.01", [{
             inputAmount: '0.01',
             tokenAddress: '0x912ce59144191c1204e64559fe8253a0e49e6548'
         }], arbitrum.id,);
-        console.log("--supplyCollaterals-", supplyCollaterals);
+        console.log("--borrowAndSupplyCollaterals-", borrowAndSupplyCollaterals);
     });
 
     test("check supply", async () => {
