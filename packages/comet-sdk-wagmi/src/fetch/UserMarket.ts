@@ -4,6 +4,7 @@ import type { Provider, Signer } from "ethers";
 import { cometAbi, erc20Abi } from "../abis";
 import { config } from "../contracts";
 import { fetchBaseMock } from "./Base";
+import {WagmiUtils} from "../utils";
 
 export async function fetchUserMarket(
   cometProxyAddress: `0x${string}`,
@@ -165,8 +166,8 @@ export async function fetchUserMarket(
     ],
   });
 
-  const baseTokenBalance = fullData[0].result || BigInt(0);
-  const availableLiquidity = fullData[1].result || BigInt(0);
+  const baseTokenBalance = WagmiUtils.resultOrThrow<bigint>(fullData[0]);
+  const availableLiquidity = fullData[1].result;
   const totalSupply = fullData[4].result || BigInt(0);
   const totalBorrow = fullData[5].result || BigInt(0);
   const supplyRate = fullData[9].result || BigInt(0);

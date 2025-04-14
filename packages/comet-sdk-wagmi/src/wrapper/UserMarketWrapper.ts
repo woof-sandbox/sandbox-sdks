@@ -8,9 +8,7 @@ import { getWalletClient } from "@wagmi/core";
 import { AbiCoder } from "ethers";
 import {
   BulkerContract,
-  MarketContract,
-  TokenContract,
-  config,
+  config, CometContract, Erc20Contract,
 } from "../contracts";
 import { DataUtils } from "../utils";
 import { UserMarketWrapperMethods } from "./UserMarketWrapperMethods";
@@ -35,10 +33,9 @@ export class UserMarketWrapper extends UserMarket {
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const token = new TokenContract();
+    const token = new Erc20Contract(config, this.baseToken.tokenAddress as `0x${string}`);
 
-    const allowance = await token.getAllowance(
-      this.baseToken.tokenAddress as `0x${string}`,
+    const allowance = await token.allowance(
       userAddress,
       bulkerAddress,
     );
@@ -87,10 +84,9 @@ export class UserMarketWrapper extends UserMarket {
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const market = new MarketContract();
+    const market = new CometContract(config, this.cometAddress as `0x${string}`); // ?:
 
-    const isAllowed = await market.getIsAllow(
-      this.cometAddress as `0x${string}`,
+    const isAllowed = await market.isAllowed(
       userAddress,
       bulkerAddress,
     );

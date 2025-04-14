@@ -1,4 +1,4 @@
-export * from "./entities/contract-call";
+export * from './config';
 export * from "./comet.contract";
 export * from "./erc20.contract";
 export * from "./bulker.contract";

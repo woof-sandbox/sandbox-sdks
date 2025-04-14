@@ -1,3 +1,4 @@
+/* TODO: remove
 import { readContract } from "@wagmi/core";
 import type { Address } from "viem";
 import { erc20Abi } from "../abis";
@@ -13,3 +14,4 @@ export class TokenContract {
     });
   }
 }
+*/

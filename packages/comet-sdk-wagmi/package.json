@@ -1,9 +1,10 @@
 {
-  "name": "@sandbox/comet-sdk-ethers",
-  "description": "Ethers-based augmentation of `@sandbox/comet-sdk` that exports (and optionally injects) ethers-based fetch methods.",
+  "name": "@sandbox/comet-sdk-wagmi",
+  "description": "Wagmi-based augmentation of `@sandbox/comet-sdk` that exports (and optionally injects) wagmi-based fetch methods.",
   "version": "2.0.0",
   "license": "MIT",
   "main": "src/index.ts",
+  "type": "module",
   "files": ["lib"],
   "scripts": {
     "prepublish": "$npm_execpath build",
