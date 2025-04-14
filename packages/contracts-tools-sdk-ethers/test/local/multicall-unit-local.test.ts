@@ -1,6 +1,6 @@
-import { TransactionReceipt, TransactionResponse } from 'ethers';
-import { describe, expect, test } from 'vitest';
-import { MulticallUnit, waitForAddressTxs } from '../../src/';
+import { TransactionReceipt, TransactionResponse } from "ethers";
+import { describe, expect, test } from "vitest";
+import { MulticallUnit, waitForAddressTxs } from "../../src/";
 import {
   AsyncAbortController,
   MULTICALL_ADDRESS,
@@ -8,22 +8,22 @@ import {
   SimpleStorageAutoClass,
   SimpleStorageAutoInstance,
   WALLET,
-} from './local.mock.js';
+} from "./local.mock.js";
 
 const storage = new SimpleStorage(WALLET);
 
 // noinspection t
-describe('MulticallUnit - Local Test', () => {
-  test('does not wait for tx receipts (write calls with raw responses)', async () => {
+describe("MulticallUnit - Local Test", () => {
+  test("does not wait for tx receipts (write calls with raw responses)", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
 
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          maxMutableCallsStack: 2,
-          waitForTxs: false,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        maxMutableCallsStack: 2,
+        waitForTxs: false,
+      },
+      MULTICALL_ADDRESS,
     );
 
     for (let i = 0; i < 1; i++) {
@@ -46,13 +46,13 @@ describe('MulticallUnit - Local Test', () => {
     await tx.wait();
   });
 
-  test('waits for tx receipts automatically (write calls)', async () => {
+  test("waits for tx receipts automatically (write calls)", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
 
     const unit = new MulticallUnit(
-        WALLET,
-        { maxMutableCallsStack: 2 },
-        MULTICALL_ADDRESS
+      WALLET,
+      { maxMutableCallsStack: 2 },
+      MULTICALL_ADDRESS,
     );
 
     for (let i = 0; i < 3; i++) {
@@ -71,16 +71,16 @@ describe('MulticallUnit - Local Test', () => {
     }
   });
 
-  test('executes write calls with highPriorityTxs', async () => {
+  test("executes write calls with highPriorityTxs", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
 
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          maxMutableCallsStack: 2,
-          highPriorityTxs: true,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        maxMutableCallsStack: 2,
+        highPriorityTxs: true,
+      },
+      MULTICALL_ADDRESS,
     );
 
     for (let i = 0; i < 3; i++) {
@@ -102,17 +102,17 @@ describe('MulticallUnit - Local Test', () => {
     expect(uniqueTxs.size).to.be.eq(3);
   });
 
-  test('handles mixed static and mutable calls', async () => {
+  test("handles mixed static and mutable calls", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
 
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          maxStaticCallsStack: 5,
-          maxMutableCallsStack: 2,
-          highPriorityTxs: true,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        maxStaticCallsStack: 5,
+        maxMutableCallsStack: 2,
+        highPriorityTxs: true,
+      },
+      MULTICALL_ADDRESS,
     );
 
     for (let i = 0; i < 3; i++) {
@@ -137,11 +137,11 @@ describe('MulticallUnit - Local Test', () => {
     expect(unit.getTxReceipt(2)).to.be.instanceOf(TransactionReceipt);
   });
 
-  test('reads static data successfully', async () => {
+  test("reads static data successfully", async () => {
     const unit = new MulticallUnit(
-        WALLET,
-        { maxStaticCallsStack: 2 },
-        MULTICALL_ADDRESS
+      WALLET,
+      { maxStaticCallsStack: 2 },
+      MULTICALL_ADDRESS,
     );
 
     unit.add(storage.getFirstCall(), [0]);
@@ -156,14 +156,14 @@ describe('MulticallUnit - Local Test', () => {
     expect(unit.getSingle([0, 0])).to.be.eq(9n);
   });
 
-  test('fails static call due to timeout', async () => {
+  test("fails static call due to timeout", async () => {
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          staticCallsTimeoutMs: 1,
-          maxStaticCallsStack: 1,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        staticCallsTimeoutMs: 1,
+        maxStaticCallsStack: 1,
+      },
+      MULTICALL_ADDRESS,
     );
 
     unit.add(storage.getFirstCall(), [0]);
@@ -180,17 +180,17 @@ describe('MulticallUnit - Local Test', () => {
     expect(unit.success).to.be.false;
   });
 
-  test('aborts static call with signal', async () => {
+  test("aborts static call with signal", async () => {
     const controller = new AsyncAbortController();
 
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          highPriorityTxs: true,
-          signals: [controller.signal],
-          maxStaticCallsStack: 2,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        highPriorityTxs: true,
+        signals: [controller.signal],
+        maxStaticCallsStack: 2,
+      },
+      MULTICALL_ADDRESS,
     );
 
     unit.add(storage.getFirstCall(), [0]);
@@ -209,14 +209,14 @@ describe('MulticallUnit - Local Test', () => {
     expect(unit.success).to.be.false;
   });
 
-  test('gets decoded object (named)', async () => {
+  test("gets decoded object (named)", async () => {
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          highPriorityTxs: true,
-          maxStaticCallsStack: 2,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        highPriorityTxs: true,
+        maxStaticCallsStack: 2,
+      },
+      MULTICALL_ADDRESS,
     );
 
     unit.add(storage.setFirstCall(0), 0);
@@ -226,19 +226,19 @@ describe('MulticallUnit - Local Test', () => {
     const result = await unit.run();
     const both: any = unit.getObjectOrThrow(2);
 
-    expect(both!['first']).to.be.eq(0n);
-    expect(both['second']).to.be.eq(1n);
+    expect(both!["first"]).to.be.eq(0n);
+    expect(both["second"]).to.be.eq(1n);
     expect(result).to.be.true;
   });
 
-  test('gets both object and single values', async () => {
+  test("gets both object and single values", async () => {
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          highPriorityTxs: true,
-          maxStaticCallsStack: 2,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        highPriorityTxs: true,
+        maxStaticCallsStack: 2,
+      },
+      MULTICALL_ADDRESS,
     );
 
     unit.add(storage.setFirstCall(0), 0);
@@ -251,19 +251,19 @@ describe('MulticallUnit - Local Test', () => {
     const both: any = unit.get(2);
     const first = unit.get(3);
 
-    expect(both['first']).to.be.eq(0n);
-    expect(both['second']).to.be.eq(1n);
+    expect(both["first"]).to.be.eq(0n);
+    expect(both["second"]).to.be.eq(1n);
     expect(first).to.be.eq(0n);
     expect(result).to.be.true;
   });
 
-  test('using auto instance', async () => {
+  test("using auto instance", async () => {
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          maxStaticCallsStack: 2,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        maxStaticCallsStack: 2,
+      },
+      MULTICALL_ADDRESS,
     );
 
     unit.add(SimpleStorageAutoInstance.getSetFirstCall!([33]), 0);
@@ -276,19 +276,19 @@ describe('MulticallUnit - Local Test', () => {
     const both: any = unit.get(2);
     const first = unit.get(3);
 
-    expect(both['first']).to.be.eq(33n);
-    expect(both['second']).to.be.eq(32n);
+    expect(both["first"]).to.be.eq(33n);
+    expect(both["second"]).to.be.eq(32n);
     expect(first).to.be.eq(33n);
     expect(result).to.be.true;
   });
 
-  test('using auto class', async () => {
+  test("using auto class", async () => {
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          maxStaticCallsStack: 2,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        maxStaticCallsStack: 2,
+      },
+      MULTICALL_ADDRESS,
     );
 
     const instance = new SimpleStorageAutoClass();
@@ -303,19 +303,19 @@ describe('MulticallUnit - Local Test', () => {
     const both: any = unit.get(2);
     const first = unit.get(3);
 
-    expect(both['first']).to.be.eq(32n);
-    expect(both['second']).to.be.eq(31n);
+    expect(both["first"]).to.be.eq(32n);
+    expect(both["second"]).to.be.eq(31n);
     expect(first).to.be.eq(32n);
     expect(result).to.be.true;
   });
 
-  test('using waitFor', async () => {
+  test("using waitFor", async () => {
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          maxStaticCallsStack: 2,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        maxStaticCallsStack: 2,
+      },
+      MULTICALL_ADDRESS,
     );
 
     const instance = new SimpleStorageAutoClass();
@@ -323,17 +323,17 @@ describe('MulticallUnit - Local Test', () => {
     unit.add(instance.getSetFirstCall!([40]), 0);
     unit.add(instance.getSetSecondCall!([41]), 1);
     unit.add(instance.getBothCall!(), 2);
-    unit.add(instance.getFirstCall!(), 'first');
+    unit.add(instance.getFirstCall!(), "first");
 
     const [first, result] = await Promise.all([
-      unit.waitFor('first'),
+      unit.waitFor("first"),
       unit.run(),
     ]);
 
     const both: any = unit.get(2);
 
-    expect(both['first']).to.be.eq(40n);
-    expect(both['second']).to.be.eq(41n);
+    expect(both["first"]).to.be.eq(40n);
+    expect(both["second"]).to.be.eq(41n);
     expect(first).to.be.eq(40n);
     expect(result).to.be.true;
   });

@@ -6,8 +6,8 @@ import { JSON_PROVIDER, RegistryContract } from "../mock";
 const registryProvider = new RegistryContract(JSON_PROVIDER);
 const multicallProvider = new MulticallUnit(JSON_PROVIDER);
 
-describe('MulticallUnit Behavior and Edge Cases', () => {
-  test('detects whether all calls are static (readonly)', () => {
+describe("MulticallUnit Behavior and Edge Cases", () => {
+  test("detects whether all calls are static (readonly)", () => {
     expect(multicallProvider.static).to.be.true;
 
     multicallProvider.add(registryProvider.getOwnerCall(), 0); // static call
@@ -17,7 +17,7 @@ describe('MulticallUnit Behavior and Edge Cases', () => {
     expect(multicallProvider.static).to.be.false;
   });
 
-  test('throws on write call using readonly contract', async () => {
+  test("throws on write call using readonly contract", async () => {
     let error;
 
     try {
@@ -31,7 +31,7 @@ describe('MulticallUnit Behavior and Edge Cases', () => {
     expect(multicallProvider.static).to.be.false;
   });
 
-  test('clears internal call and tag state correctly', () => {
+  test("clears internal call and tag state correctly", () => {
     multicallProvider.clear();
 
     expect(multicallProvider.calls.length).to.equal(0);
@@ -39,7 +39,7 @@ describe('MulticallUnit Behavior and Edge Cases', () => {
     expect(multicallProvider.success).to.be.undefined;
   });
 
-  test('prevents simultaneous execution of .run()', async () => {
+  test("prevents simultaneous execution of .run()", async () => {
     multicallProvider.clear();
     multicallProvider.add(registryProvider.getOwnerCall(), 0);
 

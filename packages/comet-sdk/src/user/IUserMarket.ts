@@ -1,7 +1,7 @@
-import {IMarket} from "../market";
+import type { IMarket } from "../market";
 
 export interface IUserMarket extends IMarket {
-    borrowBalance: bigint;
-    supplyBalance: bigint;
-    baseTokenBalance: bigint;
+  borrowBalance: bigint;
+  supplyBalance: bigint;
+  baseTokenBalance: bigint;
 }

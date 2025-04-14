@@ -1,4 +1,7 @@
-import { BaseContract, ContractCall } from "@sandbox/contracts-tools-sdk-ethers";
+import {
+  BaseContract,
+  type ContractCall,
+} from "@sandbox/contracts-tools-sdk-ethers";
 import type { BigNumberish, Provider, Signer, ethers } from "ethers";
 import { CometAbi } from "../abis";
 
@@ -40,7 +43,7 @@ export class CometContract extends BaseContract {
     return this.getCall("getReserves");
   }
   getBaseTokenCall(): ContractCall {
-    return this.getCall("baseToken") as  ContractCall;
+    return this.getCall("baseToken") as ContractCall;
   }
   //
   async isAllowed(owner: string, bulker: string): Promise<boolean> {
@@ -60,7 +63,7 @@ export class CometContract extends BaseContract {
   }
   //
   getBorrowBalanceOfCall(userAddress: string): ContractCall {
-    return this.getCall("borrowBalanceOf", [userAddress]) ;
+    return this.getCall("borrowBalanceOf", [userAddress]);
   }
   getCollateralBalanceOfCall(userAddress: string): ContractCall {
     return this.getCall("collateralBalanceOf", [userAddress]);
