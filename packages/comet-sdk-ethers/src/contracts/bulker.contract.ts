@@ -19,7 +19,7 @@ export class BulkerContract {
     this.bulkerAddress = bulkerAddress;
   }
 
-  async invokeBulker(args: any): Promise<any> {
+  async invokeBulker(args: any) {
     const walletClient = await getWalletClient(config);
 
     return walletClient.writeContract({
