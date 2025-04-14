@@ -1,5 +1,10 @@
 import { EventEmitter } from "node:events";
-import type {Provider, Signer, TransactionReceipt, TransactionResponse} from "ethers";
+import type {
+  Provider,
+  Signer,
+  TransactionReceipt,
+  TransactionResponse,
+} from "ethers";
 import { MulticallAbi } from "../abis";
 import { config } from "../config";
 import { MULTICALL_ADDRESS } from "../constant";
@@ -472,24 +477,27 @@ export class MulticallUnit extends BaseContract {
     return this._txReceipts.get(multicallNormalizeTags(tags)) ?? null;
   }
 
-  public getObjectOrThrow<T>(tags: MulticallTags, deep: boolean = false): T {
+  public getObjectOrThrow<T>(tags: MulticallTags, deep = false): T {
     const obj = this.getObject(tags, deep);
     if (obj === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND;
     return obj as T;
   }
 
-  public getObject<T>(tags: MulticallTags, deep: boolean = false): T | null {
+  public getObject<T>(tags: MulticallTags, deep = false): T | null {
     const data = this.getDecodableData(tags);
     if (data === null) return null;
     const decoded = data.call.contractInterface!.decodeFunctionResult(
-        data.call.method!,
-        data.rawData
+      data.call.method!,
+      data.rawData,
     );
 
     return decoded.toObject(deep) as T;
   }
 
-  async waitFor<T>(tags: MulticallTags, options?: MulticallWaitOptions): Promise<T> {
+  async waitFor<T>(
+    tags: MulticallTags,
+    options?: MulticallWaitOptions,
+  ): Promise<T> {
     const nTags = multicallNormalizeTags(tags);
     if (this._rawData.has(nTags)) {
       return this.get(tags, options?.deep) as T;

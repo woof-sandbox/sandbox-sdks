@@ -1,4 +1,4 @@
-export const MULTICALL_ADDRESS = '0xcA11bde05977b3631167028862bE2a173976CA11';
+export const MULTICALL_ADDRESS = "0xcA11bde05977b3631167028862bE2a173976CA11";
 
 export const DEFAULT_MULTICALL_WAIT_FOR_TXS = true; // The safest way to handle nonce in transactions
 export const DEFAULT_MULTICALL_ALLOW_FAILURE = false;

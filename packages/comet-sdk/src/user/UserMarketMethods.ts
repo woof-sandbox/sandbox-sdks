@@ -1,9 +1,9 @@
 import type { ICollateral } from "@sandbox/comet-sdk";
 import { formatUnits } from "ethers";
 import { parseUnits } from "viem";
-import { PRICE_FEED_FACTOR_UNITS } from "../constants";
+import { PRICE_FEED_MANTISSA } from "../constants";
 
-export namespace UserMarketWrapperMethods {
+export namespace UserMarketMethods {
   function getTokenPrice(
     symbol: string,
     tokenPrice: bigint,
@@ -13,8 +13,8 @@ export namespace UserMarketWrapperMethods {
       symbol === "wstETH" ||
       symbol === "WBTC" ||
       symbol === "WETH"
-      ? Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS)) * marketPrice
-      : Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS));
+      ? Number(formatUnits(tokenPrice, PRICE_FEED_MANTISSA)) * marketPrice
+      : Number(formatUnits(tokenPrice, PRICE_FEED_MANTISSA));
   }
 
   export function availableToBorrow(
@@ -30,7 +30,7 @@ export namespace UserMarketWrapperMethods {
             Number(formatUnits(collateral.collateralFactor, 18)) *
             getTokenPrice(
               collateral.symbol,
-              parseUnits(collateral.price, PRICE_FEED_FACTOR_UNITS),
+              parseUnits(collateral.price, PRICE_FEED_MANTISSA),
               Number(marketPrice),
             ),
         )

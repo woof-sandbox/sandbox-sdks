@@ -32,14 +32,18 @@ export namespace MarketMethods {
     marketTotalSupply: bigint, // or base total supply (takes from market)
   ): bigint {
     const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_MANTISSA);
-    return (marketTotalSupply * priceInBigInt) / BigInt(10 ** PRICE_FEED_MANTISSA);
+    return (
+      (marketTotalSupply * priceInBigInt) / BigInt(10 ** PRICE_FEED_MANTISSA)
+    );
   }
   export function totalBorrowed(
     baseTokenPrice: string,
     marketTotalBorrow: bigint,
   ): bigint {
     const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_MANTISSA);
-    return (marketTotalBorrow * priceInBigInt) / BigInt(10 ** PRICE_FEED_MANTISSA);
+    return (
+      (marketTotalBorrow * priceInBigInt) / BigInt(10 ** PRICE_FEED_MANTISSA)
+    );
   }
   //
   //// NET calculations

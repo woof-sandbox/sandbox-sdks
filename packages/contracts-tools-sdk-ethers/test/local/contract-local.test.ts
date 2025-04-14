@@ -1,32 +1,32 @@
-import { describe, expect, test } from 'vitest';
-import { MulticallUnit, waitForAddressTxs } from '../../src/';
+import { describe, expect, test } from "vitest";
+import { MulticallUnit, waitForAddressTxs } from "../../src/";
 import {
   AsyncAbortController,
   MULTICALL_ADDRESS,
   SimpleStorage,
   WALLET,
-} from './local.mock.js';
+} from "./local.mock.js";
 
 const storage = new SimpleStorage(WALLET);
 
-describe('Local BaseContract Tests', () => {
-  test('listens to FirstChanged events emitted during multiple txs', async () => {
+describe("Local BaseContract Tests", () => {
+  test("listens to FirstChanged events emitted during multiple txs", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
 
     let eventCount = 0;
     storage
-        .listenEvent('FirstChanged', () => {
-          eventCount++;
-        })
-        .catch(console.error);
+      .listenEvent("FirstChanged", () => {
+        eventCount++;
+      })
+      .catch(console.error);
 
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          maxMutableCallsStack: 2,
-          highPriorityTxs: true,
-        },
-        MULTICALL_ADDRESS
+      WALLET,
+      {
+        maxMutableCallsStack: 2,
+        highPriorityTxs: true,
+      },
+      MULTICALL_ADDRESS,
     );
 
     for (let i = 0; i < 10; i++) {
@@ -39,7 +39,7 @@ describe('Local BaseContract Tests', () => {
     expect(eventCount).to.be.gte(10);
   });
 
-  test('writes a value and reads logs from the past 10 blocks', async () => {
+  test("writes a value and reads logs from the past 10 blocks", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
 
     const tx: any = await storage.setFirst(90);
@@ -49,7 +49,7 @@ describe('Local BaseContract Tests', () => {
     expect(logs.length).to.be.gt(0);
   });
 
-  test('aborts transaction due to timeout', async () => {
+  test("aborts transaction due to timeout", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
 
     let error;
@@ -65,7 +65,7 @@ describe('Local BaseContract Tests', () => {
     expect((error as Error).message).to.match(/aborted/);
   });
 
-  test('aborts transaction using an aborted signal', async () => {
+  test("aborts transaction using an aborted signal", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
 
     const controller = new AsyncAbortController();
@@ -83,7 +83,7 @@ describe('Local BaseContract Tests', () => {
     expect((error as Error).message).to.match(/aborted/);
   });
 
-  test('aborts log fetching using signal during async race', async () => {
+  test("aborts log fetching using signal during async race", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
 
     const controller = new AsyncAbortController();

@@ -19,7 +19,6 @@ import {
   type ContractCallOptions,
   type ContractGetLogsOptions,
   type ContractOptions,
-  type DynamicContract,
   type DynamicContractConstructor,
   type StateMutability,
 } from "../types";
@@ -89,7 +88,7 @@ export class BaseContract {
     address?: string,
     driver?: Provider | Signer,
     options?: ContractOptions,
-  )  {
+  ) {
     const AutoClass = this.createAutoClass(abi, address, driver, options);
     return new AutoClass({ abi, address, driver, options });
   }
