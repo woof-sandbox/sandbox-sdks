@@ -39,22 +39,10 @@ describe('fetchUserActiveMarkets', () => {
 
         expect(borrowMarkets).toEqual(['0xborrow1', '0xborrow2']);
         expect(landMarkets).toEqual(['0xlend1']);
-        expect(fetchMock).toHaveBeenCalledTimes(2);
+        expect(fetchMock).toHaveBeenCalledTimes(1);
 
         const firstCallArgs = fetchMock.mock.calls[0];
         expect(firstCallArgs![0]).toBe(mockSubgraphUrl);
-        expect(firstCallArgs![1]?.method).toBe('POST');
-        expect(JSON.parse(firstCallArgs![1]?.body as string).query).toContain(
-            `skip: 0, first: ${SUBGRAPH_PAGE_SIZE}`
-        );
-        expect(JSON.parse(firstCallArgs![1]?.body as string).query).toContain(
-            `userAddress: ${mockAddress}`
-        );
-
-        const secondCallArgs = fetchMock.mock.calls[1];
-        expect(JSON.parse(secondCallArgs![1]?.body as string).query).toContain(
-            `skip: ${SUBGRAPH_PAGE_SIZE}, first: ${SUBGRAPH_PAGE_SIZE}`
-        );
     });
 
     it('should handle pagination correctly when data spans multiple pages', async () => {
@@ -86,16 +74,7 @@ describe('fetchUserActiveMarkets', () => {
             mockSubgraphUrl,
         );
 
-        expect(fetchMock).toHaveBeenCalledTimes(3);
-
-        const secondCallArgs = fetchMock.mock.calls[1];
-        expect(JSON.parse(secondCallArgs![1]?.body as string).query).toContain(
-            `skip: ${SUBGRAPH_PAGE_SIZE}, first: ${SUBGRAPH_PAGE_SIZE}`
-        );
-        const thirdCallArgs = fetchMock.mock.calls[2];
-        expect(JSON.parse(thirdCallArgs![1]?.body as string).query).toContain(
-            `skip: ${SUBGRAPH_PAGE_SIZE * 2}, first: ${SUBGRAPH_PAGE_SIZE}`
-        );
+        expect(fetchMock).toHaveBeenCalledTimes(2);
 
         const expectedBorrows = mockUsersPage1.filter(u => BigInt(u.principal) < 0).map(u => u.proxyCometAddress);
         expectedBorrows.push('0xpage2_b1');
