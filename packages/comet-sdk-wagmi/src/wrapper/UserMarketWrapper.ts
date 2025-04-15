@@ -9,9 +9,7 @@ import { AbiCoder } from "ethers";
 import type { Address } from "viem";
 import {
   BulkerContract,
-  MarketContract,
-  TokenContract,
-  config,
+  WagmiConfig, CometContract, Erc20Contract,
 } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import { DataUtils } from "../utils";
@@ -37,10 +35,9 @@ export class UserMarketWrapper extends UserMarket {
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const token = new TokenContract();
+    const token = new Erc20Contract(WagmiConfig, this.baseToken.tokenAddress as `0x${string}`);
 
-    const allowance = await token.getAllowance(
-      this.baseToken.tokenAddress as Address,
+    const allowance = await token.allowance(
       userAddress,
       bulkerAddress,
     );
@@ -96,10 +93,9 @@ export class UserMarketWrapper extends UserMarket {
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const market = new MarketContract();
+    const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`); // ?:
 
-    const isAllowed = await market.getIsAllow(
-      this.cometAddress as `0x${string}`,
+    const isAllowed = await market.isAllowed(
       userAddress,
       bulkerAddress,
     );
