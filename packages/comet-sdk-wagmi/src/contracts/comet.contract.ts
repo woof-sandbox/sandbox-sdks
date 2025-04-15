@@ -31,6 +31,10 @@ export class CometContract extends WagmiContract {
     return this.getCall("getAssetInfo", [index]);
   }
 
+  getDecimalsCall(): ContractFunctionParameters {
+    return this.getCall("decimals");
+  }
+
   getBorrowRateCall(utilization: bigint): ContractFunctionParameters {
     return this.getCall("getBorrowRate", [utilization]);
   }
@@ -46,6 +50,9 @@ export class CometContract extends WagmiContract {
   }
   getReservesCall(): ContractFunctionParameters {
     return this.getCall("getReserves");
+  }
+  getBaseBorrowMinCall(): ContractFunctionParameters {
+    return this.getCall("baseBorrowMin");
   }
   getBaseTokenCall(): ContractFunctionParameters {
     return this.getCall("baseToken");
@@ -68,6 +75,10 @@ export class CometContract extends WagmiContract {
     return this.getCall("allow", [bulker, status]);
   }
   //
+  getBorrowBalanceOf(userAddress: `0x${string}`): ContractFunctionParameters {
+    return this.getCall("balanceOf", [userAddress]);
+  }
+
   getBorrowBalanceOfCall(userAddress: `0x${string}`): ContractFunctionParameters {
     return this.getCall("borrowBalanceOf", [userAddress]);
   }
