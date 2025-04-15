@@ -27,7 +27,11 @@ export class WagmiContract {
     } as const;
   }
 
-  getCallAddress(address: Address,functionName: string, args?: any[]): ContractFunctionParameters {
+  getCallAddress(
+    address: Address,
+    functionName: string,
+    args?: any[],
+  ): ContractFunctionParameters {
     return {
       address,
       abi: this.abi,

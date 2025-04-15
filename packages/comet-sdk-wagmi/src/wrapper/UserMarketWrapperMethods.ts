@@ -1,3 +1,1 @@
-export namespace UserMarketWrapperMethods {
-
-}
+export namespace UserMarketWrapperMethods {}

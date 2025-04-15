@@ -1,10 +1,10 @@
 import { UserMarket } from "@sandbox/comet-sdk";
 import { multicall } from "@wagmi/core";
+import type { Address } from "viem";
 import type { WagmiChainId } from "../config/chains";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 import { fetchBase, fetchBaseMock } from "./Base";
-import {Address} from "viem";
 
 export async function fetchUserMarket(
   cometProxyAddress: `0x${string}`,
@@ -25,12 +25,14 @@ export async function fetchUserMarket(
     ],
   });
 
-    const baseTokenAddress = WagmiUtils.resultOrThrow<Address>(cometBaseData[0]);
-    const baseTokenPriceFeed = WagmiUtils.resultOrThrow<Address>(cometBaseData[1]);
-    const utilization = WagmiUtils.resultOrThrow<bigint>(cometBaseData[2]);
-    const supplyBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[3]);
-    const borrowBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[4]);
-    const totalReserves = WagmiUtils.resultOrThrow<bigint>(cometBaseData[6]);
+  const baseTokenAddress = WagmiUtils.resultOrThrow<Address>(cometBaseData[0]);
+  const baseTokenPriceFeed = WagmiUtils.resultOrThrow<Address>(
+    cometBaseData[1],
+  );
+  const utilization = WagmiUtils.resultOrThrow<bigint>(cometBaseData[2]);
+  const supplyBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[3]);
+  const borrowBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[4]);
+  const totalReserves = WagmiUtils.resultOrThrow<bigint>(cometBaseData[6]);
 
   const baseTokenContract = new Erc20Contract(baseTokenAddress, chainId);
 
