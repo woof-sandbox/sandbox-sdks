@@ -2,11 +2,9 @@ import type { IMarket } from "@sandbox/comet-sdk";
 import { UserMarket } from "../../src/augment";
 
 import { arbitrum } from "@wagmi/core/chains";
-import { ethers } from "ethers";
 import { beforeAll, describe, expect, test } from "vitest";
 import { UserMarketWrapper } from "../../src/wrapper/UserMarketWrapper";
 
-const RPC_URL = "https://eth.llamarpc.com";
 
 const data: Partial<IMarket> = {
   cometAddress: "0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07",
@@ -20,7 +18,6 @@ describe("UserMarketWrapper", () => {
       data.cometAddress as `0x${string}`,
       arbitrum.id,
       "0x23eEF61AB548a8852117561689886f583FC0E2B7",
-      new ethers.JsonRpcProvider(RPC_URL),
     );
 
     market = new UserMarketWrapper(userMarket);
