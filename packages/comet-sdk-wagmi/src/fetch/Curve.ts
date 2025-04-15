@@ -1,0 +1,75 @@
+import { Curve } from "@sandbox/comet-sdk";
+import {CometContract, WagmiConfig} from "../contracts";
+import {WagmiChainIds} from "../config/chains";
+import {multicall} from "@wagmi/core";
+import {WagmiUtils} from "../utils";
+
+const secsPerYear = 60n * 60n * 24n * 365n;
+
+export async function fetchCurvesMocks(
+    cometProxyAddress?: `0x${string}`,
+    chainId?: typeof WagmiChainIds[number],
+): Promise<Curve[]> {
+  return [
+    new Curve({
+      id: "42",
+      supplyKink: 900000000000000000n,
+      supplyPerYearInterestRateSlopeLow: 1712328767n * secsPerYear,
+      supplyPerYearInterestRateSlopeHigh: 96207508878n * secsPerYear,
+      supplyPerYearInterestRateBase: 0n,
+      borrowKink: 900000000000000000n,
+      borrowPerYearInterestRateSlopeLow: 1585489599n * secsPerYear,
+      borrowPerYearInterestRateSlopeHigh: 107813292744n * secsPerYear,
+      borrowPerYearInterestRateBase: 475646879n * secsPerYear,
+    }),
+  ];
+}
+
+export async function fetchCurves(
+    cometProxyAddress: `0x${string}`,
+    chainId: typeof WagmiChainIds[number],
+): Promise<Curve[]> {
+  const comet = new CometContract(WagmiConfig, cometProxyAddress as `0x${string}`);
+
+  const curveData= await multicall(
+      WagmiConfig,
+      {
+        chainId,
+        contracts: [
+          comet.getSupplyKinkCall(),
+          comet.getSupplyPerSecondInterestRateSlopeLowCall(),
+          comet.getSupplyPerSecondInterestRateSlopeHighCall(),
+          comet.getSupplyPerSecondInterestRateBaseCall(),
+          //
+          comet.getBorrowKinkCall(),
+          comet.getBorrowPerSecondInterestRateSlopeLowCall(),
+          comet.getBorrowPerSecondInterestRateSlopeHighCall(),
+          comet.getBorrowPerSecondInterestRateBaseCall(),
+        ]
+      }
+  )
+
+  const supplyKink = WagmiUtils.resultOrThrow<bigint>(curveData[0]);
+  const supplySlopeLow = WagmiUtils.resultOrThrow<bigint>(curveData[1]);
+  const supplySlopeHigh = WagmiUtils.resultOrThrow<bigint>(curveData[2]);
+  const supplyRateBase = WagmiUtils.resultOrThrow<bigint>(curveData[3]);
+
+  const borrowKink = WagmiUtils.resultOrThrow<bigint>(curveData[4]);
+  const borrowSlopeLow = WagmiUtils.resultOrThrow<bigint>(curveData[5]);
+  const borrowSlopeHigh = WagmiUtils.resultOrThrow<bigint>(curveData[6]);
+  const borrowRateBase = WagmiUtils.resultOrThrow<bigint>(curveData[7]);
+
+  return [
+    new Curve({
+      id: "42", // TODO: sandbox functionality
+      supplyKink,
+      supplyPerYearInterestRateSlopeLow: supplySlopeLow * secsPerYear,
+      supplyPerYearInterestRateSlopeHigh: supplySlopeHigh * secsPerYear,
+      supplyPerYearInterestRateBase: supplyRateBase * secsPerYear,
+      borrowKink,
+      borrowPerYearInterestRateSlopeLow: borrowSlopeLow * secsPerYear,
+      borrowPerYearInterestRateSlopeHigh: borrowSlopeHigh * secsPerYear,
+      borrowPerYearInterestRateBase: borrowRateBase * secsPerYear,
+    }),
+  ];
+}

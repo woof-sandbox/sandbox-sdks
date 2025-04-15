@@ -8,9 +8,7 @@ import { getWalletClient } from "@wagmi/core";
 import { AbiCoder } from "ethers";
 import {
   BulkerContract,
-  MarketContract,
-  TokenContract,
-  config,
+  WagmiConfig, CometContract, Erc20Contract,
 } from "../contracts";
 import { DataUtils } from "../utils";
 import { UserMarketWrapperMethods } from "./UserMarketWrapperMethods";
@@ -29,16 +27,15 @@ export class UserMarketWrapper extends UserMarket {
   // TODO implement balance user check
 
   async supplyMarket(inputValue: string) {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     const userAddress = walletClient.account.address;
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const token = new TokenContract();
+    const token = new Erc20Contract(WagmiConfig, this.baseToken.tokenAddress as `0x${string}`);
 
-    const allowance = await token.getAllowance(
-      this.baseToken.tokenAddress as `0x${string}`,
+    const allowance = await token.allowance(
       userAddress,
       bulkerAddress,
     );
@@ -81,16 +78,15 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async borrowMarket(inputValue: string) {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     const userAddress = walletClient.account.address;
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const market = new MarketContract();
+    const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`); // ?:
 
-    const isAllowed = await market.getIsAllow(
-      this.cometAddress as `0x${string}`,
+    const isAllowed = await market.isAllowed(
       userAddress,
       bulkerAddress,
     );
@@ -142,7 +138,7 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async withDrawMarket(inputValue: string, isMax: boolean) {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     const userAddress = walletClient.account.address;
 

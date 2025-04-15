@@ -3,6 +3,9 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": ".",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2020"
   }
 }

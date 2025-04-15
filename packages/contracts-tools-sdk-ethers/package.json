@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "main": "src/index.ts",
+  "type": "module",
   "keywords": ["local", "library", "npm"],
   "files": ["lib"],
   "scripts": {
