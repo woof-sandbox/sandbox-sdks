@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { MarketRatesService } from "../../src/services/market-rates";
 
-const rpcUrl = "http://localhost:8545";
+const rpcUrl = "https://rpc.test.com";
 let service: MarketRatesService;
 
 beforeEach(() => {

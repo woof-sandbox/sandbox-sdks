@@ -15,9 +15,9 @@ vi.mock("../../src/contracts", () => ({
 }));
 
 describe("LendingService", () => {
-  const rpcUrl = "https://rpc.example.com";
+  const rpcUrl = "https://rpc.test.com";
   const privateKey =
-    "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+    "0x0000000000000000000000000000000000000000000000000000000000000001";
   let service: LendingService;
 
   beforeEach(() => {
