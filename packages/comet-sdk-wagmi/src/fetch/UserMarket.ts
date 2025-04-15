@@ -55,9 +55,9 @@ export async function fetchUserMarket(
         ],
     });
 
+    const baseTokenAddress = WagmiUtils.resultOrThrow<Address>(cometBaseData[0]);
     const baseTokenPriceFeed = WagmiUtils.resultOrThrow<Address>(cometBaseData[1]);
     const utilization = WagmiUtils.resultOrThrow<bigint>(cometBaseData[2]);
-    const baseTokenAddress = WagmiUtils.resultOrThrow<Address>(cometBaseData[3]);
 
     const fullData = await multicall(WagmiConfig, {
         chainId,
