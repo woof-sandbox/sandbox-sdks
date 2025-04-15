@@ -2,11 +2,8 @@ import type { IMarket } from "@sandbox/comet-sdk";
 import { UserMarket } from "../../src/augment";
 
 import { arbitrum } from "@wagmi/core/chains";
-import { ethers } from "ethers";
 import { beforeAll, describe, expect, test } from "vitest";
 import { UserMarketWrapper } from "../../src/wrapper/UserMarketWrapper";
-
-const RPC_URL = "https://eth.llamarpc.com";
 
 const data: Partial<IMarket> = {
   cometAddress: "0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07",
@@ -18,12 +15,48 @@ describe("UserMarketWrapper", () => {
   beforeAll(async () => {
     const userMarket = await UserMarket.fetch(
       data.cometAddress as `0x${string}`,
-      arbitrum.id,
       "0x23eEF61AB548a8852117561689886f583FC0E2B7",
-      new ethers.JsonRpcProvider(RPC_URL),
+      arbitrum.id,
     );
 
     market = new UserMarketWrapper(userMarket);
+  });
+
+  test("check supply collaterals", async () => {
+    const supplyCollaterals = market.supplyCollaterals(
+      [
+        {
+          tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
+          inputAmount: "0.01",
+        },
+      ],
+      arbitrum.id,
+    );
+    console.log("--supplyCollaterals-", supplyCollaterals);
+  });
+
+  test("check withdraw collaterals", async () => {
+    const withdrawCollaterals = market.withDrawCollateral([
+      {
+        tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
+        inputAmount: "0.01",
+      },
+    ]);
+    console.log("--withdrawCollaterals-", withdrawCollaterals);
+  });
+
+  test("check borrow and supply collaterals", async () => {
+    const borrowAndSupplyCollaterals = market.borrowAndSupplyMarket(
+      "0.01",
+      [
+        {
+          inputAmount: "0.01",
+          tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
+        },
+      ],
+      arbitrum.id,
+    );
+    console.log("--borrowAndSupplyCollaterals-", borrowAndSupplyCollaterals);
   });
 
   test("check supply", async () => {

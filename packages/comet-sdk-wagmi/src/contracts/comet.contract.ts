@@ -14,39 +14,57 @@ export class CometContract extends WagmiContract {
     const utilization = await this.read("getUtilization", chainId);
     return utilization as bigint;
   }
+
   getUtilizationCall(): ContractFunctionParameters {
     return this.getCall("getUtilization");
   }
+
   async numAssets(chainId?: WagmiChainId): Promise<bigint> {
     const numAssets = await this.read("numAssets", chainId);
     return numAssets as bigint;
   }
+
   getNumAssetsCall(): ContractFunctionParameters {
     return this.getCall("numAssets");
   }
+
   getAssetInfoCall(index: number): ContractFunctionParameters {
     return this.getCall("getAssetInfo", [index]);
+  }
+
+  getDecimalsCall(): ContractFunctionParameters {
+    return this.getCall("decimals");
   }
 
   getBorrowRateCall(utilization: bigint): ContractFunctionParameters {
     return this.getCall("getBorrowRate", [utilization]);
   }
+
   getSupplyRateCall(utilization: bigint): ContractFunctionParameters {
     return this.getCall("getSupplyRate", [utilization]);
   }
+
   //
   getTotalBorrowCall(): ContractFunctionParameters {
     return this.getCall("totalBorrow");
   }
+
   getTotalSupplyCall(): ContractFunctionParameters {
     return this.getCall("totalSupply");
   }
+
   getReservesCall(): ContractFunctionParameters {
     return this.getCall("getReserves");
   }
+
+  getBaseBorrowMinCall(): ContractFunctionParameters {
+    return this.getCall("baseBorrowMin");
+  }
+
   getBaseTokenCall(): ContractFunctionParameters {
     return this.getCall("baseToken");
   }
+
   //
   async isAllowed(
     owner: `0x${string}`,
@@ -56,12 +74,14 @@ export class CometContract extends WagmiContract {
     const isAllowed = await this.read("isAllowed", chainId, [owner, bulker]);
     return isAllowed as boolean;
   }
-  isAllowedCall(
+
+  getIsAllowedCall(
     owner: `0x${string}`,
     bulker: `0x${string}`,
   ): ContractFunctionParameters {
     return this.getCall("isAllowed", [owner, bulker]);
   }
+
   async allow(
     bulker: `0x${string}`,
     status: boolean,
@@ -69,34 +89,33 @@ export class CometContract extends WagmiContract {
   ): Promise<WriteContractReturnType> {
     return this.write("allow", chainId, [bulker, status]);
   }
+
   getAllowCall(
     bulker: `0x${string}`,
     status: boolean,
   ): ContractFunctionParameters {
     return this.getCall("allow", [bulker, status]);
   }
+
   //
   getBalanceOfCall(userAddress: `0x${string}`): ContractFunctionParameters {
     return this.getCall("balanceOf", [userAddress]);
   }
+
   getBorrowBalanceOfCall(
     userAddress: `0x${string}`,
   ): ContractFunctionParameters {
     return this.getCall("borrowBalanceOf", [userAddress]);
   }
+
   getCollateralBalanceOfCall(
     userAddress: `0x${string}`,
   ): ContractFunctionParameters {
     return this.getCall("collateralBalanceOf", [userAddress]);
   }
+
   getLiquidationFactorCall(): ContractFunctionParameters {
     return this.getCall("getLiquidationFactor");
-  }
-  getBaseBorrowMinCall(): ContractFunctionParameters {
-    return this.getCall("baseBorrowMin");
-  }
-  getDecimalsCall(): ContractFunctionParameters {
-    return this.getCall("decimals");
   }
 
   // CURVE
@@ -104,12 +123,15 @@ export class CometContract extends WagmiContract {
   getSupplyKinkCall(): ContractFunctionParameters {
     return this.getCall("supplyKink");
   }
+
   getSupplyPerSecondInterestRateSlopeLowCall(): ContractFunctionParameters {
     return this.getCall("supplyPerSecondInterestRateSlopeLow");
   }
+
   getSupplyPerSecondInterestRateSlopeHighCall(): ContractFunctionParameters {
     return this.getCall("supplyPerSecondInterestRateSlopeHigh");
   }
+
   getSupplyPerSecondInterestRateBaseCall(): ContractFunctionParameters {
     return this.getCall("supplyPerSecondInterestRateBase");
   }
@@ -117,12 +139,15 @@ export class CometContract extends WagmiContract {
   getBorrowKinkCall(): ContractFunctionParameters {
     return this.getCall("borrowKink");
   }
+
   getBorrowPerSecondInterestRateSlopeLowCall(): ContractFunctionParameters {
     return this.getCall("borrowPerSecondInterestRateSlopeLow");
   }
+
   getBorrowPerSecondInterestRateSlopeHighCall(): ContractFunctionParameters {
     return this.getCall("borrowPerSecondInterestRateSlopeHigh");
   }
+
   getBorrowPerSecondInterestRateBaseCall(): ContractFunctionParameters {
     return this.getCall("borrowPerSecondInterestRateBase");
   }
@@ -132,18 +157,23 @@ export class CometContract extends WagmiContract {
   getBaseTokenPriceFeedCall(): ContractFunctionParameters {
     return this.getCall("baseTokenPriceFeed");
   }
+
   getPriceCall(priceFeedAddress: `0x${string}`): ContractFunctionParameters {
     return this.getCall("getPrice", [priceFeedAddress]);
   }
+
   getBaseMinForRewardsCall(): ContractFunctionParameters {
     return this.getCall("baseMinForRewards");
   }
+
   getBaseTrackingBorrowSpeedCall(): ContractFunctionParameters {
     return this.getCall("baseTrackingBorrowSpeed");
   }
+
   getBaseTrackingSupplySpeedCall(): ContractFunctionParameters {
     return this.getCall("baseTrackingSupplySpeed");
   }
+
   getBaseIndexScaleCall(): ContractFunctionParameters {
     // Requires additional ABI. Works while it is not showing on scan
     return this.getCall("baseIndexScale");

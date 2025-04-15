@@ -1,7 +1,9 @@
-import type { WriteContractReturnType } from "@wagmi/core";
-import type { ContractFunctionParameters } from "viem";
+import { type WriteContractReturnType, multicall } from "@wagmi/core";
+import type { Address, ContractFunctionParameters } from "viem";
 import { erc20Abi } from "../abis";
 import type { WagmiChainId } from "../config/chains";
+import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
+import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
 
@@ -18,6 +20,29 @@ export class Erc20Contract extends WagmiContract {
     const allowance = await this.read("allowance", chainId, [owner, spender]);
     return allowance as bigint;
   }
+
+  async getMultiAllowance(
+    tokensData: MultiAllowanceCallType[],
+    chainId: any,
+    owner: Address,
+    spender: Address,
+  ): Promise<MultiAllowanceResponseType[]> {
+    const tokensAllowance = await multicall(wagmiConfig, {
+      chainId,
+      contracts: tokensData.map(({ tokenAddress }) =>
+        this.getCallAddress(tokenAddress, "allowance", [owner, spender]),
+      ),
+    });
+
+    return tokensData.map((tokenData, index) => {
+      const currentTokenAllowance = tokensAllowance[index]?.result as bigint;
+      return {
+        ...tokenData,
+        allowance: currentTokenAllowance,
+      };
+    });
+  }
+
   async approve(
     spender: `0x${string}`,
     amount: bigint,
