@@ -1,182 +1,77 @@
 import { UserMarket } from "@sandbox/comet-sdk";
 import { multicall } from "@wagmi/core";
-import type { Provider, Signer } from "ethers";
-import { cometAbi, erc20Abi } from "../abis";
-import { WagmiConfig } from "../contracts";
-import { fetchBaseMock } from "./Base";
-import {WagmiUtils} from "../utils";
+import type { WagmiChainId } from "../config/chains";
+import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
+import { WagmiUtils } from "../utils";
+import { fetchBase, fetchBaseMock } from "./Base";
 
 export async function fetchUserMarket(
   cometProxyAddress: `0x${string}`,
-  chainId: any,
   userAddress: `0x${string}`,
-  driver?: Provider | Signer,
+  chainId: WagmiChainId,
 ): Promise<UserMarket> {
-  const cometBaseData = await multicall(WagmiConfig, {
+  const comet = new CometContract(cometProxyAddress, chainId);
+  const cometBaseData = await multicall(wagmiConfig, {
     chainId,
     contracts: [
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "baseToken",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "baseTokenPriceFeed",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "getUtilization",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "balanceOf",
-        args: [userAddress],
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "borrowBalanceOf",
-        args: [userAddress],
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "getReserves",
-      } as const,
-
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "baseBorrowMin",
-      } as const,
+      comet.getBaseTokenCall(),
+      comet.getBaseTokenPriceFeedCall(),
+      comet.getUtilizationCall(),
+      comet.getBalanceOfCall(userAddress),
+      comet.getBorrowBalanceOfCall(userAddress),
+      comet.getReservesCall(),
+      comet.getBaseBorrowMinCall(),
     ],
   });
 
-  const baseTokenAddress = cometBaseData[0].result || "0x123";
-  const baseTokenPriceFeed = cometBaseData[1].result || "0x123";
-  const utilization = cometBaseData[2].result || BigInt(0);
+  const baseTokenAddress = WagmiUtils.resultOrThrow<`0x${string}`>(
+    cometBaseData[0],
+  );
+  const baseTokenPriceFeed = WagmiUtils.resultOrThrow<`0x${string}`>(
+    cometBaseData[0],
+  );
+  const utilization = WagmiUtils.resultOrThrow<bigint>(cometBaseData[0]);
+  const supplyBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[0]);
+  const borrowBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[0]);
+  const totalReserves = WagmiUtils.resultOrThrow<bigint>(cometBaseData[0]);
 
-  const fullData = await multicall(WagmiConfig, {
+  const baseTokenContract = new Erc20Contract(baseTokenAddress, chainId);
+
+  const fullData = await multicall(wagmiConfig, {
     chainId,
     contracts: [
-      {
-        address: baseTokenAddress,
-        abi: erc20Abi,
-        functionName: "balanceOf",
-        args: [userAddress],
-      } as const,
-      {
-        address: baseTokenAddress,
-        abi: erc20Abi,
-        functionName: "balanceOf",
-        args: [cometProxyAddress],
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "decimals",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "baseIndexScale",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "totalSupply",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "totalBorrow",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "getPrice",
-        args: [baseTokenPriceFeed],
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "baseTrackingSupplySpeed",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "baseTrackingBorrowSpeed",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "getSupplyRate",
-        args: [utilization],
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "getBorrowRate",
-        args: [utilization],
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "supplyKink",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "supplyPerSecondInterestRateBase",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "supplyPerSecondInterestRateSlopeLow",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "supplyPerSecondInterestRateSlopeHigh",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "borrowKink",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "borrowPerSecondInterestRateBase",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "borrowPerSecondInterestRateSlopeLow",
-      } as const,
-      {
-        address: cometProxyAddress,
-        abi: cometAbi,
-        functionName: "borrowPerSecondInterestRateSlopeHigh",
-      } as const,
+      baseTokenContract.getBalanceOfCall(userAddress),
+      baseTokenContract.getBalanceOfCall(cometProxyAddress),
+      comet.getDecimalsCall(), // ?: not in use
+      comet.getBaseIndexScaleCall(), // ?: not in use
+      comet.getTotalSupplyCall(),
+      comet.getTotalBorrowCall(),
+      comet.getPriceCall(baseTokenPriceFeed), // ?: not in use
+      comet.getBaseTrackingSupplySpeedCall(), // ?: not in use
+      comet.getBaseTrackingBorrowSpeedCall(), // ?: not in use
+      comet.getSupplyRateCall(utilization),
+      comet.getBorrowRateCall(utilization),
+      //
+      comet.getSupplyKinkCall(), // ?: not in use
+      comet.getSupplyPerSecondInterestRateBaseCall(), // ?: not in use
+      comet.getSupplyPerSecondInterestRateSlopeLowCall(), // ?: not in use
+      comet.getSupplyPerSecondInterestRateSlopeHighCall(), // ?: not in use
+      //
+      comet.getBorrowKinkCall(), // ?: not in use
+      comet.getBorrowPerSecondInterestRateBaseCall(), // ?: not in use
+      comet.getBorrowPerSecondInterestRateSlopeLowCall(), // ?: not in use
+      comet.getBorrowPerSecondInterestRateSlopeHighCall(), // ?: not in use
     ],
   });
 
   const baseTokenBalance = WagmiUtils.resultOrThrow<bigint>(fullData[0]);
-  const availableLiquidity = fullData[1].result;
-  const totalSupply = fullData[4].result || BigInt(0);
-  const totalBorrow = fullData[5].result || BigInt(0);
-  const supplyRate = fullData[9].result || BigInt(0);
-  const borrowRate = fullData[10].result || BigInt(0);
+  const availableLiquidity = WagmiUtils.resultOrThrow<bigint>(fullData[1]);
+  const totalSupply = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
+  const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[5]);
+  const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
+  const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[10]);
 
-  const supplyBalance = cometBaseData[3].result || BigInt(0);
-  const borrowBalance = cometBaseData[4].result || BigInt(0);
-  const totalReserves = cometBaseData[6].result || BigInt(0);
-  const baseToken = await fetchBaseMock(cometProxyAddress, driver);
+  const baseToken = await fetchBase(cometProxyAddress, chainId);
 
   return new UserMarket({
     borrowBalance,

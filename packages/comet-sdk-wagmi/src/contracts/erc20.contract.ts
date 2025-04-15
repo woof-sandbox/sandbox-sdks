@@ -1,32 +1,42 @@
+import type { WriteContractReturnType } from "@wagmi/core";
+import type { ContractFunctionParameters } from "viem";
 import { erc20Abi } from "../abis";
-import {WagmiContract} from "./wagmi-contract";
-import {Config, WriteContractReturnType} from "@wagmi/core";
-import {ContractFunctionParameters} from "viem";
+import type { WagmiChainId } from "../config/chains";
+import { WagmiContract } from "./wagmi-contract";
+import { wagmiConfig } from "./wagmiConfig";
 
 export class Erc20Contract extends WagmiContract {
-  constructor(
-      config: Config,
-      address: `0x${string}`
-  ) {
-    super(config, erc20Abi, address);
+  constructor(address: `0x${string}`, chainId?: WagmiChainId) {
+    super(wagmiConfig, erc20Abi, address, chainId);
   }
 
-  async allowance(owner: `0x${string}`, spender: `0x${string}`): Promise<bigint> {
-    const allowance = await this.read("allowance", [owner, spender]);
+  async allowance(
+    owner: `0x${string}`,
+    spender: `0x${string}`,
+    chainId?: WagmiChainId,
+  ): Promise<bigint> {
+    const allowance = await this.read("allowance", chainId, [owner, spender]);
     return allowance as bigint;
   }
   async approve(
     spender: `0x${string}`,
     amount: bigint,
+    chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
-    return this.write("approve", [spender, amount]);
+    return this.write("approve", chainId, [spender, amount]);
   }
 
-  getAllowanceCall(owner: `0x${string}`, spender: `0x${string}`): ContractFunctionParameters {
+  getAllowanceCall(
+    owner: `0x${string}`,
+    spender: `0x${string}`,
+  ): ContractFunctionParameters {
     return this.getCall("allowance", [owner, spender]);
   }
   // ?: will be removed
-  getApproveCall(spender: `0x${string}`, amount: bigint): ContractFunctionParameters {
+  getApproveCall(
+    spender: `0x${string}`,
+    amount: bigint,
+  ): ContractFunctionParameters {
     return this.getCall("approve", [spender, amount]);
   }
 

@@ -1,27 +1,24 @@
-
+import type { WriteContractReturnType } from "@wagmi/core";
+import type { ContractFunctionParameters } from "viem";
 import { cometAbi } from "../abis";
-import {WagmiContract} from "./wagmi-contract";
-import {ContractFunctionParameters} from "viem";
-import {Config, WriteContractReturnType} from "@wagmi/core";
+import type { WagmiChainId } from "../config/chains";
+import { WagmiContract } from "./wagmi-contract";
+import { wagmiConfig } from "./wagmiConfig";
 
 export class CometContract extends WagmiContract {
-
-  constructor(
-      config: Config,
-      address: `0x${string}`
-  ) {
-    super(config, cometAbi, address);
+  constructor(address: `0x${string}`, chainId?: WagmiChainId) {
+    super(wagmiConfig, cometAbi, address, chainId);
   }
 
-  async getUtilization(): Promise<bigint> {
-    const utilization = await this.read("getUtilization");
+  async getUtilization(chainId?: WagmiChainId): Promise<bigint> {
+    const utilization = await this.read("getUtilization", chainId);
     return utilization as bigint;
   }
   getUtilizationCall(): ContractFunctionParameters {
     return this.getCall("getUtilization");
   }
-  async numAssets(): Promise<bigint> {
-    const numAssets = await this.read("numAssets");
+  async numAssets(chainId?: WagmiChainId): Promise<bigint> {
+    const numAssets = await this.read("numAssets", chainId);
     return numAssets as bigint;
   }
   getNumAssetsCall(): ContractFunctionParameters {
@@ -51,31 +48,55 @@ export class CometContract extends WagmiContract {
     return this.getCall("baseToken");
   }
   //
-  async isAllowed(owner: `0x${string}`, bulker: `0x${string}`): Promise<boolean> {
-    const isAllowed = await this.read("isAllowed", [owner, bulker]);
+  async isAllowed(
+    owner: `0x${string}`,
+    bulker: `0x${string}`,
+    chainId?: WagmiChainId,
+  ): Promise<boolean> {
+    const isAllowed = await this.read("isAllowed", chainId, [owner, bulker]);
     return isAllowed as boolean;
   }
-  isAllowedCall(owner: `0x${string}`, bulker: `0x${string}`): ContractFunctionParameters {
+  isAllowedCall(
+    owner: `0x${string}`,
+    bulker: `0x${string}`,
+  ): ContractFunctionParameters {
     return this.getCall("isAllowed", [owner, bulker]);
   }
   async allow(
     bulker: `0x${string}`,
     status: boolean,
+    chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
-    return this.write("allow", [bulker, status]);
+    return this.write("allow", chainId, [bulker, status]);
   }
-  getAllowCall(bulker: `0x${string}`, status: boolean): ContractFunctionParameters {
+  getAllowCall(
+    bulker: `0x${string}`,
+    status: boolean,
+  ): ContractFunctionParameters {
     return this.getCall("allow", [bulker, status]);
   }
   //
-  getBorrowBalanceOfCall(userAddress: `0x${string}`): ContractFunctionParameters {
+  getBalanceOfCall(userAddress: `0x${string}`): ContractFunctionParameters {
+    return this.getCall("balanceOf", [userAddress]);
+  }
+  getBorrowBalanceOfCall(
+    userAddress: `0x${string}`,
+  ): ContractFunctionParameters {
     return this.getCall("borrowBalanceOf", [userAddress]);
   }
-  getCollateralBalanceOfCall(userAddress: `0x${string}`): ContractFunctionParameters {
+  getCollateralBalanceOfCall(
+    userAddress: `0x${string}`,
+  ): ContractFunctionParameters {
     return this.getCall("collateralBalanceOf", [userAddress]);
   }
   getLiquidationFactorCall(): ContractFunctionParameters {
     return this.getCall("getLiquidationFactor");
+  }
+  getBaseBorrowMinCall(): ContractFunctionParameters {
+    return this.getCall("baseBorrowMin");
+  }
+  getDecimalsCall(): ContractFunctionParameters {
+    return this.getCall("decimals");
   }
 
   // CURVE

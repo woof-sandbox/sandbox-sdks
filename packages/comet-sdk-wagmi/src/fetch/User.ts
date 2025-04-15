@@ -3,13 +3,12 @@ import {
   type CollectionCallback,
   fetchCollection,
 } from "@sandbox/contracts-tools-sdk-ethers"; // Ensure the package is installed using `npm install @sandbox/contracts-tools-sdk-ethers`
-import type { Provider, Signer } from "ethers";
 import type { IUser } from "../subgraph/entities";
 import { userActiveMarketQuery } from "../subgraph/queries";
 
 export async function fetchUserMock(
   userAddress?: string,
-  driver?: Provider | Signer,
+  subgraphUrl?: string,
 ): Promise<User> {
   const address = userAddress || "0xd0E4A05a84ce039be8647cA8089266117a7E96C5";
   const borrowMarkets = ["0x3Afdc9BCA9213A35503b077a6072F3D0d5AB0840"]; // USDt comet
