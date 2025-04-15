@@ -1,4 +1,4 @@
-import {Abi, ContractFunctionParameters} from "viem";
+import {Abi, Address, ContractFunctionParameters} from "viem";
 import {Config, readContract, writeContract, WriteContractReturnType} from '@wagmi/core';
 
 export class WagmiContract {
@@ -14,6 +14,15 @@ export class WagmiContract {
   getCall(functionName: string, args?: any[]): ContractFunctionParameters {
     return {
       address: this.address,
+      abi: this.abi,
+      functionName,
+      args,
+    } as const;
+  }
+
+  getCallAddress(address: Address,functionName: string, args?: any[]): ContractFunctionParameters {
+    return {
+      address,
       abi: this.abi,
       functionName,
       args,

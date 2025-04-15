@@ -29,7 +29,7 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async supplyMarket(inputValue: string): Promise<setterResponseType> {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     const userAddress = walletClient.account.address;
 
@@ -87,7 +87,7 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async borrowMarket(inputValue: string): Promise<setterResponseType> {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     const userAddress = walletClient.account.address;
 
@@ -160,20 +160,19 @@ export class UserMarketWrapper extends UserMarket {
     supplyCollaterals: MultiAllowanceCallType[],
     chainId: number,
   ): Promise<setterResponseType> {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     const userAddress = walletClient.account.address;
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const market = new MarketContract();
+    const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`);
 
-    const token = new TokenContract();
+    const token = new Erc20Contract(WagmiConfig, this.baseToken.tokenAddress as `0x${string}`);
 
-    const isAllowed = await market.getIsAllow(
-      this.cometAddress as Address,
-      userAddress,
-      bulkerAddress,
+    const isAllowed = await market.isAllowed(
+        userAddress,
+        bulkerAddress,
     );
 
     if (!isAllowed) {
@@ -297,7 +296,7 @@ export class UserMarketWrapper extends UserMarket {
     inputValue: string,
     isMax: boolean,
   ): Promise<setterResponseType> {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     const userAddress = walletClient.account.address;
 
@@ -345,20 +344,19 @@ export class UserMarketWrapper extends UserMarket {
     collateralAmount: string,
     collateralAddress: Address,
   ): Promise<setterResponseType> {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     const userAddress = walletClient.account.address;
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const market = new MarketContract();
+    const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`);
 
-    const token = new TokenContract();
+    const token = new Erc20Contract(WagmiConfig, this.baseToken.tokenAddress as `0x${string}`);
 
-    const isAllowed = await market.getIsAllow(
-      this.cometAddress as `0x${string}`,
-      userAddress,
-      bulkerAddress,
+    const isAllowed = await market.isAllowed(
+        userAddress,
+        bulkerAddress,
     );
 
     if (!isAllowed) {
@@ -381,8 +379,7 @@ export class UserMarketWrapper extends UserMarket {
       };
     }
 
-    const allowance = await token.getAllowance(
-      collateralAddress,
+    const allowance = await token.allowance(
       userAddress,
       bulkerAddress,
     );
@@ -435,18 +432,17 @@ export class UserMarketWrapper extends UserMarket {
     collateralAmount: string,
     collateralAddress: Address,
   ): Promise<setterResponseType> {
-    const walletClient = await getWalletClient(config);
+    const walletClient = await getWalletClient(WagmiConfig);
 
     const userAddress = walletClient.account.address;
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const market = new MarketContract();
+    const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`);
 
-    const isAllowed = await market.getIsAllow(
-      this.cometAddress as Address,
-      userAddress,
-      bulkerAddress,
+    const isAllowed = await market.isAllowed(
+        userAddress,
+        bulkerAddress,
     );
 
     if (!isAllowed) {
