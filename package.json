@@ -22,10 +22,10 @@
     "lint": "biome check && $npm_execpath lint:address",
     "format": "biome check --write",
     "lint:address": "node --no-warnings=ExperimentalWarning scripts/lint/checksum-address.js",
-    "test": "vitest run --coverage --config vitest-config/vitest.config.unit.ts",
-    "test:unit": "vitest run --coverage --config vitest-config/vitest.config.unit.ts",
-    "test:e2e": "vitest run --coverage --config vitest-config/vitest.config.e2e.ts",
-    "test:local": "vitest run --coverage --config vitest-config/vitest.config.local.ts"
+    "test": "pnpm -r run test:unit",
+    "test:unit": "pnpm -r run test:unit",
+    "test:e2e": "pnpm -r run test:e2e",
+    "test:local": "pnpm -r run test:local"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
