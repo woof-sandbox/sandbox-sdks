@@ -8,7 +8,9 @@ import { getWalletClient } from "@wagmi/core";
 import { AbiCoder } from "ethers";
 import {
   BulkerContract,
-  WagmiConfig, CometContract, Erc20Contract,
+  CometContract,
+  Erc20Contract,
+  wagmiConfig,
 } from "../contracts";
 import { DataUtils } from "../utils";
 import { UserMarketWrapperMethods } from "./UserMarketWrapperMethods";
@@ -27,18 +29,18 @@ export class UserMarketWrapper extends UserMarket {
   // TODO implement balance user check
 
   async supplyMarket(inputValue: string) {
-    const walletClient = await getWalletClient(WagmiConfig);
+    const walletClient = await getWalletClient(wagmiConfig);
 
     const userAddress = walletClient.account.address;
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const token = new Erc20Contract(WagmiConfig, this.baseToken.tokenAddress as `0x${string}`);
-
-    const allowance = await token.allowance(
-      userAddress,
-      bulkerAddress,
+    const token = new Erc20Contract(
+      wagmiConfig,
+      this.baseToken.tokenAddress as `0x${string}`,
     );
+
+    const allowance = await token.allowance(userAddress, bulkerAddress);
 
     const supplyValue = DataUtils.toBigNumber(
       inputValue,
@@ -78,18 +80,18 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async borrowMarket(inputValue: string) {
-    const walletClient = await getWalletClient(WagmiConfig);
+    const walletClient = await getWalletClient(wagmiConfig);
 
     const userAddress = walletClient.account.address;
 
     const bulker = new BulkerContract(bulkerAddress);
 
-    const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`); // ?:
+    const market = new CometContract(
+      wagmiConfig,
+      this.cometAddress as `0x${string}`,
+    ); // ?:
 
-    const isAllowed = await market.isAllowed(
-      userAddress,
-      bulkerAddress,
-    );
+    const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
 
     if (!isAllowed) {
       return "need to make allow on contract!";
@@ -138,7 +140,7 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async withDrawMarket(inputValue: string, isMax: boolean) {
-    const walletClient = await getWalletClient(WagmiConfig);
+    const walletClient = await getWalletClient(wagmiConfig);
 
     const userAddress = walletClient.account.address;
 

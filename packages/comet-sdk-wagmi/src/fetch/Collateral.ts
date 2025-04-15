@@ -1,13 +1,16 @@
 import { Collateral } from "@sandbox/comet-sdk/src/token";
-import { MulticallUnit } from "@sandbox/contracts-tools-sdk-ethers";
-import { type Provider, type Signer, formatUnits } from "ethers";
+import { multicall } from "@wagmi/core";
+import { type ContractFunctionParameters, formatUnits } from "viem";
+import { Addresses } from "../config/addresses";
+import type { WagmiChainId } from "../config/chains";
 import { PRICE_FEED_FACTOR_UNITS } from "../constants";
-import { CometContract, Erc20Contract } from "../contracts";
-import { MULTICALL_ERRORS } from "../errors/multicall";
+import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
+import { ConfiguratorContract } from "../contracts/configurator.contract";
+import { WagmiUtils } from "../utils";
 
 export async function fetchCollateralsMocks(
-  cometProxyAddress?: string,
-  driver?: Provider | Signer,
+  cometProxyAddress?: `0x${string}`,
+  chainId?: WagmiChainId,
 ): Promise<Collateral[]> {
   // for USDt comet
   return [
@@ -159,95 +162,54 @@ export async function fetchCollateralsMocks(
 }
 
 export async function fetchCollaterals(
-  cometProxyAddress: string,
-  driver: Provider | Signer,
+  cometProxyAddress: `0x${string}`,
+  chainId: WagmiChainId,
 ): Promise<Collateral[]> {
-  const comet = new CometContract(cometProxyAddress, driver);
-  const numAssets = Number(await comet.numAssets());
-
-  const multicall = new MulticallUnit(driver);
-
-  // Collaterals
-  for (let i = 0; i < numAssets; i++) {
-    multicall.add(i, comet.getAssetInfoCall(i));
-  }
-
-  await multicall.run();
-
-  // Collaterals infos
-  const addresses: string[] = new Array<string>(numAssets);
-  const priceFeeds: string[] = new Array<string>(numAssets);
-  const collateralFactors: bigint[] = new Array<bigint>(numAssets);
-  const liquidationFactors: bigint[] = new Array<bigint>(numAssets);
-  const liquidationPenalties: bigint[] = new Array<bigint>(numAssets);
-  const supplyCaps: bigint[] = new Array<bigint>(numAssets);
-  //
-  for (let i = 0; i < numAssets; i++) {
-    const assetRaw =
-      multicall.getArray<
-        [bigint, string, string, bigint, bigint, bigint, bigint, bigint]
-      >(i);
-    if (!assetRaw) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(i);
-    const [
-      _offset,
-      address,
-      priceFeed,
-      _scale,
-      borrowCollateralFactor,
-      liquidateCollateralFactor,
-      liquidationFactor,
-      supplyCap,
-    ] = assetRaw;
-    addresses[i] = address;
-    priceFeeds[i] = priceFeed;
-    collateralFactors[i] = borrowCollateralFactor;
-    liquidationFactors[i] = liquidateCollateralFactor;
-    liquidationPenalties[i] = BigInt(1e18) - liquidationFactor; // Reverse
-    supplyCaps[i] = supplyCap;
-  }
-
-  multicall.clear();
-
-  const erc20Contracts = addresses.map(
-    (address) => new Erc20Contract(address, driver),
+  const configurator = new ConfiguratorContract(
+    Addresses[chainId].configurator,
+    chainId,
   );
+  const cometConfig = await configurator.getConfiguration(cometProxyAddress);
+  const comet = new CometContract(cometProxyAddress, chainId);
 
-  const symbolT = (iter: number) => `symbol-${iter}`;
-  const decimalsT = (iter: number) => `decimals-${iter}`;
-  const priceRawT = (iter: number) => `priceRaw-${iter}`;
-
-  for (let i = 0; i < numAssets; i++) {
-    const erc20Contract = erc20Contracts[i]!;
-    multicall.add(symbolT(i), erc20Contract.getSymbolCall());
-    multicall.add(decimalsT(i), erc20Contract.getDecimalsCall());
-    multicall.add(priceRawT(i), comet.getPriceCall(priceFeeds[i]!));
+  const multicallBatch: ContractFunctionParameters[] = [];
+  for (const config of cometConfig.assetConfigs) {
+    const asset = new Erc20Contract(config.asset, chainId);
+    multicallBatch.push(
+      asset.getSymbolCall(),
+      asset.getDecimalsCall(),
+      comet.getPriceCall(config.priceFeed),
+    );
   }
 
-  await multicall.run();
+  const assetsData = await multicall(wagmiConfig, {
+    chainId,
+    contracts: multicallBatch,
+  });
 
-  // Collect results
-  const results = new Array<Collateral>(numAssets);
+  const results = new Array<Collateral>(cometConfig.assetConfigs.length);
 
-  for (let i = 0; i < numAssets; i++) {
-    const symbol = multicall.getSingle<string>(symbolT(i));
-    if (!symbol) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(symbolT(i));
+  let index = 0;
+  for (let i = 0; i < cometConfig.assetConfigs.length; ++i) {
+    const config = cometConfig.assetConfigs[i]!;
 
-    const decimals = multicall.getSingle<bigint>(decimalsT(i));
-    if (!decimals) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(decimalsT(i));
-
-    const priceRaw = multicall.getSingle<bigint>(priceRawT(i));
-    if (!priceRaw) throw MULTICALL_ERRORS.RESULT_NOT_FOUND(priceRawT(i));
+    const symbol = WagmiUtils.resultOrThrow<string>(assetsData[index]!);
+    ++index;
+    const decimals = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
+    ++index;
+    const rawPrice = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
+    ++index;
 
     results[i] = new Collateral({
-      tokenAddress: addresses[i]!,
+      tokenAddress: config.asset,
       symbol,
       decimals,
-      price: formatUnits(priceRaw, PRICE_FEED_FACTOR_UNITS),
-      priceFeedAddress: priceFeeds[i]!,
-      collateralFactor: collateralFactors[i]!,
-      liquidationFactor: liquidationFactors[i]!,
-      liquidationPenalty: liquidationPenalties[i]!,
-      supplyCap: supplyCaps[i]!,
+      price: formatUnits(rawPrice, PRICE_FEED_FACTOR_UNITS),
+      priceFeedAddress: config.priceFeed,
+      collateralFactor: config.borrowCollateralFactor,
+      liquidationFactor: config.liquidateCollateralFactor,
+      liquidationPenalty: BigInt(1e18) - config.liquidationFactor,
+      supplyCap: config.supplyCap,
     });
   }
 

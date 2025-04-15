@@ -1,14 +1,14 @@
 import { Curve } from "@sandbox/comet-sdk";
-import {CometContract, WagmiConfig} from "../contracts";
-import {WagmiChainIds} from "../config/chains";
-import {multicall} from "@wagmi/core";
-import {WagmiUtils} from "../utils";
+import { multicall } from "@wagmi/core";
+import type { WagmiChainIds } from "../config/chains";
+import { CometContract, wagmiConfig } from "../contracts";
+import { WagmiUtils } from "../utils";
 
 const secsPerYear = 60n * 60n * 24n * 365n;
 
 export async function fetchCurvesMocks(
-    cometProxyAddress?: `0x${string}`,
-    chainId?: typeof WagmiChainIds[number],
+  cometProxyAddress?: `0x${string}`,
+  chainId?: (typeof WagmiChainIds)[number],
 ): Promise<Curve[]> {
   return [
     new Curve({
@@ -26,28 +26,25 @@ export async function fetchCurvesMocks(
 }
 
 export async function fetchCurves(
-    cometProxyAddress: `0x${string}`,
-    chainId: typeof WagmiChainIds[number],
+  cometProxyAddress: `0x${string}`,
+  chainId: (typeof WagmiChainIds)[number],
 ): Promise<Curve[]> {
-  const comet = new CometContract(WagmiConfig, cometProxyAddress as `0x${string}`);
+  const comet = new CometContract(cometProxyAddress, chainId);
 
-  const curveData= await multicall(
-      WagmiConfig,
-      {
-        chainId,
-        contracts: [
-          comet.getSupplyKinkCall(),
-          comet.getSupplyPerSecondInterestRateSlopeLowCall(),
-          comet.getSupplyPerSecondInterestRateSlopeHighCall(),
-          comet.getSupplyPerSecondInterestRateBaseCall(),
-          //
-          comet.getBorrowKinkCall(),
-          comet.getBorrowPerSecondInterestRateSlopeLowCall(),
-          comet.getBorrowPerSecondInterestRateSlopeHighCall(),
-          comet.getBorrowPerSecondInterestRateBaseCall(),
-        ]
-      }
-  )
+  const curveData = await multicall(wagmiConfig, {
+    chainId,
+    contracts: [
+      comet.getSupplyKinkCall(),
+      comet.getSupplyPerSecondInterestRateSlopeLowCall(),
+      comet.getSupplyPerSecondInterestRateSlopeHighCall(),
+      comet.getSupplyPerSecondInterestRateBaseCall(),
+      //
+      comet.getBorrowKinkCall(),
+      comet.getBorrowPerSecondInterestRateSlopeLowCall(),
+      comet.getBorrowPerSecondInterestRateSlopeHighCall(),
+      comet.getBorrowPerSecondInterestRateBaseCall(),
+    ],
+  });
 
   const supplyKink = WagmiUtils.resultOrThrow<bigint>(curveData[0]);
   const supplySlopeLow = WagmiUtils.resultOrThrow<bigint>(curveData[1]);

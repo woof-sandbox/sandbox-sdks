@@ -1,2 +1,2 @@
-export * from './chain';
-export * from './wagmi.chains';
+export * from "./chain";
+export * from "./wagmi.chains";
