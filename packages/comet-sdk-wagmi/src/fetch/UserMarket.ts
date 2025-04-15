@@ -167,7 +167,7 @@ export async function fetchUserMarket(
   });
 
   const baseTokenBalance = WagmiUtils.resultOrThrow<bigint>(fullData[0]);
-  const availableLiquidity = fullData[1].result;
+  const availableLiquidity = WagmiUtils.resultOrThrow<bigint>(fullData[1]);
   const totalSupply = fullData[4].result || BigInt(0);
   const totalBorrow = fullData[5].result || BigInt(0);
   const supplyRate = fullData[9].result || BigInt(0);
@@ -176,7 +176,7 @@ export async function fetchUserMarket(
   const supplyBalance = cometBaseData[3].result || BigInt(0);
   const borrowBalance = cometBaseData[4].result || BigInt(0);
   const totalReserves = cometBaseData[6].result || BigInt(0);
-  const baseToken = await fetchBaseMock(cometProxyAddress, driver);
+  const baseToken = await fetchBaseMock(cometProxyAddress, chainId);
 
   return new UserMarket({
     borrowBalance,
