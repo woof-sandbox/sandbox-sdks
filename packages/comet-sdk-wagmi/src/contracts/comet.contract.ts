@@ -75,7 +75,7 @@ export class CometContract extends WagmiContract {
         return isAllowed as boolean;
     }
 
-    isAllowedCall(
+    getIsAllowedCall(
         owner: `0x${string}`,
         bulker: `0x${string}`,
     ): ContractFunctionParameters {
