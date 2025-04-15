@@ -9,7 +9,9 @@
   "scripts": {
     "prepublish": "$npm_execpath build",
     "build": "tsc --build tsconfig.build.json",
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage --config vitest-config/vitest.config.unit.ts",
+    "test:unit": "vitest run --coverage --config vitest-config/vitest.config.unit.ts",
+    "test:e2e": "vitest run --coverage --config vitest-config/vitest.config.e2e.ts"
   },
   "dependencies": {
     "rxjs": "^7.8.1",
