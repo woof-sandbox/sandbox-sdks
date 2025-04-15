@@ -1,8 +1,9 @@
-import { MulticallReturnType } from "@wagmi/core";
+import type { MulticallReturnType } from "@wagmi/core";
 
 export class WagmiUtils {
-    static resultOrThrow<T>(response: MulticallReturnType[number]) {
-        if (response.result === undefined || response.error) throw (response.error || new Error('Failed to get multicall result'));
-        return response.result as T;
-    }
+  static resultOrThrow<T>(response: MulticallReturnType[number]) {
+    if (response?.result === undefined || response.error)
+      throw response.error || new Error("Failed to get multicall result");
+    return response.result as T;
+  }
 }

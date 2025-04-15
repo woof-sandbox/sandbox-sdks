@@ -1,16 +1,23 @@
-import {Abi, Address, ContractFunctionParameters} from "viem";
-import {Config, readContract, writeContract, WriteContractReturnType} from '@wagmi/core';
+import {
+  type Config,
+  type WriteContractReturnType,
+  readContract,
+  writeContract,
+} from "@wagmi/core";
+import type { Abi, Address, ContractFunctionParameters } from "viem";
+import type { WagmiChainId } from "../config/chains";
 
 export class WagmiContract {
   constructor(
-      protected readonly config: Config,
+    protected readonly config: Config,
     public readonly abi: Abi,
     public readonly address: `0x${string}`,
+    public readonly chainId?: WagmiChainId,
   ) {}
 
   /**
-  * For Multicall purpose
-  * */
+   * For Multicall purpose
+   * */
   getCall(functionName: string, args?: any[]): ContractFunctionParameters {
     return {
       address: this.address,
@@ -29,24 +36,30 @@ export class WagmiContract {
     } as const;
   }
   //
-  read(functionName: string, args?: any[]): Promise<unknown> {
-    return readContract(
-        this.config,
-        {
+  read(
+    functionName: string,
+    chainId?: WagmiChainId,
+    args?: any[],
+  ): Promise<unknown> {
+    return readContract(this.config, {
       address: this.address,
       abi: this.abi,
       functionName,
       args,
+      chainId: chainId ?? this.chainId,
     });
   }
-  write(functionName: string, args?: any[]): Promise<WriteContractReturnType> {
-    return writeContract(
-        this.config,
-        {
-          address: this.address,
-          abi: this.abi,
-          functionName,
-          args,
-        });
+  write(
+    functionName: string,
+    chainId?: WagmiChainId,
+    args?: any[],
+  ): Promise<WriteContractReturnType> {
+    return writeContract(this.config, {
+      address: this.address,
+      abi: this.abi,
+      functionName,
+      args,
+      chainId: chainId ?? this.chainId,
+    });
   }
 }
