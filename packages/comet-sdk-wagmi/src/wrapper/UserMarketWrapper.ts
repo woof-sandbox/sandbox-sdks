@@ -27,7 +27,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(bulkerAddress);
+        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
 
         const token = new Erc20Contract(WagmiConfig, this.baseToken.tokenAddress as `0x${string}`);
 
@@ -67,7 +67,7 @@ export class UserMarketWrapper extends UserMarket {
 
         try {
             return {
-                response: await bulker.invokeBulker([
+                response: await bulker.invoke([
                     [ACTION_SUPPLY_TOKEN],
                     abiEncodeData,
                 ]),
@@ -85,7 +85,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(bulkerAddress);
+        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
 
         const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`); // ?:
 
@@ -136,7 +136,7 @@ export class UserMarketWrapper extends UserMarket {
 
         try {
             return {
-                response: await bulker.invokeBulker([
+                response: await bulker.invoke([
                     [ACTION_WITHDRAW_ASSET],
                     abiEncodeData,
                 ]),
@@ -158,7 +158,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(bulkerAddress);
+        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
 
         const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`);
 
@@ -273,7 +273,7 @@ export class UserMarketWrapper extends UserMarket {
 
         try {
             return {
-                response: await bulker.invokeBulker([
+                response: await bulker.invoke([
                     collateralsActions,
                     collateralsData,
                 ]),
@@ -294,7 +294,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(bulkerAddress);
+        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
 
         const inputAmount = DataUtils.toBigNumber(
             inputValue,
@@ -321,7 +321,7 @@ export class UserMarketWrapper extends UserMarket {
 
         try {
             return {
-                response: await bulker.invokeBulker([
+                response: await bulker.invoke([
                     [ACTION_WITHDRAW_ASSET],
                     abiEncodeData,
                 ]),
@@ -342,7 +342,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(bulkerAddress);
+        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
 
         const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`);
 
@@ -409,7 +409,7 @@ export class UserMarketWrapper extends UserMarket {
 
         try {
             return {
-                response: await bulker.invokeBulker([
+                response: await bulker.invoke([
                     [ACTION_SUPPLY_TOKEN],
                     abiEncodeData,
                 ]),
@@ -430,7 +430,7 @@ export class UserMarketWrapper extends UserMarket {
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(bulkerAddress);
+        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
 
         const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`);
 
@@ -500,7 +500,7 @@ export class UserMarketWrapper extends UserMarket {
 
         try {
             return {
-                response: await bulker.invokeBulker([
+                response: await bulker.invoke([
                     [ACTION_WITHDRAW_ASSET],
                     abiEncodeData,
                 ]),

@@ -1,23 +1,18 @@
-import { getWalletClient } from "@wagmi/core";
-import type { Address } from "viem";
-import { BulkerAbi } from "../abis";
-import {WagmiConfig} from "./wagmiConfig";
+import {Config} from "@wagmi/core";
+import {bulkerAbi} from "../abis";
+import {WagmiContract} from "./wagmi-contract";
 
-export class BulkerContract {
-  public bulkerAddress: Address;
+export class BulkerContract extends WagmiContract {
 
-  constructor(bulkerAddress: Address) {
-    this.bulkerAddress = bulkerAddress;
-  }
+    constructor(
+        config: Config,
+        address: `0x${string}`
+    ) {
+        super(config, bulkerAbi, address);
+    }
 
-  async invokeBulker(args: any): Promise<any> {
-    const walletClient = await getWalletClient(WagmiConfig);
 
-    return walletClient.writeContract({
-      abi: BulkerAbi,
-      address: this.bulkerAddress,
-      functionName: "invoke",
-      args,
-    });
-  }
+    async invoke(args: any) {
+        return this.write("invoke", args);
+    }
 }
