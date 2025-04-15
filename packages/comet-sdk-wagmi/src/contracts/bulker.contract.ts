@@ -1,14 +1,12 @@
-import {Config} from "@wagmi/core";
 import {bulkerAbi} from "../abis";
 import {WagmiContract} from "./wagmi-contract";
+import type {WagmiChainId} from "../config/chains";
+import {wagmiConfig} from "./wagmiConfig";
 
 export class BulkerContract extends WagmiContract {
 
-    constructor(
-        config: Config,
-        address: `0x${string}`
-    ) {
-        super(config, bulkerAbi, address);
+    constructor(address: `0x${string}`, chainId?: WagmiChainId) {
+        super(wagmiConfig, bulkerAbi, address, chainId);
     }
 
 

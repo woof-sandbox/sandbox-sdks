@@ -2,11 +2,11 @@ import {ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET, UserMarket,} from "@sandbox/
 import type {IUserMarket} from "@sandbox/comet-sdk/src/user/IUserMarket";
 import {getWalletClient} from "@wagmi/core";
 import {AbiCoder} from "ethers";
-import type {Address} from "viem";
-import {BulkerContract, CometContract, Erc20Contract, WagmiConfig,} from "../contracts";
+import {BulkerContract, CometContract, Erc20Contract, wagmiConfig,} from "../contracts";
 import type {MultiAllowanceCallType} from "../contracts/entities/multi-allowance-call";
 import {DataUtils} from "../utils";
 import {UserMarketMethods} from "@sandbox/comet-sdk/src/user/UserMarketMethods";
+import type {WagmiChainId} from "../config/chains";
 
 
 // Todo need to find where to get Bulker Address
@@ -23,13 +23,13 @@ export class UserMarketWrapper extends UserMarket {
     }
 
     async supplyMarket(inputValue: string): Promise<setterResponseType> {
-        const walletClient = await getWalletClient(WagmiConfig);
+        const walletClient = await getWalletClient(wagmiConfig);
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
+        const bulker = new BulkerContract(bulkerAddress);
 
-        const token = new Erc20Contract(WagmiConfig, this.baseToken.tokenAddress as `0x${string}`);
+        const token = new Erc20Contract(this.baseToken.tokenAddress as `0x${string}`);
 
         const allowance = await token.allowance(
             userAddress,
@@ -81,13 +81,13 @@ export class UserMarketWrapper extends UserMarket {
     }
 
     async borrowMarket(inputValue: string): Promise<setterResponseType> {
-        const walletClient = await getWalletClient(WagmiConfig);
+        const walletClient = await getWalletClient(wagmiConfig);
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
+        const bulker = new BulkerContract(bulkerAddress);
 
-        const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`); // ?:
+        const market = new CometContract(this.cometAddress as `0x${string}`); // ?:
 
         const isAllowed = await market.isAllowed(
             userAddress,
@@ -152,17 +152,17 @@ export class UserMarketWrapper extends UserMarket {
     async borrowAndSupplyMarket(
         inputValue: string,
         supplyCollaterals: MultiAllowanceCallType[],
-        chainId: number,
+        chainId: WagmiChainId,
     ): Promise<setterResponseType> {
-        const walletClient = await getWalletClient(WagmiConfig);
+        const walletClient = await getWalletClient(wagmiConfig);
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
+        const bulker = new BulkerContract(bulkerAddress);
 
-        const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`);
+        const market = new CometContract(this.cometAddress as `0x${string}`, chainId);
 
-        const token = new Erc20Contract(WagmiConfig, this.baseToken.tokenAddress as `0x${string}`);
+        const token = new Erc20Contract(this.baseToken.tokenAddress as `0x${string}`, chainId);
 
         const isAllowed = await market.isAllowed(
             userAddress,
@@ -290,11 +290,11 @@ export class UserMarketWrapper extends UserMarket {
         inputValue: string,
         isMax: boolean,
     ): Promise<setterResponseType> {
-        const walletClient = await getWalletClient(WagmiConfig);
+        const walletClient = await getWalletClient(wagmiConfig);
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
+        const bulker = new BulkerContract(bulkerAddress);
 
         const inputAmount = DataUtils.toBigNumber(
             inputValue,
@@ -334,19 +334,19 @@ export class UserMarketWrapper extends UserMarket {
         }
     }
 
-    async supplyCollateral(
-        collateralAmount: string,
-        collateralAddress: Address,
+    async supplyCollaterals(
+        collaterals: MultiAllowanceCallType[],
+        chainId: number,
     ): Promise<setterResponseType> {
-        const walletClient = await getWalletClient(WagmiConfig);
+        const walletClient = await getWalletClient(wagmiConfig);
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
+        const bulker = new BulkerContract(bulkerAddress);
 
-        const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`);
+        const market = new CometContract(this.cometAddress as `0x${string}`);
 
-        const token = new Erc20Contract(WagmiConfig, this.baseToken.tokenAddress as `0x${string}`);
+        const token = new Erc20Contract(this.baseToken.tokenAddress as `0x${string}`);
 
         const isAllowed = await market.isAllowed(
             userAddress,
@@ -360,12 +360,7 @@ export class UserMarketWrapper extends UserMarket {
         }
 
         const isCollateralsFromThisMarket =
-            UserMarketMethods.isAllCollateralsFromMarket(this.collaterals, [
-                {
-                    tokenAddress: collateralAddress,
-                    inputAmount: collateralAmount,
-                },
-            ]);
+            UserMarketMethods.isAllCollateralsFromMarket(this.collaterals, collaterals);
 
         if (!isCollateralsFromThisMarket) {
             return {
@@ -373,44 +368,56 @@ export class UserMarketWrapper extends UserMarket {
             };
         }
 
-        const allowance = await token.allowance(
+        const collateralsAllowances = await token.getMultiAllowance(
+            collaterals,
+            chainId,
             userAddress,
             bulkerAddress,
         );
 
-        const currentCollateralData =
-            UserMarketMethods.findMarketCollateralByAddress(
-                this.collaterals,
-                collateralAddress,
-            );
-
-        const supplyValue = DataUtils.toBigNumber(
-            collateralAmount,
-            Number(currentCollateralData?.decimals || 18),
+        const isSmallAllowance = UserMarketMethods.isSomeTokenSmallAllowance(
+            collateralsAllowances,
+            this.collaterals,
         );
 
-        if (allowance < supplyValue) {
+        if (isSmallAllowance) {
             return {
-                message: "need approve token on input amount",
+                message: "some of tokens have smaller approve then input value",
             };
         }
 
-        const data = [
-            this.cometAddress,
-            userAddress,
-            collateralAddress,
-            supplyValue,
-        ];
 
-        const abiEncodeData = AbiCoder.defaultAbiCoder().encode(
-            ["address", "address", "address", "uint"],
-            data,
-        ) as `0x${string}`;
+        const actions: `0x${string}`[] = collateralsAllowances.map(
+            () => ACTION_SUPPLY_TOKEN,
+        );
+
+        const abiEncodeData = collateralsAllowances.map((collateral) => {
+            const currentCollateralData =
+                UserMarketMethods.findMarketCollateralByAddress(
+                    this.collaterals,
+                    collateral.tokenAddress,
+                );
+
+            const data = [
+                this.cometAddress,
+                userAddress,
+                collateral.tokenAddress,
+                DataUtils.toBigNumber(
+                    collateral.inputAmount,
+                    Number(currentCollateralData?.decimals || 18),
+                ),
+            ];
+
+            return AbiCoder.defaultAbiCoder().encode(
+                ["address", "address", "address", "uint"],
+                data,
+            ) as `0x${string}`;
+        });
 
         try {
             return {
                 response: await bulker.invoke([
-                    [ACTION_SUPPLY_TOKEN],
+                    actions,
                     abiEncodeData,
                 ]),
                 message: "supply success",
@@ -423,16 +430,15 @@ export class UserMarketWrapper extends UserMarket {
     }
 
     async withDrawCollateral(
-        collateralAmount: string,
-        collateralAddress: Address,
+        collaterals: MultiAllowanceCallType[],
     ): Promise<setterResponseType> {
-        const walletClient = await getWalletClient(WagmiConfig);
+        const walletClient = await getWalletClient(wagmiConfig);
 
         const userAddress = walletClient.account.address;
 
-        const bulker = new BulkerContract(WagmiConfig, bulkerAddress);
+        const bulker = new BulkerContract(bulkerAddress);
 
-        const market = new CometContract(WagmiConfig, this.cometAddress as `0x${string}`);
+        const market = new CometContract(this.cometAddress as `0x${string}`);
 
         const isAllowed = await market.isAllowed(
             userAddress,
@@ -446,12 +452,7 @@ export class UserMarketWrapper extends UserMarket {
         }
 
         const isCollateralsFromThisMarket =
-            UserMarketMethods.isAllCollateralsFromMarket(this.collaterals, [
-                {
-                    tokenAddress: collateralAddress,
-                    inputAmount: collateralAmount,
-                },
-            ]);
+            UserMarketMethods.isAllCollateralsFromMarket(this.collaterals, collaterals);
 
         if (!isCollateralsFromThisMarket) {
             return {
@@ -459,22 +460,19 @@ export class UserMarketWrapper extends UserMarket {
             };
         }
 
-        const currentCollateralData =
-            UserMarketMethods.findMarketCollateralByAddress(
-                this.collaterals,
-                collateralAddress,
+        const sumOfWithdraw = collaterals.reduce((acc, collateral) => {
+            const currentCollateralData =
+                UserMarketMethods.findMarketCollateralByAddress(
+                    this.collaterals,
+                    collateral.tokenAddress,
+                );
+
+            return acc + DataUtils.toBigNumber(
+                collateral.inputAmount,
+                Number(currentCollateralData?.decimals || 18),
             );
+        }, BigInt(0))
 
-        if (!currentCollateralData) {
-            return {
-                message: "you try to withdraw collaterals from other market",
-            };
-        }
-
-        const withDrawAmount = DataUtils.toBigNumber(
-            collateralAmount,
-            Number(currentCollateralData?.decimals || 18),
-        );
 
         const maxWithDrawAmount =
             UserMarketMethods.maxWithDrawCollateralAmount(
@@ -485,23 +483,37 @@ export class UserMarketWrapper extends UserMarket {
                 this.baseToken.decimals,
             );
 
-        if (Number(collateralAmount) > Number(maxWithDrawAmount)) {
+        if (Number(sumOfWithdraw) > Number(maxWithDrawAmount)) {
             return {
                 message: "you try to withdraw more than you can",
             };
         }
 
-        const data = [this.cometAddress, userAddress, withDrawAmount];
+        const action = collaterals.map(() => ACTION_WITHDRAW_ASSET);
 
-        const abiEncodeData = AbiCoder.defaultAbiCoder().encode(
-            ["address", "address", "uint"],
-            data,
-        ) as `0x${string}`;
+        const abiEncodeData = collaterals.map((collateral) => {
+            const currentCollateralData =
+                UserMarketMethods.findMarketCollateralByAddress(
+                    this.collaterals,
+                    collateral.tokenAddress,
+                );
+
+            const withDrawAmount = DataUtils.toBigNumber(
+                collateral.inputAmount,
+                Number(currentCollateralData?.decimals || 18),
+            )
+            const data = [this.cometAddress, userAddress, withDrawAmount];
+
+            return AbiCoder.defaultAbiCoder().encode(
+                ["address", "address", "uint"],
+                data,
+            ) as `0x${string}`;
+        })
 
         try {
             return {
                 response: await bulker.invoke([
-                    [ACTION_WITHDRAW_ASSET],
+                    action,
                     abiEncodeData,
                 ]),
                 message: "withdraw success",

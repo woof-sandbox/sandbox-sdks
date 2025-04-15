@@ -24,9 +24,10 @@ describe("UserMarketWrapper", () => {
   });
 
   test("check supply collaterals", async () => {
-    const supplyCollaterals = market.supplyCollateral(
-      "0.01",
-      "0x912ce59144191c1204e64559fe8253a0e49e6548",
+    const supplyCollaterals = market.supplyCollaterals(
+      [{
+        tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548", inputAmount:"0.01",
+      }], arbitrum.id
     );
     console.log("--supplyCollaterals-", supplyCollaterals);
   });
