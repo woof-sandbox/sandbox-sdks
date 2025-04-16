@@ -1,27 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import type { 
-  CollectionQuery, 
+import type {
   CollectionCallback, 
   CollectionCallbackParams 
 } from '../../src';
 
 describe('types', () => {
-  describe('CollectionQuery', () => {
-    it('should accept number parameters', () => {
-      const query: CollectionQuery = (skip: number | string, pageSize: number | string) => 
-        `query { items(skip: ${skip}, first: ${pageSize}) { id } }`;
-      
-      expect(query(0, 10)).toBe('query { items(skip: 0, first: 10) { id } }');
-    });
-
-    it('should accept string parameters', () => {
-      const query: CollectionQuery = (skip: number | string, pageSize: number | string) => 
-        `query { items(skip: ${skip}, first: ${pageSize}) { id } }`;
-      
-      expect(query('0', '10')).toBe('query { items(skip: 0, first: 10) { id } }');
-    });
-  });
-
   describe('CollectionCallback', () => {
     it('should accept result and params', () => {
       const callback: CollectionCallback = (result, params) => {
