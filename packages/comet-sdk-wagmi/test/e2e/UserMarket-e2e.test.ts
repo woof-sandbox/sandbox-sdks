@@ -17,9 +17,8 @@ describe("MarketMethods", () => {
   beforeAll(async () => {
     market = await UserMarket.fetch(
       data.cometAddress as `0x${string}`,
-      arbitrum.id,
       "0x23eEF61AB548a8852117561689886f583FC0E2B7",
-      new ethers.JsonRpcProvider(RPC_URL),
+      arbitrum.id,
     );
     console.log();
   });
