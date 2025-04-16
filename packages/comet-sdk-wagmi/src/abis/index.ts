@@ -1,6 +1,6 @@
-import BulkerAbi from "./bulker.abi.json";
+import { bulkerAbi } from "./bulker.abi";
 import { cometAbi } from "./comet.abi";
 import { configuratorAbi } from "./configurator.abi";
 import { erc20Abi } from "./erc20.abi";
 
-export { BulkerAbi, cometAbi, erc20Abi, configuratorAbi };
+export { bulkerAbi, cometAbi, erc20Abi, configuratorAbi };
