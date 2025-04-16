@@ -1,4 +1,4 @@
-import { SUBGRAPH_PAGE_SIZE } from "../constant";
+import { SUBGRAPH_PAGE_SIZE } from "./constant";
 import type { CollectionCallback } from "./collection-callback";
 import type { CollectionCallbackParams } from "./collection-callback-params";
 import type { CollectionQuery } from "./collection-query";
