@@ -15,7 +15,7 @@ let market: Market;
 describe("MarketMethods", () => {
   beforeAll(async () => {
     market = await Market.fetch(
-      data.cometAddress!,
+      data.cometAddress as `0x${string}`,
       new ethers.JsonRpcProvider(RPC_URL),
     );
     console.log();
