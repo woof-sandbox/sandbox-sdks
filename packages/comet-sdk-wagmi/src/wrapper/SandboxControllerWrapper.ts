@@ -2,6 +2,7 @@ import { SandboxController } from "@sandbox/comet-sdk";
 import type { ISandboxController } from "@sandbox/comet-sdk/src/sandbox-controller";
 import type { WagmiChainId } from "../config/chains";
 import { ControllerContract } from "../contracts";
+import { WriteContractReturnType } from "@wagmi/core";
 
 export class SandboxControllerWrapper extends SandboxController {
   private readonly controllerContract: ControllerContract;
@@ -25,7 +26,7 @@ export class SandboxControllerWrapper extends SandboxController {
       borrowPerYearInterestRateSlopeLow: bigint;
       borrowPerYearInterestRateSlopeHigh: bigint;
     },
-  ): Promise<string> {
+  ): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.addBaseAssetCurve(
         token,
@@ -50,7 +51,7 @@ export class SandboxControllerWrapper extends SandboxController {
       borrowPerYearInterestRateSlopeLow: bigint;
       borrowPerYearInterestRateSlopeHigh: bigint;
     },
-  ): Promise<string> {
+  ): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.changeBaseAssetCurve(
         token,
@@ -68,7 +69,7 @@ export class SandboxControllerWrapper extends SandboxController {
     minUpdateTime: bigint;
     suggestedAmountOfSeedReserves: bigint;
     suggestedLockTimeOfSeedReserves: bigint;
-  }): Promise<string> {
+  }): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.setConfiguration(
         config,
@@ -79,7 +80,7 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async setFeeEnabled(feeEnabled: boolean): Promise<string> {
+  async setFeeEnabled(feeEnabled: boolean): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.setFeeEnabled(
         feeEnabled,
@@ -90,7 +91,7 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async transferDao(newDao: `0x${string}`): Promise<string> {
+  async transferDao(newDao: `0x${string}`): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.transferDao(newDao, this.chainId);
     } catch {
@@ -98,7 +99,7 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async transferOwner(newOwner: `0x${string}`): Promise<string> {
+  async transferOwner(newOwner: `0x${string}`): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.transferOwner(
         newOwner,
@@ -109,7 +110,7 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async setTreasury(treasury: `0x${string}`): Promise<string> {
+  async setTreasury(treasury: `0x${string}`): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.setTreasury(treasury, this.chainId);
     } catch {
@@ -117,7 +118,7 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async setThresholds(thresholds: [bigint, bigint, bigint]): Promise<string> {
+  async setThresholds(thresholds: [bigint, bigint, bigint]): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.setThresholds(
         thresholds,
@@ -142,7 +143,7 @@ export class SandboxControllerWrapper extends SandboxController {
       borrowPerYearInterestRateSlopeHigh: bigint;
     },
     minBorrow: bigint,
-  ): Promise<string> {
+  ): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.whitelistBaseAsset(
         token,
