@@ -27,6 +27,7 @@
   "peerDependencies": {
     "@sandbox/comet-sdk": "workspace:^",
     "@sandbox/contracts-tools-sdk-ethers": "workspace:^",
+    "@sandbox/subgraph-sdk": "workspace:^",
     "@wagmi/connectors": "^5.7.12",
     "@wagmi/core": "^2.16.7",
     "wagmi": "^2.14.16",
