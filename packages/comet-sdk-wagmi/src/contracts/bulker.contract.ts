@@ -1,8 +1,8 @@
+import type { Config } from "@wagmi/core";
 import { bulkerAbi } from "../abis";
 import type { WagmiChainId } from "../config/chains";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
-import { Config } from "@wagmi/core";
 
 export class BulkerContract extends WagmiContract {
   constructor(

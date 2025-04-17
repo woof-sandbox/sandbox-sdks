@@ -1,4 +1,8 @@
-import { Config, multicall, type WriteContractReturnType } from "@wagmi/core";
+import {
+  type Config,
+  type WriteContractReturnType,
+  multicall,
+} from "@wagmi/core";
 import type { Address, ContractFunctionParameters } from "viem";
 import { erc20Abi } from "../abis";
 import type { WagmiChainId } from "../config/chains";

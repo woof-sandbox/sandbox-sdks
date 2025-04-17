@@ -2,8 +2,8 @@ import type { IMarket } from "@sandbox/comet-sdk";
 
 import { arbitrum } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";
-import { UserMarketWrapper } from "../../src/wrapper/UserMarketWrapper";
 import { wagmiConfig } from "../../lib/contracts";
+import { UserMarketWrapper } from "../../src/wrapper/UserMarketWrapper";
 
 const data: Partial<IMarket> = {
   cometAddress: "0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07",

@@ -1,8 +1,8 @@
 import { SandboxController } from "@sandbox/comet-sdk";
 import type { ISandboxController } from "@sandbox/comet-sdk/src/sandbox-controller";
+import type { WriteContractReturnType } from "@wagmi/core";
 import type { WagmiChainId } from "../config/chains";
 import { ControllerContract } from "../contracts";
-import { WriteContractReturnType } from "@wagmi/core";
 
 export class SandboxControllerWrapper extends SandboxController {
   private readonly controllerContract: ControllerContract;
@@ -99,7 +99,9 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async transferOwner(newOwner: `0x${string}`): Promise<WriteContractReturnType> {
+  async transferOwner(
+    newOwner: `0x${string}`,
+  ): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.transferOwner(
         newOwner,
@@ -118,7 +120,9 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async setThresholds(thresholds: [bigint, bigint, bigint]): Promise<WriteContractReturnType> {
+  async setThresholds(
+    thresholds: [bigint, bigint, bigint],
+  ): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.setThresholds(
         thresholds,

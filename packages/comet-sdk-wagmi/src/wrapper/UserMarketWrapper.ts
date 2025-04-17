@@ -1,18 +1,18 @@
 import {
   ACTION_SUPPLY_TOKEN,
   ACTION_WITHDRAW_ASSET,
-  IUserMarket,
+  type IUserMarket,
 } from "@sandbox/comet-sdk";
 import { UserMarket } from "../augment/UserMarket";
 
-import { Config, getWalletClient } from "@wagmi/core";
+import { type Config, getWalletClient } from "@wagmi/core";
+import { arbitrum } from "@wagmi/core/chains";
 import { AbiCoder } from "ethers";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config/chains";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import { DataUtils } from "../utils";
-import { arbitrum } from "@wagmi/core/chains";
 
 // Todo need to find where to get Bulker Address
 const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum

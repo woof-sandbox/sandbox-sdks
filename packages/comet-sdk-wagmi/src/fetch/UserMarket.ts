@@ -1,11 +1,11 @@
 import { UserMarket } from "@sandbox/comet-sdk";
-import { Config, multicall } from "@wagmi/core";
+import { type Config, multicall } from "@wagmi/core";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config/chains";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
-import { fetchBase, fetchBaseMock } from "./Base";
 import { UserMarketWrapper } from "../wrapper/UserMarketWrapper";
+import { fetchBase, fetchBaseMock } from "./Base";
 
 export async function fetchUserMarkets(
   marketConfig: Record<number, `0x${string}`[]>,

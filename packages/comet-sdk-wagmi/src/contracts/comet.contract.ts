@@ -1,4 +1,4 @@
-import { Config, WriteContractReturnType } from "@wagmi/core";
+import type { Config, WriteContractReturnType } from "@wagmi/core";
 import type { ContractFunctionParameters } from "viem";
 import { cometAbi } from "../abis";
 import type { WagmiChainId } from "../config/chains";
