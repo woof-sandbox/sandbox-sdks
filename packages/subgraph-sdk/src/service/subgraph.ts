@@ -1,6 +1,6 @@
-import {CollectionCallback, CollectionCallbackParams} from "../types";
-import {SUBGRAPH_PAGE_SIZE} from "../constant";
-import {CollectionQuery} from "../query";
+import { CollectionCallback, CollectionCallbackParams } from "../types";
+import { SUBGRAPH_PAGE_SIZE } from "../constant";
+import { CollectionQuery } from "../query";
 
 
 export async function fetchCollection(
