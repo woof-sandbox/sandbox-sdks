@@ -1,7 +1,5 @@
-import type { Address } from "viem";
-
 export type MultiAllowanceResponseType = {
-  tokenAddress: Address;
+  tokenAddress: `0x${string}`;
   inputAmount: string;
   allowance?: bigint;
 };

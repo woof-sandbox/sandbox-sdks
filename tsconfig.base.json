@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./packages/test-sdk",
+    "paths": {
+      "comet-sdk": ["packages/comet-sdk/src"],
+      "comet-sdk-wagmi": ["packages/comet-sdk-wagmi/src"]
+    },
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true
+  }
+}

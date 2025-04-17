@@ -1,19 +1,16 @@
 import {
   ACTION_SUPPLY_TOKEN,
   ACTION_WITHDRAW_ASSET,
-  UserMarket,
+  type IUserMarket,
 } from "@sandbox/comet-sdk";
-import type { IUserMarket } from "@sandbox/comet-sdk/src/user/IUserMarket";
-import { getWalletClient } from "@wagmi/core";
+import { UserMarket } from "../augment/UserMarket";
+
+import { type Config, getWalletClient } from "@wagmi/core";
+import { arbitrum } from "@wagmi/core/chains";
 import { AbiCoder } from "ethers";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config/chains";
-import {
-  BulkerContract,
-  CometContract,
-  Erc20Contract,
-  wagmiConfig,
-} from "../contracts";
+import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import { DataUtils } from "../utils";
 
@@ -21,18 +18,85 @@ import { DataUtils } from "../utils";
 const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum
 
 export class UserMarketWrapper extends UserMarket {
-  constructor(userMarket: IUserMarket) {
+  private config: Config;
+
+  constructor(userMarket: IUserMarket, config: Config) {
     super(userMarket);
+    this.config = config;
+  }
+
+  async allowMarket() {
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
+
+    try {
+      return await market.allow(bulkerAddress, true, arbitrum.id);
+    } catch (e) {
+      throw new Error("approve error");
+    }
+  }
+
+  async approveMarketBaseToken(amount: string) {
+    const token = new Erc20Contract(
+      this.baseToken.tokenAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
+
+    try {
+      return await token.approve(
+        bulkerAddress,
+        DataUtils.toBigNumber(amount, Number(this.baseToken.decimals)),
+      );
+    } catch (e) {
+      throw new Error("approve error");
+    }
+  }
+
+  async approveToken(
+    tokenAddress: `0x${string}`,
+    amount: string,
+    tokenDecimals: number,
+  ) {
+    const token = new Erc20Contract(tokenAddress, arbitrum.id, this.config);
+
+    try {
+      return await token.approve(
+        bulkerAddress,
+        DataUtils.toBigNumber(amount, tokenDecimals),
+      );
+    } catch (e) {
+      throw new Error("approve error");
+    }
   }
 
   async supplyMarket(inputValue: string): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
 
-    const token = new Erc20Contract(this.baseToken.tokenAddress as Address);
+    const bulker = new BulkerContract(bulkerAddress, this.config, arbitrum.id);
+
+    const token = new Erc20Contract(
+      this.baseToken.tokenAddress as Address,
+      arbitrum.id,
+      this.config,
+    );
+
+    const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
+
+    if (!isAllowed) {
+      throw new Error("need to make allow on contract!");
+    }
 
     const allowance = await token.allowance(userAddress, bulkerAddress);
 
@@ -42,7 +106,7 @@ export class UserMarketWrapper extends UserMarket {
     );
 
     if (allowance < supplyValue) {
-      throw new Error("need approve token on input amount");
+      throw new Error(`need approve token on input amount ${supplyValue}`);
     }
 
     const data = [
@@ -58,20 +122,25 @@ export class UserMarketWrapper extends UserMarket {
     ) as `0x${string}`;
 
     try {
-      return await bulker.invoke([[ACTION_SUPPLY_TOKEN], abiEncodeData]);
+      return await bulker.invoke([[ACTION_SUPPLY_TOKEN], [abiEncodeData]]);
     } catch (e) {
+      console.log("--e--", e);
       throw new Error("supply error");
     }
   }
 
   async borrowMarket(inputValue: string): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
-    const market = new CometContract(this.cometAddress as `0x${string}`); // ?:
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
 
     const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
 
@@ -106,7 +175,7 @@ export class UserMarketWrapper extends UserMarket {
     ) as `0x${string}`;
 
     try {
-      return await bulker.invoke([[ACTION_WITHDRAW_ASSET], abiEncodeData]);
+      return await bulker.invoke([[ACTION_WITHDRAW_ASSET], [abiEncodeData]]);
     } catch (e) {
       throw new Error("borrow error");
     }
@@ -117,20 +186,22 @@ export class UserMarketWrapper extends UserMarket {
     supplyCollaterals: MultiAllowanceCallType[],
     chainId: WagmiChainId,
   ): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
     const market = new CometContract(
       this.cometAddress as `0x${string}`,
       chainId,
+      this.config,
     );
 
     const token = new Erc20Contract(
       this.baseToken.tokenAddress as `0x${string}`,
       chainId,
+      this.config,
     );
 
     const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
@@ -228,18 +299,23 @@ export class UserMarketWrapper extends UserMarket {
     inputValue: string,
     isMax: boolean,
   ): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
     const inputAmount = DataUtils.toBigNumber(
       inputValue,
       Number(this.baseToken.decimals),
     );
 
+    const borrowBalance = this.borrowBalance;
     const supplyBalance = this.supplyBalance;
+
+    if (borrowBalance > BigInt(0)) {
+      throw new Error("you have opened borrow position");
+    }
 
     if (supplyBalance < inputAmount) {
       throw new Error("user cant withdraw more that he borrow");
@@ -256,7 +332,7 @@ export class UserMarketWrapper extends UserMarket {
     ) as `0x${string}`;
 
     try {
-      return await bulker.invoke([[ACTION_WITHDRAW_ASSET], abiEncodeData]);
+      return await bulker.invoke([[ACTION_WITHDRAW_ASSET], [abiEncodeData]]);
     } catch (e) {
       throw new Error("error withdraw market");
     }
@@ -264,18 +340,24 @@ export class UserMarketWrapper extends UserMarket {
 
   async supplyCollaterals(
     collaterals: MultiAllowanceCallType[],
-    chainId: number,
+    chainId: WagmiChainId,
   ): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
-    const market = new CometContract(this.cometAddress as `0x${string}`);
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      chainId,
+      this.config,
+    );
 
     const token = new Erc20Contract(
       this.baseToken.tokenAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
     );
 
     const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
@@ -341,13 +423,17 @@ export class UserMarketWrapper extends UserMarket {
   async withDrawCollateral(
     collaterals: MultiAllowanceCallType[],
   ): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
-    const market = new CometContract(this.cometAddress as `0x${string}`);
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
 
     const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
 
