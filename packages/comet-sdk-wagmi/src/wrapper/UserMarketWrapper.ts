@@ -12,6 +12,7 @@ import type { WagmiChainId } from "../config/chains";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import { DataUtils } from "../utils";
+import { arbitrum } from "@wagmi/core/chains";
 
 // Todo need to find where to get Bulker Address
 const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum
@@ -24,16 +25,33 @@ export class UserMarketWrapper extends UserMarket {
     this.config = config;
   }
 
+  async approveMarketBaseToken(amount: string) {
+    const token = new Erc20Contract(
+      this.baseToken.tokenAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
+
+    try {
+      return await token.approve(
+        bulkerAddress,
+        DataUtils.toBigNumber(amount, Number(this.baseToken.decimals)),
+      );
+    } catch (e) {
+      throw new Error("approve error");
+    }
+  }
+
   async approveToken(
     tokenAddress: `0x${string}`,
     amount: string,
     tokenDecimals: number,
   ) {
-    const token = new Erc20Contract(tokenAddress);
+    const token = new Erc20Contract(tokenAddress, arbitrum.id, this.config);
 
     try {
       return await token.approve(
-        this.cometAddress as `0x${string}`,
+        bulkerAddress,
         DataUtils.toBigNumber(amount, tokenDecimals),
       );
     } catch (e) {
@@ -46,9 +64,13 @@ export class UserMarketWrapper extends UserMarket {
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config, arbitrum.id);
 
-    const token = new Erc20Contract(this.baseToken.tokenAddress as Address);
+    const token = new Erc20Contract(
+      this.baseToken.tokenAddress as Address,
+      arbitrum.id,
+      this.config,
+    );
 
     const allowance = await token.allowance(userAddress, bulkerAddress);
 
@@ -74,8 +96,9 @@ export class UserMarketWrapper extends UserMarket {
     ) as `0x${string}`;
 
     try {
-      return await bulker.invoke([[ACTION_SUPPLY_TOKEN], abiEncodeData]);
+      return await bulker.invoke([[ACTION_SUPPLY_TOKEN], [abiEncodeData]]);
     } catch (e) {
+      console.log("--e--", e);
       throw new Error("supply error");
     }
   }
@@ -85,9 +108,13 @@ export class UserMarketWrapper extends UserMarket {
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
-    const market = new CometContract(this.cometAddress as `0x${string}`); // ?:
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
 
     const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
 
@@ -122,7 +149,7 @@ export class UserMarketWrapper extends UserMarket {
     ) as `0x${string}`;
 
     try {
-      return await bulker.invoke([[ACTION_WITHDRAW_ASSET], abiEncodeData]);
+      return await bulker.invoke([[ACTION_WITHDRAW_ASSET], [abiEncodeData]]);
     } catch (e) {
       throw new Error("borrow error");
     }
@@ -137,16 +164,18 @@ export class UserMarketWrapper extends UserMarket {
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
     const market = new CometContract(
       this.cometAddress as `0x${string}`,
       chainId,
+      this.config,
     );
 
     const token = new Erc20Contract(
       this.baseToken.tokenAddress as `0x${string}`,
       chainId,
+      this.config,
     );
 
     const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
@@ -248,14 +277,19 @@ export class UserMarketWrapper extends UserMarket {
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
     const inputAmount = DataUtils.toBigNumber(
       inputValue,
       Number(this.baseToken.decimals),
     );
 
+    const borrowBalance = this.borrowBalance;
     const supplyBalance = this.supplyBalance;
+
+    if (borrowBalance > BigInt(0)) {
+      throw new Error("you have opened borrow position");
+    }
 
     if (supplyBalance < inputAmount) {
       throw new Error("user cant withdraw more that he borrow");
@@ -272,7 +306,7 @@ export class UserMarketWrapper extends UserMarket {
     ) as `0x${string}`;
 
     try {
-      return await bulker.invoke([[ACTION_WITHDRAW_ASSET], abiEncodeData]);
+      return await bulker.invoke([[ACTION_WITHDRAW_ASSET], [abiEncodeData]]);
     } catch (e) {
       throw new Error("error withdraw market");
     }
@@ -280,18 +314,24 @@ export class UserMarketWrapper extends UserMarket {
 
   async supplyCollaterals(
     collaterals: MultiAllowanceCallType[],
-    chainId: number,
+    chainId: WagmiChainId,
   ): Promise<`0x${string}`> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
-    const market = new CometContract(this.cometAddress as `0x${string}`);
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      chainId,
+      this.config,
+    );
 
     const token = new Erc20Contract(
       this.baseToken.tokenAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
     );
 
     const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
@@ -361,9 +401,13 @@ export class UserMarketWrapper extends UserMarket {
 
     const userAddress = walletClient.account.address;
 
-    const bulker = new BulkerContract(bulkerAddress);
+    const bulker = new BulkerContract(bulkerAddress, this.config);
 
-    const market = new CometContract(this.cometAddress as `0x${string}`);
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
 
     const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
 

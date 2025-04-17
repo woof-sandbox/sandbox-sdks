@@ -1,4 +1,4 @@
-import type { WriteContractReturnType } from "@wagmi/core";
+import { Config, WriteContractReturnType } from "@wagmi/core";
 import type { ContractFunctionParameters } from "viem";
 import { cometAbi } from "../abis";
 import type { WagmiChainId } from "../config/chains";
@@ -6,8 +6,12 @@ import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
 
 export class CometContract extends WagmiContract {
-  constructor(address: `0x${string}`, chainId?: WagmiChainId) {
-    super(wagmiConfig, cometAbi, address, chainId);
+  constructor(
+    address: `0x${string}`,
+    chainId?: WagmiChainId,
+    config: Config = wagmiConfig,
+  ) {
+    super(config, cometAbi, address, chainId);
   }
 
   async getUtilization(chainId?: WagmiChainId): Promise<bigint> {

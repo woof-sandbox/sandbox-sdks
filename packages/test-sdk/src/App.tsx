@@ -3,7 +3,7 @@ import { UserMarketWrapper } from '@sandbox/comet-sdk-wagmi/wrapper/UserMarketWr
 import { arbitrum } from '@wagmi/core/chains';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useTransactionReceipt, useWaitForTransactionReceipt } from 'wagmi';
 import { config } from './web3/wagmi';
 
 const marketsArbitrum = [
@@ -31,7 +31,20 @@ function App() {
   const [selectedAddress, setSelectedAddress] = useState<string>(marketsArbitrum[0].address);
 
   const [currentMarket, setCurrentMarket] = useState<any>(null);
+
   const [viewError, setViewError] = useState<any>(null);
+
+  const [transactionHash, setTransactionHash] = useState<`0x${string}`>();
+
+  const { isLoading: isLoadingTransactionReceipt } = useTransactionReceipt({
+    hash: transactionHash,
+  });
+  const { isLoading: isLoadingWaitForTransactionReceipt, isSuccess: isSuccessToken } =
+    useWaitForTransactionReceipt({
+      hash: transactionHash,
+    });
+
+  const isAbsoluteLoading = isLoadingTransactionReceipt || isLoadingWaitForTransactionReceipt;
 
   const handleGetUserMarket = async () => {
     try {
@@ -60,7 +73,7 @@ function App() {
     try {
       const result = await fn();
 
-      console.log('--result--', result);
+      setTransactionHash(result);
     } catch (error: any) {
       const message = error?.message || 'Something went wrong';
       console.error('--error--', message);
@@ -101,25 +114,37 @@ function App() {
           </div>
         )}
 
+        {isAbsoluteLoading && (
+          <div style={{ border: '1px solid #FFFF00', padding: '10px', borderRadius: '20px' }}>
+            <h2>Loading...</h2>
+          </div>
+        )}
+
+        {isSuccessToken && (
+          <div style={{ border: '1px solid #008000', padding: '10px', borderRadius: '20px' }}>
+            <h2>Successful...</h2>
+          </div>
+        )}
+
         {currentMarket && (
           <div style={{ display: 'flex', gap: '10px' }}>
             <table>
               <thead>
                 <tr>
                   <th>Comet Address</th>
+                  <th>Base Token Balance</th>
                   <th>Supply Balance</th>
                   <th>Borrow Balance</th>
                   <th>Total Borrow</th>
-                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <th>{currentMarket?.cometAddress}</th>
+                  <th>{currentMarket?.baseTokenBalance}</th>
                   <th>{currentMarket?.supplyBalance}</th>
                   <th>{currentMarket?.borrowBalance}</th>
                   <th>{currentMarket?.totalBorrow}</th>
-                  <th></th>
                 </tr>
               </tbody>
             </table>
@@ -128,15 +153,7 @@ function App() {
                 supply market 0.01
               </button>
               <button
-                onClick={() =>
-                  handleFunction(() =>
-                    currentMarket?.approveToken(
-                      currentMarket.baseToken.tokenAddress,
-                      '0.01',
-                      Number(currentMarket.baseToken.decimals)
-                    )
-                  )
-                }
+                onClick={() => handleFunction(() => currentMarket?.approveMarketBaseToken('0.01'))}
               >
                 approve market base asset 0.01
               </button>
