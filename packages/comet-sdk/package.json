@@ -12,11 +12,14 @@
   },
   "license": "MIT",
   "main": "src/index.ts",
+  "type": "module",
   "files": ["lib"],
   "scripts": {
     "prepublish": "$npm_execpath build",
     "build": "tsc --build tsconfig.build.json",
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
+    "test:unit": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
+    "test:all": "vitest run --coverage --config test/vitest-config/vitest.config.all.ts"
   },
   "dependencies": {
     "@noble/hashes": "^1.6.1"
