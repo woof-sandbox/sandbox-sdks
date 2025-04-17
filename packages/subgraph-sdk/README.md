@@ -17,13 +17,13 @@ async function fetchCollection(
 ): Promise<void>
 ```
 
-#### Parameters
+### Parameters
 
 - `iterationQuery`: A function that generates GraphQL queries with pagination parameters
 - `iterationCallback`: A callback function that processes each page of results
 - `subgraphUrl`: The URL of the subgraph endpoint
 
-### Types
+## Types
 
 ```typescript
 type CollectionQuery = (
