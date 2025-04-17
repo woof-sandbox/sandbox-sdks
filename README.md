@@ -11,6 +11,7 @@ Tests can be run either from the root of the repository or directly within each 
 `test:unit` - Fast, deterministic, isolated tests for individual functions  
 `test:e2e` - Full-stack tests that may involve external dependencies (e.g. RPC, contracts)  
 `test:local` - Special tests for local dev environments (e.g., mocks or anvil-based tests)  
+`test:all` - Run all tests  
 
 ## Services
 - Borrowing - calculation of the available borrowing limit, minBorrow check.
