@@ -2,10 +2,7 @@ import type { IMarket } from "@sandbox/comet-sdk";
 import { UserMarket } from "../../src/augment";
 
 import { arbitrum } from "@wagmi/core/chains";
-import { ethers } from "ethers";
 import { beforeAll, describe, expect, test } from "vitest";
-
-const RPC_URL = "https://eth.llamarpc.com";
 
 const data: Partial<IMarket> = {
   cometAddress: "0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07",
