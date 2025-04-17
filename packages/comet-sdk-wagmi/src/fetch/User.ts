@@ -2,9 +2,9 @@ import { User } from "@sandbox/comet-sdk";
 import {
   type CollectionCallback,
   fetchCollection,
-  userActiveMarketQuery,
 } from "@sandbox/subgraph-sdk"; // Ensure the package is installed using `npm install @sandbox/subgraph-sdk`
-import type { IUser } from "../entities";
+import type { IUser } from "../subgraph/entities";
+import {userActiveMarketQuery} from "../subgraph/queries";
 
 export async function fetchUserMock(
   userAddress?: string,
