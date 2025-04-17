@@ -1,10 +1,10 @@
 import type { IBase, ICollateral } from "../token";
 
 export interface ISandboxController {
-  address: string;
+  address: `0x${string}`;
 
-  daoAddress: string; // contract
-  multisigAddress: string; // contract
+  daoAddress: `0x${string}`; // contract
+  multisigAddress: `0x${string}`; // contract
   suggestedAmountOfSeedReserves: bigint;
   suggestedLockTimeOfSeedReserves: bigint;
   minUpdateTime: bigint;
