@@ -14,7 +14,6 @@ export class BulkerContract extends WagmiContract {
   }
 
   async invoke(args: any[]) {
-    console.log("--args--", args);
     return this.write("invoke", this.chainId, args);
   }
 }
