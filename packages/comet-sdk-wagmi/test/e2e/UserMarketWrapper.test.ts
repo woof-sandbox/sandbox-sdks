@@ -21,13 +21,13 @@ describe("UserMarketWrapper", () => {
     );
   });
 
-  test("check supply collaterals", async () => {
+  test("check approve", async () => {
     const approve = market.approveToken(
       "0x912ce59144191c1204e64559fe8253a0e49e6548",
       "0.01",
       18,
     );
-    console.log("--supplyCollaterals-", approve);
+    console.log("--approve-", approve);
   });
 
   test("check supply collaterals", async () => {

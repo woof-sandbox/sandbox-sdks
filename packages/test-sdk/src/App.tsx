@@ -148,7 +148,7 @@ function App() {
                 </tr>
               </tbody>
             </table>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <div style={{ display: 'grid', gap: '10px', gridTemplateColumns: 'repeat(3, 1fr)' }}>
               <button onClick={() => handleFunction(() => currentMarket?.supplyMarket('0.01'))}>
                 supply market 0.01
               </button>
@@ -156,6 +156,10 @@ function App() {
                 onClick={() => handleFunction(() => currentMarket?.approveMarketBaseToken('0.01'))}
               >
                 approve market base asset 0.01
+              </button>
+
+              <button onClick={() => handleFunction(() => currentMarket?.allowMarket())}>
+                allow market
               </button>
 
               <button onClick={() => handleFunction(() => currentMarket?.borrowMarket('0.01'))}>
@@ -166,6 +170,71 @@ function App() {
                 onClick={() => handleFunction(() => currentMarket?.withDrawMarket('0.01', false))}
               >
                 withdraw market 0.01
+              </button>
+
+              <button
+                onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.borrowAndSupplyMarket(
+                      '0.01',
+                      [
+                        {
+                          inputAmount: '0.5',
+                          tokenAddress: '0x912ce59144191c1204e64559fe8253a0e49e6548',
+                        },
+                      ],
+                      arbitrum.id
+                    )
+                  )
+                }
+              >
+                borrow and supply collateral ARB 0.01
+              </button>
+
+              <button
+                onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.approveToken(
+                      '0x912ce59144191c1204e64559fe8253a0e49e6548',
+                      '0.01',
+                      18
+                    )
+                  )
+                }
+              >
+                approve collateral ARB 0.01
+              </button>
+
+              <button
+                onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.supplyCollaterals(
+                      [
+                        {
+                          tokenAddress: '0x912ce59144191c1204e64559fe8253a0e49e6548',
+                          inputAmount: '0.01',
+                        },
+                      ],
+                      arbitrum.id
+                    )
+                  )
+                }
+              >
+                supply collateral ARB 0.01
+              </button>
+              <button
+                onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.withDrawCollateral([
+                      {
+                        tokenAddress: '0x912ce59144191c1204e64559fe8253a0e49e6548',
+                        inputAmount: '0.01',
+                      },
+                    ])
+                  )
+                }
+              >
+                withdraw collateral ARB 0.01
               </button>
             </div>
           </div>

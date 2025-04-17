@@ -25,6 +25,20 @@ export class UserMarketWrapper extends UserMarket {
     this.config = config;
   }
 
+  async allowMarket() {
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
+
+    try {
+      return await market.allow(bulkerAddress, true, arbitrum.id);
+    } catch (e) {
+      throw new Error("approve error");
+    }
+  }
+
   async approveMarketBaseToken(amount: string) {
     const token = new Erc20Contract(
       this.baseToken.tokenAddress as `0x${string}`,
@@ -64,6 +78,12 @@ export class UserMarketWrapper extends UserMarket {
 
     const userAddress = walletClient.account.address;
 
+    const market = new CometContract(
+      this.cometAddress as `0x${string}`,
+      arbitrum.id,
+      this.config,
+    );
+
     const bulker = new BulkerContract(bulkerAddress, this.config, arbitrum.id);
 
     const token = new Erc20Contract(
@@ -71,6 +91,12 @@ export class UserMarketWrapper extends UserMarket {
       arbitrum.id,
       this.config,
     );
+
+    const isAllowed = await market.isAllowed(userAddress, bulkerAddress);
+
+    if (!isAllowed) {
+      throw new Error("need to make allow on contract!");
+    }
 
     const allowance = await token.allowance(userAddress, bulkerAddress);
 
