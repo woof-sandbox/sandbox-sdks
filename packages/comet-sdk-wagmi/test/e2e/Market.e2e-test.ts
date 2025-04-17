@@ -1,8 +1,8 @@
 import { type IMarket, PERCENT_PRECISION } from "@sandbox/comet-sdk";
 import { Market } from "../../src/augment";
-
-import { ethers } from "ethers";
 import { beforeAll, describe, expect, test } from "vitest";
+import {arbitrum} from "@wagmi/core/chains";
+import {createConfig, http} from "@wagmi/core";
 
 const percentsReg = new RegExp(`^\\d+\\.\\d{${PERCENT_PRECISION}}$`);
 const RPC_URL = "https://eth.llamarpc.com";
@@ -14,9 +14,16 @@ let market: Market;
 
 describe("MarketMethods", () => {
   beforeAll(async () => {
+    createConfig({
+      chains: [arbitrum],
+      transports: {
+        [arbitrum.id]: http(RPC_URL),
+      },
+    });
+
     market = await Market.fetch(
-      data.cometAddress!,
-      new ethers.JsonRpcProvider(RPC_URL),
+      data.cometAddress as `0x${string}`,
+      arbitrum.id,
     );
     console.log();
   });

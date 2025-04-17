@@ -51,11 +51,11 @@ export class CollateralService {
 
         const data: `0x${string}`[] = [
             isNative
-                ? ethers.utils.defaultAbiCoder.encode(
+                ? ethers.unit.defaultAbiCoder.encode(
                     ["address", "address", "uint"],
                     [cometAddress, recipient, amount],
                 )
-                : ethers.utils.defaultAbiCoder.encode(
+                : ethers.unit.defaultAbiCoder.encode(
                     ["address", "address", "address", "uint"],
                     [cometAddress, recipient, tokenAddress, amount],
                 ),
