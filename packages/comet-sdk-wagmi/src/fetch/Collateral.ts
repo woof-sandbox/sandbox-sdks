@@ -1,4 +1,4 @@
-import { Collateral } from "@sandbox/comet-sdk/src/token";
+import { Collateral } from "@sandbox/comet-sdk";
 import { multicall } from "@wagmi/core";
 import { type ContractFunctionParameters, formatUnits } from "viem";
 import { Addresses } from "../config/addresses";

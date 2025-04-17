@@ -114,11 +114,15 @@ export class UserMarket extends Market implements IUserMarket {
   }
 
   availableToBorrow() {
+    if (!this.collaterals.length) {
+      return "10";
+    }
     const borrowCapacity =
       this.collaterals
         .map(
           (collateral) =>
             // Number(formatUnits(collateral.totalSupply, collateral.decimals)) * // here need to add user total supply in collateral
+            10 *
             Number(formatUnits(collateral.collateralFactor, 18)) *
             this.getTokenPrice(
               collateral.symbol,

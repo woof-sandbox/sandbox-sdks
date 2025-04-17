@@ -1,4 +1,8 @@
-import { type WriteContractReturnType, multicall } from "@wagmi/core";
+import {
+  type Config,
+  type WriteContractReturnType,
+  multicall,
+} from "@wagmi/core";
 import type { Address, ContractFunctionParameters } from "viem";
 import { erc20Abi } from "../abis";
 import type { WagmiChainId } from "../config/chains";
@@ -8,8 +12,12 @@ import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
 
 export class Erc20Contract extends WagmiContract {
-  constructor(address: `0x${string}`, chainId?: WagmiChainId) {
-    super(wagmiConfig, erc20Abi, address, chainId);
+  constructor(
+    address: `0x${string}`,
+    chainId?: WagmiChainId,
+    config: Config = wagmiConfig,
+  ) {
+    super(config, erc20Abi, address, chainId);
   }
 
   async allowance(
@@ -57,6 +65,7 @@ export class Erc20Contract extends WagmiContract {
   ): ContractFunctionParameters {
     return this.getCall("allowance", [owner, spender]);
   }
+
   // ?: will be removed
   getApproveCall(
     spender: `0x${string}`,
@@ -70,6 +79,7 @@ export class Erc20Contract extends WagmiContract {
   getDecimalsCall(): ContractFunctionParameters {
     return this.getCall("decimals");
   }
+
   getSymbolCall(): ContractFunctionParameters {
     return this.getCall("symbol");
   }
