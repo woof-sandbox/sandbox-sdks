@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [
+      "vite/client"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@sandbox/comet-sdk-wagmi": [
+        "../comet-sdk-wagmi/src"
+      ],
+      "@sandbox/comet-sdk": [
+        "../comet-sdk/src"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ],
+}

@@ -1,9 +1,9 @@
 import type { IMarket } from "@sandbox/comet-sdk";
-import { UserMarket } from "../../src/augment";
 
 import { arbitrum } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";
 import { UserMarketWrapper } from "../../src/wrapper/UserMarketWrapper";
+import { wagmiConfig } from "../../lib/contracts";
 
 const data: Partial<IMarket> = {
   cometAddress: "0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07",
@@ -13,13 +13,21 @@ let market: UserMarketWrapper;
 
 describe("UserMarketWrapper", () => {
   beforeAll(async () => {
-    const userMarket = await UserMarket.fetch(
+    market = await UserMarketWrapper.fetch(
       data.cometAddress as `0x${string}`,
       "0x23eEF61AB548a8852117561689886f583FC0E2B7",
       arbitrum.id,
+      wagmiConfig,
     );
+  });
 
-    market = new UserMarketWrapper(userMarket);
+  test("check supply collaterals", async () => {
+    const approve = market.approveToken(
+      "0x912ce59144191c1204e64559fe8253a0e49e6548",
+      "0.01",
+      18,
+    );
+    console.log("--supplyCollaterals-", approve);
   });
 
   test("check supply collaterals", async () => {

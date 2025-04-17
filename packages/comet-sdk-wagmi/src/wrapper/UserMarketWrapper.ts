@@ -1,19 +1,15 @@
 import {
   ACTION_SUPPLY_TOKEN,
   ACTION_WITHDRAW_ASSET,
-  UserMarket,
+  IUserMarket,
 } from "@sandbox/comet-sdk";
-import type { IUserMarket } from "@sandbox/comet-sdk/src/user/IUserMarket";
-import { getWalletClient } from "@wagmi/core";
+import { UserMarket } from "../augment/UserMarket";
+
+import { Config, getWalletClient } from "@wagmi/core";
 import { AbiCoder } from "ethers";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config/chains";
-import {
-  BulkerContract,
-  CometContract,
-  Erc20Contract,
-  wagmiConfig,
-} from "../contracts";
+import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import { DataUtils } from "../utils";
 
@@ -21,12 +17,32 @@ import { DataUtils } from "../utils";
 const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum
 
 export class UserMarketWrapper extends UserMarket {
-  constructor(userMarket: IUserMarket) {
+  private config: Config;
+
+  constructor(userMarket: IUserMarket, config: Config) {
     super(userMarket);
+    this.config = config;
+  }
+
+  async approveToken(
+    tokenAddress: `0x${string}`,
+    amount: string,
+    tokenDecimals: number,
+  ) {
+    const token = new Erc20Contract(tokenAddress);
+
+    try {
+      return await token.approve(
+        this.cometAddress as `0x${string}`,
+        DataUtils.toBigNumber(amount, tokenDecimals),
+      );
+    } catch (e) {
+      throw new Error("approve error");
+    }
   }
 
   async supplyMarket(inputValue: string): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
@@ -42,7 +58,7 @@ export class UserMarketWrapper extends UserMarket {
     );
 
     if (allowance < supplyValue) {
-      throw new Error("need approve token on input amount");
+      throw new Error(`need approve token on input amount ${supplyValue}`);
     }
 
     const data = [
@@ -65,7 +81,7 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async borrowMarket(inputValue: string): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
@@ -117,7 +133,7 @@ export class UserMarketWrapper extends UserMarket {
     supplyCollaterals: MultiAllowanceCallType[],
     chainId: WagmiChainId,
   ): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
@@ -228,7 +244,7 @@ export class UserMarketWrapper extends UserMarket {
     inputValue: string,
     isMax: boolean,
   ): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
@@ -266,7 +282,7 @@ export class UserMarketWrapper extends UserMarket {
     collaterals: MultiAllowanceCallType[],
     chainId: number,
   ): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
@@ -341,7 +357,7 @@ export class UserMarketWrapper extends UserMarket {
   async withDrawCollateral(
     collaterals: MultiAllowanceCallType[],
   ): Promise<`0x${string}`> {
-    const walletClient = await getWalletClient(wagmiConfig);
+    const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
