@@ -25,7 +25,8 @@
     "test": "pnpm -r run test:unit",
     "test:unit": "pnpm -r run test:unit",
     "test:e2e": "pnpm -r run test:e2e",
-    "test:local": "pnpm -r run test:local"
+    "test:local": "pnpm -r run test:local",
+    "test:all": "pnpm -r run test:all"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

@@ -2,8 +2,8 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
     test: {
-        name: 'e2e',
-        include: ['test/e2e/**/*.test.ts'],
+        name: 'local',
+        include: ['test/local/**/*.local-test.ts'],
         environment: 'node',
     },
 })
