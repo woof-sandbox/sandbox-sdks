@@ -1,5 +1,5 @@
-import type { IUserCollateral } from "./IUserCollateral";
 import { Collateral } from "../token";
+import type { IUserCollateral } from "./IUserCollateral";
 
 export class UserCollateral extends Collateral implements IUserCollateral {
   public userBalance: bigint;

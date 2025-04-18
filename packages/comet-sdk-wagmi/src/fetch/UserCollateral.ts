@@ -1,12 +1,12 @@
-import type { WagmiChainId } from "../config/chains";
 import { UserCollateral } from "@sandbox/comet-sdk";
-import { ConfiguratorContract } from "../contracts/configurator.contract";
-import { Addresses } from "../config/addresses";
-import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
-import { ContractFunctionParameters, formatUnits } from "viem";
 import { multicall } from "@wagmi/core";
-import { WagmiUtils } from "../utils";
+import { type ContractFunctionParameters, formatUnits } from "viem";
+import { Addresses } from "../config/addresses";
+import type { WagmiChainId } from "../config/chains";
 import { PRICE_FEED_FACTOR_UNITS } from "../constants";
+import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
+import { ConfiguratorContract } from "../contracts/configurator.contract";
+import { WagmiUtils } from "../utils";
 
 export async function fetchUserCollaterals(
   cometProxyAddress: `0x${string}`,
