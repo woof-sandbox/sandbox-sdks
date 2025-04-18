@@ -23,7 +23,6 @@ describe("UserMarketWrapper", () => {
 
   test("collaterals ", async () => {
     const collaterals = market.collaterals;
-    console.log("--collaterals--", collaterals);
     expect(collaterals.length).to.be.greaterThan(0);
   });
 
