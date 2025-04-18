@@ -14,13 +14,11 @@ export async function fetchUserMarkets(
 ): Promise<UserMarket[]> {
   const marketInChain = Object.entries(marketConfig).flatMap(
     async ([chainId, marketsComets]) => {
+      const chain = Number(chainId) as WagmiChainId;
       const cometsBaseData = await multicall(wagmiConfig, {
-        chainId: Number(chainId) as WagmiChainId,
+        chainId: chain,
         contracts: marketsComets.flatMap((cometProxyAddress) => {
-          const comet = new CometContract(
-            cometProxyAddress,
-            Number(chainId) as WagmiChainId,
-          );
+          const comet = new CometContract(cometProxyAddress, chain);
 
           return [
             comet.getBaseTokenCall(),
@@ -60,17 +58,11 @@ export async function fetchUserMarkets(
             currentCometBaseData[6],
           );
 
-          const comet = new CometContract(
-            cometProxyAddress,
-            Number(chainId) as WagmiChainId,
-          );
-          const baseTokenContract = new Erc20Contract(
-            baseTokenAddress,
-            Number(chainId) as WagmiChainId,
-          );
+          const comet = new CometContract(cometProxyAddress, chain);
+          const baseTokenContract = new Erc20Contract(baseTokenAddress, chain);
 
           const fullData = await multicall(wagmiConfig, {
-            chainId: Number(chainId) as WagmiChainId,
+            chainId: chain,
             contracts: [
               baseTokenContract.getBalanceOfCall(userAddress),
               baseTokenContract.getBalanceOfCall(cometProxyAddress),
@@ -107,15 +99,12 @@ export async function fetchUserMarkets(
           const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
           const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[10]);
 
-          const baseToken = await fetchBase(
-            cometProxyAddress,
-            Number(chainId) as WagmiChainId,
-          );
+          const baseToken = await fetchBase(cometProxyAddress, chain);
 
           const collaterals = await fetchUserCollaterals(
             cometProxyAddress,
             userAddress,
-            Number(chainId) as WagmiChainId,
+            chain,
           );
 
           return new UserMarket({

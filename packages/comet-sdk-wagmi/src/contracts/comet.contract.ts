@@ -165,10 +165,11 @@ export class CometContract extends WagmiContract {
   getPriceCall(priceFeedAddress: `0x${string}`): ContractFunctionParameters {
     return this.getCall("getPrice", [priceFeedAddress]);
   }
-  getCollateralReservesCall(
+  getUserCollateralCall(
+    userAddress: `0x${string}`,
     tokenAddress: `0x${string}`,
   ): ContractFunctionParameters {
-    return this.getCall("getCollateralReserves", [tokenAddress]);
+    return this.getCall("userCollateral", [userAddress, tokenAddress]);
   }
 
   getBaseMinForRewardsCall(): ContractFunctionParameters {

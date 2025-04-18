@@ -28,7 +28,7 @@ export async function fetchUserCollaterals(
       asset.getDecimalsCall(),
       asset.getBalanceOfCall(userAddress),
       comet.getPriceCall(config.priceFeed),
-      comet.getCollateralReservesCall(config.asset),
+      comet.getUserCollateralCall(userAddress, config.asset),
     );
   }
 
