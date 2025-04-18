@@ -4,3 +4,4 @@ export * from "./Collateral";
 export * from "./Market";
 export * from "./User";
 export * from "./SandboxController";
+export * from "./ConfigController";
