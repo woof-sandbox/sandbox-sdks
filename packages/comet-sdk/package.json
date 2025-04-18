@@ -14,12 +14,6 @@
   "main": "src/index.ts",
   "type": "module",
   "files": ["lib"],
-  "exports": {
-    ".": {
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
-    }
-  },
   "scripts": {
     "prepublish": "$npm_execpath build",
     "build": "tsc --build tsconfig.build.json",

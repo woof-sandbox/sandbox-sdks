@@ -2,6 +2,7 @@ import { formatUnits, parseUnits } from "ethers";
 import { PRICE_FEED_MANTISSA } from "../constants";
 import { Market } from "../market";
 import { DataUtils } from "../utils/data";
+import type { IUserCollateral } from "./IUserCollateral";
 import type { IUserMarket } from "./IUserMarket";
 import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
@@ -10,12 +11,14 @@ export class UserMarket extends Market implements IUserMarket {
   public borrowBalance: bigint;
   public supplyBalance: bigint;
   public baseTokenBalance: bigint;
+  public collaterals: IUserCollateral[];
 
   constructor(userMarket: IUserMarket) {
     super(userMarket);
     this.borrowBalance = userMarket.borrowBalance;
     this.supplyBalance = userMarket.supplyBalance;
     this.baseTokenBalance = userMarket.baseTokenBalance;
+    this.collaterals = userMarket.collaterals;
   }
 
   getTokenPrice(symbol: string, tokenPrice: bigint): number {

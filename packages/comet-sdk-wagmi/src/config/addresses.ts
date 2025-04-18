@@ -7,7 +7,7 @@ export interface IAddresses {
 // !: change it
 export const Addresses: Record<Chain, IAddresses> = {
   [Chain.Arbitrum]: {
-    configurator: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
+    configurator: "0xb21b06d71c75973babde35b49ffdac3f82ad3775",
     sandboxController: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
   },
   [Chain.Base]: {
