@@ -51,7 +51,7 @@ export async function fetchUserCollaterals(
     ++index;
     const rawPrice = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
-    const userSupplyBalance = WagmiUtils.resultOrThrow<bigint>(
+    const userSupplyBalance = WagmiUtils.resultOrThrow<bigint[]>(
       assetsData[index]!,
     );
     ++index;
