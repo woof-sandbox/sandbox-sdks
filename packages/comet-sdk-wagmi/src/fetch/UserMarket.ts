@@ -214,7 +214,7 @@ export async function fetchUserMarket(
   const collaterals = await fetchUserCollaterals(
     cometProxyAddress,
     userAddress,
-    Number(chainId) as WagmiChainId,
+    chainId,
   );
 
   const userMarket = new UserMarket({
