@@ -6,6 +6,7 @@ import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 import { UserMarketWrapper } from "../wrapper/UserMarketWrapper";
 import { fetchBase, fetchBaseMock } from "./Base";
+import { fetchUserCollaterals } from "./UserCollateral";
 
 export async function fetchUserMarkets(
   marketConfig: Record<number, `0x${string}`[]>,
@@ -111,6 +112,12 @@ export async function fetchUserMarkets(
             Number(chainId) as WagmiChainId,
           );
 
+          const collaterals = await fetchUserCollaterals(
+            cometProxyAddress,
+            userAddress,
+            Number(chainId) as WagmiChainId,
+          );
+
           return new UserMarket({
             borrowBalance,
             supplyBalance,
@@ -123,7 +130,7 @@ export async function fetchUserMarkets(
             totalSupply,
             totalReserves,
             baseToken,
-            collaterals: [],
+            collaterals: collaterals,
             availableLiquidity,
             // TODO: update after contracts
             configControllerAddress:
@@ -215,6 +222,12 @@ export async function fetchUserMarket(
 
   const baseToken = await fetchBase(cometProxyAddress, chainId);
 
+  const collaterals = await fetchUserCollaterals(
+    cometProxyAddress,
+    userAddress,
+    Number(chainId) as WagmiChainId,
+  );
+
   const userMarket = new UserMarket({
     borrowBalance,
     supplyBalance,
@@ -227,7 +240,7 @@ export async function fetchUserMarket(
     totalSupply,
     totalReserves,
     baseToken,
-    collaterals: [],
+    collaterals: collaterals,
     availableLiquidity,
     // TODO: update after contracts
     configControllerAddress: "0x0000000000000000000000000000000000000000", // TODO
