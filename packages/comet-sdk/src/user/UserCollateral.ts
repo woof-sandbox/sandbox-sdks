@@ -3,7 +3,7 @@ import type { IUserCollateral } from "./IUserCollateral";
 
 export class UserCollateral extends Collateral implements IUserCollateral {
   public userBalance: bigint;
-  public userSupplyBalance: bigint;
+  public userSupplyBalance: bigint[];
 
   constructor(collateralData: IUserCollateral) {
     super(collateralData);
