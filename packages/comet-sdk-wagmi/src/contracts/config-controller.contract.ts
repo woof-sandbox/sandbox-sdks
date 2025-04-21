@@ -13,27 +13,27 @@ export class ConfigControllerContract extends WagmiContract {
     super(config, configControllerAbi, address, chainId);
   }
 
-  ownerCall() {
+  getOwnerCall() {
     return this.getCall("owner");
   }
 
-  guardianCall() {
+  getGuardianCall() {
     return this.getCall("guardian");
   }
 
-  curatorCall() {
+  getCuratorCall() {
     return this.getCall("curator");
   }
 
-  curatorFeeCall() {
+  getCuratorFeeCall() {
     return this.getCall("curatorFee");
   }
 
-  marketsLengthCall() {
+  getMarketsLengthCall() {
     return this.getCall("marketsLength");
   }
 
-  revenueTokensLengthCall() {
+  getRevenueTokensLengthCall() {
     return this.getCall("revenueTokensLength");
   }
 

@@ -14,12 +14,12 @@ export async function fetchConfigControllerData(
   const baseData = await multicall(wagmiConfig, {
     chainId,
     contracts: [
-      controller.ownerCall(),
-      controller.guardianCall(),
-      controller.curatorCall(),
-      controller.curatorFeeCall(),
-      controller.marketsLengthCall(),
-      controller.revenueTokensLengthCall(),
+      controller.getOwnerCall(),
+      controller.getGuardianCall(),
+      controller.getCuratorCall(),
+      controller.getCuratorFeeCall(),
+      controller.getMarketsLengthCall(),
+      controller.getRevenueTokensLengthCall(),
     ],
   });
 
