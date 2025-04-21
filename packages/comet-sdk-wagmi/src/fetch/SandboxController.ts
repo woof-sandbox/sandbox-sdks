@@ -1,17 +1,18 @@
-import { SandboxController } from "@sandbox/comet-sdk/src/sandbox-controller";
-import { multicall } from "@wagmi/core";
+import { SandboxController } from "@sandbox/comet-sdk";
+import { type Config, multicall } from "@wagmi/core";
 import type { WagmiChainId } from "../config/chains";
-import { wagmiConfig } from "../contracts";
-import { ControllerContract } from "../contracts";
+import { ControllerContract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
+import { SandboxControllerWrapper } from "../wrapper/SandboxControllerWrapper";
 
 export async function fetchSandboxControllerData(
   controllerAddress: `0x${string}`,
   chainId: WagmiChainId,
-): Promise<SandboxController> {
+  config: Config = wagmiConfig,
+): Promise<SandboxControllerWrapper> {
   const controller = new ControllerContract(controllerAddress, chainId);
 
-  const controllerBaseData = await multicall(wagmiConfig, {
+  const controllerBaseData = await multicall(config, {
     chainId,
     contracts: [
       controller.daoCall(),
@@ -39,7 +40,7 @@ export async function fetchSandboxControllerData(
     suggestedLockTimeOfSeedReserves: controllerConfigRaw[3],
   };
 
-  return new SandboxController({
+  const sandboxController = new SandboxController({
     address: controllerAddress,
     daoAddress,
     multisigAddress: treasuryAddress,
@@ -53,4 +54,6 @@ export async function fetchSandboxControllerData(
     baseWhitelist: [], // TODO
     collateralsWhitelist: [], // TODO
   });
+
+  return new SandboxControllerWrapper(sandboxController, chainId, config);
 }

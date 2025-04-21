@@ -3,6 +3,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { UserMarketWrapper } from '@sandbox/comet-sdk-wagmi/wrapper/UserMarketWrapper';
 // @ts-ignore
 import { ConfigController } from '@sandbox/comet-sdk-wagmi/augment/ConfigController';
+// @ts-ignore
+import { SandboxController } from '@sandbox/comet-sdk-wagmi/augment/SandboxController';
 import { arbitrum, sepolia } from '@wagmi/core/chains';
 import { useEffect, useState } from 'react';
 import { useAccount, useTransactionReceipt, useWaitForTransactionReceipt } from 'wagmi';
@@ -34,6 +36,7 @@ function App() {
 
   const [currentMarket, setCurrentMarket] = useState<any>(null);
   const [currentConfigController, setConfigController] = useState<any>(null);
+  const [currentSandBoxController, setSandBoxController] = useState<any>(null);
 
   const [viewError, setViewError] = useState<any>(null);
 
@@ -98,6 +101,21 @@ function App() {
     }
   };
 
+  const handleGetSandBoxControllerData = async () => {
+    try {
+      const sandboxController = await SandboxController.fetch(
+        '0xaf39746D87b067267B23C2169BF727F237f303b9',
+        sepolia.id,
+        config
+      );
+      setSandBoxController(sandboxController);
+      console.log('sandboxController data:', sandboxController);
+    } catch (error) {
+      console.error('Error fetching sandboxController:', error);
+      setViewError(error);
+    }
+  };
+
   return (
     <>
       <div
@@ -120,6 +138,9 @@ function App() {
 
           {address && (
             <button onClick={handleGetConfigControllerData}>get Config Controller Data</button>
+          )}
+          {address && (
+            <button onClick={handleGetSandBoxControllerData}>get SandBox Controller Data</button>
           )}
 
           <select onChange={(e) => handleChangeMarket(e.target.value)}>
