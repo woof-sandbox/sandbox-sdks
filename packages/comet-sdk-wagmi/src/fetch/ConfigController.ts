@@ -2,13 +2,14 @@ import { ConfigController } from "@sandbox/comet-sdk";
 import type { WagmiChainId } from "../config/chains";
 import { ConfigControllerContract } from "../contracts/config-controller.contract";
 import { wagmiConfig } from "../contracts";
-import { multicall } from "@wagmi/core";
+import { type Config, multicall } from "@wagmi/core";
 import { WagmiUtils } from "../utils";
 import { ConfigControllerWrapper } from "../wrapper/ConfigControllerWrapper";
 
 export async function fetchConfigControllerData(
   controllerAddress: `0x${string}`,
   chainId: WagmiChainId,
+  config: Config,
 ): Promise<ConfigControllerWrapper> {
   const controller = new ConfigControllerContract(controllerAddress, chainId);
 
@@ -41,5 +42,5 @@ export async function fetchConfigControllerData(
     revenueTokensLength: Number(revenueTokensLength),
   });
 
-  return new ConfigControllerWrapper(configController, chainId);
+  return new ConfigControllerWrapper(configController, chainId, config);
 }

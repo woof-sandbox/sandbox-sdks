@@ -2,10 +2,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 // @ts-ignore
 import { UserMarketWrapper } from '@sandbox/comet-sdk-wagmi/wrapper/UserMarketWrapper';
 // @ts-ignore
-import { ConfigControllerWrapper } from '@sandbox/comet-sdk-wagmi/wrapper/ConfigControllerWrapper';
-// @ts-ignore
 import { ConfigController } from '@sandbox/comet-sdk-wagmi/augment/ConfigController';
-
 import { arbitrum, sepolia } from '@wagmi/core/chains';
 import { useEffect, useState } from 'react';
 import { useAccount, useTransactionReceipt, useWaitForTransactionReceipt } from 'wagmi';
@@ -36,6 +33,7 @@ function App() {
   const [selectedAddress, setSelectedAddress] = useState<string>(marketsArbitrum[0].address);
 
   const [currentMarket, setCurrentMarket] = useState<any>(null);
+  const [currentConfigController, setConfigController] = useState<any>(null);
 
   const [viewError, setViewError] = useState<any>(null);
 
@@ -53,7 +51,6 @@ function App() {
 
   const handleGetUserMarket = async () => {
     try {
-      console.log('--UserMarketWrapper--', UserMarketWrapper);
       const market = await UserMarketWrapper.fetch(selectedAddress, address, arbitrum.id, config);
       setCurrentMarket(market);
       console.log('Market data:', market);
@@ -88,19 +85,16 @@ function App() {
 
   const handleGetConfigControllerData = async () => {
     try {
-      const conf = await ConfigControllerWrapper.fetch(
+      const conf = await ConfigController.fetch(
         '0xDF539a3B60172779Be6cBa11B26bBE0913b5316A',
-        sepolia.id
+        sepolia.id,
+        config
       );
-      console.log('--conf--', conf);
-      // console.log('--ConfigControllerWrapper--', ConfigControllerWrapper);
-      // const configC = await ConfigControllerWrapper.fetch(
-      //   '0xDF539a3B60172779Be6cBa11B26bBE0913b5316A',
-      //   sepolia.id
-      // );
-      // console.log('configC data:', configC);
+      setConfigController(conf);
+      console.log('configC data:', conf);
     } catch (error) {
       console.error('Error fetching configC:', error);
+      setViewError(error);
     }
   };
 
@@ -298,6 +292,25 @@ function App() {
           </div>
         )}
       </div>
+      {currentConfigController && (
+        <div>
+          <h2>Config Controller</h2>
+
+          <div
+            style={{
+              display: 'grid',
+              gap: '10px',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+            }}
+          >
+            <button
+              onClick={() => handleFunction(() => currentConfigController?.proposeCurator(address))}
+            >
+              propose curator ${address}
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

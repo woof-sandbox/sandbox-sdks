@@ -1,19 +1,26 @@
 import { ConfigController } from "@sandbox/comet-sdk";
 import type { WagmiChainId } from "../config/chains";
 import { ConfigControllerContract } from "../contracts/config-controller.contract";
-import { WriteContractReturnType } from "@wagmi/core";
+import { type Config, WriteContractReturnType } from "@wagmi/core";
 
 export class ConfigControllerWrapper extends ConfigController {
   private readonly configControllerContract: ConfigControllerContract;
   public chainId: WagmiChainId;
+  private config: Config;
 
-  constructor(configController: ConfigController, chainId: WagmiChainId) {
+  constructor(
+    configController: ConfigController,
+    chainId: WagmiChainId,
+    config: Config,
+  ) {
     super(configController);
     this.configControllerContract = new ConfigControllerContract(
       this.address,
       chainId,
+      config,
     );
     this.chainId = chainId;
+    this.config = config;
   }
 
   async acceptCuratorRole(): Promise<WriteContractReturnType> {
