@@ -4,7 +4,7 @@ import type { WagmiChainId } from "../config/chains";
 import { wagmiConfig } from "../contracts";
 import { ConfigControllerContract } from "../contracts/config-controller.contract";
 import { WagmiUtils } from "../utils";
-import { ConfigControllerWrapper } from "../wrapper/ConfigControllerWrapper";
+import { ConfigControllerWrapper } from "../wrappers/ConfigControllerWrapper";
 
 export async function fetchConfigControllerData(
   controllerAddress: `0x${string}`,

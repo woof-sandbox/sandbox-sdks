@@ -4,7 +4,7 @@ import { ConfigController } from "@sandbox/comet-sdk-wagmi/augment/ConfigControl
 // @ts-ignore
 import { SandboxController } from "@sandbox/comet-sdk-wagmi/augment/SandboxController";
 // @ts-ignore
-import { UserMarketWrapper } from "@sandbox/comet-sdk-wagmi/wrapper/UserMarketWrapper";
+import { UserMarketWrapper } from "@sandbox/comet-sdk-wagmi/wrappers";
 import { arbitrum, sepolia } from "@wagmi/core/chains";
 import { useEffect, useState } from "react";
 import {

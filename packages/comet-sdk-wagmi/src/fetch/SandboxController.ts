@@ -3,7 +3,7 @@ import { type Config, multicall } from "@wagmi/core";
 import type { WagmiChainId } from "../config/chains";
 import { ControllerContract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
-import { SandboxControllerWrapper } from "../wrapper/SandboxControllerWrapper";
+import { SandboxControllerWrapper } from "../wrappers/SandboxControllerWrapper";
 
 export async function fetchSandboxControllerData(
   controllerAddress: `0x${string}`,

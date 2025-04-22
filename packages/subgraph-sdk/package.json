@@ -2,6 +2,14 @@
   "name": "@sandbox/subgraph-sdk",
   "description": "SDK for streamlined access to subgraphs, designed for clarity, reusability, and minimal overhead.",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
+  },
+  "homepage": "https://github.com/woof-compound/sandbox-sdks#readme",
+  "bugs": {
+    "url": "https://github.com/woof-compound/sandbox-sdks/issues"
+  },
   "license": "MIT",
   "main": "src/index.ts",
   "type": "module",

@@ -4,7 +4,7 @@ import type { Address } from "viem";
 import type { WagmiChainId } from "../config/chains";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
-import { UserMarketWrapper } from "../wrapper/UserMarketWrapper";
+import { UserMarketWrapper } from "../wrappers/UserMarketWrapper";
 import { fetchBase, fetchBaseMock } from "./Base";
 import { fetchUserCollaterals } from "./UserCollateral";
 
