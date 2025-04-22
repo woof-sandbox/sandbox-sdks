@@ -1,7 +1,7 @@
 import { ConfigController } from "@sandbox/comet-sdk";
+import type { Config, WriteContractReturnType } from "@wagmi/core";
 import type { WagmiChainId } from "../config/chains";
 import { ConfigControllerContract } from "../contracts/config-controller.contract";
-import { type Config, WriteContractReturnType } from "@wagmi/core";
 
 export class ConfigControllerWrapper extends ConfigController {
   private readonly configControllerContract: ConfigControllerContract;

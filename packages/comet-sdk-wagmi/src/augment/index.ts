@@ -5,3 +5,4 @@ export * from "./Market";
 export * from "./User";
 export * from "./UserMarket";
 export * from "./SandboxController";
+export * from "./ConfigController";
