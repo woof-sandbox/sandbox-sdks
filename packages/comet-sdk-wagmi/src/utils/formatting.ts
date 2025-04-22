@@ -22,8 +22,8 @@ export class FormattingUtils {
 
   static sliceAddress(address: string): string {
     return address.length === 42
-        ? `${address.slice(0, 6)}...${address.slice(-4)}`
-        : address;
+      ? `${address.slice(0, 6)}...${address.slice(-4)}`
+      : address;
   }
 
   static formatPercentage(value: number, decimals = 2): string {

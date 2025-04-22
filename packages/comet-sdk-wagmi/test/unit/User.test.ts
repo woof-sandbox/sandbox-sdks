@@ -47,12 +47,10 @@ describe("fetchUserActiveMarkets", () => {
   });
 
   it("should handle pagination correctly when data spans multiple pages", async () => {
-    const mockUsersPage1 = Array.from({ length: 1000 }).map(
-      (_, i) => ({
-        principal: i % 2 === 0 ? "-100" : "100",
-        proxyCometAddress: `0xpage1_${i % 2 === 0 ? "b" : "l"}${i}`,
-      }),
-    );
+    const mockUsersPage1 = Array.from({ length: 1000 }).map((_, i) => ({
+      principal: i % 2 === 0 ? "-100" : "100",
+      proxyCometAddress: `0xpage1_${i % 2 === 0 ? "b" : "l"}${i}`,
+    }));
     const mockUsersPage2 = [
       { principal: "-500", proxyCometAddress: "0xpage2_b1" },
       { principal: "600", proxyCometAddress: "0xpage2_l1" },

@@ -1,14 +1,11 @@
-import {
-  ACTION_SUPPLY_TOKEN,
-  ACTION_WITHDRAW_ASSET,
-  type IUserMarket,
-} from "@sandbox/comet-sdk";
+import type { IUserMarket } from "@sandbox/comet-sdk";
 import { UserMarket } from "../augment/UserMarket";
 
 import { type Config, getWalletClient } from "@wagmi/core";
 import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config/chains";
+import { ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import {

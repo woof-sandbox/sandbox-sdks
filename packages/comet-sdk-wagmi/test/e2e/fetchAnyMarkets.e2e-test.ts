@@ -2,8 +2,8 @@ import { UserMarket } from "../../src/augment";
 
 import { arbitrum, mainnet } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";
+import { wagmiConfig } from "../../lib/contracts";
 import { UserMarketWrapper } from "../../src/wrapper/UserMarketWrapper";
-import {wagmiConfig} from "../../lib/contracts";
 
 const marketsArbitrum: `0x${string}`[] = [
   "0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07", // USDT

@@ -18,14 +18,12 @@
     "@sandbox/comet-sdk": "workspace:^",
     "@sandbox/subgraph-sdk": "workspace:^",
     "@wagmi/core": "^2.16.7",
-    "wagmi": "^2.14.16",
     "viem": "2.x"
   },
   "devDependencies": {
     "@sandbox/comet-sdk": "workspace:^",
     "@sandbox/subgraph-sdk": "workspace:^",
     "@wagmi/core": "^2.16.7",
-    "ethers": "^6.13.5",
     "typescript": "^5.7.2",
     "vitest": "^3.0.5"
   },

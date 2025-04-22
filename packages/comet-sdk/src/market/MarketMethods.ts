@@ -33,7 +33,8 @@ export namespace MarketMethods {
   ): bigint {
     const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_FACTOR_UNITS);
     return (
-      (marketTotalSupply * priceInBigInt) / BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
+      (marketTotalSupply * priceInBigInt) /
+      BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
     );
   }
   export function totalBorrowed(
@@ -42,7 +43,8 @@ export namespace MarketMethods {
   ): bigint {
     const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_FACTOR_UNITS);
     return (
-      (marketTotalBorrow * priceInBigInt) / BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
+      (marketTotalBorrow * priceInBigInt) /
+      BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
     );
   }
   //

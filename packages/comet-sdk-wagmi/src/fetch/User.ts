@@ -4,7 +4,7 @@ import {
   fetchCollection,
 } from "@sandbox/subgraph-sdk"; // Ensure the package is installed using `npm install @sandbox/subgraph-sdk`
 import type { IUser } from "../subgraph/entities";
-import {userActiveMarketQuery} from "../subgraph/queries";
+import { userActiveMarketQuery } from "../subgraph/queries";
 
 export async function fetchUserMock(
   userAddress?: string,

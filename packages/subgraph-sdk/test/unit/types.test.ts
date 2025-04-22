@@ -1,12 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import type {
-  CollectionCallback, 
-  CollectionCallbackParams 
-} from '../../src';
+import { describe, expect, it } from "vitest";
+import type { CollectionCallback, CollectionCallbackParams } from "../../src";
 
-describe('types', () => {
-  describe('CollectionCallback', () => {
-    it('should accept result and params', () => {
+describe("types", () => {
+  describe("CollectionCallback", () => {
+    it("should accept result and params", () => {
       const callback: CollectionCallback = (result, params) => {
         expect(result).toBeDefined();
         expect(params).toBeDefined();
@@ -18,15 +15,15 @@ describe('types', () => {
     });
   });
 
-  describe('CollectionCallbackParams', () => {
-    it('should have required properties', () => {
+  describe("CollectionCallbackParams", () => {
+    it("should have required properties", () => {
       const params: CollectionCallbackParams = {
         pageSize: 10,
-        loopFlag: true
+        loopFlag: true,
       };
 
       expect(params.pageSize).toBe(10);
       expect(params.loopFlag).toBe(true);
     });
   });
-}); 
+});

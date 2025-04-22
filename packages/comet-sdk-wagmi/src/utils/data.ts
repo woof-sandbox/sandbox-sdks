@@ -1,4 +1,4 @@
-import { parseUnits, formatUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 
 export class DataUtils {
   static parseTokenInput(input: string): string {
