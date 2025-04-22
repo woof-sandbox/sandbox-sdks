@@ -1,17 +1,27 @@
 import { SandboxController } from "@sandbox/comet-sdk";
 import type { ISandboxController } from "@sandbox/comet-sdk/src/sandbox-controller";
-import type { WriteContractReturnType } from "@wagmi/core";
+import type { Config, WriteContractReturnType } from "@wagmi/core";
 import type { WagmiChainId } from "../config/chains";
-import { ControllerContract } from "../contracts";
+import { ControllerContract, wagmiConfig } from "../contracts";
 
 export class SandboxControllerWrapper extends SandboxController {
   private readonly controllerContract: ControllerContract;
   public chainId: WagmiChainId;
+  private config: Config;
 
-  constructor(sandboxController: ISandboxController, chainId: WagmiChainId) {
+  constructor(
+    sandboxController: ISandboxController,
+    chainId: WagmiChainId,
+    config: Config = wagmiConfig,
+  ) {
     super(sandboxController);
-    this.controllerContract = new ControllerContract(this.address, chainId);
+    this.controllerContract = new ControllerContract(
+      this.address,
+      chainId,
+      config,
+    );
     this.chainId = chainId;
+    this.config = config;
   }
 
   async addBaseAssetCurve(

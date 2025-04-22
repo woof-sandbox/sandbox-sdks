@@ -21,6 +21,11 @@ describe("UserMarketWrapper", () => {
     );
   });
 
+  test("collaterals ", async () => {
+    const collaterals = market.collaterals;
+    expect(collaterals.length).to.be.greaterThan(0);
+  });
+
   test("check approve", async () => {
     const approve = market.approveToken(
       "0x912ce59144191c1204e64559fe8253a0e49e6548",

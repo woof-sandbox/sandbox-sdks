@@ -6,6 +6,7 @@ import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 import { UserMarketWrapper } from "../wrapper/UserMarketWrapper";
 import { fetchBase, fetchBaseMock } from "./Base";
+import { fetchUserCollaterals } from "./UserCollateral";
 
 export async function fetchUserMarkets(
   marketConfig: Record<number, `0x${string}`[]>,
@@ -13,13 +14,11 @@ export async function fetchUserMarkets(
 ): Promise<UserMarket[]> {
   const marketInChain = Object.entries(marketConfig).flatMap(
     async ([chainId, marketsComets]) => {
+      const chain = Number(chainId) as WagmiChainId;
       const cometsBaseData = await multicall(wagmiConfig, {
-        chainId: Number(chainId) as WagmiChainId,
+        chainId: chain,
         contracts: marketsComets.flatMap((cometProxyAddress) => {
-          const comet = new CometContract(
-            cometProxyAddress,
-            Number(chainId) as WagmiChainId,
-          );
+          const comet = new CometContract(cometProxyAddress, chain);
 
           return [
             comet.getBaseTokenCall(),
@@ -59,17 +58,11 @@ export async function fetchUserMarkets(
             currentCometBaseData[6],
           );
 
-          const comet = new CometContract(
-            cometProxyAddress,
-            Number(chainId) as WagmiChainId,
-          );
-          const baseTokenContract = new Erc20Contract(
-            baseTokenAddress,
-            Number(chainId) as WagmiChainId,
-          );
+          const comet = new CometContract(cometProxyAddress, chain);
+          const baseTokenContract = new Erc20Contract(baseTokenAddress, chain);
 
           const fullData = await multicall(wagmiConfig, {
-            chainId: Number(chainId) as WagmiChainId,
+            chainId: chain,
             contracts: [
               baseTokenContract.getBalanceOfCall(userAddress),
               baseTokenContract.getBalanceOfCall(cometProxyAddress),
@@ -106,9 +99,12 @@ export async function fetchUserMarkets(
           const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
           const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[10]);
 
-          const baseToken = await fetchBase(
+          const baseToken = await fetchBase(cometProxyAddress, chain);
+
+          const collaterals = await fetchUserCollaterals(
             cometProxyAddress,
-            Number(chainId) as WagmiChainId,
+            userAddress,
+            chain,
           );
 
           return new UserMarket({
@@ -123,7 +119,7 @@ export async function fetchUserMarkets(
             totalSupply,
             totalReserves,
             baseToken,
-            collaterals: [],
+            collaterals: collaterals,
             availableLiquidity,
             // TODO: update after contracts
             configControllerAddress:
@@ -215,6 +211,12 @@ export async function fetchUserMarket(
 
   const baseToken = await fetchBase(cometProxyAddress, chainId);
 
+  const collaterals = await fetchUserCollaterals(
+    cometProxyAddress,
+    userAddress,
+    chainId,
+  );
+
   const userMarket = new UserMarket({
     borrowBalance,
     supplyBalance,
@@ -227,7 +229,7 @@ export async function fetchUserMarket(
     totalSupply,
     totalReserves,
     baseToken,
-    collaterals: [],
+    collaterals: collaterals,
     availableLiquidity,
     // TODO: update after contracts
     configControllerAddress: "0x0000000000000000000000000000000000000000", // TODO

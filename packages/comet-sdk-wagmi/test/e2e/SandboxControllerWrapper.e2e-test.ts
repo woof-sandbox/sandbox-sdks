@@ -2,6 +2,7 @@ import { SandboxController } from "@sandbox/comet-sdk";
 
 import { arbitrum } from "@wagmi/core/chains";
 import { beforeAll, describe, test } from "vitest";
+import { wagmiConfig } from "../../lib/contracts";
 import { SandboxControllerWrapper } from "../../src/wrapper/SandboxControllerWrapper";
 
 let controller: SandboxControllerWrapper;
@@ -14,6 +15,7 @@ describe("SandboxControllerWrapper", () => {
     const sandBoxController = await SandboxController.fetch(
       controllerAddress,
       arbitrum.id,
+      wagmiConfig,
     );
     controller = new SandboxControllerWrapper(sandBoxController, arbitrum.id);
   });
