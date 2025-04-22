@@ -1,11 +1,11 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { arbitrum, sepolia } from "@wagmi/core/chains";
 // @ts-ignore
 import { ConfigController } from "@woof-software/comet-sdk-wagmi/augment/ConfigController";
 // @ts-ignore
 import { SandboxController } from "@woof-software/comet-sdk-wagmi/augment/SandboxController";
 // @ts-ignore
 import { UserMarketWrapper } from "@woof-software/comet-sdk-wagmi/wrappers";
-import { arbitrum, sepolia } from "@wagmi/core/chains";
 import { useEffect, useState } from "react";
 import {
   useAccount,

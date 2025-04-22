@@ -1,6 +1,6 @@
+import type { Config, WriteContractReturnType } from "@wagmi/core";
 import { type ICurve, SandboxController } from "@woof-software/comet-sdk";
 import type { ISandboxController } from "@woof-software/comet-sdk/src/sandbox-controller";
-import type { Config, WriteContractReturnType } from "@wagmi/core";
 import type { WagmiChainId } from "../config";
 import { ControllerContract, wagmiConfig } from "../contracts";
 import {

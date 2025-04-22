@@ -1,4 +1,4 @@
-import { type IUserMarket, DataUtils } from "@woof-software/comet-sdk";
+import { DataUtils, type IUserMarket } from "@woof-software/comet-sdk";
 import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";

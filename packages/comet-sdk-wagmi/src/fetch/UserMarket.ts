@@ -1,5 +1,5 @@
-import { UserMarket } from "@woof-software/comet-sdk";
 import { type Config, multicall } from "@wagmi/core";
+import { UserMarket } from "@woof-software/comet-sdk";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";

@@ -1,5 +1,8 @@
-import { PRICE_FEED_FACTOR_UNITS, UserCollateral } from "@woof-software/comet-sdk";
 import { multicall } from "@wagmi/core";
+import {
+  PRICE_FEED_FACTOR_UNITS,
+  UserCollateral,
+} from "@woof-software/comet-sdk";
 import { type ContractFunctionParameters, formatUnits } from "viem";
 import { Addresses, type WagmiChainId } from "../config";
 import {

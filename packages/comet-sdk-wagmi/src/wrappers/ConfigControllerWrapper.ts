@@ -1,5 +1,5 @@
-import { ConfigController } from "@woof-software/comet-sdk";
 import type { Config, WriteContractReturnType } from "@wagmi/core";
+import { ConfigController } from "@woof-software/comet-sdk";
 import type { WagmiChainId } from "../config";
 import { ConfigControllerContract } from "../contracts";
 import {

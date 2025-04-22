@@ -1,7 +1,7 @@
-import { Base, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
 import { multicall } from "@wagmi/core";
+import { Base, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
 import { formatUnits } from "viem";
-import { WagmiChainId } from "../config";
+import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract } from "../contracts";
 import { wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";

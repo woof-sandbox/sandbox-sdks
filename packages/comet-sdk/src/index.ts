@@ -1,5 +1,5 @@
 export * from "./constants";
-export * from './utils';
+export * from "./utils";
 export * from "./curve";
 export * from "./token";
 export * from "./market";
