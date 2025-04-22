@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { parseUnits, formatUnits } from "viem";
 
 export class DataUtils {
   static parseTokenInput(input: string): string {
@@ -10,10 +10,10 @@ export class DataUtils {
   }
 
   static toBigNumber(value: string, decimals: number): bigint {
-    return ethers.parseUnits(value, decimals);
+    return parseUnits(value, decimals);
   }
 
   static fromBigNumber(value: bigint, decimals: number): string {
-    return ethers.formatUnits(value, decimals);
+    return formatUnits(value, decimals);
   }
 }

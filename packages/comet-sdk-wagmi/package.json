@@ -1,7 +1,7 @@
 {
   "name": "@sandbox/comet-sdk-wagmi",
   "description": "Wagmi-based augmentation of `@sandbox/comet-sdk` that exports (and optionally injects) wagmi-based fetch methods.",
-  "version": "2.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "main": "src/index.ts",
   "type": "module",
@@ -14,26 +14,17 @@
     "test:e2e": "vitest run --coverage --config test/vitest-config/vitest.config.e2e.ts",
     "test:all": "vitest run --coverage --config test/vitest-config/vitest.config.all.ts"
   },
-  "dependencies": {
-    "rxjs": "^7.8.1",
-    "viem": "2.x"
-  },
   "peerDependencies": {
     "@sandbox/comet-sdk": "workspace:^",
-    "@sandbox/contracts-tools-sdk-ethers": "workspace:^",
     "@sandbox/subgraph-sdk": "workspace:^",
-    "@wagmi/connectors": "^5.7.12",
     "@wagmi/core": "^2.16.7",
     "wagmi": "^2.14.16",
-    "ethers": "^6.0.0"
+    "viem": "2.x"
   },
   "devDependencies": {
     "@sandbox/comet-sdk": "workspace:^",
-    "@sandbox/contracts-tools-sdk-ethers": "workspace:^",
     "@sandbox/subgraph-sdk": "workspace:^",
-    "@wagmi/connectors": "^5.7.12",
     "@wagmi/core": "^2.16.7",
-    "wagmi": "^2.14.16",
     "ethers": "^6.13.5",
     "typescript": "^5.7.2",
     "vitest": "^3.0.5"

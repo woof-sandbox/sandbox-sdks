@@ -1,5 +1,5 @@
 import { formatUnits, parseUnits } from "ethers";
-import { PRICE_FEED_MANTISSA } from "../constants";
+import { PRICE_FEED_FACTOR_UNITS } from "../constants";
 import { Market } from "../market";
 import { DataUtils } from "../utils/data";
 import type { IUserCollateral } from "./IUserCollateral";
@@ -26,9 +26,9 @@ export class UserMarket extends Market implements IUserMarket {
       symbol === "wstETH" ||
       symbol === "WBTC" ||
       symbol === "WETH"
-      ? Number(formatUnits(tokenPrice, PRICE_FEED_MANTISSA)) *
+      ? Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS)) *
           Number(this.price)
-      : Number(formatUnits(tokenPrice, PRICE_FEED_MANTISSA));
+      : Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS));
   }
 
   getBorrowCapacityMarketUSD() {
@@ -40,7 +40,7 @@ export class UserMarket extends Market implements IUserMarket {
           Number(formatUnits(collateral.liquidationFactor, 18)) *
           this.getTokenPrice(
             collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_MANTISSA),
+            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
           ),
       )
       .reduce((a: number, b: number) => a + b, 0);
@@ -129,7 +129,7 @@ export class UserMarket extends Market implements IUserMarket {
             Number(formatUnits(collateral.collateralFactor, 18)) *
             this.getTokenPrice(
               collateral.symbol,
-              parseUnits(collateral.price, PRICE_FEED_MANTISSA),
+              parseUnits(collateral.price, PRICE_FEED_FACTOR_UNITS),
             ),
         )
         .reduce((a: number, b: number) => a + b) / 1.5;

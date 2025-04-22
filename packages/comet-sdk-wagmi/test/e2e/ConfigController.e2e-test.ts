@@ -16,7 +16,7 @@ describe("Configurato Contract", () => {
   });
 
   test("curator", async () => {
-    const curator = await configC.curator;
+    const curator = configC.curator;
     expect(curator).to.be.an("string");
     // expect(conf).to.be.an("object");
   });

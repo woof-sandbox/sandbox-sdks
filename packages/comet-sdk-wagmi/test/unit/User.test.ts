@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { SUBGRAPH_PAGE_SIZE } from "../../src/constants";
 import { fetchUserActiveMarkets } from "../../src/fetch";
 
 let fetchMock: ReturnType<typeof vi.fn>;
@@ -48,7 +47,7 @@ describe("fetchUserActiveMarkets", () => {
   });
 
   it("should handle pagination correctly when data spans multiple pages", async () => {
-    const mockUsersPage1 = Array.from({ length: SUBGRAPH_PAGE_SIZE }).map(
+    const mockUsersPage1 = Array.from({ length: 1000 }).map(
       (_, i) => ({
         principal: i % 2 === 0 ? "-100" : "100",
         proxyCometAddress: `0xpage1_${i % 2 === 0 ? "b" : "l"}${i}`,
