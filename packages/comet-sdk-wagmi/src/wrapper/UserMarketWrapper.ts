@@ -1,5 +1,5 @@
 import type { IUserMarket } from "@sandbox/comet-sdk";
-import { UserMarket } from "../augment/UserMarket";
+import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
 import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";

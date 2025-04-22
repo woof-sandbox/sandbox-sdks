@@ -21,7 +21,7 @@ describe("MarketMethods", () => {
       },
     });
 
-    market = await Market.fetch(
+    market = await Market.fetchMarket(
       data.cometAddress as `0x${string}`,
       arbitrum.id,
     );

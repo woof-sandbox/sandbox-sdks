@@ -19,7 +19,7 @@ let market: UserMarketWrapper[];
 
 describe("UserMarketWrapper", () => {
   beforeAll(async () => {
-    const userMarkets = await UserMarket.fetchMarkets(
+    const userMarkets = await UserMarket.fetchUserMarkets(
       {
         [arbitrum.id]: marketsArbitrum,
         [mainnet.id]: marketsMainnet,

@@ -13,7 +13,7 @@ let market: UserMarketWrapper;
 
 describe("UserMarketWrapper", () => {
   beforeAll(async () => {
-    market = await UserMarketWrapper.fetch(
+    market = await UserMarketWrapper.fetchUserMarket(
       data.cometAddress as `0x${string}`,
       "0x23eEF61AB548a8852117561689886f583FC0E2B7",
       arbitrum.id,
