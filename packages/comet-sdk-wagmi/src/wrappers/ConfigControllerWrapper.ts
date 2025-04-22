@@ -1,7 +1,7 @@
 import { ConfigController } from "@sandbox/comet-sdk";
 import type { Config, WriteContractReturnType } from "@wagmi/core";
-import type { WagmiChainId } from "../config/chains";
-import { ConfigControllerContract } from "../contracts/config-controller.contract";
+import type { WagmiChainId } from "../config";
+import { ConfigControllerContract } from "../contracts";
 import {
   ACCEPT_CURATOR_ROLE_FAILED,
   ACCEPT_MARKET_TRANSFER_FAILED,

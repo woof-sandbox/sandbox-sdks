@@ -1,6 +1,6 @@
 import { ConfigController } from "@sandbox/comet-sdk";
 import { type Config, multicall } from "@wagmi/core";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 import { wagmiConfig } from "../contracts";
 import { ConfigControllerContract } from "../contracts";
 import { WagmiUtils } from "../utils";

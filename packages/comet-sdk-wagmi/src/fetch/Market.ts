@@ -1,6 +1,6 @@
 import { type IMarketProposalTx, Market, Token } from "@sandbox/comet-sdk";
 import { multicall } from "@wagmi/core";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 import { fetchBase, fetchBaseMock } from "./Base";

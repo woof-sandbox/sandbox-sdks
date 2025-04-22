@@ -1,10 +1,10 @@
 import { UserMarket } from "@sandbox/comet-sdk";
 import { type Config, multicall } from "@wagmi/core";
 import type { Address } from "viem";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
-import { UserMarketWrapper } from "../wrappers/UserMarketWrapper";
+import { UserMarketWrapper } from "../wrappers";
 import { fetchBase, fetchBaseMock } from "./Base";
 import { fetchUserCollaterals } from "./UserCollateral";
 

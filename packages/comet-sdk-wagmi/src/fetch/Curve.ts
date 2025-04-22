@@ -1,6 +1,6 @@
 import { Curve } from "@sandbox/comet-sdk";
 import { multicall } from "@wagmi/core";
-import type { WagmiChainIds } from "../config/chains";
+import { WagmiChainId } from "../config";
 import { CometContract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 
@@ -8,7 +8,7 @@ const secsPerYear = 60n * 60n * 24n * 365n;
 
 export async function fetchCurvesMocks(
   cometProxyAddress?: `0x${string}`,
-  chainId?: (typeof WagmiChainIds)[number],
+  chainId?: WagmiChainId,
 ): Promise<Curve[]> {
   return [
     new Curve({
@@ -27,7 +27,7 @@ export async function fetchCurvesMocks(
 
 export async function fetchCurves(
   cometProxyAddress: `0x${string}`,
-  chainId: (typeof WagmiChainIds)[number],
+  chainId: WagmiChainId,
 ): Promise<Curve[]> {
   const comet = new CometContract(cometProxyAddress, chainId);
 

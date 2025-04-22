@@ -5,7 +5,7 @@ import {
 } from "@wagmi/core";
 import type { Address, ContractFunctionParameters } from "viem";
 import { erc20Abi } from "../abis";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
 import { WagmiContract } from "./wagmi-contract";

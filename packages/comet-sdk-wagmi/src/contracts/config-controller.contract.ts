@@ -1,6 +1,6 @@
 import type { Config, WriteContractReturnType } from "@wagmi/core";
 import { configControllerAbi } from "../abis";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
 

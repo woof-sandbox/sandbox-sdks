@@ -1,6 +1,6 @@
 import type { Config } from "@wagmi/core";
 import { bulkerAbi } from "../abis";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
 

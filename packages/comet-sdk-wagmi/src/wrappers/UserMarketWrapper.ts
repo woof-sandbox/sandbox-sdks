@@ -4,7 +4,7 @@ import { UserMarket } from "../augment";
 import { type Config, getWalletClient } from "@wagmi/core";
 import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
 import type { Address } from "viem";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 import { ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";

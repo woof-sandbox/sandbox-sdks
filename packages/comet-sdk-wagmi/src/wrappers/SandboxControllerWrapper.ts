@@ -1,7 +1,7 @@
 import { type ICurve, SandboxController } from "@sandbox/comet-sdk";
 import type { ISandboxController } from "@sandbox/comet-sdk/src/sandbox-controller";
 import type { Config, WriteContractReturnType } from "@wagmi/core";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 import { ControllerContract, wagmiConfig } from "../contracts";
 import {
   ADD_CURVE_FAILED,
