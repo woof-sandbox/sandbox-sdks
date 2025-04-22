@@ -1,4 +1,4 @@
-import type { CollectionQuery } from "@sandbox/contracts-tools-sdk-ethers";
+import type { CollectionQuery } from "@sandbox/subgraph-sdk";
 
 // Returns query factory
 export const userActiveMarketQuery =

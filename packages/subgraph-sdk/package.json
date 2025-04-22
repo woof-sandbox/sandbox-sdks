@@ -1,0 +1,27 @@
+{
+  "name": "@sandbox/subgraph-sdk",
+  "description": "SDK for streamlined access to subgraphs, designed for clarity, reusability, and minimal overhead.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "type": "module",
+  "files": ["lib"],
+  "scripts": {
+    "prepublish": "$npm_execpath build",
+    "build": "tsc --build tsconfig.build.json",
+    "test": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
+    "test:unit": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
+    "test:all": "vitest run --coverage --config test/vitest-config/vitest.config.all.ts"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-ts": "^0.27.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.5"
+  },
+  "publishConfig": {
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts"
+  }
+}
