@@ -15,6 +15,7 @@ vitest.config.js
 lib/
 dist/
 node_modules/
+*.tsbuildinfo
 
 # IDEs and editors
 .idea/
