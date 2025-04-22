@@ -1,4 +1,4 @@
-import type { IUserMarket } from "@woof-software/comet-sdk";
+import { type IUserMarket, DataUtils } from "@woof-software/comet-sdk";
 import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
@@ -27,7 +27,7 @@ import {
   WITHDRAW_COLLATERAL_FAILED,
   WITHDRAW_FAILED,
 } from "../errors/wrappers/user-market-wrapper.errors";
-import { DataUtils } from "../utils";
+//import { DataUtils } from "../utils";
 
 // Todo need to find where to get Bulker Address
 const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum

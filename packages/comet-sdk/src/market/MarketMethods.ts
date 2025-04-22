@@ -1,4 +1,4 @@
-import { formatUnits, parseUnits } from "ethers";
+import { formatUnits, parseUnits } from "viem";
 import {
   COMET_FACTOR_DECIMALS,
   DAYS_PER_YEAR,
@@ -68,10 +68,10 @@ export namespace MarketMethods {
   ): number {
     // returns percents
     const nTokenToUsersPerDay = Number(
-      formatUnits(tokenToUsersPerDay, tokenDecimals),
+      formatUnits(tokenToUsersPerDay, Number(tokenDecimals)),
     );
     const nBaseTotalBorrow = Number(
-      formatUnits(baseTotalBorrowOrSupply, baseDecimals),
+      formatUnits(baseTotalBorrowOrSupply, Number(baseDecimals)),
     );
 
     if (nBaseTotalBorrow === 0 || basePriceInUsd === 0) {

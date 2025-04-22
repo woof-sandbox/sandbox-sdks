@@ -1,6 +1,6 @@
 import { formatUnits } from "viem";
 
-export class FormattingUtils {
+export abstract class FormattingUtils {
   static formatTokenValue(value: bigint, decimals: number): string {
     return formatUnits(value, decimals);
   }

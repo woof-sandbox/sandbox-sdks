@@ -1,7 +1,7 @@
-import { formatUnits, parseUnits } from "ethers";
+import { formatUnits, parseUnits } from "viem";
 import { PRICE_FEED_FACTOR_UNITS } from "../constants";
 import { Market } from "../market";
-import { DataUtils } from "../utils/data";
+import { DataUtils } from "../utils";
 import type { IUserCollateral } from "./IUserCollateral";
 import type { IUserMarket } from "./IUserMarket";
 import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
