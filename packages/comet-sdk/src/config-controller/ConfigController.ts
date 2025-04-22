@@ -1,4 +1,4 @@
-import { IConfigController } from "./IConfigController";
+import type { IConfigController } from "./IConfigController";
 
 export class ConfigController implements IConfigController {
   address: `0x${string}`;

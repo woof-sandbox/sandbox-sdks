@@ -1,14 +1,16 @@
-import { ConfigController } from "@sandbox/comet-sdk/src/config-controller";
+import { ConfigController } from "@sandbox/comet-sdk";
+import { type Config, multicall } from "@wagmi/core";
 import type { WagmiChainId } from "../config/chains";
-import { ConfigControllerContract } from "../contracts/config-controller.contract";
 import { wagmiConfig } from "../contracts";
-import { multicall } from "@wagmi/core";
+import { ConfigControllerContract } from "../contracts/config-controller.contract";
 import { WagmiUtils } from "../utils";
+import { ConfigControllerWrapper } from "../wrapper/ConfigControllerWrapper";
 
 export async function fetchConfigControllerData(
   controllerAddress: `0x${string}`,
   chainId: WagmiChainId,
-): Promise<ConfigController> {
+  config: Config,
+): Promise<ConfigControllerWrapper> {
   const controller = new ConfigControllerContract(controllerAddress, chainId);
 
   const baseData = await multicall(wagmiConfig, {
@@ -30,7 +32,7 @@ export async function fetchConfigControllerData(
   const marketsLength = WagmiUtils.resultOrThrow<bigint>(baseData[4]);
   const revenueTokensLength = WagmiUtils.resultOrThrow<bigint>(baseData[5]);
 
-  return new ConfigController({
+  const configController = new ConfigController({
     address: controllerAddress,
     owner,
     guardian,
@@ -39,4 +41,6 @@ export async function fetchConfigControllerData(
     marketsLength: Number(marketsLength),
     revenueTokensLength: Number(revenueTokensLength),
   });
+
+  return new ConfigControllerWrapper(configController, chainId, config);
 }

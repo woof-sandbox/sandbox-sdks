@@ -1,7 +1,11 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 // @ts-ignore
+import { ConfigController } from "@sandbox/comet-sdk-wagmi/augment/ConfigController";
+// @ts-ignore
+import { SandboxController } from "@sandbox/comet-sdk-wagmi/augment/SandboxController";
+// @ts-ignore
 import { UserMarketWrapper } from "@sandbox/comet-sdk-wagmi/wrapper/UserMarketWrapper";
-import { arbitrum } from "@wagmi/core/chains";
+import { arbitrum, sepolia } from "@wagmi/core/chains";
 import { useEffect, useState } from "react";
 import {
   useAccount,
@@ -37,6 +41,8 @@ function App() {
   );
 
   const [currentMarket, setCurrentMarket] = useState<any>(null);
+  const [currentConfigController, setConfigController] = useState<any>(null);
+  const [currentSandBoxController, setSandBoxController] = useState<any>(null);
 
   const [viewError, setViewError] = useState<any>(null);
 
@@ -94,6 +100,36 @@ function App() {
     }
   };
 
+  const handleGetConfigControllerData = async () => {
+    try {
+      const conf = await ConfigController.fetch(
+        "0xDF539a3B60172779Be6cBa11B26bBE0913b5316A",
+        sepolia.id,
+        config,
+      );
+      setConfigController(conf);
+      console.log("configC data:", conf);
+    } catch (error) {
+      console.error("Error fetching configC:", error);
+      setViewError(error);
+    }
+  };
+
+  const handleGetSandBoxControllerData = async () => {
+    try {
+      const sandboxController = await SandboxController.fetch(
+        "0xaf39746D87b067267B23C2169BF727F237f303b9",
+        sepolia.id,
+        config,
+      );
+      setSandBoxController(sandboxController);
+      console.log("sandboxController data:", sandboxController);
+    } catch (error) {
+      console.error("Error fetching sandboxController:", error);
+      setViewError(error);
+    }
+  };
+
   return (
     <>
       <div
@@ -114,6 +150,17 @@ function App() {
         <div style={{ display: "flex", gap: "10px" }}>
           {address && (
             <button onClick={handleGetUserMarket}>get User Market Data</button>
+          )}
+
+          {address && (
+            <button onClick={handleGetConfigControllerData}>
+              get Config Controller Data
+            </button>
+          )}
+          {address && (
+            <button onClick={handleGetSandBoxControllerData}>
+              get SandBox Controller Data
+            </button>
           )}
 
           <select onChange={(e) => handleChangeMarket(e.target.value)}>
@@ -306,6 +353,29 @@ function App() {
           </div>
         )}
       </div>
+      {currentConfigController && (
+        <div>
+          <h2>Config Controller</h2>
+
+          <div
+            style={{
+              display: "grid",
+              gap: "10px",
+              gridTemplateColumns: "repeat(3, 1fr)",
+            }}
+          >
+            <button
+              onClick={() =>
+                handleFunction(() =>
+                  currentConfigController?.proposeCurator(address),
+                )
+              }
+            >
+              propose curator ${address}
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
