@@ -10,6 +10,7 @@ vitest.config.js
 # Environment and local config
 .env
 .npmrc
+.npmrc.example
 
 # Build output
 lib/
