@@ -1,7 +1,7 @@
 {
   "name": "@woof-software/subgraph-sdk",
   "description": "SDK for streamlined access to subgraphs, designed for clarity, reusability, and minimal overhead.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
@@ -16,7 +16,7 @@
   "files": ["lib"],
   "scripts": {
     "prepublish": "$npm_execpath build",
-    "build": "tsc --build tsconfig.build.json",
+    "build": "tsc --build tsconfig.build.json --force && node ../../scripts/compile/post-compile.js",
     "test": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:unit": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:all": "vitest run --coverage --config test/vitest-config/vitest.config.all.ts"

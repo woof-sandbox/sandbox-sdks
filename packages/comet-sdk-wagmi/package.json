@@ -1,7 +1,7 @@
 {
   "name": "@woof-software/comet-sdk-wagmi",
   "description": "Wagmi-based augmentation of `@woof-software/comet-sdk` that exports (and optionally injects) wagmi-based fetch methods.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
@@ -13,19 +13,21 @@
   "license": "MIT",
   "main": "src/index.ts",
   "type": "module",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "prepublish": "$npm_execpath build",
-    "build": "tsc --build tsconfig.build.json",
+    "build": "tsc --build tsconfig.build.json --force && node ../../scripts/compile/post-compile.js",
     "test": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:unit": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:e2e": "vitest run --coverage --config test/vitest-config/vitest.config.e2e.ts",
     "test:all": "vitest run --coverage --config test/vitest-config/vitest.config.all.ts"
   },
   "peerDependencies": {
+    "@wagmi/core": "^2.16.7",
     "@woof-software/comet-sdk": "workspace:^",
     "@woof-software/subgraph-sdk": "workspace:^",
-    "@wagmi/core": "^2.16.7",
     "viem": "2.x"
   },
   "devDependencies": {
