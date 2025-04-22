@@ -2,9 +2,9 @@ import { ConfigController } from "@sandbox/comet-sdk";
 import { type Config, multicall } from "@wagmi/core";
 import type { WagmiChainId } from "../config/chains";
 import { wagmiConfig } from "../contracts";
-import { ConfigControllerContract } from "../contracts/config-controller.contract";
+import { ConfigControllerContract } from "../contracts";
 import { WagmiUtils } from "../utils";
-import { ConfigControllerWrapper } from "../wrappers/ConfigControllerWrapper";
+import { ConfigControllerWrapper } from "../wrappers";
 
 export async function fetchConfigControllerData(
   controllerAddress: `0x${string}`,

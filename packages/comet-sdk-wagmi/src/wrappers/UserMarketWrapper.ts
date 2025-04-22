@@ -26,7 +26,7 @@ import {
   TOKEN_NOT_APPROVED,
   WITHDRAW_COLLATERAL_FAILED,
   WITHDRAW_FAILED,
-} from "../errors/wrapper.errors";
+} from "../errors/wrappers/user-market-wrapper.errors";
 import { DataUtils } from "../utils";
 
 // Todo need to find where to get Bulker Address

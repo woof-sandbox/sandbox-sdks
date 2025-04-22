@@ -3,8 +3,12 @@ import { multicall } from "@wagmi/core";
 import { type ContractFunctionParameters, formatUnits } from "viem";
 import { Addresses } from "../config/addresses";
 import type { WagmiChainId } from "../config/chains";
-import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
-import { ConfiguratorContract } from "../contracts/configurator.contract";
+import {
+  CometContract,
+  ConfiguratorContract,
+  Erc20Contract,
+  wagmiConfig,
+} from "../contracts";
 import { WagmiUtils } from "../utils";
 
 export async function fetchUserCollaterals(
