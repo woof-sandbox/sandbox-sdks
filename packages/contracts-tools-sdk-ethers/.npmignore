@@ -13,7 +13,6 @@ vitest.config.js
 .npmrc.example
 
 # Build output
-lib/
 dist/
 node_modules/
 *.tsbuildinfo
