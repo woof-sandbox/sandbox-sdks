@@ -1,4 +1,4 @@
-import { SandboxController } from "@sandbox/comet-sdk";
+import { SandboxController } from "@woof-software/comet-sdk";
 
 import { arbitrum } from "@wagmi/core/chains";
 import { beforeAll, describe, test } from "vitest";

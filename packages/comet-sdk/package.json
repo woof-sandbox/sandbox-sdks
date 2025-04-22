@@ -1,5 +1,5 @@
 {
-  "name": "@sandbox/comet-sdk",
+  "name": "@woof-software/comet-sdk",
   "description": "Framework-agnostic package that defines Comet-related entity classes (such as `Market`, `Token`).",
   "version": "0.0.1",
   "repository": {

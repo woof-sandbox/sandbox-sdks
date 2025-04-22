@@ -1,10 +1,10 @@
-import { Market } from "@sandbox/comet-sdk";
+import { Market } from "@woof-software/comet-sdk";
 import {
   fetchMarket as fetchMarketF,
   fetchMarketMock as fetchMarketMockF,
 } from "../fetch";
 
-declare module "@sandbox/comet-sdk" {
+declare module "@woof-software/comet-sdk" {
   namespace Market {
     let fetchMarket: typeof fetchMarketF;
     let fetchMarketMock: typeof fetchMarketMockF;

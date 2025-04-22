@@ -1,4 +1,4 @@
-import { Base, PRICE_FEED_FACTOR_UNITS } from "@sandbox/comet-sdk";
+import { Base, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
 import { multicall } from "@wagmi/core";
 import { formatUnits } from "viem";
 import { WagmiChainId } from "../config";

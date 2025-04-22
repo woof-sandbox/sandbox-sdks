@@ -1,4 +1,4 @@
-import type { IMarket } from "@sandbox/comet-sdk";
+import type { IMarket } from "@woof-software/comet-sdk";
 
 import { arbitrum } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";

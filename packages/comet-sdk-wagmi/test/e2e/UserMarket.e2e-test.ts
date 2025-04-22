@@ -1,4 +1,4 @@
-import type { IMarket } from "@sandbox/comet-sdk";
+import type { IMarket } from "@woof-software/comet-sdk";
 import { UserMarket } from "../../src/augment";
 
 import { arbitrum } from "@wagmi/core/chains";

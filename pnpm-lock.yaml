@@ -57,10 +57,10 @@ importers:
 
   packages/comet-sdk-wagmi:
     dependencies:
-      '@sandbox/comet-sdk':
+      '@woof-software/comet-sdk':
         specifier: workspace:^
         version: link:../comet-sdk
-      '@sandbox/subgraph-sdk':
+      '@woof-software/subgraph-sdk':
         specifier: workspace:^
         version: link:../subgraph-sdk
       '@wagmi/core':
@@ -104,10 +104,10 @@ importers:
       '@rainbow-me/rainbowkit':
         specifier: ^2.2.4
         version: 2.2.4(@tanstack/react-query@5.74.3(react@19.1.0))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))(wagmi@2.14.16(@tanstack/query-core@5.74.3)(@tanstack/react-query@5.74.3(react@19.1.0))(@types/react@19.1.2)(bufferutil@4.0.9)(react@19.1.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)))
-      '@sandbox/comet-sdk':
+      '@woof-software/comet-sdk':
         specifier: link:../comet-sdk
         version: link:../comet-sdk
-      '@sandbox/comet-sdk-wagmi':
+      '@woof-software/comet-sdk-wagmi':
         specifier: link:../comet-sdk-wagmi
         version: link:../comet-sdk-wagmi
       '@tanstack/react-query':

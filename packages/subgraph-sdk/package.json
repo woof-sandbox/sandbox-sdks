@@ -1,5 +1,5 @@
 {
-  "name": "@sandbox/subgraph-sdk",
+  "name": "@woof-software/subgraph-sdk",
   "description": "SDK for streamlined access to subgraphs, designed for clarity, reusability, and minimal overhead.",
   "version": "0.0.1",
   "repository": {

@@ -1,4 +1,4 @@
-import { UserMarket } from "@sandbox/comet-sdk";
+import { UserMarket } from "@woof-software/comet-sdk";
 import { type Config, multicall } from "@wagmi/core";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config";

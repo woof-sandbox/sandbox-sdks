@@ -7,11 +7,11 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@sandbox/comet-sdk-wagmi": path.resolve(
+      "@woof-software/comet-sdk-wagmi": path.resolve(
         __dirname,
         "../comet-sdk-wagmi/src",
       ),
-      "@sandbox/comet-sdk": path.resolve(__dirname, "../comet-sdk/src"),
+      "@woof-software/comet-sdk": path.resolve(__dirname, "../comet-sdk/src"),
     },
   },
 });

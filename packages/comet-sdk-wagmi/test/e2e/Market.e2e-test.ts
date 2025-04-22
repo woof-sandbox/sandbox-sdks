@@ -1,4 +1,4 @@
-import { type IMarket, PERCENT_PRECISION } from "@sandbox/comet-sdk";
+import { type IMarket, PERCENT_PRECISION } from "@woof-software/comet-sdk";
 import { http, createConfig } from "@wagmi/core";
 import { arbitrum } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";

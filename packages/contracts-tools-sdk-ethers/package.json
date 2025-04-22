@@ -1,5 +1,5 @@
 {
-  "name": "@sandbox/contracts-tools-sdk-ethers",
+  "name": "@woof-software/contracts-tools-sdk-ethers",
   "description": "Module simplify smart contract interactions and multicall3 aggregation on the Ethereum blockchain and other EVM-compatible networks.",
   "version": "0.0.1",
   "repository": {

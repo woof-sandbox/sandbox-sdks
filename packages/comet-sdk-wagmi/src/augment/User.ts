@@ -1,7 +1,7 @@
-import { User } from "@sandbox/comet-sdk";
+import { User } from "@woof-software/comet-sdk";
 import { fetchUserActiveMarkets, fetchUserMock } from "../fetch";
 
-declare module "@sandbox/comet-sdk" {
+declare module "@woof-software/comet-sdk" {
   namespace User {
     let fetchMock: typeof fetchUserMock;
     let fetchActiveMarkets: typeof fetchUserActiveMarkets;

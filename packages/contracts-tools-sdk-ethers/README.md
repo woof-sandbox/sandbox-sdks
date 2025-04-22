@@ -1,4 +1,4 @@
-# @sandbox/contracts-tools-sdk-ethers
+# @woof-software/contracts-tools-sdk-ethers
 
 Provides logic for ethers interactions.
 

@@ -1,4 +1,4 @@
-import { type IMarketProposalTx, Market, Token } from "@sandbox/comet-sdk";
+import { type IMarketProposalTx, Market, Token } from "@woof-software/comet-sdk";
 import { multicall } from "@wagmi/core";
 import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";

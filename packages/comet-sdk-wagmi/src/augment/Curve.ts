@@ -1,7 +1,7 @@
-import { Curve } from "@sandbox/comet-sdk";
+import { Curve } from "@woof-software/comet-sdk";
 import { fetchCurves, fetchCurvesMocks } from "../fetch";
 
-declare module "@sandbox/comet-sdk" {
+declare module "@woof-software/comet-sdk" {
   namespace Curve {
     let fetchMocks: typeof fetchCurvesMocks;
     let fetch: typeof fetchCurves;

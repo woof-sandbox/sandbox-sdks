@@ -1,6 +1,6 @@
-# @sandbox/comet-sdk-wagmi
+# @woof-software/comet-sdk-wagmi
 
-A wagmi-powered extension of [`@sandbox/comet-sdk`](https://www.npmjs.com/package/@sandbox/comet-sdk) that provides utilities, fetchers, and wrappers to simplify working with Comet markets and users using wagmi-compatible tools.
+A wagmi-powered extension of [`@woof-software/comet-sdk`](https://www.npmjs.com/package/@woof-software/comet-sdk) that provides utilities, fetchers, and wrappers to simplify working with Comet markets and users using wagmi-compatible tools.
 
 ---
 
@@ -19,12 +19,12 @@ Before installing this package, make sure you have the following **peer dependen
 
 ```bash
 pnpm add \
-  @sandbox/comet-sdk \
-  @sandbox/subgraph-sdk \
+  @woof-software/comet-sdk \
+  @woof-software/subgraph-sdk \
   @wagmi/core \
   viem
 ```
 Then:
 
-`pnpm add @sandbox/comet-sdk-wagmi`
+`pnpm add @woof-software/comet-sdk-wagmi`
 

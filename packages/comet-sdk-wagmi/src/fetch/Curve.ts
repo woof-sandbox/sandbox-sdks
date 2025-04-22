@@ -1,4 +1,4 @@
-import { Curve } from "@sandbox/comet-sdk";
+import { Curve } from "@woof-software/comet-sdk";
 import { multicall } from "@wagmi/core";
 import { WagmiChainId } from "../config";
 import { CometContract, wagmiConfig } from "../contracts";

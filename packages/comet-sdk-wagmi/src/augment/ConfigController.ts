@@ -1,7 +1,7 @@
-import { ConfigController } from "@sandbox/comet-sdk";
+import { ConfigController } from "@woof-software/comet-sdk";
 import { fetchConfigControllerData } from "../fetch";
 
-declare module "@sandbox/comet-sdk" {
+declare module "@woof-software/comet-sdk" {
   namespace ConfigController {
     let fetch: typeof fetchConfigControllerData;
   }
