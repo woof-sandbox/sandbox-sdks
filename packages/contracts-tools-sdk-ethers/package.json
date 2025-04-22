@@ -17,10 +17,9 @@
     "test:all": "vitest run --coverage --config test/vitest-config/vitest.config.all.ts"
   },
   "peerDependencies": {
-    "ethers": "^6.13.5"
+    "ethers": "^6.0.0"
   },
   "devDependencies": {
-    "ethers": "^6.13.5",
     "typescript": "^5.7.2",
     "vitest": "^3.0.5"
   },

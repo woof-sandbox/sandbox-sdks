@@ -57,10 +57,6 @@ importers:
 
   packages/comet-sdk-wagmi:
     dependencies:
-      viem:
-        specifier: 2.x
-        version: 2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
-    devDependencies:
       '@sandbox/comet-sdk':
         specifier: workspace:^
         version: link:../comet-sdk
@@ -70,6 +66,10 @@ importers:
       '@wagmi/core':
         specifier: ^2.16.7
         version: 2.16.7(@tanstack/query-core@5.74.3)(@types/react@19.1.2)(react@19.1.0)(typescript@5.7.3)(use-sync-external-store@1.4.0(react@19.1.0))(viem@2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10))
+      viem:
+        specifier: 2.x
+        version: 2.26.2(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
+    devDependencies:
       typescript:
         specifier: ^5.7.2
         version: 5.7.3
@@ -78,10 +78,11 @@ importers:
         version: 3.0.5(@types/debug@4.1.12)(@types/node@22.7.5)(yaml@2.7.0)
 
   packages/contracts-tools-sdk-ethers:
-    devDependencies:
+    dependencies:
       ethers:
-        specifier: ^6.13.5
+        specifier: ^6.0.0
         version: 6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+    devDependencies:
       typescript:
         specifier: ^5.7.2
         version: 5.7.3
