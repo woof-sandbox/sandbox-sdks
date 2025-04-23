@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
+import { formatUnits } from "viem";
 
-export class FormattingUtils {
+export abstract class FormattingUtils {
   static formatTokenValue(value: bigint, decimals: number): string {
-    return ethers.formatUnits(value, decimals);
+    return formatUnits(value, decimals);
   }
 
   static formatNumber(value: number | string, decimals = 2): string {
@@ -14,7 +14,10 @@ export class FormattingUtils {
   }
 
   static formatCurrency(value: number, symbol = "$"): string {
-    return `${symbol}${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `${symbol}${value.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
   }
 
   static sliceAddress(address: string): string {

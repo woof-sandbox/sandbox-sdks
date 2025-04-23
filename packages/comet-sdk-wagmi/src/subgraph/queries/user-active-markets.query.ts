@@ -1,4 +1,4 @@
-import type { CollectionQuery } from "@sandbox/subgraph-sdk";
+import type { CollectionQuery } from "@woof-software/subgraph-sdk";
 
 // Returns query factory
 export const userActiveMarketQuery =

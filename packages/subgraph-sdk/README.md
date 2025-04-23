@@ -1,11 +1,11 @@
-# @sandbox/subgraph-sdk
+# @woof-software/subgraph-sdk
 
 A lightweight and efficient SDK for interacting with subgraphs, designed for clarity, reusability, and minimal overhead.
 
 ## Installation
 
 ```
-npm install @sandbox/subgraph-sdk
+npm install @woof-software/subgraph-sdk
 ```
 ## API Reference
 

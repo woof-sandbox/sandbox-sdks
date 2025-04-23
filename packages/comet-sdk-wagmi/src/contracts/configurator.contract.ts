@@ -1,6 +1,6 @@
 import type { ContractFunctionParameters } from "viem";
 import { configuratorAbi } from "../abis";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
 

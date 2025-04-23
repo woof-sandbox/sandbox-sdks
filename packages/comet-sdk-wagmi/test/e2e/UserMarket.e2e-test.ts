@@ -1,4 +1,4 @@
-import type { IMarket } from "@sandbox/comet-sdk";
+import type { IMarket } from "@woof-software/comet-sdk";
 import { UserMarket } from "../../src/augment";
 
 import { arbitrum } from "@wagmi/core/chains";
@@ -13,7 +13,7 @@ let market: UserMarket;
 
 describe("MarketMethods", () => {
   beforeAll(async () => {
-    market = await UserMarket.fetch(
+    market = await UserMarket.fetchUserMarket(
       data.cometAddress as `0x${string}`,
       "0x23eEF61AB548a8852117561689886f583FC0E2B7",
       arbitrum.id,

@@ -1,7 +1,29 @@
-import { ConfigController } from "@sandbox/comet-sdk";
 import type { Config, WriteContractReturnType } from "@wagmi/core";
-import type { WagmiChainId } from "../config/chains";
-import { ConfigControllerContract } from "../contracts/config-controller.contract";
+import { ConfigController } from "@woof-software/comet-sdk";
+import type { WagmiChainId } from "../config";
+import { ConfigControllerContract } from "../contracts";
+import {
+  ACCEPT_CURATOR_ROLE_FAILED,
+  ACCEPT_MARKET_TRANSFER_FAILED,
+  ACCUMULATE_REVENUE_FAILED,
+  CANCEL_CURATOR_PROPOSAL_FAILED,
+  CANCEL_MARKET_CONFIG_PROPOSAL_FAILED,
+  CANCEL_MARKET_TRANSFER_PROPOSAL_FAILED,
+  CLAIM_ALL_REVENUE_FAILED,
+  CLAIM_REVENUE_FAILED,
+  CONFIG_INITIALIZATION_FAILED,
+  CREATE_MARKET_FAILED,
+  EXECUTE_MARKET_CONFIG_PROPOSAL_FAILED,
+  GRANT_OWNERSHIP_FAILED,
+  PROPOSE_CURATOR_FAILED,
+  PROPOSE_MARKET_COLLATERAL_FAILED,
+  PROPOSE_MARKET_TRANSFER_FAILED,
+  REMOVE_CLAIM_REVENUE_TOKEN_FAILED,
+  REMOVE_CURATOR_FAILED,
+  SET_CURATOR_FEE_FAILED,
+  SET_GUARDIAN_FAILED,
+  SET_PROPOSAL_DURATIONS_FAILED,
+} from "../errors/wrappers/config-controller-wrapper.errors";
 
 export class ConfigControllerWrapper extends ConfigController {
   private readonly configControllerContract: ConfigControllerContract;
@@ -29,7 +51,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to accept curator role.");
+      throw ACCEPT_CURATOR_ROLE_FAILED();
     }
   }
 
@@ -42,7 +64,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to accept market transfer proposal.");
+      throw ACCEPT_MARKET_TRANSFER_FAILED();
     }
   }
 
@@ -57,7 +79,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to accumulate revenue.");
+      throw ACCUMULATE_REVENUE_FAILED();
     }
   }
 
@@ -67,7 +89,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to cancel curator proposal.");
+      throw CANCEL_CURATOR_PROPOSAL_FAILED();
     }
   }
 
@@ -80,7 +102,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to cancel market config proposal.");
+      throw CANCEL_MARKET_CONFIG_PROPOSAL_FAILED();
     }
   }
 
@@ -93,7 +115,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to cancel market transfer proposal.");
+      throw CANCEL_MARKET_TRANSFER_PROPOSAL_FAILED();
     }
   }
 
@@ -101,7 +123,7 @@ export class ConfigControllerWrapper extends ConfigController {
     try {
       return await this.configControllerContract.claimAllRevenue(this.chainId);
     } catch {
-      throw new Error("Failed to claim all revenue.");
+      throw CLAIM_ALL_REVENUE_FAILED();
     }
   }
 
@@ -112,7 +134,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to claim revenue.");
+      throw CLAIM_REVENUE_FAILED();
     }
   }
 
@@ -125,7 +147,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to create market.");
+      throw CREATE_MARKET_FAILED();
     }
   }
 
@@ -138,7 +160,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to execute market config proposal.");
+      throw EXECUTE_MARKET_CONFIG_PROPOSAL_FAILED();
     }
   }
 
@@ -151,7 +173,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to grant ownership.");
+      throw GRANT_OWNERSHIP_FAILED();
     }
   }
 
@@ -180,7 +202,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to initialize config controller.");
+      throw CONFIG_INITIALIZATION_FAILED();
     }
   }
 
@@ -193,7 +215,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to propose curator.");
+      throw PROPOSE_CURATOR_FAILED();
     }
   }
 
@@ -210,7 +232,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to propose market collateral tokens.");
+      throw PROPOSE_MARKET_COLLATERAL_FAILED();
     }
   }
 
@@ -225,7 +247,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to propose market transfer.");
+      throw PROPOSE_MARKET_TRANSFER_FAILED();
     }
   }
 
@@ -238,7 +260,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to remove claim revenue token.");
+      throw REMOVE_CLAIM_REVENUE_TOKEN_FAILED();
     }
   }
 
@@ -246,7 +268,7 @@ export class ConfigControllerWrapper extends ConfigController {
     try {
       return await this.configControllerContract.removeCurator(this.chainId);
     } catch {
-      throw new Error("Failed to remove curator.");
+      throw REMOVE_CURATOR_FAILED();
     }
   }
 
@@ -257,7 +279,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to set curator fee.");
+      throw SET_CURATOR_FEE_FAILED();
     }
   }
 
@@ -270,7 +292,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to set guardian.");
+      throw SET_GUARDIAN_FAILED();
     }
   }
 
@@ -285,7 +307,7 @@ export class ConfigControllerWrapper extends ConfigController {
         this.chainId,
       );
     } catch {
-      throw new Error("Failed to set proposal durations.");
+      throw SET_PROPOSAL_DURATIONS_FAILED();
     }
   }
 }

@@ -1,8 +1,8 @@
-import { formatUnits, parseUnits } from "ethers";
+import { formatUnits, parseUnits } from "viem";
 import {
   COMET_FACTOR_DECIMALS,
   DAYS_PER_YEAR,
-  PRICE_FEED_MANTISSA,
+  PRICE_FEED_FACTOR_UNITS,
   SECONDS_PER_DAY,
   SECONDS_PER_YEAR,
 } from "../constants";
@@ -31,18 +31,20 @@ export namespace MarketMethods {
     baseTokenPrice: string,
     marketTotalSupply: bigint, // or base total supply (takes from market)
   ): bigint {
-    const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_MANTISSA);
+    const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_FACTOR_UNITS);
     return (
-      (marketTotalSupply * priceInBigInt) / BigInt(10 ** PRICE_FEED_MANTISSA)
+      (marketTotalSupply * priceInBigInt) /
+      BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
     );
   }
   export function totalBorrowed(
     baseTokenPrice: string,
     marketTotalBorrow: bigint,
   ): bigint {
-    const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_MANTISSA);
+    const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_FACTOR_UNITS);
     return (
-      (marketTotalBorrow * priceInBigInt) / BigInt(10 ** PRICE_FEED_MANTISSA)
+      (marketTotalBorrow * priceInBigInt) /
+      BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
     );
   }
   //
@@ -66,10 +68,10 @@ export namespace MarketMethods {
   ): number {
     // returns percents
     const nTokenToUsersPerDay = Number(
-      formatUnits(tokenToUsersPerDay, tokenDecimals),
+      formatUnits(tokenToUsersPerDay, Number(tokenDecimals)),
     );
     const nBaseTotalBorrow = Number(
-      formatUnits(baseTotalBorrowOrSupply, baseDecimals),
+      formatUnits(baseTotalBorrowOrSupply, Number(baseDecimals)),
     );
 
     if (nBaseTotalBorrow === 0 || basePriceInUsd === 0) {

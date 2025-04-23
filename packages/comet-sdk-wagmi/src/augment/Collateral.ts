@@ -1,7 +1,7 @@
-import { Collateral } from "@sandbox/comet-sdk";
+import { Collateral } from "@woof-software/comet-sdk";
 import { fetchCollateralsMocks } from "../fetch";
 
-declare module "@sandbox/comet-sdk" {
+declare module "@woof-software/comet-sdk" {
   namespace Collateral {
     let fetchMocks: typeof fetchCollateralsMocks;
   }

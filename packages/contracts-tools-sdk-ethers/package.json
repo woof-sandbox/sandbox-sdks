@@ -1,7 +1,15 @@
 {
-  "name": "@sandbox/contracts-tools-sdk-ethers",
+  "name": "@woof-software/contracts-tools-sdk-ethers",
   "description": "Module simplify smart contract interactions and multicall3 aggregation on the Ethereum blockchain and other EVM-compatible networks.",
-  "version": "1.0.0",
+  "version": "0.0.6",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
+  },
+  "homepage": "https://github.com/woof-compound/sandbox-sdks#readme",
+  "bugs": {
+    "url": "https://github.com/woof-compound/sandbox-sdks/issues"
+  },
   "license": "MIT",
   "main": "src/index.ts",
   "type": "module",
@@ -9,7 +17,7 @@
   "files": ["lib"],
   "scripts": {
     "prepublish": "$npm_execpath build",
-    "build": "tsc --build  tsconfig.build.json",
+    "build": "tsc --build tsconfig.build.json --force && node ../../scripts/compile/post-compile.js",
     "test": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:unit": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:e2e": "vitest run --coverage --config test/vitest-config/vitest.config.e2e.ts",
@@ -17,18 +25,15 @@
     "test:all": "vitest run --coverage --config test/vitest-config/vitest.config.all.ts"
   },
   "peerDependencies": {
-    "ethers": "^6.13.5"
+    "ethers": "^6.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.27.0",
-    "@babel/core": "^7.26.10",
-    "@babel/preset-env": "^7.26.9",
-    "ethers": "^6.13.5",
     "typescript": "^5.7.2",
     "vitest": "^3.0.5"
   },
   "publishConfig": {
     "main": "lib/index.js",
-    "types": "lib/index.d.ts"
+    "types": "lib/index.d.ts",
+    "access": "public"
   }
 }

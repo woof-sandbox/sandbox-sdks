@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.2.4",
-    "@sandbox/comet-sdk": "link:../comet-sdk",
-    "@sandbox/comet-sdk-wagmi": "link:../comet-sdk-wagmi",
+    "@woof-software/comet-sdk": "link:../comet-sdk",
+    "@woof-software/comet-sdk-wagmi": "link:../comet-sdk-wagmi",
     "@tanstack/react-query": "^5.74.3",
     "prettier": "^3.5.3",
     "react": "^19.0.0",

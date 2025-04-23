@@ -1,0 +1,34 @@
+# Test files and coverage
+tests/
+coverage/
+.nyc_output/
+vitest.config.js
+
+# Prettier
+.prettierrc
+
+# Environment and local config
+.env
+.npmrc
+.npmrc.example
+
+# Build output
+dist/
+node_modules/
+*.tsbuildinfo
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# VSCode settings
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

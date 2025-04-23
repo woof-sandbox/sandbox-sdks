@@ -1,7 +1,7 @@
 {
-  "name": "@sandbox/comet-sdk",
+  "name": "@woof-software/comet-sdk",
   "description": "Framework-agnostic package that defines Comet-related entity classes (such as `Market`, `Token`).",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
@@ -16,13 +16,13 @@
   "files": ["lib"],
   "scripts": {
     "prepublish": "$npm_execpath build",
-    "build": "tsc --build tsconfig.build.json",
+    "build": "tsc --build tsconfig.build.json --force && node ../../scripts/compile/post-compile.js",
     "test": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:unit": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:all": "vitest run --coverage --config test/vitest-config/vitest.config.all.ts"
   },
   "dependencies": {
-    "@noble/hashes": "^1.6.1"
+    "viem": "2.x"
   },
   "devDependencies": {
     "typescript": "^5.7.2",
@@ -30,6 +30,7 @@
   },
   "publishConfig": {
     "main": "lib/index.js",
-    "types": "lib/index.d.ts"
+    "types": "lib/index.d.ts",
+    "access": "public"
   }
 }

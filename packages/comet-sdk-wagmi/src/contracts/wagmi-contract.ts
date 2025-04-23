@@ -5,7 +5,7 @@ import {
   writeContract,
 } from "@wagmi/core";
 import type { Abi, Address, ContractFunctionParameters } from "viem";
-import type { WagmiChainId } from "../config/chains";
+import type { WagmiChainId } from "../config";
 
 export class WagmiContract {
   constructor(

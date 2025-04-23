@@ -4,8 +4,8 @@
     "outDir": "lib",
     "rootDir": ".",
     "baseUrl": ".",
+    "moduleResolution": "node",
     "module": "ESNext",
-    "moduleResolution": "bundler",
     "target": "ES2020"
   }
 }

@@ -1,8 +1,7 @@
-import { Base } from "@sandbox/comet-sdk";
 import { multicall } from "@wagmi/core";
+import { Base, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
 import { formatUnits } from "viem";
-import type { WagmiChainIds } from "../config/chains";
-import { PRICE_FEED_FACTOR_UNITS } from "../constants";
+import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract } from "../contracts";
 import { wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
@@ -12,7 +11,7 @@ const secsPerYear = 60n * 60n * 24n * 365n;
 
 export async function fetchBaseMock(
   cometProxyAddress?: `0x${string}`,
-  chainId?: (typeof WagmiChainIds)[number],
+  chainId?: WagmiChainId,
 ): Promise<Base> {
   // for USDt comet
   const tokenAddress = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
@@ -41,7 +40,7 @@ export async function fetchBaseMock(
 
 export async function fetchBase(
   cometProxyAddress: `0x${string}`,
-  chainId: (typeof WagmiChainIds)[number],
+  chainId: WagmiChainId,
 ): Promise<Base> {
   const comet = new CometContract(cometProxyAddress, chainId);
 

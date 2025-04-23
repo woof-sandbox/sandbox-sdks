@@ -1,9 +1,9 @@
-import type { IMarket } from "@sandbox/comet-sdk";
+import type { IMarket } from "@woof-software/comet-sdk";
 
 import { arbitrum } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";
 import { wagmiConfig } from "../../lib/contracts";
-import { UserMarketWrapper } from "../../src/wrapper/UserMarketWrapper";
+import { UserMarketWrapper } from "../../src/wrappers/UserMarketWrapper";
 
 const data: Partial<IMarket> = {
   cometAddress: "0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07",
@@ -13,7 +13,7 @@ let market: UserMarketWrapper;
 
 describe("UserMarketWrapper", () => {
   beforeAll(async () => {
-    market = await UserMarketWrapper.fetch(
+    market = await UserMarketWrapper.fetchUserMarket(
       data.cometAddress as `0x${string}`,
       "0x23eEF61AB548a8852117561689886f583FC0E2B7",
       arbitrum.id,
