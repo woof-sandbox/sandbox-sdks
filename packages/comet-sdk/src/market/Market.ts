@@ -52,6 +52,33 @@ export class Market implements IMarket {
     this.rewardTokens = marketData.rewardTokens;
   }
 
+  get totalReservesUSD(): number {
+    return MarketMethods.getTotalReservesUSD(
+      this.totalReserves,
+      this.baseToken,
+    );
+  }
+
+  get utilizationPercent(): number {
+    return MarketMethods.getUtilization(this.utilization);
+  }
+
+  get сollateralization(): number {
+    return MarketMethods.getCollateralization(
+      this.totalBorrow,
+      this.totalSupply,
+      this.baseToken,
+    );
+  }
+
+  get totalValueLocked(): number {
+    return MarketMethods.getTVL(
+      this.availableLiquidity,
+      this.baseToken,
+      this.collaterals,
+    );
+  }
+
   get borrowApr(): number {
     return MarketMethods.calcApr(this.borrowRate);
   }
@@ -90,12 +117,5 @@ export class Market implements IMarket {
       this.rewardTokens,
       this.borrowApr,
     );
-  }
-
-  get supplyData() {
-    return {
-      baseToken: this.baseToken,
-      // userData: fetchUserMock()  // userMarketData !
-    };
   }
 }

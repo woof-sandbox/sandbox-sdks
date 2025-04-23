@@ -6,6 +6,7 @@ export class Collateral extends Token implements ICollateral {
   public liquidationFactor: bigint;
   public liquidationPenalty: bigint;
   public supplyCap: bigint;
+  public cometBalance: bigint;
 
   constructor(collateralData: ICollateral) {
     super(collateralData);
@@ -13,5 +14,6 @@ export class Collateral extends Token implements ICollateral {
     this.liquidationFactor = collateralData.liquidationFactor;
     this.liquidationPenalty = collateralData.liquidationPenalty;
     this.supplyCap = collateralData.supplyCap;
+    this.cometBalance = collateralData.cometBalance;
   }
 }

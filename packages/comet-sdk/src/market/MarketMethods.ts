@@ -6,7 +6,7 @@ import {
   SECONDS_PER_DAY,
   SECONDS_PER_YEAR,
 } from "../constants";
-import type { IBase, IToken } from "../token";
+import type { IBase, ICollateral, IToken } from "../token";
 
 /**
  * Namespace of utility functions to ease market-related calculations.
@@ -20,12 +20,14 @@ export namespace MarketMethods {
     const apr = rate * BigInt(SECONDS_PER_YEAR);
     return Number(formatUnits(apr, COMET_FACTOR_DECIMALS));
   }
+
   export function calcApr(rate?: bigint): number {
     // Returns 90.00000 % format value
     // Borrow APR(%)= Borrow Rate / (10 ^ 18) * Seconds Per Year * 100
     // https://docs.compound.finance/interest-rates/
     return getAprCoef(rate) * 100;
   }
+
   //
   export function totalEarned(
     baseTokenPrice: string,
@@ -37,6 +39,7 @@ export namespace MarketMethods {
       BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
     );
   }
+
   export function totalBorrowed(
     baseTokenPrice: string,
     marketTotalBorrow: bigint,
@@ -47,6 +50,7 @@ export namespace MarketMethods {
       BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
     );
   }
+
   //
   //// NET calculations
   //
@@ -57,6 +61,7 @@ export namespace MarketMethods {
     // "toUsers" means "toBorrowers" or "toSuppliers"
     return (baseTrackingSpeed / baseIndexScale) * BigInt(SECONDS_PER_DAY);
   }
+
   function tokenRewardApr(
     // supply or borrow, comp or just token
     tokenPrice: number, // USD
@@ -166,6 +171,7 @@ export namespace MarketMethods {
       supplyApr,
     );
   }
+
   /**
    * Calculates the net earned APR for borrowed tokens, including the compound token and reward tokens.
    *
@@ -194,6 +200,58 @@ export namespace MarketMethods {
       compToken,
       rewardTokens,
       borrowApr,
+    );
+  }
+
+  export function getTVL(
+    cometBalance: bigint,
+    baseToken: IBase,
+    collaterals: ICollateral[],
+  ): number {
+    const baseTokenAmount = formatUnits(
+      cometBalance,
+      Number(baseToken.decimals),
+    );
+
+    const collateralsSum = collaterals.reduce((acc, collateral) => {
+      return (
+        acc +
+        Number(
+          formatUnits(collateral.cometBalance, Number(collateral.decimals)),
+        ) *
+          Number(collateral.price)
+      );
+    }, 0);
+    return Number(baseTokenAmount) * Number(baseToken.price) + collateralsSum;
+  }
+
+  export function getCollateralization(
+    totalBorrowed: bigint,
+    totalSupplied: bigint,
+    baseToken: IBase,
+  ) {
+    const totalBorrowedUSD =
+      Number(formatUnits(totalBorrowed, Number(baseToken.decimals))) *
+      Number(baseToken.price);
+
+    const totalSuppliedUSD =
+      Number(formatUnits(totalSupplied, Number(baseToken.decimals))) *
+      Number(baseToken.price);
+
+    return (totalSuppliedUSD / totalBorrowedUSD) * 100;
+  }
+
+  export function getUtilization(utilization: bigint): number {
+    return Number(formatUnits(utilization, 18)) * 100;
+  }
+
+  export function getTotalReservesUSD(
+    totalReserves: bigint,
+    baseToken: IBase,
+  ): number {
+    return (
+      Number(formatUnits(totalReserves, Number(baseToken.decimals))) *
+      Number(baseToken.price)
     );
   }
 }

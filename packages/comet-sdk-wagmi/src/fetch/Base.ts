@@ -1,9 +1,8 @@
-import { multicall } from "@wagmi/core";
+import { type Config, multicall } from "@wagmi/core";
 import { Base, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
 import { formatUnits } from "viem";
 import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract } from "../contracts";
-import { wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 import { fetchCurves, fetchCurvesMocks } from "./Curve";
 
@@ -41,10 +40,11 @@ export async function fetchBaseMock(
 export async function fetchBase(
   cometProxyAddress: `0x${string}`,
   chainId: WagmiChainId,
+  config: Config,
 ): Promise<Base> {
   const comet = new CometContract(cometProxyAddress, chainId);
 
-  const cometBaseData = await multicall(wagmiConfig, {
+  const cometBaseData = await multicall(config, {
     chainId,
     contracts: [comet.getBaseTokenCall(), comet.getBaseTokenPriceFeedCall()],
   });
@@ -60,7 +60,7 @@ export async function fetchBase(
 
   ///
 
-  const baseData = await multicall(wagmiConfig, {
+  const baseData = await multicall(config, {
     chainId,
     contracts: [
       comet.getPriceCall(priceFeedAddress),

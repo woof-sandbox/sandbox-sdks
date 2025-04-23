@@ -34,6 +34,7 @@ export async function fetchUserCollaterals(
       asset.getBalanceOfCall(userAddress),
       comet.getPriceCall(config.priceFeed),
       comet.getUserCollateralCall(userAddress, config.asset),
+      asset.getBalanceOfCall(cometProxyAddress),
     );
   }
 
@@ -61,12 +62,16 @@ export async function fetchUserCollaterals(
     );
     ++index;
 
+    const cometBalance = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
+    ++index;
+
     results[i] = new UserCollateral({
       tokenAddress: config.asset,
       symbol,
       decimals,
       userBalance,
       userSupplyBalance,
+      cometBalance,
       price: formatUnits(rawPrice, PRICE_FEED_FACTOR_UNITS),
       priceFeedAddress: config.priceFeed,
       collateralFactor: config.borrowCollateralFactor,
