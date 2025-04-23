@@ -14,6 +14,18 @@ export class CometContract extends WagmiContract {
     super(config, cometAbi, address, chainId);
   }
 
+  getTotalsCollateralCall(
+    collateralAddress: `0x${string}`,
+  ): ContractFunctionParameters {
+    return this.getCall("totalsCollateral", [collateralAddress]);
+  }
+
+  getCollateralReservesCall(
+    collateralAddress: `0x${string}`,
+  ): ContractFunctionParameters {
+    return this.getCall("getCollateralReserves", [collateralAddress]);
+  }
+
   async getUtilization(chainId?: WagmiChainId): Promise<bigint> {
     const utilization = await this.read("getUtilization", chainId);
     return utilization as bigint;
@@ -165,6 +177,7 @@ export class CometContract extends WagmiContract {
   getPriceCall(priceFeedAddress: `0x${string}`): ContractFunctionParameters {
     return this.getCall("getPrice", [priceFeedAddress]);
   }
+
   getUserCollateralCall(
     userAddress: `0x${string}`,
     tokenAddress: `0x${string}`,

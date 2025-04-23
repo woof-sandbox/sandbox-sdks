@@ -35,6 +35,8 @@ export async function fetchUserCollaterals(
       comet.getPriceCall(config.priceFeed),
       comet.getUserCollateralCall(userAddress, config.asset),
       asset.getBalanceOfCall(cometProxyAddress),
+      comet.getTotalsCollateralCall(config.asset),
+      comet.getCollateralReservesCall(config.asset),
     );
   }
 
@@ -65,6 +67,16 @@ export async function fetchUserCollaterals(
     const cometBalance = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
 
+    const totalSupplyAsset = WagmiUtils.resultOrThrow<bigint[]>(
+      assetsData[index]!,
+    );
+    ++index;
+
+    const collateralReserves = WagmiUtils.resultOrThrow<bigint>(
+      assetsData[index]!,
+    );
+    ++index;
+
     results[i] = new UserCollateral({
       tokenAddress: config.asset,
       symbol,
@@ -72,6 +84,8 @@ export async function fetchUserCollaterals(
       userBalance,
       userSupplyBalance,
       cometBalance,
+      totalSupplyAsset,
+      collateralReserves,
       price: formatUnits(rawPrice, PRICE_FEED_FACTOR_UNITS),
       priceFeedAddress: config.priceFeed,
       collateralFactor: config.borrowCollateralFactor,

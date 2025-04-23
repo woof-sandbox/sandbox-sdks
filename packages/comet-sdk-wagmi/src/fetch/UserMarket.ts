@@ -176,7 +176,7 @@ export async function fetchUserMarket(
   const utilization = WagmiUtils.resultOrThrow<bigint>(cometBaseData[2]);
   const supplyBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[3]);
   const borrowBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[4]);
-  const totalReserves = WagmiUtils.resultOrThrow<bigint>(cometBaseData[6]);
+  const totalReserves = WagmiUtils.resultOrThrow<bigint>(cometBaseData[5]);
 
   const baseTokenContract = new Erc20Contract(baseTokenAddress, chainId);
 
