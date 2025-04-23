@@ -1,4 +1,4 @@
-import { multicall } from "@wagmi/core";
+import { type Config, multicall } from "@wagmi/core";
 import {
   type IMarketProposalTx,
   Market,
@@ -67,12 +67,13 @@ export async function fetchMarketMock(
 export async function fetchMarket(
   cometProxyAddress: `0x${string}`,
   chainId: WagmiChainId,
+  config: Config,
 ): Promise<Market> {
   const comet = new CometContract(cometProxyAddress, chainId);
 
   const utilization = await comet.getUtilization();
   const collaterals = await fetchCollaterals(cometProxyAddress, chainId);
-  const baseToken = await fetchBase(cometProxyAddress, chainId);
+  const baseToken = await fetchBase(cometProxyAddress, chainId, config);
   const baseContract = new Erc20Contract(
     baseToken.tokenAddress as `0x${string}`,
     chainId,

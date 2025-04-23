@@ -28,8 +28,8 @@ export const Addresses: Record<Chain, IAddresses> = {
   },
   //
   [Chain.Sepolia]: {
-    configurator: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
-    sandboxController: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
+    configurator: "0xc28aD44975C614EaBe0Ed090207314549e1c6624",
+    sandboxController: "0xaf39746D87b067267B23C2169BF727F237f303b9",
   },
   [Chain.Anvil]: {
     configurator: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
