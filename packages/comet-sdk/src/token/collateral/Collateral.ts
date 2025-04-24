@@ -30,6 +30,28 @@ export class Collateral extends Token implements ICollateral {
     );
   }
 
+  get supplyCapUSD(): number {
+    return CollateralMethods.getSupplyCapUSD(
+      this.supplyCap,
+      this.decimals,
+      this.price,
+    );
+  }
+
+  get remainingCapacityUSD(): number {
+    return CollateralMethods.getRemainingCapacityUSD(
+      this.totalSupplyAssetUSD,
+      this.supplyCapUSD,
+    );
+  }
+
+  get remainingCapacityPercent(): number {
+    return CollateralMethods.getRemainingCapacityPercent(
+      this.totalSupplyAssetUSD,
+      this.supplyCapUSD,
+    );
+  }
+
   get collateralReservesUSD(): number {
     return CollateralMethods.getCollateralReservesUSD(
       this.collateralReserves,
