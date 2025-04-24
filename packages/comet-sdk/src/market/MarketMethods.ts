@@ -6,11 +6,14 @@ import {
   SECONDS_PER_DAY,
   SECONDS_PER_YEAR,
 } from "../constants";
+import type { ICurve } from "../curve";
 import type { IBase, ICollateral, IToken } from "../token";
+import type { IMarketInterestRateModel } from "./IMarketInterestRateModel";
 
 /**
  * Namespace of utility functions to ease market-related calculations.
  */
+
 export namespace MarketMethods {
   function getAprCoef(rate = 0n): number {
     // Returns 0.xx format value
@@ -19,6 +22,75 @@ export namespace MarketMethods {
     if (!rate) return 0;
     const apr = rate * BigInt(SECONDS_PER_YEAR);
     return Number(formatUnits(apr, COMET_FACTOR_DECIMALS));
+  }
+
+  function getApr(
+    utilization: bigint,
+    kink: bigint,
+    perSecondInterestRateBase: bigint,
+    perSecondInterestRateSlopeLow: bigint,
+    perSecondInterestRateSlopeHigh: bigint,
+  ): number {
+    let rate: number;
+    if (utilization <= kink) {
+      rate =
+        Number(perSecondInterestRateBase) +
+        Number(formatUnits(perSecondInterestRateSlopeLow * utilization, 18));
+    } else {
+      rate =
+        Number(perSecondInterestRateBase) +
+        Number(formatUnits(perSecondInterestRateSlopeLow * kink, 18)) +
+        Number(
+          formatUnits(
+            perSecondInterestRateSlopeHigh * (utilization - kink),
+            18,
+          ),
+        );
+    }
+    return Number(((rate / 1e18) * 100).toFixed(2));
+  }
+
+  export function getInterestRateChartData(
+    utilization: number,
+    curvePresets: ICurve,
+  ): IMarketInterestRateModel[] {
+    const utilizationArray = Array(101)
+      .fill(null)
+      .map((_, i) => i);
+
+    return utilizationArray.map(
+      (utilizationNumber): IMarketInterestRateModel => {
+        const currentUtilization = parseUnits(
+          (utilizationNumber === Math.round(utilization)
+            ? utilization
+            : utilizationNumber
+          ).toString(),
+          16,
+        );
+
+        const earnAPR = getApr(
+          currentUtilization,
+          curvePresets.supplyKink,
+          curvePresets.supplyPerYearInterestRateBase,
+          curvePresets.supplyPerYearInterestRateSlopeLow,
+          curvePresets.supplyPerYearInterestRateSlopeHigh,
+        );
+
+        const borrowAPR = getApr(
+          currentUtilization,
+          curvePresets.borrowKink,
+          curvePresets.borrowPerYearInterestRateBase,
+          curvePresets.borrowPerYearInterestRateSlopeLow,
+          curvePresets.borrowPerYearInterestRateSlopeHigh,
+        );
+
+        return {
+          utilization: Number(formatUnits(currentUtilization, 16)).toFixed(2),
+          borrowApr: borrowAPR.toFixed(2),
+          earnApr: earnAPR.toFixed(2),
+        };
+      },
+    );
   }
 
   export function calcApr(rate?: bigint): number {

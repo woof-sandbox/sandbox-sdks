@@ -1,5 +1,6 @@
 import type { IBase, ICollateral, IToken } from "../token";
 import type { IMarket } from "./IMarket";
+import type { IMarketInterestRateModel } from "./IMarketInterestRateModel";
 import type { IMarketProposalTx } from "./IMarketProposalTx";
 import { MarketMethods } from "./MarketMethods";
 
@@ -50,6 +51,13 @@ export class Market implements IMarket {
     //
     this.compToken = marketData.compToken;
     this.rewardTokens = marketData.rewardTokens;
+  }
+
+  get interestRateChartData(): IMarketInterestRateModel[] {
+    return MarketMethods.getInterestRateChartData(
+      this.utilizationPercent,
+      this.baseToken.curvePresets[0]!,
+    );
   }
 
   get totalReservesUSD(): number {
