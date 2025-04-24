@@ -1,6 +1,6 @@
 import { Token } from "../Token";
-import type { ICollateral } from "./ICollateral";
 import { CollateralMethods } from "./CollateralMethods";
+import type { ICollateral } from "./ICollateral";
 
 export class Collateral extends Token implements ICollateral {
   public collateralFactor: bigint;
