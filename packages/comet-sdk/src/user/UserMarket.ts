@@ -21,6 +21,15 @@ export class UserMarket extends Market implements IUserMarket {
     this.collaterals = userMarket.collaterals;
   }
 
+  getSupplyBalanceUSD() {
+    const supplyAmount = DataUtils.fromBigNumber(
+      this.supplyBalance,
+      Number(this.baseToken.decimals),
+    );
+
+    return Number(supplyAmount) * Number(this.price);
+  }
+
   getTokenPrice(symbol: string, tokenPrice: bigint): number {
     return symbol === "ETH" ||
       symbol === "wstETH" ||

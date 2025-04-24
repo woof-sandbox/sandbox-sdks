@@ -108,7 +108,7 @@ export class Market implements IMarket {
   }
 
   get netEarnAprs(): number[] {
-    return MarketMethods.netBorrowAprs(
+    return MarketMethods.netEarnAprs(
       this.baseToken,
       this.totalEarned,
       this.compToken,
