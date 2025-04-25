@@ -1,4 +1,4 @@
-import type { IBase, ICollateral, IToken } from "../token";
+import type { Collateral, IBase, IToken } from "../token";
 import type { IMarket } from "./IMarket";
 import type { IMarketInterestRateModel } from "./IMarketInterestRateModel";
 import type { IMarketProposalTx } from "./IMarketProposalTx";
@@ -14,7 +14,7 @@ export class Market implements IMarket {
   public totalSupply: bigint;
   public totalReserves: bigint;
   public baseToken: IBase;
-  public collaterals: ICollateral[];
+  public collaterals: Collateral[];
   public availableLiquidity: bigint;
   //
   public configControllerAddress: string;

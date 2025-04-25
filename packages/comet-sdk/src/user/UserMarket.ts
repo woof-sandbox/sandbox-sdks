@@ -2,16 +2,16 @@ import { formatUnits, parseUnits } from "viem";
 import { PRICE_FEED_FACTOR_UNITS } from "../constants";
 import { Market } from "../market";
 import { DataUtils } from "../utils";
-import type { IUserCollateral } from "./IUserCollateral";
 import type { IUserMarket } from "./IUserMarket";
 import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
+import { UserCollateral } from "./UserCollateral";
 
 export class UserMarket extends Market implements IUserMarket {
   public borrowBalance: bigint;
   public supplyBalance: bigint;
   public baseTokenBalance: bigint;
-  public collaterals: IUserCollateral[];
+  public collaterals: UserCollateral[];
 
   constructor(userMarket: IUserMarket) {
     super(userMarket);
@@ -21,7 +21,16 @@ export class UserMarket extends Market implements IUserMarket {
     this.collaterals = userMarket.collaterals;
   }
 
-  getSupplyBalanceUSD() {
+  getBorrowBalanceUSD(): number {
+    const borrowAmount = DataUtils.fromBigNumber(
+      this.borrowBalance,
+      Number(this.baseToken.decimals),
+    );
+
+    return Number(borrowAmount) * Number(this.price);
+  }
+
+  getSupplyBalanceUSD(): number {
     const supplyAmount = DataUtils.fromBigNumber(
       this.supplyBalance,
       Number(this.baseToken.decimals),
@@ -40,12 +49,34 @@ export class UserMarket extends Market implements IUserMarket {
       : Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS));
   }
 
-  getBorrowCapacityMarketUSD() {
+  getBorrowCollateralValueUSD(): number {
     return this.collaterals
       .map(
         (collateral) =>
-          //TODO add totalSupply
-          // Number(formatUnits(collateral.totalSupply, collateral.decimals)) *
+          Number(
+            formatUnits(
+              collateral.userSupplyBalance[0] || BigInt(0),
+              Number(collateral.decimals),
+            ),
+          ) *
+          this.getTokenPrice(
+            collateral.symbol,
+            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+          ),
+      )
+      .reduce((a: number, b: number) => a + b, 0);
+  }
+
+  getBorrowCapacityMarketUSD(): number {
+    return this.collaterals
+      .map(
+        (collateral) =>
+          Number(
+            formatUnits(
+              collateral.userSupplyBalance[0] || BigInt(0),
+              Number(collateral.decimals),
+            ),
+          ) *
           Number(formatUnits(collateral.liquidationFactor, 18)) *
           this.getTokenPrice(
             collateral.symbol,
@@ -53,6 +84,10 @@ export class UserMarket extends Market implements IUserMarket {
           ),
       )
       .reduce((a: number, b: number) => a + b, 0);
+  }
+
+  getAvailableToBorrow(): number {
+    return this.getBorrowCapacityMarketUSD() - this.getBorrowBalanceUSD();
   }
 
   maxWithDrawCollateralAmount() {

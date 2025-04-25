@@ -1,4 +1,4 @@
-import type { IBase, ICollateral, IToken } from "../token";
+import type { Collateral, IBase, IToken } from "../token";
 import type { IMarketProposalTx } from "./IMarketProposalTx";
 
 export interface IMarket {
@@ -12,7 +12,7 @@ export interface IMarket {
   totalSupply: bigint; // or base total supply. comet.totalSupply(), mock: 185064689883219
   totalReserves: bigint; // mock: 1368714199302
   baseToken: IBase;
-  collaterals: ICollateral[];
+  collaterals: Collateral[];
   availableLiquidity: bigint; // baseToken.balanceOf(CometAddress), mock: 71294244719270
   // Config Controller
   configControllerAddress: string; // mock: --
