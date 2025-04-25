@@ -119,7 +119,7 @@ export class UserMarketWrapper extends UserMarket {
   async approveMarketBaseToken(amount: string) {
     try {
       return await this.baseTokenContract.approve(
-        bulkerAddress,
+        this.cometAddress as `0x${string}`,
         DataUtils.toBigNumber(amount, Number(this.baseToken.decimals)),
       );
     } catch (e) {
@@ -136,7 +136,7 @@ export class UserMarketWrapper extends UserMarket {
 
     try {
       return await token.approve(
-        bulkerAddress,
+        this.cometAddress as `0x${string}`,
         DataUtils.toBigNumber(amount, tokenDecimals),
       );
     } catch (e) {
@@ -151,7 +151,10 @@ export class UserMarketWrapper extends UserMarket {
 
     const token = new Erc20Contract(tokenAddress, this.chainId, this.config);
 
-    return await token.allowance(userAddress, bulkerAddress);
+    return await token.allowance(
+      userAddress,
+      this.cometAddress as `0x${string}`,
+    );
   }
 
   async supplyMarket(inputValue: string): Promise<`0x${string}`> {
