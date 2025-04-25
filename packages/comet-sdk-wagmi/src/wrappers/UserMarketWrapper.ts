@@ -2,8 +2,8 @@ import { DataUtils, type IUserMarket } from "@woof-software/comet-sdk";
 import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
-import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
 import type { Address } from "viem";
+import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
 import type { WagmiChainId } from "../config";
 import { ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
@@ -62,11 +62,6 @@ export class UserMarketWrapper extends UserMarket {
     );
   }
 
-  private async _ensureBulkerAllowed(user: Address) {
-    const allowed = await this.cometContract.isAllowed(user, bulkerAddress);
-    if (!allowed) throw BULKER_NOT_ALLOWED();
-  }
-
   /**
    * Encode supply or borrow call with full params: market, user, token, amount
    */
@@ -108,6 +103,11 @@ export class UserMarketWrapper extends UserMarket {
     );
   }
 
+  async ensureBulkerAllowed(user: Address) {
+    const allowed = await this.cometContract.isAllowed(user, bulkerAddress);
+    if (!allowed) throw BULKER_NOT_ALLOWED();
+  }
+
   async allowMarket() {
     try {
       return await this.cometContract.allow(bulkerAddress, true);
@@ -144,19 +144,25 @@ export class UserMarketWrapper extends UserMarket {
     }
   }
 
+  async getTokenAllowance(tokenAddress: `0x${string}`) {
+    const walletClient = await getWalletClient(this.config);
+
+    const userAddress = walletClient.account.address;
+
+    const token = new Erc20Contract(tokenAddress, this.chainId, this.config);
+
+    return await token.allowance(userAddress, bulkerAddress);
+  }
+
   async supplyMarket(inputValue: string): Promise<`0x${string}`> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this._ensureBulkerAllowed(userAddress);
+    await this.ensureBulkerAllowed(userAddress);
 
-    const token = new Erc20Contract(
+    const allowance = await this.getTokenAllowance(
       this.baseToken.tokenAddress as Address,
-      this.chainId,
-      this.config,
     );
-
-    const allowance = await token.allowance(userAddress, bulkerAddress);
 
     const supplyValue = DataUtils.toBigNumber(
       inputValue,
@@ -185,7 +191,7 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this._ensureBulkerAllowed(userAddress);
+    await this.ensureBulkerAllowed(userAddress);
 
     const borrowValue = DataUtils.toBigNumber(
       inputValue,
@@ -223,7 +229,7 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this._ensureBulkerAllowed(userAddress);
+    await this.ensureBulkerAllowed(userAddress);
 
     const isCollateralsFromThisMarket =
       this.isAllCollateralsFromMarket(supplyCollaterals);
@@ -306,7 +312,7 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this._ensureBulkerAllowed(userAddress);
+    await this.ensureBulkerAllowed(userAddress);
 
     const inputAmount = DataUtils.toBigNumber(
       inputValue,
@@ -341,7 +347,7 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this._ensureBulkerAllowed(userAddress);
+    await this.ensureBulkerAllowed(userAddress);
 
     const isCollateralsFromThisMarket =
       this.isAllCollateralsFromMarket(collaterals);
@@ -399,7 +405,7 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this._ensureBulkerAllowed(userAddress);
+    await this.ensureBulkerAllowed(userAddress);
 
     const isCollateralsFromThisMarket =
       this.isAllCollateralsFromMarket(collaterals);
