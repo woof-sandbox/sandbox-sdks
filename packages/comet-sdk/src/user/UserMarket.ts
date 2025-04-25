@@ -127,7 +127,7 @@ export class UserMarket extends Market implements IUserMarket {
     if (!allowance) {
       return true;
     }
-    return tokenAmount < allowance;
+    return tokenAmount > allowance;
   }
 
   isSomeTokenSmallAllowance(
