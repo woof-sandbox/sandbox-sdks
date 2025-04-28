@@ -71,7 +71,7 @@ export class Market implements IMarket {
     return MarketMethods.getUtilization(this.utilization);
   }
 
-  get сollateralization(): number {
+  get collateralization(): number {
     return MarketMethods.getCollateralization(
       this.totalBorrow,
       this.totalSupply,

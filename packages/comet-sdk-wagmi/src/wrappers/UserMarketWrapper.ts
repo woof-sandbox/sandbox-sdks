@@ -92,12 +92,19 @@ export class UserMarketWrapper extends UserMarket {
   private _encodeWithdrawSimple(
     userAddress: string,
     amount: bigint,
+    tokenAddress?: string,
   ): EncodeAbiParametersReturnType {
     return encodeAbiParameters(
-      [{ type: "address" }, { type: "address" }, { type: "uint256" }],
+      [
+        { type: "address" },
+        { type: "address" },
+        { type: "address" },
+        { type: "uint256" },
+      ],
       [
         this.cometAddress as `0x${string}`,
         userAddress as `0x${string}`,
+        (tokenAddress || this.baseToken.tokenAddress) as `0x${string}`,
         amount,
       ],
     );
@@ -452,7 +459,11 @@ export class UserMarketWrapper extends UserMarket {
         Number(currentCollateralData?.decimals),
       );
 
-      return this._encodeWithdrawSimple(userAddress, withdrawAmount);
+      return this._encodeWithdrawSimple(
+        userAddress,
+        withdrawAmount,
+        collateral.tokenAddress,
+      );
     });
 
     try {
