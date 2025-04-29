@@ -26,8 +26,8 @@ export class CometContract extends WagmiContract {
     return this.getCall("getCollateralReserves", [collateralAddress]);
   }
 
-  async getUtilization(chainId?: WagmiChainId): Promise<bigint> {
-    const utilization = await this.read("getUtilization", chainId);
+  async getUtilization(): Promise<bigint> {
+    const utilization = await this.read("getUtilization", this.chainId);
     return utilization as bigint;
   }
 
@@ -35,8 +35,8 @@ export class CometContract extends WagmiContract {
     return this.getCall("getUtilization");
   }
 
-  async numAssets(chainId?: WagmiChainId): Promise<bigint> {
-    const numAssets = await this.read("numAssets", chainId);
+  async numAssets(): Promise<bigint> {
+    const numAssets = await this.read("numAssets", this.chainId);
     return numAssets as bigint;
   }
 
@@ -85,9 +85,11 @@ export class CometContract extends WagmiContract {
   async isAllowed(
     owner: `0x${string}`,
     bulker: `0x${string}`,
-    chainId?: WagmiChainId,
   ): Promise<boolean> {
-    const isAllowed = await this.read("isAllowed", chainId, [owner, bulker]);
+    const isAllowed = await this.read("isAllowed", this.chainId, [
+      owner,
+      bulker,
+    ]);
     return isAllowed as boolean;
   }
 
@@ -101,9 +103,8 @@ export class CometContract extends WagmiContract {
   async allow(
     bulker: `0x${string}`,
     status: boolean,
-    chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
-    return this.write("allow", chainId, [bulker, status]);
+    return this.write("allow", this.chainId, [bulker, status]);
   }
 
   getAllowCall(
