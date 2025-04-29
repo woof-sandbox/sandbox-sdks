@@ -1,4 +1,6 @@
+import type { Address } from "viem";
+
 export type MultiAllowanceCallType = {
-  tokenAddress: `0x${string}`;
+  tokenAddress: Address;
   inputAmount: string;
 };
