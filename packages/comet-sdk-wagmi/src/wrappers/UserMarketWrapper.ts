@@ -209,7 +209,7 @@ export class UserMarketWrapper extends UserMarket {
     );
 
     const availableToBorrow = DataUtils.toBigNumber(
-      this.availableToBorrow(),
+      this.availableToBorrow,
       Number(this.baseToken.decimals),
     );
 
@@ -288,7 +288,7 @@ export class UserMarketWrapper extends UserMarket {
 
     // TODO here we need to add supply amount to correct data
     const availableToBorrow = DataUtils.toBigNumber(
-      this.availableToBorrow(),
+      this.availableToBorrow,
       Number(this.baseToken.decimals),
     );
 
@@ -438,7 +438,7 @@ export class UserMarketWrapper extends UserMarket {
       );
     }, BigInt(0));
 
-    const maxWithDrawAmount = this.maxWithDrawCollateralAmount();
+    const maxWithDrawAmount = this.maxWithDrawCollateralAmount;
 
     if (Number(sumOfWithdraw) > Number(maxWithDrawAmount))
       throw EXCESSIVE_COLLATERAL_WITHDRAW();
