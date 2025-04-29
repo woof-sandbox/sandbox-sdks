@@ -1,9 +1,7 @@
-import { formatUnits, parseUnits } from "viem";
-import { PRICE_FEED_FACTOR_UNITS } from "../constants";
-import { Market, MarketMethods } from "../market";
-import { DataUtils } from "../utils";
+import { Market } from "../market";
 import type { IUserMarket } from "./IUserMarket";
 import type { UserCollateral } from "./UserCollateral";
+import { UserMarketMethods } from "./UserMarketMethods";
 import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
 
@@ -21,227 +19,106 @@ export class UserMarket extends Market implements IUserMarket {
     this.collaterals = userMarket.collaterals;
   }
 
-  getBorrowBalanceUSD(): number {
-    const borrowAmount = DataUtils.fromBigNumber(
+  get borrowBalanceUSD(): number {
+    return UserMarketMethods.borrowBalanceUsd(
       this.borrowBalance,
-      Number(this.baseToken.decimals),
+      this.baseToken.decimals,
+      this.price,
     );
-
-    return Number(borrowAmount) * Number(this.price);
   }
 
-  getSupplyBalanceUSD(): number {
-    const supplyAmount = DataUtils.fromBigNumber(
+  get supplyBalanceUSD(): number {
+    return UserMarketMethods.supplyBalanceUsd(
       this.supplyBalance,
-      Number(this.baseToken.decimals),
+      this.baseToken.decimals,
+      this.price,
     );
-
-    return Number(supplyAmount) * Number(this.price);
   }
 
   getTokenPrice(symbol: string, tokenPrice: bigint): number {
-    return symbol === "ETH" ||
-      symbol === "wstETH" ||
-      symbol === "WBTC" ||
-      symbol === "WETH"
-      ? Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS)) *
-          Number(this.price)
-      : Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS));
+    return UserMarketMethods.tokenPrice(symbol, tokenPrice, this.price);
   }
 
-  getBorrowCollateralValueUSD(): number {
-    return this.collaterals
-      .map(
-        (collateral) =>
-          Number(
-            formatUnits(
-              collateral.userSupplyBalance[0] || BigInt(0),
-              Number(collateral.decimals),
-            ),
-          ) *
-          this.getTokenPrice(
-            collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
-          ),
-      )
-      .reduce((a: number, b: number) => a + b, 0);
-  }
-
-  getBorrowCollateralValueCustomUSD(
-    collaterals: { address: string; value: string }[],
-  ): number {
-    return this.collaterals
-      .map((collateral) => {
-        const collateralData =
-          collaterals.find((data) => data.address === collateral.tokenAddress)
-            ?.value || "0";
-        return (
-          (Number(
-            formatUnits(
-              collateral.userSupplyBalance[0] || BigInt(0),
-              Number(collateral.decimals),
-            ),
-          ) +
-            Number(collateralData)) *
-          this.getTokenPrice(
-            collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
-          )
-        );
-      })
-      .reduce((a: number, b: number) => a + b, 0);
-  }
-
-  getBorrowCapacityMarketUSD(): number {
-    return this.collaterals
-      .map(
-        (collateral) =>
-          Number(
-            formatUnits(
-              collateral.userSupplyBalance[0] || BigInt(0),
-              Number(collateral.decimals),
-            ),
-          ) *
-          Number(formatUnits(collateral.liquidationFactor, 18)) *
-          this.getTokenPrice(
-            collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
-          ),
-      )
-      .reduce((a: number, b: number) => a + b, 0);
-  }
-
-  getBorrowCapacityMarketCustomUSD(
-    collaterals: { address: string; value: string }[],
-  ): number {
-    return this.collaterals
-      .map((collateral) => {
-        const collateralData =
-          collaterals.find((data) => data.address === collateral.tokenAddress)
-            ?.value || "0";
-        return (
-          (Number(
-            formatUnits(
-              collateral.userSupplyBalance[0] || BigInt(0),
-              Number(collateral.decimals),
-            ),
-          ) +
-            Number(collateralData)) *
-          Number(formatUnits(collateral.liquidationFactor, 18)) *
-          this.getTokenPrice(
-            collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
-          )
-        );
-      })
-      .reduce((a: number, b: number) => a + b, 0);
-  }
-
-  getAvailableToBorrow(): number {
-    return this.getBorrowCapacityMarketUSD() - this.getBorrowBalanceUSD();
-  }
-
-  maxWithDrawCollateralAmount() {
-    const borrowCapacityUSD = this.getBorrowCapacityMarketUSD();
-
-    const supplyAmount = DataUtils.fromBigNumber(
-      this.supplyBalance,
-      Number(this.baseToken.decimals),
+  get borrowCollateralValueUSD(): number {
+    return UserMarketMethods.borrowCollateralValueUSD(
+      this.collaterals,
+      this.price,
     );
+  }
 
-    const borrowBalanceUSD =
-      Number(
-        DataUtils.fromBigNumber(
-          this.borrowBalance,
-          Number(this.baseToken.decimals),
-        ),
-      ) * Number(this.price);
+  getBorrowCollateralValueUSD(
+    collaterals: { address: string; value: string }[],
+  ): number {
+    return UserMarketMethods.borrowCollateralValueCustomUsd(
+      this.collaterals,
+      collaterals,
+      this.price,
+    );
+  }
 
-    const availableToBorrow = borrowCapacityUSD - borrowBalanceUSD;
+  get borrowCapacityMarketUSD(): number {
+    return UserMarketMethods.borrowCapacityMarketUsd(
+      this.collaterals,
+      this.price,
+    );
+  }
 
-    if (this.borrowBalance > BigInt(0)) {
-      return (availableToBorrow / Number(this.price)).toString();
-    } else {
-      return supplyAmount;
-    }
+  getBorrowCapacityMarketUSD(
+    collaterals: { address: string; value: string }[],
+  ): number {
+    return UserMarketMethods.borrowCapacityMarketCustomUsd(
+      this.collaterals,
+      collaterals,
+      this.price,
+    );
+  }
+
+  get maxWithDrawCollateralAmount() {
+    return UserMarketMethods.maxWithdrawCollateralAmount(
+      this.borrowCapacityMarketUSD,
+      this.supplyBalance,
+      this.borrowBalance,
+      this.baseToken.decimals,
+      this.price,
+    );
   }
 
   findMarketCollateralByAddress(collateralAddress: `0x${string}`) {
-    return this.collaterals.find(
-      (marketCollateral) =>
-        marketCollateral.tokenAddress.toLowerCase() ===
-        collateralAddress.toLowerCase(),
+    return UserMarketMethods.findMarketCollateralByAddress(
+      collateralAddress,
+      this.collaterals,
     );
-  }
-
-  isTokenSmallAllowance(tokenAmount: bigint, allowance?: bigint) {
-    if (!allowance) {
-      return true;
-    }
-    return tokenAmount > allowance;
   }
 
   isSomeTokenSmallAllowance(
     collateralsAllowances: MultiAllowanceResponseType[],
   ) {
-    return collateralsAllowances.some((collateral) => {
-      const currentCollateralData = this.findMarketCollateralByAddress(
-        collateral.tokenAddress,
-      );
-
-      return this.isTokenSmallAllowance(
-        DataUtils.toBigNumber(
-          collateral.inputAmount,
-          Number(currentCollateralData?.decimals || 18),
-        ),
-        collateral.allowance,
-      );
-    });
+    return UserMarketMethods.isSomeTokenAllowanceTooSmall(
+      this.collaterals,
+      collateralsAllowances,
+    );
   }
 
   isAllCollateralsFromMarket(supplyCollaterals: MultiAllowanceCallType[]) {
-    return supplyCollaterals
-      .map(({ tokenAddress }) => tokenAddress)
-      .every((tokenAddress) =>
-        this.collaterals
-          .map((marketCollateral) =>
-            marketCollateral.tokenAddress.toLowerCase(),
-          )
-          .includes(tokenAddress),
-      );
+    return UserMarketMethods.isAllCollateralsFromMarket(
+      this.collaterals,
+      supplyCollaterals,
+    );
   }
 
-  availableToBorrow() {
-    const borrowCapacity =
-      this.collaterals
-        .map(
-          (collateral) =>
-            Number(
-              formatUnits(
-                collateral.userSupplyBalance[0] || BigInt(0),
-                Number(collateral.decimals),
-              ),
-            ) *
-            Number(formatUnits(collateral.collateralFactor, 18)) *
-            this.getTokenPrice(
-              collateral.symbol,
-              parseUnits(collateral.price, PRICE_FEED_FACTOR_UNITS),
-            ),
-        )
-        .reduce((a: number, b: number) => a + b) / 1.5;
-
-    const borrow = Number(this.borrowBalance) * Number(this.price);
-
-    const availableToBorrow = (borrowCapacity - borrow) / Number(this.price);
-
-    return availableToBorrow.toString();
+  get availableToBorrow() {
+    return UserMarketMethods.availableToBorrow(
+      this.collaterals,
+      this.price,
+      this.borrowBalance,
+    );
   }
 
   netBorrowAprsCustom(userBorrowValue: string): number[] {
-    return MarketMethods.netBorrowAprs(
+    return UserMarketMethods.netBorrowAprsCustom(
+      userBorrowValue,
       this.baseToken,
-      this.totalBorrowed +
-        parseUnits(userBorrowValue, Number(this.baseToken.decimals)),
+      this.totalBorrowed,
       this.compToken,
       this.rewardTokens,
       this.borrowApr,
