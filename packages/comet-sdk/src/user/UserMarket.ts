@@ -1,4 +1,6 @@
+import type { Address } from "viem";
 import { Market } from "../market";
+import type { ICustomCollateral } from "./ICustomCollateral";
 import type { IUserMarket } from "./IUserMarket";
 import type { UserCollateral } from "./UserCollateral";
 import { UserMarketMethods } from "./UserMarketMethods";
@@ -46,12 +48,10 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  getBorrowCollateralValueUSD(
-    collaterals: { address: string; value: string }[],
-  ): number {
+  getBorrowCollateralValueUSD(customCollaterals: ICustomCollateral[]): number {
     return UserMarketMethods.borrowCollateralValueCustomUsd(
       this.collaterals,
-      collaterals,
+      customCollaterals,
       this.price,
     );
   }
@@ -63,12 +63,10 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  getBorrowCapacityMarketUSD(
-    collaterals: { address: string; value: string }[],
-  ): number {
+  getBorrowCapacityMarketUSD(customCollaterals: ICustomCollateral[]): number {
     return UserMarketMethods.borrowCapacityMarketCustomUsd(
       this.collaterals,
-      collaterals,
+      customCollaterals,
       this.price,
     );
   }
@@ -83,7 +81,7 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  findMarketCollateralByAddress(collateralAddress: `0x${string}`) {
+  findMarketCollateralByAddress(collateralAddress: Address) {
     return UserMarketMethods.findMarketCollateralByAddress(
       collateralAddress,
       this.collaterals,

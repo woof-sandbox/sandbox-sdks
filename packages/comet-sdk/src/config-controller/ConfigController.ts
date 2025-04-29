@@ -1,10 +1,11 @@
+import type { Address } from "viem";
 import type { IConfigController } from "./IConfigController";
 
 export class ConfigController implements IConfigController {
-  address: `0x${string}`;
-  owner: `0x${string}`;
-  guardian: `0x${string}`;
-  curator: `0x${string}`;
+  address: Address;
+  owner: Address;
+  guardian: Address;
+  curator: Address;
   curatorFee: number;
   marketsLength: number;
   revenueTokensLength: number;

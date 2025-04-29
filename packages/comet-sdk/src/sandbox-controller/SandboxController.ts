@@ -1,11 +1,12 @@
+import type { Address } from "viem";
 import type { IBase, ICollateral } from "../token";
 import type { ISandboxController } from "./ISandboxController";
 
 export class SandboxController implements ISandboxController {
-  address: `0x${string}`;
+  address: Address;
 
-  daoAddress: `0x${string}`; // contract
-  multisigAddress: `0x${string}`; // contract
+  daoAddress: Address; // contract
+  multisigAddress: Address; // contract
   suggestedAmountOfSeedReserves: bigint;
   suggestedLockTimeOfSeedReserves: bigint;
   minUpdateTime: bigint;

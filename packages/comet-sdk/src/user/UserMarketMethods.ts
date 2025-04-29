@@ -8,6 +8,7 @@ import { MISSING_COLLATERAL_DATA } from "../errors/methods/user-market-methods.e
 import { MarketMethods } from "../market";
 import type { IBase, IToken } from "../token";
 import { DataUtils } from "../utils";
+import type { ICustomCollateral } from "./ICustomCollateral";
 import type { UserCollateral } from "./UserCollateral";
 import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
@@ -74,7 +75,7 @@ export namespace UserMarketMethods {
 
   export function borrowCollateralValueCustomUsd(
     collaterals: UserCollateral[],
-    customCollaterals: { address: string; value: string }[],
+    customCollaterals: ICustomCollateral[],
     basePriceUsd: string,
   ): number {
     return collaterals
@@ -128,7 +129,7 @@ export namespace UserMarketMethods {
 
   export function borrowCapacityMarketCustomUsd(
     collaterals: UserCollateral[],
-    customCollaterals: { address: string; value: string }[],
+    customCollaterals: ICustomCollateral[],
     basePriceUsd: string,
   ): number {
     return collaterals
