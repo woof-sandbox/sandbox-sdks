@@ -1,6 +1,6 @@
 import { formatUnits, parseUnits } from "viem";
 import { PRICE_FEED_FACTOR_UNITS } from "../constants";
-import { Market } from "../market";
+import { Market, MarketMethods } from "../market";
 import { DataUtils } from "../utils";
 import type { IUserMarket } from "./IUserMarket";
 import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
@@ -67,6 +67,31 @@ export class UserMarket extends Market implements IUserMarket {
       .reduce((a: number, b: number) => a + b, 0);
   }
 
+  getBorrowCollateralValueCustomUSD(
+    collaterals: { address: string; value: string }[],
+  ): number {
+    return this.collaterals
+      .map((collateral) => {
+        const collateralData =
+          collaterals.find((data) => data.address === collateral.tokenAddress)
+            ?.value || "0";
+        return (
+          (Number(
+            formatUnits(
+              collateral.userSupplyBalance[0] || BigInt(0),
+              Number(collateral.decimals),
+            ),
+          ) +
+            Number(collateralData)) *
+          this.getTokenPrice(
+            collateral.symbol,
+            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+          )
+        );
+      })
+      .reduce((a: number, b: number) => a + b, 0);
+  }
+
   getBorrowCapacityMarketUSD(): number {
     return this.collaterals
       .map(
@@ -83,6 +108,32 @@ export class UserMarket extends Market implements IUserMarket {
             DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
           ),
       )
+      .reduce((a: number, b: number) => a + b, 0);
+  }
+
+  getBorrowCapacityMarketCustomUSD(
+    collaterals: { address: string; value: string }[],
+  ): number {
+    return this.collaterals
+      .map((collateral) => {
+        const collateralData =
+          collaterals.find((data) => data.address === collateral.tokenAddress)
+            ?.value || "0";
+        return (
+          (Number(
+            formatUnits(
+              collateral.userSupplyBalance[0] || BigInt(0),
+              Number(collateral.decimals),
+            ),
+          ) +
+            Number(collateralData)) *
+          Number(formatUnits(collateral.liquidationFactor, 18)) *
+          this.getTokenPrice(
+            collateral.symbol,
+            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+          )
+        );
+      })
       .reduce((a: number, b: number) => a + b, 0);
   }
 
@@ -184,5 +235,16 @@ export class UserMarket extends Market implements IUserMarket {
     const availableToBorrow = (borrowCapacity - borrow) / Number(this.price);
 
     return availableToBorrow.toString();
+  }
+
+  netBorrowAprsCustom(userBorrowValue: string): number[] {
+    return MarketMethods.netBorrowAprs(
+      this.baseToken,
+      this.totalBorrowed +
+        parseUnits(userBorrowValue, Number(this.baseToken.decimals)),
+      this.compToken,
+      this.rewardTokens,
+      this.borrowApr,
+    );
   }
 }
