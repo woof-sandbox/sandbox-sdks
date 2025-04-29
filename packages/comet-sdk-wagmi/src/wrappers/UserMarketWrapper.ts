@@ -3,7 +3,7 @@ import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
 import type { Address } from "viem";
-import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
+import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
 import type { WagmiChainId } from "../config";
 import { ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";

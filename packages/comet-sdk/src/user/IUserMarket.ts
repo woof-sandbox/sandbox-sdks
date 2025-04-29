@@ -1,5 +1,5 @@
 import type { IMarket } from "../market";
-import { UserCollateral } from "./UserCollateral";
+import type { UserCollateral } from "./UserCollateral";
 
 export interface IUserMarket extends IMarket {
   borrowBalance: bigint;

@@ -3,9 +3,9 @@ import { PRICE_FEED_FACTOR_UNITS } from "../constants";
 import { Market, MarketMethods } from "../market";
 import { DataUtils } from "../utils";
 import type { IUserMarket } from "./IUserMarket";
+import type { UserCollateral } from "./UserCollateral";
 import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
-import { UserCollateral } from "./UserCollateral";
 
 export class UserMarket extends Market implements IUserMarket {
   public borrowBalance: bigint;
