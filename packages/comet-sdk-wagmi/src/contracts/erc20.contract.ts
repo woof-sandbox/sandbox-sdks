@@ -1,7 +1,7 @@
 import {
   type Config,
-  type WriteContractReturnType,
   multicall,
+  type WriteContractReturnType,
 } from "@wagmi/core";
 import type { Address, ContractFunctionParameters } from "viem";
 import { erc20Abi } from "../abis";
@@ -23,9 +23,11 @@ export class Erc20Contract extends WagmiContract {
   async allowance(
     owner: `0x${string}`,
     spender: `0x${string}`,
-    chainId?: WagmiChainId,
   ): Promise<bigint> {
-    const allowance = await this.read("allowance", chainId, [owner, spender]);
+    const allowance = await this.read("allowance", this.chainId, [
+      owner,
+      spender,
+    ]);
     return allowance as bigint;
   }
 
@@ -54,9 +56,8 @@ export class Erc20Contract extends WagmiContract {
   async approve(
     spender: `0x${string}`,
     amount: bigint,
-    chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
-    return this.write("approve", chainId, [spender, amount]);
+    return this.write("approve", this.chainId, [spender, amount]);
   }
 
   getAllowanceCall(

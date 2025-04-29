@@ -276,7 +276,7 @@ function App() {
               <button
                 onClick={() =>
                   handleFunction(() =>
-                    currentMarket?.withDrawMarket("0.01", false),
+                    currentMarket?.withdrawMarket("0.01", false),
                   )
                 }
               >

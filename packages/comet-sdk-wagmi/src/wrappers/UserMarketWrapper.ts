@@ -3,7 +3,7 @@ import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
 import type { Address } from "viem";
-import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
+import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
 import type { WagmiChainId } from "../config";
 import { ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
@@ -92,12 +92,19 @@ export class UserMarketWrapper extends UserMarket {
   private _encodeWithdrawSimple(
     userAddress: string,
     amount: bigint,
+    tokenAddress?: string,
   ): EncodeAbiParametersReturnType {
     return encodeAbiParameters(
-      [{ type: "address" }, { type: "address" }, { type: "uint256" }],
+      [
+        { type: "address" },
+        { type: "address" },
+        { type: "address" },
+        { type: "uint256" },
+      ],
       [
         this.cometAddress as `0x${string}`,
         userAddress as `0x${string}`,
+        (tokenAddress || this.baseToken.tokenAddress) as `0x${string}`,
         amount,
       ],
     );
@@ -227,7 +234,6 @@ export class UserMarketWrapper extends UserMarket {
   async borrowAndSupplyMarket(
     inputValue: string,
     supplyCollaterals: MultiAllowanceCallType[],
-    chainId: WagmiChainId,
   ): Promise<`0x${string}`> {
     const walletClient = await getWalletClient(this.config);
 
@@ -242,7 +248,7 @@ export class UserMarketWrapper extends UserMarket {
     const collateralsAllowances =
       await this.baseTokenContract.getMultiAllowance(
         supplyCollaterals,
-        chainId,
+        this.chainId,
         userAddress,
         bulkerAddress,
       );
@@ -452,7 +458,11 @@ export class UserMarketWrapper extends UserMarket {
         Number(currentCollateralData?.decimals),
       );
 
-      return this._encodeWithdrawSimple(userAddress, withdrawAmount);
+      return this._encodeWithdrawSimple(
+        userAddress,
+        withdrawAmount,
+        collateral.tokenAddress,
+      );
     });
 
     try {
