@@ -234,7 +234,6 @@ export class UserMarketWrapper extends UserMarket {
   async borrowAndSupplyMarket(
     inputValue: string,
     supplyCollaterals: MultiAllowanceCallType[],
-    chainId: WagmiChainId,
   ): Promise<`0x${string}`> {
     const walletClient = await getWalletClient(this.config);
 
@@ -249,7 +248,7 @@ export class UserMarketWrapper extends UserMarket {
     const collateralsAllowances =
       await this.baseTokenContract.getMultiAllowance(
         supplyCollaterals,
-        chainId,
+        this.chainId,
         userAddress,
         bulkerAddress,
       );
