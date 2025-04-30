@@ -198,7 +198,7 @@ describe("MarketMethods", () => {
     ];
     const tvl = MarketMethods.getTVL(cometBalance, baseToken, collaterals);
     expect(typeof tvl).toBe("number");
-    expect(tvl).toBeGreaterThan(0);
+    expect(tvl).toBeCloseTo(0.00335, 5);
   });
 
   it("should calculate collateralization ratio", () => {
