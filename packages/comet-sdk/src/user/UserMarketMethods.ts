@@ -229,7 +229,7 @@ export namespace UserMarketMethods {
     supplyCollaterals: MultiAllowanceCallType[],
   ) {
     return supplyCollaterals
-      .map(({ tokenAddress }) => tokenAddress)
+      .map(({ tokenAddress }) => tokenAddress.toLowerCase())
       .every((tokenAddress) =>
         collaterals
           .map((marketCollateral) =>
@@ -265,7 +265,8 @@ export namespace UserMarketMethods {
         )
         .reduce((a: number, b: number) => a + b) / 1.5;
 
-    const borrow = Number(borrowBalance) * Number(basePriceUsd);
+    const decimals = collaterals[0]?.decimals ? Number(collaterals[0].decimals) : COMET_FACTOR_DECIMALS;
+    const borrow = Number(formatUnits(borrowBalance, decimals)) * Number(basePriceUsd);
 
     const availableToBorrow = (borrowCapacity - borrow) / Number(basePriceUsd);
 
