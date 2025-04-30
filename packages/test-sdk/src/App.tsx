@@ -290,9 +290,14 @@ function App() {
                       "0.01",
                       [
                         {
-                          inputAmount: "0.5",
                           tokenAddress:
                             "0x912ce59144191c1204e64559fe8253a0e49e6548",
+                          inputAmount: "0.01",
+                        },
+                        {
+                          tokenAddress:
+                            "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+                          inputAmount: "0.0001",
                         },
                       ],
                       arbitrum.id,
@@ -326,6 +331,11 @@ function App() {
                           tokenAddress:
                             "0x912ce59144191c1204e64559fe8253a0e49e6548",
                           inputAmount: "0.01",
+                        },
+                        {
+                          tokenAddress:
+                            "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+                          inputAmount: "0.0001",
                         },
                       ],
                       arbitrum.id,

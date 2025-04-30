@@ -81,7 +81,6 @@ export class CometContract extends WagmiContract {
     return this.getCall("baseToken");
   }
 
-  //
   async isAllowed(
     owner: `0x${string}`,
     bulker: `0x${string}`,

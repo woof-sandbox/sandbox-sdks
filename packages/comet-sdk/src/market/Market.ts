@@ -10,6 +10,7 @@ export class Market implements IMarket {
   public supplyRate: bigint;
   public borrowRate: bigint;
   //
+  public borrowMinAmount: bigint;
   public totalBorrow: bigint;
   public totalSupply: bigint;
   public totalReserves: bigint;
@@ -34,6 +35,7 @@ export class Market implements IMarket {
     this.supplyRate = marketData.supplyRate;
     this.borrowRate = marketData.borrowRate;
     //
+    this.borrowMinAmount = marketData.borrowMinAmount;
     this.totalBorrow = marketData.totalBorrow;
     this.totalSupply = marketData.totalSupply;
     this.totalReserves = marketData.totalReserves;
