@@ -3,7 +3,7 @@ import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
 import type { Address } from "viem";
-import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
+import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
 import type { WagmiChainId } from "../config";
 import { ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
@@ -21,6 +21,7 @@ import {
   INVALID_COLLATERAL_MARKET,
   LOW_COLLATERAL_ALLOWANCE,
   OVER_WITHDRAW,
+  SMALL_BORROW_AMOUNT,
   SUPPLY_COLLATERAL_FAILED,
   SUPPLY_FAILED,
   TOKEN_NOT_APPROVED,
@@ -111,8 +112,14 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async ensureBulkerAllowed(user: Address) {
-    const allowed = await this.cometContract.isAllowed(user, bulkerAddress);
-    if (!allowed) throw BULKER_NOT_ALLOWED();
+    const response = await this.cometContract.isAllowed(user, bulkerAddress);
+    if (!response) {
+      throw BULKER_NOT_ALLOWED();
+    }
+  }
+
+  async getBulkerAllowed(user: Address) {
+    return await this.cometContract.isAllowed(user, bulkerAddress);
   }
 
   async allowMarket() {
@@ -208,6 +215,10 @@ export class UserMarketWrapper extends UserMarket {
       Number(this.baseToken.decimals),
     );
 
+    const minBorrowValue = this.borrowMinAmount;
+
+    if (borrowValue < minBorrowValue) throw SMALL_BORROW_AMOUNT();
+
     const availableToBorrow = DataUtils.toBigNumber(
       this.availableToBorrow,
       Number(this.baseToken.decimals),
@@ -250,7 +261,7 @@ export class UserMarketWrapper extends UserMarket {
         supplyCollaterals,
         this.chainId,
         userAddress,
-        bulkerAddress,
+        this.cometAddress as `0x${string}`,
       );
 
     const isSmallAllowance = this.isSomeTokenSmallAllowance(
@@ -285,6 +296,10 @@ export class UserMarketWrapper extends UserMarket {
       inputValue,
       Number(this.baseToken.decimals),
     );
+
+    const minBorrowValue = this.borrowMinAmount;
+
+    if (borrowValue < minBorrowValue) throw SMALL_BORROW_AMOUNT();
 
     // TODO here we need to add supply amount to correct data
     const availableToBorrow = DataUtils.toBigNumber(
@@ -368,7 +383,7 @@ export class UserMarketWrapper extends UserMarket {
         collaterals,
         chainId,
         userAddress,
-        bulkerAddress,
+        this.cometAddress as `0x${string}`,
       );
 
     const isSmallAllowance = this.isSomeTokenSmallAllowance(

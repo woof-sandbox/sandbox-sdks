@@ -235,7 +235,7 @@ export namespace UserMarketMethods {
           .map((marketCollateral) =>
             marketCollateral.tokenAddress.toLowerCase(),
           )
-          .includes(tokenAddress),
+          .includes(tokenAddress.toLowerCase()),
       );
   }
 

@@ -20,6 +20,7 @@ export async function fetchMarketMock(
   const supplyRate = 1065334068n;
   const borrowRate = 1462067313n;
   //
+  const borrowMinAmount = 1000000000000000n;
   const totalBorrow = 115139196488456n;
   const totalSupply = 185064689883219n;
   const totalReserves = 1368714199302n;
@@ -43,6 +44,7 @@ export async function fetchMarketMock(
   });
   //
   return new Market({
+    borrowMinAmount,
     cometAddress,
     utilization,
     supplyRate,
@@ -88,6 +90,7 @@ export async function fetchMarket(
       comet.getTotalSupplyCall(),
       comet.getReservesCall(),
       baseContract.getBalanceOfCall(cometProxyAddress),
+      comet.getBaseBorrowMinCall(),
     ],
   });
   const borrowRate = WagmiUtils.resultOrThrow<bigint>(marketData[0]);
@@ -96,9 +99,11 @@ export async function fetchMarket(
   const totalSupply = WagmiUtils.resultOrThrow<bigint>(marketData[3]);
   const totalReserves = WagmiUtils.resultOrThrow<bigint>(marketData[4]);
   const availableLiquidity = WagmiUtils.resultOrThrow<bigint>(marketData[5]);
+  const borrowMinAmount = WagmiUtils.resultOrThrow<bigint>(marketData[6]);
 
   return new Market({
     cometAddress: cometProxyAddress,
+    borrowMinAmount,
     utilization,
     supplyRate,
     borrowRate,
