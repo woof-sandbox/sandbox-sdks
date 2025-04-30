@@ -213,7 +213,7 @@ export class UserMarketWrapper extends UserMarket {
       Number(this.baseToken.decimals),
     );
 
-    const minBorrowValue = this.borrowMinAmount;
+    const minBorrowValue = this.borrowMinAmount + this.supplyBalance;
 
     if (borrowValue < minBorrowValue) throw SMALL_BORROW_AMOUNT();
 
