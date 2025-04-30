@@ -3,7 +3,7 @@ import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
 import type { Address } from "viem";
-import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
+import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
 import type { WagmiChainId } from "../config";
 import { ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
@@ -112,10 +112,8 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async ensureBulkerAllowed(user: Address) {
-    const response = await this.cometContract.isAllowed(user, bulkerAddress);
-    if (!response) {
-      throw BULKER_NOT_ALLOWED();
-    }
+    const allowed = await this.cometContract.isAllowed(user, bulkerAddress);
+    if (!allowed) throw BULKER_NOT_ALLOWED();
   }
 
   async getBulkerAllowed(user: Address) {
