@@ -63,7 +63,9 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  getBorrowCapacityMarketUSD(customCollaterals: ICustomCollateral[]): number {
+  getBorrowCapacityMarketUSD(
+    customCollaterals: MultiAllowanceCallType[],
+  ): number {
     return UserMarketMethods.borrowCapacityMarketCustomUsd(
       this.collaterals,
       customCollaterals,

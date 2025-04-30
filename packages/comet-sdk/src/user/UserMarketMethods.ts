@@ -129,15 +129,15 @@ export namespace UserMarketMethods {
 
   export function borrowCapacityMarketCustomUsd(
     collaterals: UserCollateral[],
-    customCollaterals: ICustomCollateral[],
+    customCollaterals: MultiAllowanceCallType[],
     basePriceUsd: string,
   ): number {
     return collaterals
       .map((collateral) => {
         const collateralData =
           customCollaterals.find(
-            (data) => data.address === collateral.tokenAddress,
-          )?.value || "0";
+            (data) => data.tokenAddress === collateral.tokenAddress,
+          )?.inputAmount || "0";
         return (
           (Number(
             formatUnits(
