@@ -25,6 +25,7 @@ describe("UserMarketWrapper", () => {
         [mainnet.id]: marketsMainnet,
       },
       "0x23eEF61AB548a8852117561689886f583FC0E2B7",
+      wagmiConfig,
     );
 
     market = await Promise.all(

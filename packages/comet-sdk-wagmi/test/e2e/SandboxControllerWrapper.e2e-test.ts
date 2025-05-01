@@ -15,13 +15,13 @@ describe("SandboxControllerWrapper", () => {
     const sandBoxController = await SandboxController.fetch(
       controllerAddress,
       arbitrum.id,
-      wagmiConfig,
     );
     controller = new SandboxControllerWrapper(sandBoxController, arbitrum.id);
   });
 
   test("addBaseAssetCurve", async () => {
     const addBaseAssetCurve = controller.addBaseAssetCurve(token, {
+      id: "1",
       supplyKink: BigInt(0),
       borrowKink: BigInt(0),
       borrowPerYearInterestRateBase: BigInt(0),
@@ -39,6 +39,7 @@ describe("SandboxControllerWrapper", () => {
       token,
       BigInt(1),
       {
+        id: "1",
         supplyKink: BigInt(0),
         borrowKink: BigInt(0),
         borrowPerYearInterestRateBase: BigInt(0),

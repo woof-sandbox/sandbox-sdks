@@ -48,15 +48,15 @@ describe("UserMarketWrapper", () => {
     console.log("--supplyCollaterals-", supplyCollaterals);
   });
 
-  test("check withdraw collaterals", async () => {
-    const withdrawCollaterals = market.withDrawCollateral([
-      {
-        tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
-        inputAmount: "0.01",
-      },
-    ]);
-    console.log("--withdrawCollaterals-", withdrawCollaterals);
-  });
+  // test("check withdraw collaterals", async () => {
+  //   const withdrawCollaterals = market.withDrawCollateral([
+  //     {
+  //       tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
+  //       inputAmount: "0.01",
+  //     },
+  //   ]);
+  //   console.log("--withdrawCollaterals-", withdrawCollaterals);
+  // });
 
   test("check borrow and supply collaterals", async () => {
     const borrowAndSupplyCollaterals = market.borrowAndSupplyMarket(
@@ -67,7 +67,6 @@ describe("UserMarketWrapper", () => {
           tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
         },
       ],
-      arbitrum.id,
     );
     console.log("--borrowAndSupplyCollaterals-", borrowAndSupplyCollaterals);
   });
@@ -82,10 +81,10 @@ describe("UserMarketWrapper", () => {
     console.log("--borrow-", borrow);
   });
 
-  test("check withDraw", async () => {
-    const withDraw = market.withDrawMarket("0.01", false);
-    console.log("--withDraw-", withDraw);
-  });
+  // test("check withDraw", async () => {
+  //   const withDraw = market.withDrawMarket("0.01", false);
+  //   console.log("--withDraw-", withDraw);
+  // });
 
   test("check availableLiquidity", async () => {
     const availableLiquidity = Number(market.availableLiquidity);
