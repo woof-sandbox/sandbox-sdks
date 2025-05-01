@@ -114,6 +114,17 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
+  netEarnAprsCustom(userSupplyValue: string): number[] {
+    return UserMarketMethods.netEarnAprsCustom(
+      userSupplyValue,
+      this.baseToken,
+      this.totalSupply,
+      this.compToken,
+      this.rewardTokens,
+      this.supplyApr,
+    );
+  }
+
   netBorrowAprsCustom(userBorrowValue: string): number[] {
     return UserMarketMethods.netBorrowAprsCustom(
       userBorrowValue,
