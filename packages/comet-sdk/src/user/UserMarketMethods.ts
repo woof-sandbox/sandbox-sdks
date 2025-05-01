@@ -129,15 +129,15 @@ export namespace UserMarketMethods {
 
   export function borrowCapacityMarketCustomUsd(
     collaterals: UserCollateral[],
-    customCollaterals: ICustomCollateral[],
+    customCollaterals: MultiAllowanceCallType[],
     basePriceUsd: string,
   ): number {
     return collaterals
       .map((collateral) => {
         const collateralData =
           customCollaterals.find(
-            (data) => data.address === collateral.tokenAddress,
-          )?.value || "0";
+            (data) => data.tokenAddress === collateral.tokenAddress,
+          )?.inputAmount || "0";
         return (
           (Number(
             formatUnits(
@@ -244,32 +244,48 @@ export namespace UserMarketMethods {
     basePriceUsd: string,
     borrowBalance: bigint,
   ) {
-    const borrowCapacity =
-      collaterals
-        .map(
-          (collateral) =>
-            Number(
-              formatUnits(
-                collateral.userSupplyBalance[0] ?? 0n,
-                Number(collateral.decimals),
-              ),
-            ) *
-            Number(
-              formatUnits(collateral.collateralFactor, COMET_FACTOR_DECIMALS),
-            ) *
-            tokenPrice(
-              collateral.symbol,
-              parseUnits(collateral.price, PRICE_FEED_FACTOR_UNITS),
-              basePriceUsd,
+    const borrowCapacity = collaterals
+      .map(
+        (collateral) =>
+          Number(
+            formatUnits(
+              collateral.userSupplyBalance[0] ?? 0n,
+              Number(collateral.decimals),
             ),
-        )
-        .reduce((a: number, b: number) => a + b) / 1.5;
+          ) *
+          Number(
+            formatUnits(collateral.collateralFactor, COMET_FACTOR_DECIMALS),
+          ) *
+          tokenPrice(
+            collateral.symbol,
+            parseUnits(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            basePriceUsd,
+          ),
+      )
+      .reduce((a: number, b: number) => a + b);
 
     const borrow = Number(borrowBalance) * Number(basePriceUsd);
 
     const availableToBorrow = (borrowCapacity - borrow) / Number(basePriceUsd);
 
     return availableToBorrow.toString();
+  }
+
+  export function netEarnAprsCustom(
+    userSupplyValue: string,
+    baseToken: IBase,
+    totalSupplied: bigint,
+    compToken: IToken,
+    rewardTokens: IToken[],
+    supplyApr: number,
+  ): number[] {
+    return MarketMethods.netEarnAprs(
+      baseToken,
+      totalSupplied + parseUnits(userSupplyValue, Number(baseToken.decimals)),
+      compToken,
+      rewardTokens,
+      supplyApr,
+    );
   }
 
   export function netBorrowAprsCustom(

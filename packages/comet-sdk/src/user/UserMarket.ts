@@ -63,7 +63,9 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  getBorrowCapacityMarketUSD(customCollaterals: ICustomCollateral[]): number {
+  getBorrowCapacityMarketUSD(
+    customCollaterals: MultiAllowanceCallType[],
+  ): number {
     return UserMarketMethods.borrowCapacityMarketCustomUsd(
       this.collaterals,
       customCollaterals,
@@ -109,6 +111,17 @@ export class UserMarket extends Market implements IUserMarket {
       this.collaterals,
       this.price,
       this.borrowBalance,
+    );
+  }
+
+  netEarnAprsCustom(userSupplyValue: string): number[] {
+    return UserMarketMethods.netEarnAprsCustom(
+      userSupplyValue,
+      this.baseToken,
+      this.totalSupply,
+      this.compToken,
+      this.rewardTokens,
+      this.supplyApr,
     );
   }
 

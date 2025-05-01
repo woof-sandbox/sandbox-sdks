@@ -287,12 +287,12 @@ function App() {
                 onClick={() =>
                   handleFunction(() =>
                     currentMarket?.borrowAndSupplyMarket(
-                      "0.01",
+                      "0.05",
                       [
                         {
                           tokenAddress:
                             "0x912ce59144191c1204e64559fe8253a0e49e6548",
-                          inputAmount: "0.01",
+                          inputAmount: "0.1",
                         },
                         {
                           tokenAddress:

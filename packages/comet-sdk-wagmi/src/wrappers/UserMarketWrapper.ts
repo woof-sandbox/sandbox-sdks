@@ -213,7 +213,7 @@ export class UserMarketWrapper extends UserMarket {
       Number(this.baseToken.decimals),
     );
 
-    const minBorrowValue = this.borrowMinAmount;
+    const minBorrowValue = this.borrowMinAmount + this.supplyBalance;
 
     if (borrowValue < minBorrowValue) throw SMALL_BORROW_AMOUNT();
 
@@ -295,17 +295,16 @@ export class UserMarketWrapper extends UserMarket {
       Number(this.baseToken.decimals),
     );
 
-    const minBorrowValue = this.borrowMinAmount;
+    const minBorrowValue = this.borrowMinAmount + this.supplyBalance;
 
     if (borrowValue < minBorrowValue) throw SMALL_BORROW_AMOUNT();
 
-    // TODO here we need to add supply amount to correct data
-    const availableToBorrow = DataUtils.toBigNumber(
-      this.availableToBorrow,
+    const borrowCapacityUSD = DataUtils.toBigNumber(
+      this.getBorrowCapacityMarketUSD(supplyCollaterals).toString(),
       Number(this.baseToken.decimals),
     );
 
-    if (availableToBorrow <= borrowValue) throw INSUFFICIENT_COLLATERAL();
+    if (borrowCapacityUSD <= borrowValue) throw INSUFFICIENT_COLLATERAL();
 
     const abiEncodeData = this._encodeSupplyOrWithdrawWithToken(
       userAddress,
