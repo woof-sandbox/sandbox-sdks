@@ -82,8 +82,8 @@ export namespace UserMarketMethods {
       .map((collateral) => {
         const collateralData =
           customCollaterals.find(
-            (data) => data.address === collateral.tokenAddress,
-          )?.value || "0";
+            (data) => data.tokenAddress === collateral.tokenAddress,
+          )?.inputAmount || "0";
         return (
           (Number(
             formatUnits(
@@ -129,7 +129,7 @@ export namespace UserMarketMethods {
 
   export function borrowCapacityMarketCustomUsd(
     collaterals: UserCollateral[],
-    customCollaterals: MultiAllowanceCallType[],
+    customCollaterals: ICustomCollateral[],
     basePriceUsd: string,
   ): number {
     return collaterals
@@ -226,7 +226,7 @@ export namespace UserMarketMethods {
 
   export function isAllCollateralsFromMarket(
     collaterals: UserCollateral[],
-    supplyCollaterals: MultiAllowanceCallType[],
+    supplyCollaterals: ICustomCollateral[],
   ) {
     return supplyCollaterals
       .map(({ tokenAddress }) => tokenAddress)

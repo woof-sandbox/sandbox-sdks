@@ -1,4 +1,4 @@
 export interface ICustomCollateral {
-  address: string;
-  value: string;
+  tokenAddress: string;
+  inputAmount: string;
 }
