@@ -10,7 +10,6 @@ import type { IBase, IToken } from "../token";
 import { DataUtils } from "../utils";
 import type { ICustomCollateral } from "./ICustomCollateral";
 import type { UserCollateral } from "./UserCollateral";
-import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
 
 export namespace UserMarketMethods {
@@ -229,7 +228,7 @@ export namespace UserMarketMethods {
     supplyCollaterals: ICustomCollateral[],
   ) {
     return supplyCollaterals
-      .map(({ tokenAddress }) => tokenAddress)
+      .map(({ tokenAddress }) => tokenAddress.toLowerCase())
       .every((tokenAddress) =>
         collaterals
           .map((marketCollateral) =>
@@ -264,7 +263,11 @@ export namespace UserMarketMethods {
       )
       .reduce((a: number, b: number) => a + b);
 
-    const borrow = Number(borrowBalance) * Number(basePriceUsd);
+    const decimals = collaterals[0]?.decimals
+      ? Number(collaterals[0].decimals)
+      : COMET_FACTOR_DECIMALS;
+    const borrow =
+      Number(formatUnits(borrowBalance, decimals)) * Number(basePriceUsd);
 
     const availableToBorrow = (borrowCapacity - borrow) / Number(basePriceUsd);
 

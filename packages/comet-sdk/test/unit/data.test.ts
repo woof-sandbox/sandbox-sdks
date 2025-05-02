@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { describe, expect, test } from "vitest";
-import { DataUtils } from "../../src/utils";
+import { DataUtils } from "../../src";
 
 describe("DataUtils", () => {
   test("parseTokenInput", () => {
