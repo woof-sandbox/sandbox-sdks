@@ -79,6 +79,9 @@ importers:
 
   packages/contracts-tools-sdk-ethers:
     dependencies:
+      '@woof-software/contracts-tools-sdk-ethers':
+        specifier: workspace:^
+        version: 'link:'
       ethers:
         specifier: ^6.0.0
         version: 6.13.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)

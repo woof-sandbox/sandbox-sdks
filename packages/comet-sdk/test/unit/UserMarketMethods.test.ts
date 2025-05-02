@@ -105,7 +105,7 @@ describe("UserMarketMethods", () => {
     expect(UserMarketMethods.findMarketCollateralByAddress(mockAddress2, collaterals)).toBeDefined();
   });
 
-  it("isSomeTokenAllowanceTooSmall\": true if allowance is less than inputAmount", () => {
+  it("isSomeTokenAllowanceTooSmall: true if allowance is less than inputAmount", () => {
     const collaterals = [mockCollateral({ decimals: BigInt(18) })];
     const allowances = [mockAllowance({ inputAmount: "2", allowance: DataUtils.toBigNumber("1", 18) })];
     expect(UserMarketMethods.isSomeTokenAllowanceTooSmall(collaterals, allowances)).toBe(true);
