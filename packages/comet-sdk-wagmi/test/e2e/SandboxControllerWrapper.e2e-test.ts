@@ -2,7 +2,6 @@ import { SandboxController } from "@woof-software/comet-sdk";
 
 import { arbitrum } from "@wagmi/core/chains";
 import { beforeAll, describe, test } from "vitest";
-import { wagmiConfig } from "../../lib/contracts";
 import { SandboxControllerWrapper } from "../../src/wrappers/SandboxControllerWrapper";
 
 let controller: SandboxControllerWrapper;

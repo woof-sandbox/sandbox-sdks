@@ -205,7 +205,11 @@ describe("MarketMethods", () => {
     const totalBorrowed = 1000n;
     const totalSupplied = 2000n;
     const baseToken = { ...mockBaseToken, price: "2.0", decimals: BigInt(6) };
-    const ratio = MarketMethods.getCollateralization(totalBorrowed, totalSupplied, baseToken);
+    const ratio = MarketMethods.getCollateralization(
+      totalBorrowed,
+      totalSupplied,
+      baseToken,
+    );
     expect(typeof ratio).toBe("number");
     expect(ratio).toBeGreaterThan(0);
   });
@@ -300,7 +304,10 @@ describe("MarketMethods", () => {
         supplyPerYearInterestRateSlopeHigh: 10n * BigInt(1e18),
         borrowPerYearInterestRateSlopeHigh: 20n * BigInt(1e18),
       };
-      const data = MarketMethods.getInterestRateChartData(50, extremeCurvePresets);
+      const data = MarketMethods.getInterestRateChartData(
+        50,
+        extremeCurvePresets,
+      );
       const point = data[100];
 
       expect(point!.utilization).toBe("100.00");
@@ -322,7 +329,10 @@ describe("MarketMethods", () => {
 
     it("should respect provided utilization for exact match", () => {
       const utilization = 75;
-      const data = MarketMethods.getInterestRateChartData(utilization, mockCurvePresets);
+      const data = MarketMethods.getInterestRateChartData(
+        utilization,
+        mockCurvePresets,
+      );
       const point = data[utilization];
 
       expect(point!.utilization).toBe("75.00");
@@ -331,4 +341,3 @@ describe("MarketMethods", () => {
     });
   });
 });
-

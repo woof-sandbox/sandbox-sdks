@@ -59,15 +59,12 @@ describe("UserMarketWrapper", () => {
   // });
 
   test("check borrow and supply collaterals", async () => {
-    const borrowAndSupplyCollaterals = market.borrowAndSupplyMarket(
-      "0.01",
-      [
-        {
-          inputAmount: "0.01",
-          tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
-        },
-      ],
-    );
+    const borrowAndSupplyCollaterals = market.borrowAndSupplyMarket("0.01", [
+      {
+        inputAmount: "0.01",
+        tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
+      },
+    ]);
     console.log("--borrowAndSupplyCollaterals-", borrowAndSupplyCollaterals);
   });
 

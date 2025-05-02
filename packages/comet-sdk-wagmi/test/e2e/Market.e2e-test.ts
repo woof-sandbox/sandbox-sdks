@@ -2,8 +2,8 @@ import { http, createConfig } from "@wagmi/core";
 import { arbitrum } from "@wagmi/core/chains";
 import { type IMarket, PERCENT_PRECISION } from "@woof-software/comet-sdk";
 import { beforeAll, describe, expect, test } from "vitest";
+import { wagmiConfig } from "../../lib";
 import { Market } from "../../src/augment";
-import {wagmiConfig} from "../../lib";
 
 const percentsReg = new RegExp(`^\\d+\\.\\d{${PERCENT_PRECISION}}$`);
 const RPC_URL = "https://eth.llamarpc.com";
@@ -25,7 +25,7 @@ describe("MarketMethods", () => {
     market = await Market.fetchMarket(
       data.cometAddress as `0x${string}`,
       arbitrum.id,
-      wagmiConfig
+      wagmiConfig,
     );
     console.log();
   });

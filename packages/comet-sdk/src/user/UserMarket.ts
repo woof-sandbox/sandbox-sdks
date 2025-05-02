@@ -4,7 +4,6 @@ import type { ICustomCollateral } from "./ICustomCollateral";
 import type { IUserMarket } from "./IUserMarket";
 import type { UserCollateral } from "./UserCollateral";
 import { UserMarketMethods } from "./UserMarketMethods";
-import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
 
 export class UserMarket extends Market implements IUserMarket {
