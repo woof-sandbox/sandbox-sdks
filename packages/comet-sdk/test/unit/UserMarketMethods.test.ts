@@ -24,7 +24,7 @@ const mockCollateral = (data = {}) => new UserCollateral({
   ...data,
 });
 
-const mockCustomCollateral = ({ address = mockAddress1, value = "0.5" } = {}) => ({ address, value });
+const mockCustomCollateral = ({ tokenAddress = mockAddress1, inputAmount = "0.5" } = {}) => ({ tokenAddress, inputAmount });
 const mockAllowance = ({ tokenAddress = mockAddress1, inputAmount = "1", allowance = DataUtils.toBigNumber("1", 18) } = {}) => ({ tokenAddress, inputAmount, allowance });
 const mockCall = ({ tokenAddress = mockAddress1, inputAmount = "1" } = {}) => ({ tokenAddress, inputAmount });
 const mockBaseToken = {
@@ -46,6 +46,7 @@ const mockRewardToken = { tokenAddress: "0xReward" as `0x${string}`, symbol: "RW
 vi.mock("../../src/market/MarketMethods", () => ({
   MarketMethods: {
     netBorrowAprs: vi.fn(() => [1, 2, 3]),
+    netEarnAprs: vi.fn(() => [4, 5, 6]),
   },
 }));
 
@@ -74,7 +75,7 @@ describe("UserMarketMethods", () => {
 
   it("borrowCollateralValueCustomUsd: honors customCollaterals", () => {
     const collaterals = [mockCollateral()];
-    const customCollaterals = [mockCustomCollateral({ value: "2" })];
+    const customCollaterals = [mockCustomCollateral({ inputAmount: "2" })];
     expect(UserMarketMethods.borrowCollateralValueCustomUsd(collaterals, customCollaterals, "1")).toBeGreaterThan(0);
   });
 
@@ -85,7 +86,7 @@ describe("UserMarketMethods", () => {
 
   it("borrowCapacityMarketCustomUsd: honors customCollaterals", () => {
     const collaterals = [mockCollateral()];
-    const customCollaterals = [mockCustomCollateral({ value: "2" })];
+    const customCollaterals = [mockCustomCollateral({ inputAmount: "2" })];
     expect(UserMarketMethods.borrowCapacityMarketCustomUsd(collaterals, customCollaterals, "1")).toBeGreaterThan(0);
   });
 
@@ -149,5 +150,10 @@ describe("UserMarketMethods", () => {
   it("netBorrowAprsCustom: delegates to MarketMethods.netBorrowAprs", () => {
     const result = UserMarketMethods.netBorrowAprsCustom("1", mockBaseToken, 1n, mockCompToken, [mockRewardToken], 0.1);
     expect(result).toEqual([1, 2, 3]);
+  });
+
+  it("netEarnAprsCustom: delegates to MarketMethods.netEarnAprs", () => {
+    const result = UserMarketMethods.netEarnAprsCustom("2", mockBaseToken, 2n, mockCompToken, [mockRewardToken], 0.2);
+    expect(result).toEqual([4, 5, 6]);
   });
 });
