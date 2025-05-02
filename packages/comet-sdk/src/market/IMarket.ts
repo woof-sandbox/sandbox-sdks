@@ -8,6 +8,7 @@ export interface IMarket {
   supplyRate: bigint; // mock: 1065334068
   borrowRate: bigint; // mock: 1462067313
   //
+  borrowMinAmount: bigint; // mock: 1000000000000000
   totalBorrow: bigint; // mock: 115139196488456
   totalSupply: bigint; // or base total supply. comet.totalSupply(), mock: 185064689883219
   totalReserves: bigint; // mock: 1368714199302

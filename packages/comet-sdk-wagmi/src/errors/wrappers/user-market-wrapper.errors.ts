@@ -11,6 +11,9 @@ export const TOKEN_NOT_APPROVED = (amount: bigint) =>
     `Insufficient token allowance. Need approval for at least ${amount.toString()}.`,
   );
 
+export const SMALL_BORROW_AMOUNT = () =>
+  new Error("Borrow amount is too small.");
+
 export const INSUFFICIENT_COLLATERAL = () =>
   new Error("Not enough collateral to borrow this amount.");
 

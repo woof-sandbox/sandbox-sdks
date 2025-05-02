@@ -21,6 +21,7 @@ import {
   INVALID_COLLATERAL_MARKET,
   LOW_COLLATERAL_ALLOWANCE,
   OVER_WITHDRAW,
+  SMALL_BORROW_AMOUNT,
   SUPPLY_COLLATERAL_FAILED,
   SUPPLY_FAILED,
   TOKEN_NOT_APPROVED,
@@ -113,6 +114,10 @@ export class UserMarketWrapper extends UserMarket {
   async ensureBulkerAllowed(user: Address) {
     const allowed = await this.cometContract.isAllowed(user, bulkerAddress);
     if (!allowed) throw BULKER_NOT_ALLOWED();
+  }
+
+  async getBulkerAllowed(user: Address) {
+    return await this.cometContract.isAllowed(user, bulkerAddress);
   }
 
   async allowMarket() {
@@ -208,6 +213,10 @@ export class UserMarketWrapper extends UserMarket {
       Number(this.baseToken.decimals),
     );
 
+    const minBorrowValue = this.borrowMinAmount + this.supplyBalance;
+
+    if (borrowValue < minBorrowValue) throw SMALL_BORROW_AMOUNT();
+
     const availableToBorrow = DataUtils.toBigNumber(
       this.availableToBorrow,
       Number(this.baseToken.decimals),
@@ -250,7 +259,7 @@ export class UserMarketWrapper extends UserMarket {
         supplyCollaterals,
         this.chainId,
         userAddress,
-        bulkerAddress,
+        this.cometAddress as `0x${string}`,
       );
 
     const isSmallAllowance = this.isSomeTokenSmallAllowance(
@@ -286,13 +295,16 @@ export class UserMarketWrapper extends UserMarket {
       Number(this.baseToken.decimals),
     );
 
-    // TODO here we need to add supply amount to correct data
-    const availableToBorrow = DataUtils.toBigNumber(
-      this.availableToBorrow,
+    const minBorrowValue = this.borrowMinAmount + this.supplyBalance;
+
+    if (borrowValue < minBorrowValue) throw SMALL_BORROW_AMOUNT();
+
+    const borrowCapacityUSD = DataUtils.toBigNumber(
+      this.getBorrowCapacityMarketUSD(supplyCollaterals).toString(),
       Number(this.baseToken.decimals),
     );
 
-    if (availableToBorrow <= borrowValue) throw INSUFFICIENT_COLLATERAL();
+    if (borrowCapacityUSD <= borrowValue) throw INSUFFICIENT_COLLATERAL();
 
     const abiEncodeData = this._encodeSupplyOrWithdrawWithToken(
       userAddress,
@@ -368,7 +380,7 @@ export class UserMarketWrapper extends UserMarket {
         collaterals,
         chainId,
         userAddress,
-        bulkerAddress,
+        this.cometAddress as `0x${string}`,
       );
 
     const isSmallAllowance = this.isSomeTokenSmallAllowance(

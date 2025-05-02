@@ -58,6 +58,9 @@ export async function fetchUserMarkets(
           const totalReserves = WagmiUtils.resultOrThrow<bigint>(
             currentCometBaseData[5],
           );
+          const borrowMinAmount = WagmiUtils.resultOrThrow<bigint>(
+            currentCometBaseData[6],
+          );
 
           const comet = new CometContract(cometProxyAddress, chain, config);
           const baseTokenContract = new Erc20Contract(
@@ -113,6 +116,7 @@ export async function fetchUserMarkets(
           );
 
           return new UserMarket({
+            borrowMinAmount,
             borrowBalance,
             supplyBalance,
             baseTokenBalance,
@@ -177,6 +181,7 @@ export async function fetchUserMarket(
   const supplyBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[3]);
   const borrowBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[4]);
   const totalReserves = WagmiUtils.resultOrThrow<bigint>(cometBaseData[5]);
+  const borrowMinAmount = WagmiUtils.resultOrThrow<bigint>(cometBaseData[6]);
 
   const baseTokenContract = new Erc20Contract(baseTokenAddress, chainId);
 
@@ -223,6 +228,7 @@ export async function fetchUserMarket(
   );
 
   const userMarket = new UserMarket({
+    borrowMinAmount,
     borrowBalance,
     supplyBalance,
     baseTokenBalance,
