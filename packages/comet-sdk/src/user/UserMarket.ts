@@ -63,9 +63,7 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  getBorrowCapacityMarketUSD(
-    customCollaterals: MultiAllowanceCallType[],
-  ): number {
+  getBorrowCapacityMarketUSD(customCollaterals: ICustomCollateral[]): number {
     return UserMarketMethods.borrowCapacityMarketCustomUsd(
       this.collaterals,
       customCollaterals,
@@ -99,7 +97,7 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  isAllCollateralsFromMarket(supplyCollaterals: MultiAllowanceCallType[]) {
+  isAllCollateralsFromMarket(supplyCollaterals: ICustomCollateral[]) {
     return UserMarketMethods.isAllCollateralsFromMarket(
       this.collaterals,
       supplyCollaterals,
