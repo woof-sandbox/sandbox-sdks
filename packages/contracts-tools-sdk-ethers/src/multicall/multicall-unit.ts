@@ -130,12 +130,24 @@ export class MulticallUnit extends BaseContract {
     return value;
   }
 
+  public getSingleOrThrow<T>(tags: MulticallTags): T {
+    const value: T | null = this.get(tags);
+    if (value === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND;
+    return value;
+  }
+
   public getArray<T>(tags: MulticallTags, deep = false): T | null {
     const data = this.getDecodableData(tags);
     if (data === null) return null;
     return data.call
       .contractInterface!.decodeFunctionResult(data.call.method!, data.rawData)
       .toArray(deep) as T;
+  }
+
+  public getArrayOrThrow<T>(tags: MulticallTags, deep = false): T {
+    const value: T | null = this.getArray(tags, deep);
+    if (value === null) throw MULTICALL_ERRORS.RESULT_NOT_FOUND;
+    return value;
   }
 
   public async run(options: Partial<MulticallOptions> = {}): Promise<boolean> {
