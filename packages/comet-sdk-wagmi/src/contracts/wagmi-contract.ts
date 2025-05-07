@@ -1,8 +1,8 @@
 import {
   type Config,
+  type WriteContractReturnType,
   readContract,
   writeContract,
-  type WriteContractReturnType,
 } from "@wagmi/core";
 import type { Abi, Address, ContractFunctionParameters } from "viem";
 import type { WagmiChainId } from "../config";
