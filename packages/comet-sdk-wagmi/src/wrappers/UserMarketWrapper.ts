@@ -289,6 +289,8 @@ export class UserMarketWrapper extends UserMarket {
       data.isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN,
     );
 
+    let nativeTokenAmount: bigint | undefined;
+
     const collateralsData = collateralsAllowances.map((collateral) => {
       const currentCollateralData = this.findMarketCollateralByAddress(
         collateral.tokenAddress,
@@ -296,6 +298,13 @@ export class UserMarketWrapper extends UserMarket {
 
       if (!currentCollateralData)
         throw COLLATERAL_NOT_FOUND(collateral.tokenAddress);
+
+      if (collateral.isNative) {
+        nativeTokenAmount = DataUtils.toBigNumber(
+          collateral.inputAmount,
+          Number(currentCollateralData.decimals),
+        );
+      }
 
       return collateral.isNative
         ? this._encodeSupplyNativeToken(
@@ -346,12 +355,7 @@ export class UserMarketWrapper extends UserMarket {
     try {
       return await this.bulkerContract.invoke(
         [collateralsActions, collateralsData],
-        isSomeIsNative
-          ? DataUtils.toBigNumber(
-              isSomeIsNative.inputAmount,
-              Number(this.baseToken.decimals),
-            )
-          : undefined,
+        isSomeIsNative ? nativeTokenAmount : undefined,
       );
     } catch (e) {
       throw BORROW_SUPPLY_FAILED();
