@@ -5,7 +5,11 @@ import { type Config, getWalletClient } from "@wagmi/core";
 import type { Address } from "viem";
 import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
 import type { WagmiChainId } from "../config";
-import { ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET } from "../constants";
+import {
+  ACTION_SUPPLY_NATIVE_TOKEN,
+  ACTION_SUPPLY_TOKEN,
+  ACTION_WITHDRAW_ASSET,
+} from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import {
@@ -60,6 +64,20 @@ export class UserMarketWrapper extends UserMarket {
       this.baseToken.tokenAddress as `0x${string}`,
       chainId,
       config,
+    );
+  }
+
+  private _encodeSupplyNativeToken(
+    userAddress: string,
+    amount: bigint,
+  ): EncodeAbiParametersReturnType {
+    return encodeAbiParameters(
+      [{ type: "address" }, { type: "address" }, { type: "uint256" }],
+      [
+        this.cometAddress as `0x${string}`,
+        userAddress as `0x${string}`,
+        amount,
+      ],
     );
   }
 
@@ -169,7 +187,10 @@ export class UserMarketWrapper extends UserMarket {
     );
   }
 
-  async supplyMarket(inputValue: string): Promise<`0x${string}`> {
+  async supplyMarket(
+    inputValue: string,
+    isNative: boolean,
+  ): Promise<`0x${string}`> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -184,17 +205,20 @@ export class UserMarketWrapper extends UserMarket {
       Number(this.baseToken.decimals),
     );
 
-    if (allowance < supplyValue) throw TOKEN_NOT_APPROVED(supplyValue);
+    if (!isNative && allowance < supplyValue)
+      throw TOKEN_NOT_APPROVED(supplyValue);
 
-    const abiEncodeData = this._encodeSupplyOrWithdrawWithToken(
-      userAddress,
-      this.baseToken.tokenAddress,
-      supplyValue,
-    );
+    const abiEncodeData = isNative
+      ? this._encodeSupplyNativeToken(userAddress, supplyValue)
+      : this._encodeSupplyOrWithdrawWithToken(
+          userAddress,
+          this.baseToken.tokenAddress,
+          supplyValue,
+        );
 
     try {
       return await this.bulkerContract.invoke([
-        [ACTION_SUPPLY_TOKEN],
+        [isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN],
         [abiEncodeData],
       ]);
     } catch (e) {
@@ -269,7 +293,8 @@ export class UserMarketWrapper extends UserMarket {
     if (isSmallAllowance) throw LOW_COLLATERAL_ALLOWANCE();
 
     const collateralsActions: `0x${string}`[] = collateralsAllowances.map(
-      () => ACTION_SUPPLY_TOKEN,
+      (data) =>
+        data.isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN,
     );
 
     const collateralsData = collateralsAllowances.map((collateral) => {
@@ -280,14 +305,22 @@ export class UserMarketWrapper extends UserMarket {
       if (!currentCollateralData)
         throw COLLATERAL_NOT_FOUND(collateral.tokenAddress);
 
-      return this._encodeSupplyOrWithdrawWithToken(
-        userAddress,
-        collateral.tokenAddress,
-        DataUtils.toBigNumber(
-          collateral.inputAmount,
-          Number(currentCollateralData.decimals),
-        ),
-      );
+      return collateral.isNative
+        ? this._encodeSupplyNativeToken(
+            userAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData.decimals),
+            ),
+          )
+        : this._encodeSupplyOrWithdrawWithToken(
+            userAddress,
+            collateral.tokenAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData.decimals),
+            ),
+          );
     });
 
     const borrowValue = DataUtils.toBigNumber(
@@ -391,8 +424,8 @@ export class UserMarketWrapper extends UserMarket {
       throw new Error("some of tokens have smaller approve then input value");
     }
 
-    const actions: `0x${string}`[] = collateralsAllowances.map(
-      () => ACTION_SUPPLY_TOKEN,
+    const actions: `0x${string}`[] = collateralsAllowances.map((data) =>
+      data.isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN,
     );
 
     const abiEncodeData = collateralsAllowances.map((collateral) => {
@@ -403,14 +436,22 @@ export class UserMarketWrapper extends UserMarket {
       if (!currentCollateralData)
         throw COLLATERAL_NOT_FOUND(collateral.tokenAddress);
 
-      return this._encodeSupplyOrWithdrawWithToken(
-        userAddress,
-        collateral.tokenAddress,
-        DataUtils.toBigNumber(
-          collateral.inputAmount,
-          Number(currentCollateralData?.decimals),
-        ),
-      );
+      return collateral.isNative
+        ? this._encodeSupplyNativeToken(
+            userAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData?.decimals),
+            ),
+          )
+        : this._encodeSupplyOrWithdrawWithToken(
+            userAddress,
+            collateral.tokenAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData?.decimals),
+            ),
+          );
     });
 
     try {

@@ -205,22 +205,24 @@ export namespace UserMarketMethods {
     collaterals: UserCollateral[],
     collateralsAllowances: MultiAllowanceResponseType[],
   ) {
-    return collateralsAllowances.some((collateral) => {
-      const currentCollateralData = findMarketCollateralByAddress(
-        collateral.tokenAddress,
-        collaterals,
-      );
+    return collateralsAllowances
+      .filter((collateral) => !collateral.isNative)
+      .some((collateral) => {
+        const currentCollateralData = findMarketCollateralByAddress(
+          collateral.tokenAddress,
+          collaterals,
+        );
 
-      if (!currentCollateralData) throw MISSING_COLLATERAL_DATA();
+        if (!currentCollateralData) throw MISSING_COLLATERAL_DATA();
 
-      return isTokenAllowanceTooSmall(
-        DataUtils.toBigNumber(
-          collateral.inputAmount,
-          Number(currentCollateralData.decimals),
-        ),
-        collateral.allowance,
-      );
-    });
+        return isTokenAllowanceTooSmall(
+          DataUtils.toBigNumber(
+            collateral.inputAmount,
+            Number(currentCollateralData.decimals),
+          ),
+          collateral.allowance,
+        );
+      });
   }
 
   export function isAllCollateralsFromMarket(
