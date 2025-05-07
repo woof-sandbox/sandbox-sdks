@@ -3,9 +3,13 @@ import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
 import type { Address } from "viem";
-import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
+import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
 import type { WagmiChainId } from "../config";
-import { ACTION_SUPPLY_TOKEN, ACTION_WITHDRAW_ASSET } from "../constants";
+import {
+  ACTION_SUPPLY_NATIVE_TOKEN,
+  ACTION_SUPPLY_TOKEN,
+  ACTION_WITHDRAW_ASSET,
+} from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import {
@@ -47,19 +51,29 @@ export class UserMarketWrapper extends UserMarket {
     this.chainId = chainId;
 
     this.cometContract = new CometContract(
-      this.cometAddress as `0x${string}`,
+      this.cometAddress as Address,
       chainId,
       config,
     );
     this.bulkerContract = new BulkerContract(
-      bulkerAddress as `0x${string}`,
+      bulkerAddress as Address,
       chainId,
       config,
     );
     this.baseTokenContract = new Erc20Contract(
-      this.baseToken.tokenAddress as `0x${string}`,
+      this.baseToken.tokenAddress as Address,
       chainId,
       config,
+    );
+  }
+
+  private _encodeSupplyNativeToken(
+    userAddress: string,
+    amount: bigint,
+  ): EncodeAbiParametersReturnType {
+    return encodeAbiParameters(
+      [{ type: "address" }, { type: "address" }, { type: "uint256" }],
+      [this.cometAddress as Address, userAddress as Address, amount],
     );
   }
 
@@ -79,9 +93,9 @@ export class UserMarketWrapper extends UserMarket {
         { type: "uint256" },
       ],
       [
-        this.cometAddress as `0x${string}`,
-        userAddress as `0x${string}`,
-        tokenAddress as `0x${string}`,
+        this.cometAddress as Address,
+        userAddress as Address,
+        tokenAddress as Address,
         amount,
       ],
     );
@@ -103,9 +117,9 @@ export class UserMarketWrapper extends UserMarket {
         { type: "uint256" },
       ],
       [
-        this.cometAddress as `0x${string}`,
-        userAddress as `0x${string}`,
-        (tokenAddress || this.baseToken.tokenAddress) as `0x${string}`,
+        this.cometAddress as Address,
+        userAddress as Address,
+        (tokenAddress || this.baseToken.tokenAddress) as Address,
         amount,
       ],
     );
@@ -131,7 +145,7 @@ export class UserMarketWrapper extends UserMarket {
   async approveMarketBaseToken(amount: string) {
     try {
       return await this.baseTokenContract.approve(
-        this.cometAddress as `0x${string}`,
+        this.cometAddress as Address,
         DataUtils.toBigNumber(amount, Number(this.baseToken.decimals)),
       );
     } catch (e) {
@@ -140,7 +154,7 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async approveToken(
-    tokenAddress: `0x${string}`,
+    tokenAddress: Address,
     amount: string,
     tokenDecimals: number,
   ) {
@@ -148,7 +162,7 @@ export class UserMarketWrapper extends UserMarket {
 
     try {
       return await token.approve(
-        this.cometAddress as `0x${string}`,
+        this.cometAddress as Address,
         DataUtils.toBigNumber(amount, tokenDecimals),
       );
     } catch (e) {
@@ -156,20 +170,17 @@ export class UserMarketWrapper extends UserMarket {
     }
   }
 
-  async getTokenAllowance(tokenAddress: `0x${string}`) {
+  async getTokenAllowance(tokenAddress: Address) {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
 
     const token = new Erc20Contract(tokenAddress, this.chainId, this.config);
 
-    return await token.allowance(
-      userAddress,
-      this.cometAddress as `0x${string}`,
-    );
+    return await token.allowance(userAddress, this.cometAddress as Address);
   }
 
-  async supplyMarket(inputValue: string): Promise<`0x${string}`> {
+  async supplyMarket(inputValue: string, isNative: boolean): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -184,17 +195,20 @@ export class UserMarketWrapper extends UserMarket {
       Number(this.baseToken.decimals),
     );
 
-    if (allowance < supplyValue) throw TOKEN_NOT_APPROVED(supplyValue);
+    if (!isNative && allowance < supplyValue)
+      throw TOKEN_NOT_APPROVED(supplyValue);
 
-    const abiEncodeData = this._encodeSupplyOrWithdrawWithToken(
-      userAddress,
-      this.baseToken.tokenAddress,
-      supplyValue,
-    );
+    const abiEncodeData = isNative
+      ? this._encodeSupplyNativeToken(userAddress, supplyValue)
+      : this._encodeSupplyOrWithdrawWithToken(
+          userAddress,
+          this.baseToken.tokenAddress,
+          supplyValue,
+        );
 
     try {
       return await this.bulkerContract.invoke([
-        [ACTION_SUPPLY_TOKEN],
+        [isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN],
         [abiEncodeData],
       ]);
     } catch (e) {
@@ -202,7 +216,7 @@ export class UserMarketWrapper extends UserMarket {
     }
   }
 
-  async borrowMarket(inputValue: string): Promise<`0x${string}`> {
+  async borrowMarket(inputValue: string): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -243,7 +257,7 @@ export class UserMarketWrapper extends UserMarket {
   async borrowAndSupplyMarket(
     inputValue: string,
     supplyCollaterals: MultiAllowanceCallType[],
-  ): Promise<`0x${string}`> {
+  ): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -259,7 +273,7 @@ export class UserMarketWrapper extends UserMarket {
         supplyCollaterals,
         this.chainId,
         userAddress,
-        this.cometAddress as `0x${string}`,
+        this.cometAddress as Address,
       );
 
     const isSmallAllowance = this.isSomeTokenSmallAllowance(
@@ -268,8 +282,8 @@ export class UserMarketWrapper extends UserMarket {
 
     if (isSmallAllowance) throw LOW_COLLATERAL_ALLOWANCE();
 
-    const collateralsActions: `0x${string}`[] = collateralsAllowances.map(
-      () => ACTION_SUPPLY_TOKEN,
+    const collateralsActions: Address[] = collateralsAllowances.map((data) =>
+      data.isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN,
     );
 
     const collateralsData = collateralsAllowances.map((collateral) => {
@@ -280,14 +294,22 @@ export class UserMarketWrapper extends UserMarket {
       if (!currentCollateralData)
         throw COLLATERAL_NOT_FOUND(collateral.tokenAddress);
 
-      return this._encodeSupplyOrWithdrawWithToken(
-        userAddress,
-        collateral.tokenAddress,
-        DataUtils.toBigNumber(
-          collateral.inputAmount,
-          Number(currentCollateralData.decimals),
-        ),
-      );
+      return collateral.isNative
+        ? this._encodeSupplyNativeToken(
+            userAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData.decimals),
+            ),
+          )
+        : this._encodeSupplyOrWithdrawWithToken(
+            userAddress,
+            collateral.tokenAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData.decimals),
+            ),
+          );
     });
 
     const borrowValue = DataUtils.toBigNumber(
@@ -326,10 +348,7 @@ export class UserMarketWrapper extends UserMarket {
     }
   }
 
-  async withdrawMarket(
-    inputValue: string,
-    isMax: boolean,
-  ): Promise<`0x${string}`> {
+  async withdrawMarket(inputValue: string, isMax: boolean): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -364,7 +383,7 @@ export class UserMarketWrapper extends UserMarket {
   async supplyCollaterals(
     collaterals: MultiAllowanceCallType[],
     chainId: WagmiChainId,
-  ): Promise<`0x${string}`> {
+  ): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -380,7 +399,7 @@ export class UserMarketWrapper extends UserMarket {
         collaterals,
         chainId,
         userAddress,
-        this.cometAddress as `0x${string}`,
+        this.cometAddress as Address,
       );
 
     const isSmallAllowance = this.isSomeTokenSmallAllowance(
@@ -391,8 +410,8 @@ export class UserMarketWrapper extends UserMarket {
       throw new Error("some of tokens have smaller approve then input value");
     }
 
-    const actions: `0x${string}`[] = collateralsAllowances.map(
-      () => ACTION_SUPPLY_TOKEN,
+    const actions: Address[] = collateralsAllowances.map((data) =>
+      data.isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN,
     );
 
     const abiEncodeData = collateralsAllowances.map((collateral) => {
@@ -403,14 +422,22 @@ export class UserMarketWrapper extends UserMarket {
       if (!currentCollateralData)
         throw COLLATERAL_NOT_FOUND(collateral.tokenAddress);
 
-      return this._encodeSupplyOrWithdrawWithToken(
-        userAddress,
-        collateral.tokenAddress,
-        DataUtils.toBigNumber(
-          collateral.inputAmount,
-          Number(currentCollateralData?.decimals),
-        ),
-      );
+      return collateral.isNative
+        ? this._encodeSupplyNativeToken(
+            userAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData?.decimals),
+            ),
+          )
+        : this._encodeSupplyOrWithdrawWithToken(
+            userAddress,
+            collateral.tokenAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData?.decimals),
+            ),
+          );
     });
 
     try {
@@ -422,7 +449,7 @@ export class UserMarketWrapper extends UserMarket {
 
   async withdrawCollateral(
     collaterals: MultiAllowanceCallType[],
-  ): Promise<`0x${string}`> {
+  ): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
