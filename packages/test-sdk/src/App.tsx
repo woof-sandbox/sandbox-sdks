@@ -247,6 +247,16 @@ function App() {
               >
                 supply market 0.01
               </button>
+
+              <button
+                onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.supplyMarket("0.00000038307", true),
+                  )
+                }
+              >
+                supply base token 0.00000038307
+              </button>
               <button
                 onClick={() =>
                   handleFunction(() =>
