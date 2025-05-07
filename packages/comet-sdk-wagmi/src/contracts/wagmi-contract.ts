@@ -39,6 +39,7 @@ export class WagmiContract {
       args,
     } as const;
   }
+
   //
   read(
     functionName: string,
@@ -53,10 +54,12 @@ export class WagmiContract {
       chainId: chainId ?? this.chainId,
     });
   }
+
   write(
     functionName: string,
     chainId?: WagmiChainId,
     args?: any[],
+    value?: bigint,
   ): Promise<WriteContractReturnType> {
     return writeContract(this.config, {
       address: this.address,
@@ -64,6 +67,7 @@ export class WagmiContract {
       functionName,
       args,
       chainId: chainId ?? this.chainId,
+      value,
     });
   }
 }
