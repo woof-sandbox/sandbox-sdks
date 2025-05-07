@@ -1,8 +1,8 @@
 import {
   type Config,
-  type WriteContractReturnType,
   readContract,
   writeContract,
+  type WriteContractReturnType,
 } from "@wagmi/core";
 import type { Abi, Address, ContractFunctionParameters } from "viem";
 import type { WagmiChainId } from "../config";
@@ -39,6 +39,7 @@ export class WagmiContract {
       args,
     } as const;
   }
+
   //
   read(
     functionName: string,
@@ -53,10 +54,12 @@ export class WagmiContract {
       chainId: chainId ?? this.chainId,
     });
   }
+
   write(
     functionName: string,
     chainId?: WagmiChainId,
     args?: any[],
+    value?: bigint,
   ): Promise<WriteContractReturnType> {
     return writeContract(this.config, {
       address: this.address,
@@ -64,6 +67,7 @@ export class WagmiContract {
       functionName,
       args,
       chainId: chainId ?? this.chainId,
+      value,
     });
   }
 }

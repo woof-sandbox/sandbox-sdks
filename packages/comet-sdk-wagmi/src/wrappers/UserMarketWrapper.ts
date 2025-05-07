@@ -207,10 +207,13 @@ export class UserMarketWrapper extends UserMarket {
         );
 
     try {
-      return await this.bulkerContract.invoke([
-        [isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN],
-        [abiEncodeData],
-      ]);
+      return await this.bulkerContract.invoke(
+        [
+          [isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN],
+          [abiEncodeData],
+        ],
+        isNative ? supplyValue : undefined,
+      );
     } catch (e) {
       throw SUPPLY_FAILED();
     }
@@ -338,11 +341,18 @@ export class UserMarketWrapper extends UserMarket {
 
     collateralsData.push(abiEncodeData);
 
+    const isSomeIsNative = collateralsAllowances.find((data) => data.isNative);
+
     try {
-      return await this.bulkerContract.invoke([
-        collateralsActions,
-        collateralsData,
-      ]);
+      return await this.bulkerContract.invoke(
+        [collateralsActions, collateralsData],
+        isSomeIsNative
+          ? DataUtils.toBigNumber(
+              isSomeIsNative.inputAmount,
+              Number(this.baseToken.decimals),
+            )
+          : undefined,
+      );
     } catch (e) {
       throw BORROW_SUPPLY_FAILED();
     }

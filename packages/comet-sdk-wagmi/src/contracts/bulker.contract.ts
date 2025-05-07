@@ -13,7 +13,7 @@ export class BulkerContract extends WagmiContract {
     super(config, bulkerAbi, address, chainId);
   }
 
-  async invoke(args: any[]) {
-    return this.write("invoke", this.chainId, args);
+  async invoke(args: any[], value?: bigint) {
+    return this.write("invoke", this.chainId, args, value);
   }
 }
