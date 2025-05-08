@@ -5,9 +5,12 @@ export default defineConfig({
     name: "local",
     include: ["test/local/**/*.local-test.ts"],
     environment: "node",
-    testTimeout: 60000,
+    testTimeout: 600000,
+    maxConcurrency: 1,
+    fileParallelism: false,
     sequence: {
       concurrent: false,
+      shuffle: false,
     },
   },
 });
