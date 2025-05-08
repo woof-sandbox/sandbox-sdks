@@ -9,6 +9,7 @@ import {
   ACTION_SUPPLY_NATIVE_TOKEN,
   ACTION_SUPPLY_TOKEN,
   ACTION_WITHDRAW_ASSET,
+  ACTION_WITHDRAW_NATIVE_TOKEN,
 } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
@@ -122,6 +123,16 @@ export class UserMarketWrapper extends UserMarket {
         (tokenAddress || this.baseToken.tokenAddress) as Address,
         amount,
       ],
+    );
+  }
+
+  private _encodeWithdrawNative(
+    userAddress: string,
+    amount: bigint,
+  ): EncodeAbiParametersReturnType {
+    return encodeAbiParameters(
+      [{ type: "address" }, { type: "address" }, { type: "uint256" }],
+      [this.cometAddress as Address, userAddress as Address, amount],
     );
   }
 
@@ -362,7 +373,11 @@ export class UserMarketWrapper extends UserMarket {
     }
   }
 
-  async withdrawMarket(inputValue: string, isMax: boolean): Promise<Address> {
+  async withdrawMarket(
+    inputValue: string,
+    isMax: boolean,
+    isNative: boolean,
+  ): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -379,16 +394,24 @@ export class UserMarketWrapper extends UserMarket {
     if (borrowBalance > BigInt(0)) throw BORROW_POSITION_OPEN();
     if (supplyBalance < inputAmount) throw OVER_WITHDRAW();
 
-    const abiEncodeData = this._encodeWithdrawSimple(
-      userAddress,
-      isMax ? supplyBalance : inputAmount,
-    );
+    const abiEncodeData = isNative
+      ? this._encodeWithdrawNative(
+          userAddress,
+          isMax ? supplyBalance : inputAmount,
+        )
+      : this._encodeWithdrawSimple(
+          userAddress,
+          isMax ? supplyBalance : inputAmount,
+        );
 
     try {
-      return await this.bulkerContract.invoke([
-        [ACTION_WITHDRAW_ASSET],
-        [abiEncodeData],
-      ]);
+      return await this.bulkerContract.invoke(
+        [
+          [isNative ? ACTION_WITHDRAW_NATIVE_TOKEN : ACTION_WITHDRAW_ASSET],
+          [abiEncodeData],
+        ],
+        isNative ? (isMax ? supplyBalance : inputAmount) : undefined,
+      );
     } catch (e) {
       throw WITHDRAW_FAILED();
     }

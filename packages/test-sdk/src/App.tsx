@@ -296,6 +296,30 @@ function App() {
               <button
                 onClick={() =>
                   handleFunction(() =>
+                    currentMarket?.withdrawMarket(
+                      "0.000200000229887368",
+                      false,
+                      true,
+                    ),
+                  )
+                }
+              >
+                withdraw market in Native 0.000200000229887368
+              </button>
+
+              <button
+                onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.supplyMarket("0.000071161671297822", true),
+                  )
+                }
+              >
+                repay market in Native 0.000071161671297822
+              </button>
+
+              <button
+                onClick={() =>
+                  handleFunction(() =>
                     currentMarket?.borrowAndSupplyMarket(
                       "0.5",
                       [
