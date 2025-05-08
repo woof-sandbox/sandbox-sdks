@@ -15,6 +15,7 @@ node_modules
 .husky
 
 # testing
+anvil-data-tmp
 coverage
 .nyc_output
 .mp4

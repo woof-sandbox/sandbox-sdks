@@ -18,6 +18,7 @@
   "scripts": {
     "prepublish": "$npm_execpath build",
     "build": "tsc --build tsconfig.build.json --force && node ../../scripts/compile/post-compile.js",
+    "anvil": "cp ./test/local/anvil-data ./anvil-data-tmp && anvil --state ./anvil-data-tmp --block-time 3",
     "test": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:unit": "vitest run --coverage --config test/vitest-config/vitest.config.unit.ts",
     "test:e2e": "vitest run --coverage --config test/vitest-config/vitest.config.e2e.ts",

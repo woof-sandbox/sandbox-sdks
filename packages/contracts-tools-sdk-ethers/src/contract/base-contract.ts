@@ -7,7 +7,6 @@ import {
   type LogDescription,
   type Provider,
   type Signer,
-  Wallet,
   WebSocketProvider,
 } from "ethers";
 import { config } from "../config";
@@ -102,7 +101,7 @@ export class BaseContract {
     this.address = address;
     this.driver = driver;
     this.isCallable = !!address && !!driver;
-    this.isReadonly = !this.isCallable || !(driver instanceof Wallet);
+    this.isReadonly = !this.isCallable || !isSigner(driver);
     this.contract = new EthersContract(address, abi, driver);
     this.contractOptions = {
       staticCallsTimeoutMs: config.contract.staticCalls.timeoutMs,
