@@ -1,4 +1,10 @@
-import {Contract, FeeData, Provider, Signer, TransactionRequest} from "ethers";
+import type {
+  Contract,
+  FeeData,
+  Provider,
+  Signer,
+  TransactionRequest,
+} from "ethers";
 import { DEFAULT_PRIORITY_CALL_MULTIPLIER } from "../constant";
 import type { PriorityCallOptions } from "../types";
 import { checkSignals, createTimeoutSignal } from "../utils";

@@ -11,7 +11,7 @@ import {
 } from "ethers";
 import { config } from "../config";
 import { CONTRACTS_ERRORS } from "../errors";
-import {isSigner, isStaticMethod, priorityCall} from "../helpers";
+import { isSigner, isStaticMethod, priorityCall } from "../helpers";
 import {
   CallMutability,
   type ContractCall,
