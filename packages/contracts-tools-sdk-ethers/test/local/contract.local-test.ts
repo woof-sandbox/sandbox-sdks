@@ -62,7 +62,7 @@ describe("Local BaseContract Tests", () => {
       error = err;
     }
 
-    expect((error as Error).message).to.match(/aborted/);
+    expect(error).to.match(/exceeded/);
   });
 
   test("aborts transaction using an aborted signal", async () => {

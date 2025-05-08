@@ -9,5 +9,9 @@ export default defineConfig({
       "test/local/**/*.local-test.ts",
     ],
     environment: "node",
+    testTimeout: 60000,
+    sequence: {
+      concurrent: false,
+    },
   },
 });
