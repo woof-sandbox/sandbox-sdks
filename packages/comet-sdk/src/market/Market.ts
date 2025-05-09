@@ -115,7 +115,7 @@ export class Market implements IMarket {
       this.totalEarned,
       this.compToken,
       this.rewardTokens,
-      this.borrowApr,
+      this.supplyApr,
     );
   }
 

@@ -4,6 +4,7 @@ import {
   NON_USD_BASE_SYMBOLS,
   PRICE_FEED_FACTOR_UNITS,
 } from "../constants";
+import type { ICurve } from "../curve";
 import { MISSING_COLLATERAL_DATA } from "../errors/methods/user-market-methods.errors";
 import { MarketMethods } from "../market";
 import type { IBase, IToken } from "../token";
@@ -274,6 +275,48 @@ export namespace UserMarketMethods {
     const availableToBorrow = (borrowCapacity - borrow) / Number(basePriceUsd);
 
     return availableToBorrow.toString();
+  }
+
+  function customUtilization(totalBorrow: bigint, totalSupply: bigint): bigint {
+    return totalBorrow / totalSupply;
+  }
+
+  export function earnAprCustom(
+    userSupplyValue: string,
+    baseToken: IBase,
+    totalSupplied: bigint,
+    totalBorrowed: bigint,
+    curvePresets: ICurve,
+  ) {
+    return MarketMethods.getApr(
+      customUtilization(
+        totalBorrowed,
+        totalSupplied + parseUnits(userSupplyValue, Number(baseToken.decimals)),
+      ),
+      curvePresets.supplyKink,
+      curvePresets.supplyPerYearInterestRateBase,
+      curvePresets.supplyPerYearInterestRateSlopeLow,
+      curvePresets.supplyPerYearInterestRateSlopeHigh,
+    );
+  }
+
+  export function borrowAprCustom(
+    userBorrowValue: string,
+    baseToken: IBase,
+    totalSupplied: bigint,
+    totalBorrowed: bigint,
+    curvePresets: ICurve,
+  ) {
+    return MarketMethods.getApr(
+      customUtilization(
+        totalBorrowed + parseUnits(userBorrowValue, Number(baseToken.decimals)),
+        totalSupplied,
+      ),
+      curvePresets.borrowKink,
+      curvePresets.borrowPerYearInterestRateBase,
+      curvePresets.borrowPerYearInterestRateSlopeLow,
+      curvePresets.borrowPerYearInterestRateSlopeHigh,
+    );
   }
 
   export function netEarnAprsCustom(
