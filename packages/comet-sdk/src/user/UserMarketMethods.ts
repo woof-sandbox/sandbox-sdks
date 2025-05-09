@@ -278,7 +278,7 @@ export namespace UserMarketMethods {
   }
 
   function customUtilization(totalBorrow: number, totalSupply: number): bigint {
-    return parseUnits((totalBorrow / totalSupply).toString(), 18);
+    return DataUtils.toBigNumber((totalBorrow / totalSupply).toString(), 18);
   }
 
   export function earnAprCustom(
@@ -289,7 +289,8 @@ export namespace UserMarketMethods {
     curvePresets: ICurve,
   ) {
     const totalSupply = Number(
-      totalSupplied + parseUnits(userSupplyValue, Number(baseToken.decimals)),
+      totalSupplied +
+        DataUtils.toBigNumber(userSupplyValue, Number(baseToken.decimals)),
     );
 
     return MarketMethods.getApr(
@@ -309,7 +310,8 @@ export namespace UserMarketMethods {
     curvePresets: ICurve,
   ) {
     const totalBorrow = Number(
-      totalBorrowed + parseUnits(userBorrowValue, Number(baseToken.decimals)),
+      totalBorrowed +
+        DataUtils.toBigNumber(userBorrowValue, Number(baseToken.decimals)),
     );
     return MarketMethods.getApr(
       customUtilization(totalBorrow, Number(totalSupplied)),
