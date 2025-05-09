@@ -24,7 +24,7 @@ export namespace MarketMethods {
     return Number(formatUnits(apr, COMET_FACTOR_DECIMALS));
   }
 
-  function getApr(
+  export function getApr(
     utilization: bigint,
     kink: bigint,
     perSecondInterestRateBase: bigint,

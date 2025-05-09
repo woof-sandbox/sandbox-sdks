@@ -111,6 +111,26 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
+  earnAprCustom(userSupplyValue: string): number {
+    return UserMarketMethods.earnAprCustom(
+      userSupplyValue,
+      this.baseToken,
+      this.totalSupply,
+      this.totalBorrow,
+      this.baseToken.curvePresets[0]!,
+    );
+  }
+
+  borrowAprCustom(userBorrowValue: string): number {
+    return UserMarketMethods.borrowAprCustom(
+      userBorrowValue,
+      this.baseToken,
+      this.totalSupply,
+      this.totalBorrow,
+      this.baseToken.curvePresets[0]!,
+    );
+  }
+
   netEarnAprsCustom(userSupplyValue: string): number[] {
     return UserMarketMethods.netEarnAprsCustom(
       userSupplyValue,
@@ -126,7 +146,7 @@ export class UserMarket extends Market implements IUserMarket {
     return UserMarketMethods.netBorrowAprsCustom(
       userBorrowValue,
       this.baseToken,
-      this.totalBorrowed,
+      this.totalBorrow,
       this.compToken,
       this.rewardTokens,
       this.borrowApr,
