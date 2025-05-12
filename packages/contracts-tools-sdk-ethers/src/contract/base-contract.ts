@@ -11,7 +11,12 @@ import {
 } from "ethers";
 import { config } from "../config";
 import { CONTRACTS_ERRORS } from "../errors";
-import { isSigner, isStaticMethod, priorityCall } from "../helpers";
+import {
+  isSigner,
+  isStaticMethod,
+  priorityCall,
+  priorityCallEstimate,
+} from "../helpers";
 import {
   CallMutability,
   type ContractCall,
@@ -182,6 +187,62 @@ export class BaseContract {
 
       return tx;
     }
+  }
+
+  async estimate(
+    method: string,
+    args: any[] = [],
+    options: ContractCallOptions = {},
+  ) {
+    if (!this.isCallable)
+      throw CONTRACTS_ERRORS.NON_CALLABLE_CONTRACT_INVOCATION;
+    const methodFn = this.contract[method];
+
+    if (!methodFn) throw CONTRACTS_ERRORS.METHOD_NOT_DEFINED(method);
+
+    const functionFragment = this.contract.interface.getFunction(method);
+    if (!functionFragment) throw CONTRACTS_ERRORS.FRAGMENT_NOT_DEFINED(method);
+
+    if (isStaticMethod(functionFragment.stateMutability))
+      throw CONTRACTS_ERRORS.ESTIMATE_STATIC_CALL(method);
+
+    const callOptions = {
+      highPriorityTx: this.contractOptions.highPriorityTxs,
+      priorityOptions: this.contractOptions.priorityOptions,
+      ...options,
+    };
+
+    const localSignals: AbortSignal[] = [];
+    if (callOptions.signals) localSignals.push(...callOptions.signals);
+    if (callOptions.timeoutMs)
+      localSignals.push(this.getTimeoutSignal(false, callOptions.timeoutMs));
+
+    if (this.isReadonly) throw CONTRACTS_ERRORS.READ_ONLY_CONTRACT_MUTATION;
+    let estimate;
+    if (callOptions.highPriorityTx) {
+      const provider = this.driver?.provider;
+      estimate = await raceWithSignals(
+        () =>
+          priorityCallEstimate(
+            provider as Provider,
+            this.driver as Signer,
+            this.contract,
+            method,
+            args,
+            {
+              signals: localSignals,
+              ...options.priorityOptions,
+            },
+          ),
+        localSignals,
+      );
+    } else {
+      estimate = await raceWithSignals(
+        () => this.contract[method]!.estimateGas(...args),
+        localSignals,
+      );
+    }
+    return estimate;
   }
 
   public getCall(
