@@ -17,7 +17,9 @@
   "bugs": {
     "url": "https://github.com/woof-compound/sandbox-sdks/issues"
   },
+  "workspaces": ["packages/*"],
   "scripts": {
+    "release": "changeset publish",
     "prepare": "husky",
     "lint": "biome check && $npm_execpath lint:address",
     "format": "biome check --write",
