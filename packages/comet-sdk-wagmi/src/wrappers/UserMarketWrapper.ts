@@ -12,8 +12,10 @@ import {
   ACTION_WITHDRAW_NATIVE_TOKEN,
 } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
+import { type ActionData, ActionType } from "../contracts/entities/actions";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import {
+  ACTION_FAILED,
   ALLOW_FAILED,
   APPROVE_FAILED,
   BORROW_FAILED,
@@ -191,6 +193,175 @@ export class UserMarketWrapper extends UserMarket {
     return await token.allowance(userAddress, this.cometAddress as Address);
   }
 
+  findByActionType(actions: ActionData[], actionType: ActionType) {
+    return actions.filter((action) => action.action === actionType);
+  }
+
+  async createAction(actions: ActionData[]): Promise<Address> {
+    const walletClient = await getWalletClient(this.config);
+    const userAddress = walletClient.account.address;
+    await this.ensureBulkerAllowed(userAddress);
+
+    const collateralsSupplyActions = this.findByActionType(
+      actions,
+      ActionType.Supply,
+    );
+
+    const collateralsWithdrawActions = this.findByActionType(
+      actions,
+      ActionType.Withdraw,
+    );
+
+    const lendActions = this.findByActionType(actions, ActionType.Lend);
+
+    const repayActions = this.findByActionType(actions, ActionType.Repay);
+
+    const borrowActions = this.findByActionType(actions, ActionType.Borrow);
+
+    const withdrawActions = this.findByActionType(
+      actions,
+      ActionType.WithdrawBase,
+    );
+
+    const supplyData: MultiAllowanceCallType[] = collateralsSupplyActions.map(
+      (action) => ({
+        tokenAddress: action.address,
+        inputAmount: action.value,
+        isNative: false,
+      }),
+    );
+
+    const withdrawData: MultiAllowanceCallType[] =
+      collateralsWithdrawActions.map((action) => ({
+        tokenAddress: action.address,
+        inputAmount: action.value,
+        isNative: false,
+      }));
+
+    const allCollateralsData = [...withdrawData, ...supplyData];
+
+    if (Boolean(allCollateralsData.length)) {
+      const isCollateralsFromThisMarket =
+        this.isAllCollateralsFromMarket(allCollateralsData);
+
+      if (!isCollateralsFromThisMarket) throw INVALID_COLLATERAL_MARKET();
+
+      if (Boolean(supplyData.length)) {
+        const collateralsAllowances =
+          await this.baseTokenContract.getMultiAllowance(
+            supplyData,
+            this.chainId,
+            userAddress,
+            this.cometAddress as Address,
+          );
+
+        const isSmallAllowance = this.isSomeTokenSmallAllowance(
+          collateralsAllowances,
+        );
+
+        if (isSmallAllowance) throw LOW_COLLATERAL_ALLOWANCE();
+      }
+    }
+
+    const invokeActions: Address[] = [];
+
+    const collateralsData = allCollateralsData.map((collateral, index) => {
+      const currentCollateralData = this.findMarketCollateralByAddress(
+        collateral.tokenAddress,
+      );
+
+      if (!currentCollateralData)
+        throw COLLATERAL_NOT_FOUND(collateral.tokenAddress);
+
+      invokeActions.push(
+        index < withdrawData.length
+          ? ACTION_WITHDRAW_ASSET
+          : ACTION_SUPPLY_TOKEN,
+      );
+
+      return this._encodeSupplyOrWithdrawWithToken(
+        userAddress,
+        collateral.tokenAddress,
+        DataUtils.toBigNumber(
+          collateral.inputAmount,
+          Number(currentCollateralData.decimals),
+        ),
+      );
+    });
+
+    const supplyRepayValue =
+      lendActions.reduce((a, b) => a + Number(b.value), 0) +
+      repayActions.reduce((a, b) => a + Number(b.value), 0).toString();
+
+    if (Boolean(lendActions.length) || Boolean(repayActions.length)) {
+      const supplyValue = DataUtils.toBigNumber(
+        supplyRepayValue,
+        Number(this.baseToken.decimals),
+      );
+
+      const baseTokenAllowance = await this.getTokenAllowance(
+        this.baseToken.tokenAddress as Address,
+      );
+
+      if (baseTokenAllowance < supplyValue)
+        throw TOKEN_NOT_APPROVED(supplyValue);
+
+      invokeActions.push(ACTION_SUPPLY_TOKEN);
+
+      collateralsData.push(
+        this._encodeSupplyOrWithdrawWithToken(
+          userAddress,
+          this.baseToken.tokenAddress,
+          supplyValue,
+        ),
+      );
+    }
+
+    const borrowValue = borrowActions
+      .reduce((a, b) => a + Number(b.value), 0)
+      .toString();
+
+    if (Boolean(borrowActions.length)) {
+      const borrowInput = DataUtils.toBigNumber(
+        borrowValue,
+        Number(this.baseToken.decimals),
+      );
+
+      invokeActions.push(ACTION_WITHDRAW_ASSET);
+
+      collateralsData.push(
+        this._encodeSupplyOrWithdrawWithToken(
+          userAddress,
+          this.baseToken.tokenAddress,
+          borrowInput,
+        ),
+      );
+    }
+
+    const withdrawValue = withdrawActions
+      .reduce((a, b) => a + Number(b.value), 0)
+      .toString();
+
+    if (Boolean(withdrawActions.length)) {
+      const inputAmount = DataUtils.toBigNumber(
+        withdrawValue,
+        Number(this.baseToken.decimals),
+      );
+
+      invokeActions.push(ACTION_WITHDRAW_ASSET);
+
+      collateralsData.push(
+        this._encodeWithdrawSimple(userAddress, inputAmount),
+      );
+    }
+
+    try {
+      return await this.bulkerContract.invoke([invokeActions, collateralsData]);
+    } catch (e) {
+      throw ACTION_FAILED();
+    }
+  }
+
   async supplyMarket(inputValue: string, isNative: boolean): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
 
@@ -265,6 +436,124 @@ export class UserMarketWrapper extends UserMarket {
       ]);
     } catch (e) {
       throw BORROW_FAILED();
+    }
+  }
+
+  async lendAndSupplyMarket(
+    inputValue: string,
+    isNative: boolean,
+    supplyCollaterals: MultiAllowanceCallType[],
+  ): Promise<Address> {
+    const walletClient = await getWalletClient(this.config);
+
+    const userAddress = walletClient.account.address;
+    await this.ensureBulkerAllowed(userAddress);
+
+    const isCollateralsFromThisMarket =
+      this.isAllCollateralsFromMarket(supplyCollaterals);
+
+    if (!isCollateralsFromThisMarket) throw INVALID_COLLATERAL_MARKET();
+
+    const collateralsAllowances =
+      await this.baseTokenContract.getMultiAllowance(
+        supplyCollaterals,
+        this.chainId,
+        userAddress,
+        this.cometAddress as Address,
+      );
+
+    const isSmallAllowance = this.isSomeTokenSmallAllowance(
+      collateralsAllowances,
+    );
+
+    if (isSmallAllowance) throw LOW_COLLATERAL_ALLOWANCE();
+
+    const collateralsActions: Address[] = collateralsAllowances.map((data) =>
+      data.isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN,
+    );
+
+    let nativeTokenAmount: bigint | undefined;
+
+    const collateralsData = collateralsAllowances.map((collateral) => {
+      const currentCollateralData = this.findMarketCollateralByAddress(
+        collateral.tokenAddress,
+      );
+
+      if (!currentCollateralData)
+        throw COLLATERAL_NOT_FOUND(collateral.tokenAddress);
+
+      if (collateral.isNative) {
+        nativeTokenAmount = DataUtils.toBigNumber(
+          collateral.inputAmount,
+          Number(currentCollateralData.decimals),
+        );
+      }
+
+      return collateral.isNative
+        ? this._encodeSupplyNativeToken(
+            userAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData.decimals),
+            ),
+          )
+        : this._encodeSupplyOrWithdrawWithToken(
+            userAddress,
+            collateral.tokenAddress,
+            DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData.decimals),
+            ),
+          );
+    });
+
+    const supplyValue = DataUtils.toBigNumber(
+      inputValue,
+      Number(this.baseToken.decimals),
+    );
+
+    const baseTokenAllowance = await this.getTokenAllowance(
+      this.baseToken.tokenAddress as Address,
+    );
+
+    if (!isNative && baseTokenAllowance < supplyValue)
+      throw TOKEN_NOT_APPROVED(supplyValue);
+
+    const abiEncodeData = isNative
+      ? this._encodeSupplyNativeToken(userAddress, supplyValue)
+      : this._encodeSupplyOrWithdrawWithToken(
+          userAddress,
+          this.baseToken.tokenAddress,
+          supplyValue,
+        );
+
+    collateralsActions.push(
+      isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN,
+    );
+
+    collateralsData.push(abiEncodeData);
+
+    const isSomeIsNative = collateralsAllowances.find((data) => data.isNative);
+
+    let value: bigint | undefined;
+
+    if (isNative && isSomeIsNative) {
+      value = supplyValue + (nativeTokenAmount || BigInt(0));
+    } else if (isSomeIsNative) {
+      value = nativeTokenAmount;
+    } else if (isNative) {
+      value = supplyValue;
+    } else {
+      value = undefined;
+    }
+
+    try {
+      return await this.bulkerContract.invoke(
+        [collateralsActions, collateralsData],
+        value,
+      );
+    } catch (e) {
+      throw BORROW_SUPPLY_FAILED();
     }
   }
 

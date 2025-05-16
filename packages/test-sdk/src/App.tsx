@@ -244,6 +244,37 @@ function App() {
             >
               <button
                 onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.createAction([
+                      {
+                        address: "0x912CE59144191C1204E64559FE8253a0e49E6548",
+                        value: "1.4",
+                        action: "supply",
+                      },
+                      {
+                        address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+                        value: "0.001",
+                        action: "withdraw",
+                      },
+                      {
+                        address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+                        value: "0.4",
+                        action: "repay",
+                      },
+                      // {
+                      //   address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+                      //   value: '1',
+                      //   action: 'borrow',
+                      // },
+                    ]),
+                  )
+                }
+              >
+                call custom action
+              </button>
+
+              <button
+                onClick={() =>
                   handleFunction(() => currentMarket?.supplyMarket("0.01"))
                 }
               >

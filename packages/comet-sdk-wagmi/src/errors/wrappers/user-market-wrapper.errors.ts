@@ -48,5 +48,7 @@ export const BORROW_SUPPLY_FAILED = () =>
 export const WITHDRAW_FAILED = () =>
   new Error("Failed to withdraw from the market.");
 
+export const ACTION_FAILED = () => new Error("Failed to create action.");
+
 export const WITHDRAW_COLLATERAL_FAILED = () =>
   new Error("Failed to withdraw collateral.");
