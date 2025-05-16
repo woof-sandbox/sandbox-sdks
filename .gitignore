@@ -1,5 +1,5 @@
 # Keys
-.npmrc
+packages/**/.npmrc
 
 # IDE
 .idea
