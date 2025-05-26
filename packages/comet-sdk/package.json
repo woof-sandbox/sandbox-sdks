@@ -1,7 +1,7 @@
 {
   "name": "@woof-software/comet-sdk",
   "description": "Framework-agnostic package that defines Comet-related entity classes (such as `Market`, `Token`).",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
