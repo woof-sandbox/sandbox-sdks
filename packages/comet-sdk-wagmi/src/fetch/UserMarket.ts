@@ -12,7 +12,7 @@ export async function fetchUserMarkets(
   marketConfig: Record<number, `0x${string}`[]>,
   userAddress: `0x${string}`,
   config: Config,
-): Promise<UserMarket[]> {
+): Promise<UserMarketWrapper[]> {
   const marketInChain = Object.entries(marketConfig).flatMap(
     async ([chainId, marketsComets]) => {
       const chain = Number(chainId) as WagmiChainId;
@@ -115,7 +115,7 @@ export async function fetchUserMarkets(
             chain,
           );
 
-          return new UserMarket({
+          const userMarket = new UserMarket({
             borrowMinAmount,
             borrowBalance,
             supplyBalance,
@@ -143,6 +143,8 @@ export async function fetchUserMarkets(
             compToken: await fetchBaseMock(), // TODO
             rewardTokens: [], // TODO
           });
+
+          return new UserMarketWrapper(userMarket, config);
         }),
       );
     },
