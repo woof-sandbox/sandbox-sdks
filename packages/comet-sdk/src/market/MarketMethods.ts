@@ -8,8 +8,8 @@ import {
 } from "../constants";
 import type { ICurve } from "../curve";
 import type { IBase, ICollateral, IToken } from "../token";
-import type { IMarketInterestRateModel } from "./IMarketInterestRateModel";
 import { DataUtils } from "../utils";
+import type { IMarketInterestRateModel } from "./IMarketInterestRateModel";
 
 /**
  * Namespace of utility functions to ease market-related calculations.

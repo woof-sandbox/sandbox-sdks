@@ -3,7 +3,7 @@ import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
 import type { Address } from "viem";
-import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
+import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
 import type { WagmiChainId } from "../config";
 import {
   ACTION_SUPPLY_NATIVE_TOKEN,
@@ -35,7 +35,7 @@ import {
   WITHDRAW_FAILED,
 } from "../errors/wrappers/user-market-wrapper.errors";
 
-import { ActionType, ActionData } from "../contracts/entities/actions";
+import { type ActionData, ActionType } from "../contracts/entities/actions";
 //import { DataUtils } from "../utils";
 
 // Todo need to find where to get Bulker Address
