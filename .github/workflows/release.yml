@@ -24,9 +24,13 @@ jobs:
 
       - run: corepack enable
       - run: pnpm install
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create fallback changeset (if none exist)
         run: |
+          set -euo pipefail
+          
           mkdir -p .changeset
           
           if ls .changeset/*.md 1> /dev/null 2>&1; then
