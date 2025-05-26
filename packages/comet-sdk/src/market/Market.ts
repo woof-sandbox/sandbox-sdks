@@ -62,6 +62,14 @@ export class Market implements IMarket {
     );
   }
 
+  get totalSupplyUSD(): number {
+    return MarketMethods.getTotalSupplyUSD(this.totalSupply, this.baseToken);
+  }
+
+  get totalBorrowUSD(): number {
+    return MarketMethods.totalBorrowUSD(this.totalBorrow, this.baseToken);
+  }
+
   get totalReservesUSD(): number {
     return MarketMethods.getTotalReservesUSD(
       this.totalReserves,
@@ -127,5 +135,9 @@ export class Market implements IMarket {
       this.rewardTokens,
       this.borrowApr,
     );
+  }
+
+  get totalCollateralsSupplyUSD(): number {
+    return MarketMethods.getTotalCollateralsSupply(this.collaterals);
   }
 }

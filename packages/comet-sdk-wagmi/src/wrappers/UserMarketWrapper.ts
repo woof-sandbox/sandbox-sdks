@@ -12,7 +12,6 @@ import {
   ACTION_WITHDRAW_NATIVE_TOKEN,
 } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
-import { type ActionData, ActionType } from "../contracts/entities/actions";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import {
   ACTION_FAILED,
@@ -35,6 +34,8 @@ import {
   WITHDRAW_COLLATERAL_FAILED,
   WITHDRAW_FAILED,
 } from "../errors/wrappers/user-market-wrapper.errors";
+
+import { type ActionData, ActionType } from "../contracts/entities/actions";
 //import { DataUtils } from "../utils";
 
 // Todo need to find where to get Bulker Address
@@ -279,13 +280,25 @@ export class UserMarketWrapper extends UserMarket {
           : ACTION_SUPPLY_TOKEN,
       );
 
+      const supplyBalance = this.supplyBalance;
+
+      const amount = DataUtils.toBigNumber(
+        collateral.inputAmount,
+        Number(currentCollateralData.decimals),
+      );
+
+      const sendAmount =
+        index < withdrawData.length && amount > supplyBalance
+          ? supplyBalance
+          : DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData.decimals),
+            );
+
       return this._encodeSupplyOrWithdrawWithToken(
         userAddress,
         collateral.tokenAddress,
-        DataUtils.toBigNumber(
-          collateral.inputAmount,
-          Number(currentCollateralData.decimals),
-        ),
+        sendAmount,
       );
     });
 
