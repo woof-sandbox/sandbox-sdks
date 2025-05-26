@@ -12,7 +12,6 @@ import {
   ACTION_WITHDRAW_NATIVE_TOKEN,
 } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
-import { type ActionData, ActionType } from "../contracts/entities/actions";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import {
   ACTION_FAILED,
@@ -35,6 +34,8 @@ import {
   WITHDRAW_COLLATERAL_FAILED,
   WITHDRAW_FAILED,
 } from "../errors/wrappers/user-market-wrapper.errors";
+
+import { ActionType, ActionData } from "../contracts/entities/actions";
 //import { DataUtils } from "../utils";
 
 // Todo need to find where to get Bulker Address
