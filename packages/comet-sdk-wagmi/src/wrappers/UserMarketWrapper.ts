@@ -280,13 +280,25 @@ export class UserMarketWrapper extends UserMarket {
           : ACTION_SUPPLY_TOKEN,
       );
 
+      const supplyBalance = this.supplyBalance;
+
+      const amount = DataUtils.toBigNumber(
+        collateral.inputAmount,
+        Number(currentCollateralData.decimals),
+      );
+
+      const sendAmount =
+        index < withdrawData.length && amount > supplyBalance
+          ? supplyBalance
+          : DataUtils.toBigNumber(
+              collateral.inputAmount,
+              Number(currentCollateralData.decimals),
+            );
+
       return this._encodeSupplyOrWithdrawWithToken(
         userAddress,
         collateral.tokenAddress,
-        DataUtils.toBigNumber(
-          collateral.inputAmount,
-          Number(currentCollateralData.decimals),
-        ),
+        sendAmount,
       );
     });
 
