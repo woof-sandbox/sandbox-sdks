@@ -1,0 +1,63 @@
+name: Auto Release
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # git diff
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - run: corepack enable
+      - run: pnpm install
+
+      - name: Create fallback changeset (if none exist)
+        run: |
+          mkdir -p .changeset
+          
+          if ls .changeset/*.md 1> /dev/null 2>&1; then
+            echo "🟢 Manual changeset found. Skipping fallback generation."
+            exit 0
+          fi
+
+          changed_packages=$(git diff --name-only origin/main...HEAD | grep '^packages/' | cut -d '/' -f2 | sort -u)
+
+          if [ -z "$changed_packages" ]; then
+            echo "🟢 No changed packages, skipping release."
+            exit 0
+          fi
+
+          # Generate changeset
+          echo "---" > .changeset/ci-auto.md
+          for pkg in $changed_packages; do
+             name=$(jq -r .name packages/$pkg/package.json)
+             echo "\"$name\": patch" >> .changeset/ci-auto.md
+          done
+          echo "---" >> .changeset/ci-auto.md
+          echo "Auto-generated changeset from CI" >> .changeset/ci-auto.md
+
+      - name: Build
+        run: pnpm prepublish
+
+      - name: Version & publish
+        run: |
+          pnpm exec changeset version
+          pnpm install
+          pnpm exec changeset publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

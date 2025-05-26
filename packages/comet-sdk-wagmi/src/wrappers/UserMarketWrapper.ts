@@ -12,8 +12,8 @@ import {
   ACTION_WITHDRAW_NATIVE_TOKEN,
 } from "../constants";
 import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
+import { type ActionData, ActionType } from "../contracts/entities/actions";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
-import { ActionsData } from "../contracts/entities/actions";
 import {
   ACTION_FAILED,
   ALLOW_FAILED,
@@ -193,29 +193,35 @@ export class UserMarketWrapper extends UserMarket {
     return await token.allowance(userAddress, this.cometAddress as Address);
   }
 
-  findByActionType(actions: ActionsData[], actionType: string) {
+  findByActionType(actions: ActionData[], actionType: ActionType) {
     return actions.filter((action) => action.action === actionType);
   }
 
-  async createAction(actions: ActionsData[]): Promise<Address> {
+  async createAction(actions: ActionData[]): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
     const userAddress = walletClient.account.address;
     await this.ensureBulkerAllowed(userAddress);
 
-    const collateralsSupplyActions = this.findByActionType(actions, "supply");
+    const collateralsSupplyActions = this.findByActionType(
+      actions,
+      ActionType.Supply,
+    );
 
     const collateralsWithdrawActions = this.findByActionType(
       actions,
-      "withdraw",
+      ActionType.Withdraw,
     );
 
-    const lendActions = this.findByActionType(actions, "lend");
+    const lendActions = this.findByActionType(actions, ActionType.Lend);
 
-    const repayActions = this.findByActionType(actions, "repay");
+    const repayActions = this.findByActionType(actions, ActionType.Repay);
 
-    const borrowActions = this.findByActionType(actions, "borrow");
+    const borrowActions = this.findByActionType(actions, ActionType.Borrow);
 
-    const withdrawActions = this.findByActionType(actions, "withdraw-base");
+    const withdrawActions = this.findByActionType(
+      actions,
+      ActionType.WithdrawBase,
+    );
 
     const supplyData: MultiAllowanceCallType[] = collateralsSupplyActions.map(
       (action) => ({
