@@ -1,4 +1,4 @@
-import { formatUnits, parseUnits } from "viem";
+import { parseUnits } from "viem";
 import {
   COMET_FACTOR_DECIMALS,
   DAYS_PER_YEAR,
@@ -9,6 +9,7 @@ import {
 import type { ICurve } from "../curve";
 import type { IBase, ICollateral, IToken } from "../token";
 import type { IMarketInterestRateModel } from "./IMarketInterestRateModel";
+import { DataUtils } from "../utils";
 
 /**
  * Namespace of utility functions to ease market-related calculations.
@@ -21,7 +22,7 @@ export namespace MarketMethods {
     // https://docs.compound.finance/interest-rates/
     if (!rate) return 0;
     const apr = rate * BigInt(SECONDS_PER_YEAR);
-    return Number(formatUnits(apr, COMET_FACTOR_DECIMALS));
+    return Number(DataUtils.fromBigNumber(apr, COMET_FACTOR_DECIMALS));
   }
 
   export function getApr(
@@ -35,13 +36,20 @@ export namespace MarketMethods {
     if (utilization <= kink) {
       rate =
         Number(perSecondInterestRateBase) +
-        Number(formatUnits(perSecondInterestRateSlopeLow * utilization, 18));
+        Number(
+          DataUtils.fromBigNumber(
+            perSecondInterestRateSlopeLow * utilization,
+            18,
+          ),
+        );
     } else {
       rate =
         Number(perSecondInterestRateBase) +
-        Number(formatUnits(perSecondInterestRateSlopeLow * kink, 18)) +
         Number(
-          formatUnits(
+          DataUtils.fromBigNumber(perSecondInterestRateSlopeLow * kink, 18),
+        ) +
+        Number(
+          DataUtils.fromBigNumber(
             perSecondInterestRateSlopeHigh * (utilization - kink),
             18,
           ),
@@ -85,7 +93,9 @@ export namespace MarketMethods {
         );
 
         return {
-          utilization: Number(formatUnits(currentUtilization, 16)).toFixed(2),
+          utilization: Number(
+            DataUtils.fromBigNumber(currentUtilization, 16),
+          ).toFixed(2),
           borrowApr: borrowAPR.toFixed(2),
           earnApr: earnAPR.toFixed(2),
         };
@@ -145,10 +155,10 @@ export namespace MarketMethods {
   ): number {
     // returns percents
     const nTokenToUsersPerDay = Number(
-      formatUnits(tokenToUsersPerDay, Number(tokenDecimals)),
+      DataUtils.fromBigNumber(tokenToUsersPerDay, Number(tokenDecimals)),
     );
     const nBaseTotalBorrow = Number(
-      formatUnits(baseTotalBorrowOrSupply, Number(baseDecimals)),
+      DataUtils.fromBigNumber(baseTotalBorrowOrSupply, Number(baseDecimals)),
     );
 
     if (nBaseTotalBorrow === 0 || basePriceInUsd === 0) {
@@ -280,7 +290,7 @@ export namespace MarketMethods {
     baseToken: IBase,
     collaterals: ICollateral[],
   ): number {
-    const baseTokenAmount = formatUnits(
+    const baseTokenAmount = DataUtils.fromBigNumber(
       cometBalance,
       Number(baseToken.decimals),
     );
@@ -289,7 +299,10 @@ export namespace MarketMethods {
       return (
         acc +
         Number(
-          formatUnits(collateral.cometBalance, Number(collateral.decimals)),
+          DataUtils.fromBigNumber(
+            collateral.cometBalance,
+            Number(collateral.decimals),
+          ),
         ) *
           Number(collateral.price)
       );
@@ -303,18 +316,40 @@ export namespace MarketMethods {
     baseToken: IBase,
   ) {
     const totalBorrowedUSD =
-      Number(formatUnits(totalBorrowed, Number(baseToken.decimals))) *
-      Number(baseToken.price);
+      Number(
+        DataUtils.fromBigNumber(totalBorrowed, Number(baseToken.decimals)),
+      ) * Number(baseToken.price);
 
     const totalSuppliedUSD =
-      Number(formatUnits(totalSupplied, Number(baseToken.decimals))) *
-      Number(baseToken.price);
+      Number(
+        DataUtils.fromBigNumber(totalSupplied, Number(baseToken.decimals)),
+      ) * Number(baseToken.price);
 
     return (totalSuppliedUSD / totalBorrowedUSD) * 100;
   }
 
   export function getUtilization(utilization: bigint): number {
-    return Number(formatUnits(utilization, 18)) * 100;
+    return Number(DataUtils.fromBigNumber(utilization, 18)) * 100;
+  }
+
+  export function totalBorrowUSD(
+    totalBorrow: bigint,
+    baseToken: IBase,
+  ): number {
+    return (
+      Number(DataUtils.fromBigNumber(totalBorrow, Number(baseToken.decimals))) *
+      Number(baseToken.price)
+    );
+  }
+
+  export function getTotalSupplyUSD(
+    totalSupply: bigint,
+    baseToken: IBase,
+  ): number {
+    return (
+      Number(DataUtils.fromBigNumber(totalSupply, Number(baseToken.decimals))) *
+      Number(baseToken.price)
+    );
   }
 
   export function getTotalReservesUSD(
@@ -322,8 +357,25 @@ export namespace MarketMethods {
     baseToken: IBase,
   ): number {
     return (
-      Number(formatUnits(totalReserves, Number(baseToken.decimals))) *
-      Number(baseToken.price)
+      Number(
+        DataUtils.fromBigNumber(totalReserves, Number(baseToken.decimals)),
+      ) * Number(baseToken.price)
     );
+  }
+
+  export function getTotalCollateralsSupply(
+    collaterals: ICollateral[],
+  ): number {
+    return collaterals.reduce((acc, collateral) => {
+      return (
+        acc +
+        Number(
+          DataUtils.fromBigNumber(
+            collateral.totalSupplyAsset[0] || BigInt(0),
+            Number(collateral.decimals),
+          ),
+        )
+      );
+    }, 0);
   }
 }
