@@ -22,9 +22,9 @@ export async function fetchCollection(
   iterationQuery: CollectionQuery,
   iterationCallback: CollectionCallback,
   subgraphUrl: string,
-  options?: {
+  options: {
     token?: string;
-  },
+  } = {},
 ): Promise<void> {
   const headers = buildHeaders(options);
 
