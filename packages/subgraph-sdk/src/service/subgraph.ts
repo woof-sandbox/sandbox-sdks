@@ -1,6 +1,6 @@
 import { SUBGRAPH_PAGE_SIZE } from "../constant";
-import { CollectionQuery, ItemQuery } from "../query";
-import { CollectionCallback, CollectionCallbackParams } from "../types";
+import type { CollectionQuery, ItemQuery } from "../query";
+import type { CollectionCallback, CollectionCallbackParams } from "../types";
 
 export async function fetchItem(
   query: ItemQuery,
@@ -63,9 +63,9 @@ function buildHeaders(options?: {
 }
 
 async function fetchSubgraph(
-    url: string,
-    body: string,
-    headers: Record<string, string>,
+  url: string,
+  body: string,
+  headers: Record<string, string>,
 ): Promise<any> {
   const response = await fetch(url, {
     method: "POST",
@@ -78,10 +78,9 @@ async function fetchSubgraph(
   const result = await response.json();
   if (result.errors?.length) {
     throw new Error(
-        `Subgraph errors: ${result.errors.map((e: Error) => e?.message).join(" ")}`,
+      `Subgraph errors: ${result.errors.map((e: Error) => e?.message).join(" ")}`,
     );
   }
 
   return result;
 }
-
