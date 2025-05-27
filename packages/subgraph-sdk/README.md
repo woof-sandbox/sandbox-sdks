@@ -10,7 +10,7 @@ npm install @woof-software/subgraph-sdk
 ## API Reference
 
 ```typescript
-async function fetchItem(
+async function fetchItem<T>(
     query: string,
     subgraphUrl: string,
     options?: {
