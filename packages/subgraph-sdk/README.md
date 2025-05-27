@@ -13,7 +13,11 @@ npm install @woof-software/subgraph-sdk
 async function fetchCollection(
   iterationQuery: CollectionQuery,
   iterationCallback: CollectionCallback,
-  subgraphUrl: string
+  subgraphUrl: string,
+  options?: {
+      authorization?: string;
+      headers?: Record<string, string>;
+  },
 ): Promise<void>
 ```
 
@@ -22,6 +26,7 @@ async function fetchCollection(
 - `iterationQuery`: A function that generates GraphQL queries with pagination parameters
 - `iterationCallback`: A callback function that processes each page of results
 - `subgraphUrl`: The URL of the subgraph endpoint
+- `authorization`: Optional authorization header value for authenticated requests
 
 ## Types
 

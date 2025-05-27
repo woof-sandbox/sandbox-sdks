@@ -6,12 +6,22 @@ export async function fetchCollection(
   iterationQuery: CollectionQuery,
   iterationCallback: CollectionCallback,
   subgraphUrl: string,
+  options?: {
+    authorization?: string;
+    headers?: Record<string, string>;
+  },
 ): Promise<void> {
-  const headers = {
+  const defaultHeaders = {
     "Content-Type": "application/json",
     Accept: "application/json, multipart/mixed",
     "Accept-Language": "en-US,en;q=0.5",
     "Accept-Encoding": "gzip, deflate, br, zstd",
+  };
+
+  const headers: Record<string, string> = {
+    ...defaultHeaders,
+    ...(options?.headers || {}),
+    ...(options?.authorization && { Authorization: `Bearer ${options.authorization}` }),
   };
   const method = "POST";
 
