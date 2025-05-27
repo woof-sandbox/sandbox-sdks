@@ -31,8 +31,7 @@ async function fetchCollection(
 ### Parameters
 
 #### fetchItem
-- `query`: A function that generates a GraphQL query
-- `itemCallback`: A callback function that processes the query result
+- `query`: A function that generates a GraphQL query 
 - `subgraphUrl`: The URL of the subgraph endpoint
 - `options`: Optional configuration object
   - `token`: Optional authorization header value for authenticated requests
