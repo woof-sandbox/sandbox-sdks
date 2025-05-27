@@ -13,9 +13,9 @@ npm install @woof-software/subgraph-sdk
 async function fetchItem<T>(
     query: string,
     subgraphUrl: string,
-    options?: {
+    options: {
         token?: string; 
-    },
+    } = {},
 ): Promise<T> {
 
 async function fetchCollection(

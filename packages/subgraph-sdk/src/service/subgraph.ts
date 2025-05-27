@@ -3,11 +3,11 @@ import type { CollectionQuery } from "../query";
 import type { CollectionCallback, CollectionCallbackParams } from "../types";
 
 export async function fetchItem<T>(
-    query: string,
-    subgraphUrl: string,
-    options?: {
-      token?: string;
-    },
+  query: string,
+  subgraphUrl: string,
+  options: {
+    token?: string;
+  } = {},
 ): Promise<T> {
   const headers = buildHeaders(options);
   const body = JSON.stringify({
