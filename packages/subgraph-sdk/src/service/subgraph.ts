@@ -1,25 +1,20 @@
 import { SUBGRAPH_PAGE_SIZE } from "../constant";
-import {CollectionQuery, ItemQuery} from "../query";
-import {CollectionCallback, CollectionCallbackParams, ItemCallback} from "../types";
+import { CollectionQuery, ItemQuery } from "../query";
+import { CollectionCallback, CollectionCallbackParams } from "../types";
 
 export async function fetchItem(
   query: ItemQuery,
-  itemCallback: ItemCallback,
   subgraphUrl: string,
   options?: {
-    authorization?: string;
-    headers?: Record<string, string>;
+    token?: string;
   },
-): Promise<void> {
+): Promise<any> {
   const headers = buildHeaders(options);
-  const method = "POST";
-
   const body = JSON.stringify({
     query: query(),
   });
 
-  const result = await fetchSubgraph(subgraphUrl, body, headers);
-  itemCallback(result);
+  return await fetchSubgraph(subgraphUrl, body, headers);
 }
 
 export async function fetchCollection(
@@ -27,12 +22,10 @@ export async function fetchCollection(
   iterationCallback: CollectionCallback,
   subgraphUrl: string,
   options?: {
-    authorization?: string;
-    headers?: Record<string, string>;
+    token?: string;
   },
 ): Promise<void> {
   const headers = buildHeaders(options);
-  const method = "POST";
 
   const callbackParams: CollectionCallbackParams = {
     pageSize: SUBGRAPH_PAGE_SIZE,
@@ -52,8 +45,7 @@ export async function fetchCollection(
 }
 
 function buildHeaders(options?: {
-  authorization?: string;
-  headers?: Record<string, string>;
+  token?: string;
 }): Record<string, string> {
   const defaultHeaders = {
     "Content-Type": "application/json",
@@ -64,9 +56,8 @@ function buildHeaders(options?: {
 
   return {
     ...defaultHeaders,
-    ...(options?.headers || {}),
-    ...(options?.authorization && {
-      Authorization: `Bearer ${options.authorization}`,
+    ...(options?.token && {
+      Authorization: `Bearer ${options.token}`,
     }),
   };
 }
