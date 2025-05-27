@@ -84,5 +84,7 @@ jobs:
           pnpm install
           echo "Running pnpm exec changeset publish..."
           pnpm exec changeset publish
+          echo "Pushing changes..."
+          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
