@@ -41,8 +41,10 @@ jobs:
           
           mkdir -p .changeset
           
-          if ls .changeset/*.md 1> /dev/null 2>&1; then
-            echo "🟢 Manual changeset found. Skipping fallback generation."
+          changed_packages=$(git diff --name-only origin/dev...HEAD | grep '^packages/' | cut -d '/' -f2- | sort -u)
+  
+          if [ -z "$changed_packages" ]; then
+            echo "🟢 No changed packages, skipping release."
             exit 0
           fi
 
