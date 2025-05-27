@@ -54,6 +54,8 @@ jobs:
             echo "🟢 No changed packages, skipping release."
             exit 0
           fi
+          
+          echo "Changed packages: $changed_packages"
 
           # Generate changeset
           echo "---" > .changeset/ci-auto.md
@@ -63,14 +65,24 @@ jobs:
           done
           echo "---" >> .changeset/ci-auto.md
           echo "Auto-generated changeset from CI" >> .changeset/ci-auto.md
+          
+          echo "Generated changeset contents:"
+          cat .changeset/ci-auto.md
 
       - name: Build
         run: pnpm prepublish
 
       - name: Version & publish
         run: |
+          echo "Running pnpm exec changeset version..."
           pnpm exec changeset version
+          # Check the diff after version bump
+          echo "Checking changes in package.json:"
+          git diff package.json
+          echo "Checking changes are committed:"
+          git status
           pnpm install
+          echo "Running pnpm exec changeset publish..."
           pnpm exec changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

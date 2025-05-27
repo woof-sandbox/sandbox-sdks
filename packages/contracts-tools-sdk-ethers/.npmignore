@@ -1,4 +1,5 @@
 # Test files and coverage
+test/
 tests/
 coverage/
 .nyc_output/
