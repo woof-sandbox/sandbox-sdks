@@ -35,16 +35,14 @@ async function fetchCollection(
 - `itemCallback`: A callback function that processes the query result
 - `subgraphUrl`: The URL of the subgraph endpoint
 - `options`: Optional configuration object
-  - `authorization`: Optional authorization header value for authenticated requests
-  - `headers`: Optional additional headers to include in the request
+  - `token`: Optional authorization header value for authenticated requests
 
 #### fetchCollection
 - `iterationQuery`: A function that generates GraphQL queries with pagination parameters
 - `iterationCallback`: A callback function that processes each page of results
 - `subgraphUrl`: The URL of the subgraph endpoint
 - `options`: Optional configuration object
-  - `authorization`: Optional authorization header value for authenticated requests
-  - `headers`: Optional additional headers to include in the request
+  - `token`: Optional authorization header value for authenticated requests
 
 ## Types
 
