@@ -1,20 +1,21 @@
 import { SUBGRAPH_PAGE_SIZE } from "../constant";
-import type { CollectionQuery, ItemQuery } from "../query";
+import type { CollectionQuery } from "../query";
 import type { CollectionCallback, CollectionCallbackParams } from "../types";
 
-export async function fetchItem(
-  query: ItemQuery,
-  subgraphUrl: string,
-  options?: {
-    token?: string;
-  },
-): Promise<any> {
+export async function fetchItem<T>(
+    query: string,
+    subgraphUrl: string,
+    options?: {
+      token?: string;
+    },
+): Promise<T> {
   const headers = buildHeaders(options);
   const body = JSON.stringify({
-    query: query(),
+    query,
   });
 
-  return await fetchSubgraph(subgraphUrl, body, headers);
+  const result = await fetchSubgraph(subgraphUrl, body, headers);
+  return result.data as T;
 }
 
 export async function fetchCollection(

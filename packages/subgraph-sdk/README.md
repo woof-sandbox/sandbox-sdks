@@ -11,22 +11,19 @@ npm install @woof-software/subgraph-sdk
 
 ```typescript
 async function fetchItem(
-  query: ItemQuery,
-  itemCallback: ItemCallback,
-  subgraphUrl: string,
-  options?: {
-    authorization?: string;
-    headers?: Record<string, string>;
-  }
-): Promise<void>
+    query: string,
+    subgraphUrl: string,
+    options?: {
+        token?: string; 
+    },
+): Promise<T> {
 
 async function fetchCollection(
   iterationQuery: CollectionQuery,
   iterationCallback: CollectionCallback,
   subgraphUrl: string,
   options?: {
-    authorization?: string;
-    headers?: Record<string, string>;
+    token?: string;
   }
 ): Promise<void>
 ```
@@ -52,10 +49,6 @@ async function fetchCollection(
 ## Types
 
 ```typescript
-type ItemQuery = () => string;
-
-type ItemCallback = (result: any) => void;
-
 type CollectionQuery = (
   skip: number | string,
   pageSize: number | string,
