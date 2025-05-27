@@ -10,27 +10,52 @@ npm install @woof-software/subgraph-sdk
 ## API Reference
 
 ```typescript
+async function fetchItem(
+  query: ItemQuery,
+  itemCallback: ItemCallback,
+  subgraphUrl: string,
+  options?: {
+    authorization?: string;
+    headers?: Record<string, string>;
+  }
+): Promise<void>
+
 async function fetchCollection(
   iterationQuery: CollectionQuery,
   iterationCallback: CollectionCallback,
   subgraphUrl: string,
   options?: {
-      authorization?: string;
-      headers?: Record<string, string>;
-  },
+    authorization?: string;
+    headers?: Record<string, string>;
+  }
 ): Promise<void>
 ```
 
 ### Parameters
 
+#### fetchItem
+- `query`: A function that generates a GraphQL query
+- `itemCallback`: A callback function that processes the query result
+- `subgraphUrl`: The URL of the subgraph endpoint
+- `options`: Optional configuration object
+  - `authorization`: Optional authorization header value for authenticated requests
+  - `headers`: Optional additional headers to include in the request
+
+#### fetchCollection
 - `iterationQuery`: A function that generates GraphQL queries with pagination parameters
 - `iterationCallback`: A callback function that processes each page of results
 - `subgraphUrl`: The URL of the subgraph endpoint
-- `authorization`: Optional authorization header value for authenticated requests
+- `options`: Optional configuration object
+  - `authorization`: Optional authorization header value for authenticated requests
+  - `headers`: Optional additional headers to include in the request
 
 ## Types
 
 ```typescript
+type ItemQuery = () => string;
+
+type ItemCallback = (result: any) => void;
+
 type CollectionQuery = (
   skip: number | string,
   pageSize: number | string,

@@ -1,0 +1,1 @@
+export type ItemCallback = (result: any) => void;
