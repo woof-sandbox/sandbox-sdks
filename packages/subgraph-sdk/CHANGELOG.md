@@ -1,0 +1,7 @@
+# @woof-software/subgraph-sdk
+
+## 0.0.9
+
+### Patch Changes
+
+- Auto-generated changeset from CI
