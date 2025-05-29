@@ -140,4 +140,12 @@ export class Market implements IMarket {
   get totalCollateralsSupplyUSD(): number {
     return MarketMethods.getTotalCollateralsSupply(this.collaterals);
   }
+
+  marketsToMigrate(marketsList: Market[]) {
+    return MarketMethods.getMarketsToMigrate(
+      marketsList,
+      this.baseToken,
+      this.collaterals,
+    );
+  }
 }

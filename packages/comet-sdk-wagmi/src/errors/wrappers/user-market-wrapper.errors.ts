@@ -52,3 +52,9 @@ export const ACTION_FAILED = () => new Error("Failed to create action.");
 
 export const WITHDRAW_COLLATERAL_FAILED = () =>
   new Error("Failed to withdraw collateral.");
+
+export const FULL_MIGRATE_FAILED = () =>
+  new Error("Failed to full migrate collateral.");
+
+export const PART_MIGRATE_FAILED = () =>
+  new Error("Failed to part migrate collateral.");
