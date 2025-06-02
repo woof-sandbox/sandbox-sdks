@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { CollectionQuery } from "../../src/query";
+import type { CollectionQueryFactory } from "../../src/query";
 
 describe("CollectionQuery", () => {
   it("should accept number parameters", () => {
-    const query: CollectionQuery = (
+    const query: CollectionQueryFactory = (
       skip: number | string,
       pageSize: number | string,
     ) => `query { items(skip: ${skip}, first: ${pageSize}) { id } }`;
@@ -12,7 +12,7 @@ describe("CollectionQuery", () => {
   });
 
   it("should accept string parameters", () => {
-    const query: CollectionQuery = (
+    const query: CollectionQueryFactory = (
       skip: number | string,
       pageSize: number | string,
     ) => `query { items(skip: ${skip}, first: ${pageSize}) { id } }`;

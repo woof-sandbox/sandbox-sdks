@@ -1,5 +1,5 @@
 import { SUBGRAPH_PAGE_SIZE } from "../constant";
-import type { CollectionQuery } from "../query";
+import type { CollectionQueryFactory } from "../query";
 import type { CollectionCallback, CollectionCallbackParams } from "../types";
 
 export async function fetchItem<T>(
@@ -19,7 +19,7 @@ export async function fetchItem<T>(
 }
 
 export async function fetchCollection(
-  iterationQuery: CollectionQuery,
+  iterationQueryFactory: CollectionQueryFactory,
   iterationCallback: CollectionCallback,
   subgraphUrl: string,
   options: {
@@ -36,7 +36,7 @@ export async function fetchCollection(
   while (callbackParams.loopFlag) {
     const skip = prevPage * callbackParams.pageSize;
     const body = JSON.stringify({
-      query: iterationQuery(skip, callbackParams.pageSize),
+      query: iterationQueryFactory(skip, callbackParams.pageSize),
     });
 
     const result = await fetchSubgraph(subgraphUrl, body, headers);
