@@ -1,7 +1,7 @@
 {
   "name": "@woof-software/comet-sdk-wagmi",
   "description": "Wagmi-based augmentation of `@woof-software/comet-sdk` that exports (and optionally injects) wagmi-based fetch methods.",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
