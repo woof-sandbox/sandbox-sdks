@@ -10,6 +10,7 @@ import type { ICurve } from "../curve";
 import type { IBase, ICollateral, IToken } from "../token";
 import { DataUtils } from "../utils";
 import type { IMarketInterestRateModel } from "./IMarketInterestRateModel";
+import { Market } from "./Market";
 
 /**
  * Namespace of utility functions to ease market-related calculations.
@@ -377,5 +378,27 @@ export namespace MarketMethods {
         )
       );
     }, 0);
+  }
+
+  function isSameCollateralList(a: ICollateral[], b: ICollateral[]): boolean {
+    if (a.length !== b.length) return false;
+
+    const aAddresses = a.map((c) => c.tokenAddress.toLowerCase()).sort();
+    const bAddresses = b.map((c) => c.tokenAddress.toLowerCase()).sort();
+
+    return aAddresses.every((addr, i) => addr === bAddresses[i]);
+  }
+
+  export function getMarketsToMigrate(
+    marketsList: Market[],
+    baseToken: IBase,
+    collaterals: ICollateral[],
+  ): Market[] {
+    return marketsList.filter(
+      (m) =>
+        m.baseToken.tokenAddress.toLowerCase() ===
+          baseToken.tokenAddress.toLowerCase() &&
+        isSameCollateralList(m.collaterals, collaterals),
+    );
   }
 }

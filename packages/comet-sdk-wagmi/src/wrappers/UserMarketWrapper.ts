@@ -11,7 +11,12 @@ import {
   ACTION_WITHDRAW_ASSET,
   ACTION_WITHDRAW_NATIVE_TOKEN,
 } from "../constants";
-import { BulkerContract, CometContract, Erc20Contract } from "../contracts";
+import {
+  BulkerContract,
+  CometContract,
+  Erc20Contract,
+  MigratorContract,
+} from "../contracts";
 import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
 import {
   ACTION_FAILED,
@@ -23,10 +28,12 @@ import {
   BULKER_NOT_ALLOWED,
   COLLATERAL_NOT_FOUND,
   EXCESSIVE_COLLATERAL_WITHDRAW,
+  FULL_MIGRATE_FAILED,
   INSUFFICIENT_COLLATERAL,
   INVALID_COLLATERAL_MARKET,
   LOW_COLLATERAL_ALLOWANCE,
   OVER_WITHDRAW,
+  PART_MIGRATE_FAILED,
   SMALL_BORROW_AMOUNT,
   SUPPLY_COLLATERAL_FAILED,
   SUPPLY_FAILED,
@@ -48,6 +55,7 @@ export class UserMarketWrapper extends UserMarket {
   private readonly cometContract: CometContract;
   private readonly bulkerContract: BulkerContract;
   private readonly baseTokenContract: Erc20Contract;
+  private readonly migrationContract: MigratorContract;
 
   constructor(userMarket: IUserMarket, config: Config, chainId?: WagmiChainId) {
     super(userMarket);
@@ -66,6 +74,12 @@ export class UserMarketWrapper extends UserMarket {
     );
     this.baseTokenContract = new Erc20Contract(
       this.baseToken.tokenAddress as Address,
+      chainId,
+      config,
+    );
+
+    this.migrationContract = new MigratorContract(
+      this.baseToken.tokenAddress as Address, // TODO change with migration address
       chainId,
       config,
     );
@@ -847,6 +861,36 @@ export class UserMarketWrapper extends UserMarket {
       return await this.bulkerContract.invoke([action, abiEncodeData]);
     } catch (e) {
       throw WITHDRAW_COLLATERAL_FAILED();
+    }
+  }
+
+  async migrate(
+    fromCometAddress: Address,
+    toCometAddress: Address,
+    flashAmount: bigint,
+    collateralsData?: MultiAllowanceCallType[],
+  ) {
+    if (Boolean(collateralsData?.length)) {
+      try {
+        return await this.migrationContract.partialMigrate([
+          fromCometAddress,
+          toCometAddress,
+          collateralsData,
+          flashAmount,
+        ]);
+      } catch (e) {
+        throw PART_MIGRATE_FAILED();
+      }
+    }
+
+    try {
+      return await this.migrationContract.fullMigrate([
+        fromCometAddress,
+        toCometAddress,
+        flashAmount,
+      ]);
+    } catch (e) {
+      throw FULL_MIGRATE_FAILED();
     }
   }
 }
