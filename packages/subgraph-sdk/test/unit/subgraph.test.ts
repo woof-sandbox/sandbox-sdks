@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { fetchCollection, fetchItem } from "../../src";
+import { fetchCollection, fetchSingle } from "../../src";
 import type { CollectionCallback, CollectionCallbackParams } from "../../src";
 import { SUBGRAPH_PAGE_SIZE } from "../../src/constant";
 
@@ -195,7 +195,7 @@ describe("fetchCollection", () => {
   });
 });
 
-describe("fetchItem", () => {
+describe("fetchSingle", () => {
   const mockSubgraphUrl = "https://api.example.com/subgraph";
 
   beforeEach(() => {
@@ -220,7 +220,7 @@ describe("fetchItem", () => {
       json: async () => mockResponse,
     });
 
-    const result = await fetchItem<typeof mockResponse.data>(
+    const result = await fetchSingle<typeof mockResponse.data>(
       query,
       mockSubgraphUrl,
     );
@@ -247,7 +247,7 @@ describe("fetchItem", () => {
       status: 500,
     });
 
-    await expect(fetchItem<any>(query, mockSubgraphUrl)).rejects.toThrow(
+    await expect(fetchSingle<any>(query, mockSubgraphUrl)).rejects.toThrow(
       "[500] Failed to fetch subgraph!",
     );
   });
@@ -267,7 +267,7 @@ describe("fetchItem", () => {
       json: async () => errorResponse,
     });
 
-    await expect(fetchItem<any>(query, mockSubgraphUrl)).rejects.toThrow(
+    await expect(fetchSingle<any>(query, mockSubgraphUrl)).rejects.toThrow(
       "Subgraph errors: Something went wrong Another error",
     );
   });
@@ -284,7 +284,7 @@ describe("fetchItem", () => {
       json: async () => mockResponse,
     });
 
-    await fetchItem<typeof mockResponse.data>(query, mockSubgraphUrl, {
+    await fetchSingle<typeof mockResponse.data>(query, mockSubgraphUrl, {
       token,
     });
 

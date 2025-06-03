@@ -1,9 +1,9 @@
 import type { Config } from "@wagmi/core";
+import type { Address } from "viem";
 import { migratorAbi } from "../abis";
 import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
-import { Address } from "viem";
 
 export class MigratorContract extends WagmiContract {
   constructor(

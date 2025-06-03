@@ -10,7 +10,7 @@ npm install @woof-software/subgraph-sdk
 ## API Reference
 
 ```typescript
-async function fetchItem<T>(
+async function fetchSingle<T>(
     query: string,
     subgraphUrl: string,
     options: {
@@ -30,7 +30,7 @@ async function fetchCollection(
 
 ### Parameters
 
-#### fetchItem
+#### fetchSingle
 - `query`: A function that generates a GraphQL query 
 - `subgraphUrl`: The URL of the subgraph endpoint
 - `options`: Optional configuration object

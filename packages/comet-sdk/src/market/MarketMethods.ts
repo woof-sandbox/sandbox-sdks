@@ -10,7 +10,7 @@ import type { ICurve } from "../curve";
 import type { IBase, ICollateral, IToken } from "../token";
 import { DataUtils } from "../utils";
 import type { IMarketInterestRateModel } from "./IMarketInterestRateModel";
-import { Market } from "./Market";
+import type { Market } from "./Market";
 
 /**
  * Namespace of utility functions to ease market-related calculations.
