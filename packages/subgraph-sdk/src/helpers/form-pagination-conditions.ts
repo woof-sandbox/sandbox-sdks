@@ -1,4 +1,4 @@
-import type { PaginationParams } from "../types/pagination-params";
+import type { PaginationParams } from "../types";
 
 export const formPaginationConditions = (
   pagination: PaginationParams,
