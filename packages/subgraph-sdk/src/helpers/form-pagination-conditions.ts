@@ -7,8 +7,9 @@ export const formPaginationConditions = (
       `orderDirection: ${pagination.sortOrder}, ` +
       `first: ${pagination.first}`;
   if (pagination.cursorValue !== undefined) {
-    conditions += `${pagination.cursorFieldName}${pagination.sortOrder === "asc" ? "_gt" : "_lt"}: ${pagination.cursorValue}`;
+    const cursorKey = `${pagination.cursorFieldName}${pagination.sortOrder === "asc" ? "_gt" : "_lt"}`;
+    conditions += `, ${cursorKey}: "${pagination.cursorValue}"`;
   }
 
-  return conditions
+  return conditions;
 };
