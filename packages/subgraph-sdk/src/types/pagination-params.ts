@@ -1,6 +1,6 @@
 export interface PaginationParams {
+  cursorValue?: string;
   cursorFieldName: string;
-  cursorValue: string;
   sortOrder: "asc" | "desc";
   first: string | number;
 }
