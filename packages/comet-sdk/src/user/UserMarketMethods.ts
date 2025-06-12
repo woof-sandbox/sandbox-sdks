@@ -277,7 +277,7 @@ export namespace UserMarketMethods {
     return availableToBorrow.toString();
   }
 
-  function customUtilization(totalBorrow: number, totalSupply: number): bigint {
+  function customUtilization(totalBorrow: bigint, totalSupply: bigint): bigint {
     return DataUtils.toBigNumber((totalBorrow / totalSupply).toString(), 18);
   }
 
@@ -288,13 +288,12 @@ export namespace UserMarketMethods {
     totalBorrowed: bigint,
     curvePresets: ICurve,
   ) {
-    const totalSupply = Number(
+    const totalSupply =
       totalSupplied +
-        DataUtils.toBigNumber(userSupplyValue, Number(baseToken.decimals)),
-    );
+      DataUtils.toBigNumber(userSupplyValue, Number(baseToken.decimals));
 
     return MarketMethods.getApr(
-      customUtilization(Number(totalBorrowed), totalSupply),
+      customUtilization(totalBorrowed, totalSupply),
       curvePresets.supplyKink,
       curvePresets.supplyPerYearInterestRateBase,
       curvePresets.supplyPerYearInterestRateSlopeLow,
@@ -309,12 +308,12 @@ export namespace UserMarketMethods {
     totalBorrowed: bigint,
     curvePresets: ICurve,
   ) {
-    const totalBorrow = Number(
+    const totalBorrow =
       totalBorrowed +
-        DataUtils.toBigNumber(userBorrowValue, Number(baseToken.decimals)),
-    );
+      DataUtils.toBigNumber(userBorrowValue, Number(baseToken.decimals));
+
     return MarketMethods.getApr(
-      customUtilization(totalBorrow, Number(totalSupplied)),
+      customUtilization(totalBorrow, totalSupplied),
       curvePresets.borrowKink,
       curvePresets.borrowPerYearInterestRateBase,
       curvePresets.borrowPerYearInterestRateSlopeLow,

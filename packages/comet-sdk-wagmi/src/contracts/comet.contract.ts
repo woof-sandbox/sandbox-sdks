@@ -197,8 +197,8 @@ export class CometContract extends WagmiContract {
     return this.getCall("baseTrackingSupplySpeed");
   }
 
-  getBaseIndexScaleCall(): ContractFunctionParameters {
+  getBaseScaleCall(): ContractFunctionParameters {
     // Requires additional ABI. Works while it is not showing on scan
-    return this.getCall("baseIndexScale");
+    return this.getCall("baseScale");
   }
 }
