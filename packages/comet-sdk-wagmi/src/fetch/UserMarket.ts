@@ -116,6 +116,7 @@ export async function fetchUserMarkets(
           );
 
           const userMarket = new UserMarket({
+            chain,
             borrowMinAmount,
             borrowBalance,
             supplyBalance,
@@ -230,6 +231,7 @@ export async function fetchUserMarket(
   );
 
   const userMarket = new UserMarket({
+    chain: chainId,
     borrowMinAmount,
     borrowBalance,
     supplyBalance,

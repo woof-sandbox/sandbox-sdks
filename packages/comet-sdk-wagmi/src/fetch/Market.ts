@@ -44,6 +44,7 @@ export async function fetchMarketMock(
   });
   //
   return new Market({
+    chain: chainId,
     borrowMinAmount,
     cometAddress,
     utilization,
@@ -102,6 +103,7 @@ export async function fetchMarket(
   const borrowMinAmount = WagmiUtils.resultOrThrow<bigint>(marketData[6]);
 
   return new Market({
+    chain: chainId,
     cometAddress: cometProxyAddress,
     borrowMinAmount,
     utilization,
