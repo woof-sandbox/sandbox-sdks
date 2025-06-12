@@ -69,7 +69,6 @@ export namespace MarketMethods {
 
     return utilizationArray.map(
       (utilizationNumber): IMarketInterestRateModel => {
-        console.log("--utilization--", utilization);
         const currentUtilization = parseUnits(
           (utilizationNumber === Math.round(utilization)
             ? utilization
