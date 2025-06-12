@@ -27,10 +27,10 @@ const marketsArbitrum = [
   },
 ];
 const marketsSepolia = [
-  {
-    address: '0xebd83DD60944Aaf935a0765ddaB5422310f520EB',
-    name: 'BaseSep',
-  },
+  // {
+  //   address: '0xebd83DD60944Aaf935a0765ddaB5422310f520EB',
+  //   name: 'BaseSep',
+  // },
   {
     address: '0x752cbab5343ad101144d0dfc6ebc2d5e40bccca8',
     name: 'second',
@@ -132,6 +132,12 @@ function App() {
       setViewError(error);
     }
   };
+
+  useEffect(() => {
+    if (currentMarket) {
+      console.log('--data--', currentMarket.interestRateChartData);
+    }
+  }, [currentMarket]);
 
   return (
     <>

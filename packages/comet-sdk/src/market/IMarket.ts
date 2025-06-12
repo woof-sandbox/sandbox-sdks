@@ -3,6 +3,7 @@ import type { IMarketProposalTx } from "./IMarketProposalTx";
 
 export interface IMarket {
   // mock: USDT
+  chain: number;
   cometAddress: string; // mock: 0x3Afdc9BCA9213A35503b077a6072F3D0d5AB0840
   utilization: bigint; // mock: 622155096290286592
   supplyRate: bigint; // mock: 1065334068

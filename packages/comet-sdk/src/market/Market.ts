@@ -5,6 +5,7 @@ import type { IMarketProposalTx } from "./IMarketProposalTx";
 import { MarketMethods } from "./MarketMethods";
 
 export class Market implements IMarket {
+  public chain: number;
   public cometAddress: string;
   public utilization: bigint;
   public supplyRate: bigint;
@@ -30,6 +31,7 @@ export class Market implements IMarket {
   public rewardTokens: IToken[];
 
   constructor(marketData: IMarket) {
+    this.chain = marketData.chain;
     this.cometAddress = marketData.cometAddress;
     this.utilization = marketData.utilization;
     this.supplyRate = marketData.supplyRate;

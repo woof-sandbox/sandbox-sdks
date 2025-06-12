@@ -69,6 +69,7 @@ export namespace MarketMethods {
 
     return utilizationArray.map(
       (utilizationNumber): IMarketInterestRateModel => {
+        console.log("--utilization--", utilization);
         const currentUtilization = parseUnits(
           (utilizationNumber === Math.round(utilization)
             ? utilization
@@ -330,7 +331,10 @@ export namespace MarketMethods {
   }
 
   export function getUtilization(utilization: bigint): number {
-    return Number(DataUtils.fromBigNumber(utilization, 18)) * 100;
+    const percent = Number(DataUtils.fromBigNumber(utilization, 18)) * 100;
+
+    // Avoid extremely small values that can break logic
+    return percent < 1e-5 ? 0 : percent;
   }
 
   export function totalBorrowUSD(
