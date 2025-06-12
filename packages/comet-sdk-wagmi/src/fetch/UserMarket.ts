@@ -75,7 +75,7 @@ export async function fetchUserMarkets(
               baseTokenContract.getBalanceOfCall(userAddress),
               baseTokenContract.getBalanceOfCall(cometProxyAddress),
               comet.getDecimalsCall(), // ?: not in use
-              comet.getBaseIndexScaleCall(), // ?: not in use
+              comet.getBaseScaleCall(), // ?: not in use
               comet.getTotalSupplyCall(),
               comet.getTotalBorrowCall(),
               comet.getPriceCall(baseTokenPriceFeed), // ?: not in use
@@ -193,7 +193,7 @@ export async function fetchUserMarket(
       baseTokenContract.getBalanceOfCall(userAddress),
       baseTokenContract.getBalanceOfCall(cometProxyAddress),
       comet.getDecimalsCall(), // ?: not in use
-      comet.getBaseIndexScaleCall(), // ?: not in use
+      comet.getBaseScaleCall(), // ?: not in use
       comet.getTotalSupplyCall(),
       comet.getTotalBorrowCall(),
       comet.getPriceCall(baseTokenPriceFeed), // ?: not in use

@@ -28,8 +28,12 @@ const marketsArbitrum = [
 ];
 const marketsSepolia = [
   {
-    address: '0xf5fcb7448cc0c5794e576cccc031056e3dde74f5',
+    address: '0xebd83DD60944Aaf935a0765ddaB5422310f520EB',
     name: 'BaseSep',
+  },
+  {
+    address: '0x752cbab5343ad101144d0dfc6ebc2d5e40bccca8',
+    name: 'second',
   },
 ];
 

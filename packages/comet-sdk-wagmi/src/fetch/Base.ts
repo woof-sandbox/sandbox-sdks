@@ -70,7 +70,7 @@ export async function fetchBase(
       comet.getBaseMinForRewardsCall(),
       comet.getBaseTrackingBorrowSpeedCall(),
       comet.getBaseTrackingSupplySpeedCall(),
-      comet.getBaseIndexScaleCall(),
+      comet.getBaseScaleCall(),
     ],
   });
 
