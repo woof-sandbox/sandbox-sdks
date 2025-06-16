@@ -1,160 +1,5 @@
 export const cometAbi = [
   {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "governor",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "pauseGuardian",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "baseToken",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "baseTokenPriceFeed",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "extensionDelegate",
-            type: "address",
-          },
-          {
-            internalType: "uint64",
-            name: "supplyKink",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "supplyPerYearInterestRateSlopeLow",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "supplyPerYearInterestRateSlopeHigh",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "supplyPerYearInterestRateBase",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "borrowKink",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "borrowPerYearInterestRateSlopeLow",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "borrowPerYearInterestRateSlopeHigh",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "borrowPerYearInterestRateBase",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "storeFrontPriceFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "trackingIndexScale",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "baseTrackingSupplySpeed",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "baseTrackingBorrowSpeed",
-            type: "uint64",
-          },
-          {
-            internalType: "uint104",
-            name: "baseMinForRewards",
-            type: "uint104",
-          },
-          {
-            internalType: "uint104",
-            name: "baseBorrowMin",
-            type: "uint104",
-          },
-          {
-            internalType: "uint104",
-            name: "targetReserves",
-            type: "uint104",
-          },
-          {
-            components: [
-              {
-                internalType: "address",
-                name: "asset",
-                type: "address",
-              },
-              {
-                internalType: "address",
-                name: "priceFeed",
-                type: "address",
-              },
-              {
-                internalType: "uint8",
-                name: "decimals",
-                type: "uint8",
-              },
-              {
-                internalType: "uint64",
-                name: "borrowCollateralFactor",
-                type: "uint64",
-              },
-              {
-                internalType: "uint64",
-                name: "liquidateCollateralFactor",
-                type: "uint64",
-              },
-              {
-                internalType: "uint64",
-                name: "liquidationFactor",
-                type: "uint64",
-              },
-              {
-                internalType: "uint128",
-                name: "supplyCap",
-                type: "uint128",
-              },
-            ],
-            internalType: "struct CometConfiguration.AssetConfig[]",
-            name: "assetConfigs",
-            type: "tuple[]",
-          },
-        ],
-        internalType: "struct CometConfiguration.Configuration",
-        name: "config",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
     inputs: [],
     name: "Absurd",
     type: "error",
@@ -181,11 +26,6 @@ export const cometAbi = [
   },
   {
     inputs: [],
-    name: "BadMinimum",
-    type: "error",
-  },
-  {
-    inputs: [],
     name: "BadPrice",
     type: "error",
   },
@@ -197,6 +37,11 @@ export const cometAbi = [
   {
     inputs: [],
     name: "BorrowTooSmall",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "IncorrectInitialization",
     type: "error",
   },
   {
@@ -235,6 +80,22 @@ export const cometAbi = [
     type: "error",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "currrentTimestamp",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "unlockTimestamp",
+        type: "uint256",
+      },
+    ],
+    name: "Locked",
+    type: "error",
+  },
+  {
     inputs: [],
     name: "NegativeNumber",
     type: "error",
@@ -262,6 +123,11 @@ export const cometAbi = [
   {
     inputs: [],
     name: "Paused",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "ReentrantCallBlocked",
     type: "error",
   },
   {
@@ -433,6 +299,31 @@ export const cometAbi = [
       },
     ],
     name: "PauseAction",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "baseTrackingSupplySpeed",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "baseTrackingBorrowSpeed",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "dao_",
+        type: "bool",
+      },
+    ],
+    name: "SpeedsChanged",
     type: "event",
   },
   {
@@ -661,29 +552,6 @@ export const cometAbi = [
     inputs: [
       {
         internalType: "address",
-        name: "manager",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "approveThis",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "account",
         type: "address",
       },
@@ -890,8 +758,33 @@ export const cometAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "decimals",
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    name: "collateralAssetAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "collateralAssetIndex",
     outputs: [
       {
         internalType: "uint8",
@@ -903,8 +796,57 @@ export const cometAbi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "collateralAssets",
+    outputs: [
+      {
+        internalType: "address",
+        name: "collateralToken",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "priceFeed",
+        type: "address",
+      },
+      {
+        internalType: "uint128",
+        name: "supplyCap",
+        type: "uint128",
+      },
+      {
+        internalType: "uint64",
+        name: "borrowCollateralFactor",
+        type: "uint64",
+      },
+      {
+        internalType: "uint64",
+        name: "liquidateCollateralFactor",
+        type: "uint64",
+      },
+      {
+        internalType: "uint64",
+        name: "liquidationFactor",
+        type: "uint64",
+      },
+      {
+        internalType: "uint64",
+        name: "scale",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
-    name: "extensionDelegate",
+    name: "configController",
     outputs: [
       {
         internalType: "address",
@@ -913,6 +855,50 @@ export const cometAbi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "extension",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "factory",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_configController",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_ext",
+        type: "address",
+      },
+    ],
+    name: "factoryInit",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -928,13 +914,8 @@ export const cometAbi = [
       {
         components: [
           {
-            internalType: "uint8",
-            name: "offset",
-            type: "uint8",
-          },
-          {
             internalType: "address",
-            name: "asset",
+            name: "collateralToken",
             type: "address",
           },
           {
@@ -943,9 +924,9 @@ export const cometAbi = [
             type: "address",
           },
           {
-            internalType: "uint64",
-            name: "scale",
-            type: "uint64",
+            internalType: "uint128",
+            name: "supplyCap",
+            type: "uint128",
           },
           {
             internalType: "uint64",
@@ -963,12 +944,12 @@ export const cometAbi = [
             type: "uint64",
           },
           {
-            internalType: "uint128",
-            name: "supplyCap",
-            type: "uint128",
+            internalType: "uint64",
+            name: "scale",
+            type: "uint64",
           },
         ],
-        internalType: "struct CometCore.AssetInfo",
+        internalType: "struct IConfigController.CollateralTokenConfig",
         name: "",
         type: "tuple",
       },
@@ -989,13 +970,8 @@ export const cometAbi = [
       {
         components: [
           {
-            internalType: "uint8",
-            name: "offset",
-            type: "uint8",
-          },
-          {
             internalType: "address",
-            name: "asset",
+            name: "collateralToken",
             type: "address",
           },
           {
@@ -1004,9 +980,9 @@ export const cometAbi = [
             type: "address",
           },
           {
-            internalType: "uint64",
-            name: "scale",
-            type: "uint64",
+            internalType: "uint128",
+            name: "supplyCap",
+            type: "uint128",
           },
           {
             internalType: "uint64",
@@ -1024,14 +1000,19 @@ export const cometAbi = [
             type: "uint64",
           },
           {
-            internalType: "uint128",
-            name: "supplyCap",
-            type: "uint128",
+            internalType: "uint64",
+            name: "scale",
+            type: "uint64",
           },
         ],
-        internalType: "struct CometCore.AssetInfo",
+        internalType: "struct IConfigController.CollateralTokenConfig",
         name: "",
         type: "tuple",
+      },
+      {
+        internalType: "uint8",
+        name: "index",
+        type: "uint8",
       },
     ],
     stateMutability: "view",
@@ -1140,19 +1121,6 @@ export const cometAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "governor",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -1177,8 +1145,143 @@ export const cometAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "initializeStorage",
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "baseToken",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "baseTokenCurveId",
+            type: "uint256",
+          },
+          {
+            components: [
+              {
+                internalType: "uint256",
+                name: "baseTrackingSupplySpeed",
+                type: "uint256",
+              },
+              {
+                internalType: "uint256",
+                name: "baseTrackingBorrowSpeed",
+                type: "uint256",
+              },
+              {
+                internalType: "uint256",
+                name: "trackingIndexScale",
+                type: "uint256",
+              },
+              {
+                internalType: "uint256",
+                name: "baseMinForRewards",
+                type: "uint256",
+              },
+            ],
+            internalType: "struct IConfigController.CometOptions",
+            name: "options",
+            type: "tuple",
+          },
+          {
+            components: [
+              {
+                internalType: "address",
+                name: "collateralToken",
+                type: "address",
+              },
+              {
+                internalType: "address",
+                name: "priceFeed",
+                type: "address",
+              },
+              {
+                internalType: "uint128",
+                name: "supplyCap",
+                type: "uint128",
+              },
+              {
+                internalType: "uint64",
+                name: "borrowCollateralFactor",
+                type: "uint64",
+              },
+              {
+                internalType: "uint64",
+                name: "liquidateCollateralFactor",
+                type: "uint64",
+              },
+              {
+                internalType: "uint64",
+                name: "liquidationFactor",
+                type: "uint64",
+              },
+              {
+                internalType: "uint64",
+                name: "scale",
+                type: "uint64",
+              },
+            ],
+            internalType: "struct IConfigController.CollateralTokenConfig[]",
+            name: "collateralTokens",
+            type: "tuple[]",
+          },
+        ],
+        internalType: "struct IConfigController.CometConfig",
+        name: "comet",
+        type: "tuple",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "targetPercent",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "storeFrontPriceFactor",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "minUpdateTime",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxUpdateTime",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "suggestedAmountOfSeedReserves",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "suggestedLockTimeOfSeedReserves",
+            type: "uint256",
+          },
+        ],
+        internalType:
+          "struct ISandboxController.SandboxControllerConfiguration",
+        name: "config",
+        type: "tuple",
+      },
+      {
+        internalType: "address",
+        name: "sandboxController_",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "baseBorrowMin_",
+        type: "uint256",
+      },
+    ],
+    name: "initialize",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1311,40 +1414,6 @@ export const cometAbi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "liquidatorPoints",
-    outputs: [
-      {
-        internalType: "uint32",
-        name: "numAbsorbs",
-        type: "uint32",
-      },
-      {
-        internalType: "uint64",
-        name: "numAbsorbed",
-        type: "uint64",
-      },
-      {
-        internalType: "uint128",
-        name: "approxSpend",
-        type: "uint128",
-      },
-      {
-        internalType: "uint32",
-        name: "_reserved",
-        type: "uint32",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "numAssets",
     outputs: [
@@ -1391,19 +1460,6 @@ export const cometAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "pauseGuardian",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -1417,6 +1473,32 @@ export const cometAbi = [
       },
     ],
     name: "quoteCollateral",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "sandboxController",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "seedReserves",
     outputs: [
       {
         internalType: "uint256",
@@ -1563,6 +1645,19 @@ export const cometAbi = [
   },
   {
     inputs: [],
+    name: "targetPercent",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "targetReserves",
     outputs: [
       {
@@ -1611,14 +1706,9 @@ export const cometAbi = [
     name: "totalsCollateral",
     outputs: [
       {
-        internalType: "uint128",
-        name: "totalSupplyAsset",
-        type: "uint128",
-      },
-      {
-        internalType: "uint128",
-        name: "_reserved",
-        type: "uint128",
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -1742,6 +1832,19 @@ export const cometAbi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "unlockTimestamp",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -1767,14 +1870,9 @@ export const cometAbi = [
         type: "uint64",
       },
       {
-        internalType: "uint16",
+        internalType: "uint24",
         name: "assetsIn",
-        type: "uint16",
-      },
-      {
-        internalType: "uint8",
-        name: "_reserved",
-        type: "uint8",
+        type: "uint24",
       },
     ],
     stateMutability: "view",
@@ -1796,14 +1894,9 @@ export const cometAbi = [
     name: "userCollateral",
     outputs: [
       {
-        internalType: "uint128",
-        name: "balance",
-        type: "uint128",
-      },
-      {
-        internalType: "uint128",
-        name: "_reserved",
-        type: "uint128",
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -1882,24 +1975,6 @@ export const cometAbi = [
         type: "address",
       },
       {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "withdrawReserves",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
         internalType: "address",
         name: "asset",
         type: "address",
@@ -1916,620 +1991,1107 @@ export const cometAbi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "bytes32",
-            name: "name32",
-            type: "bytes32",
-          },
-          {
-            internalType: "bytes32",
-            name: "symbol32",
-            type: "bytes32",
-          },
-        ],
-        internalType: "struct CometConfiguration.ExtConfiguration",
-        name: "config",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "nonpayable",
     type: "constructor",
-  },
-  {
-    inputs: [],
-    name: "BadAmount",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "BadNonce",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "BadSignatory",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidInt104",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidInt256",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidUInt104",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidUInt128",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidUInt64",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidValueS",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidValueV",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "NegativeNumber",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "SignatureExpired",
-    type: "error",
-  },
-  {
-    anonymous: false,
     inputs: [
       {
-        indexed: true,
-        internalType: "address",
-        name: "owner",
-        type: "address",
+        name: "_name32",
+        type: "bytes32",
+        internalType: "bytes32",
       },
       {
-        indexed: true,
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
+        name: "_symbol32",
+        type: "bytes32",
+        internalType: "bytes32",
       },
     ],
-    name: "Approval",
-    type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "manager",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "isAllowed_",
-        type: "bool",
-      },
-    ],
-    name: "allow",
-    outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
   },
   {
+    type: "function",
+    name: "allowBySig",
     inputs: [
       {
-        internalType: "address",
         name: "owner",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "address",
         name: "manager",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "bool",
         name: "isAllowed_",
         type: "bool",
+        internalType: "bool",
       },
       {
-        internalType: "uint256",
         name: "nonce",
         type: "uint256",
+        internalType: "uint256",
       },
       {
-        internalType: "uint256",
         name: "expiry",
         type: "uint256",
+        internalType: "uint256",
       },
       {
-        internalType: "uint8",
         name: "v",
         type: "uint8",
+        internalType: "uint8",
       },
       {
-        internalType: "bytes32",
         name: "r",
         type: "bytes32",
+        internalType: "bytes32",
       },
       {
-        internalType: "bytes32",
         name: "s",
         type: "bytes32",
+        internalType: "bytes32",
       },
     ],
-    name: "allowBySig",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
   },
   {
+    type: "function",
+    name: "allowance",
     inputs: [
       {
-        internalType: "address",
         name: "owner",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "address",
         name: "spender",
         type: "address",
+        internalType: "address",
       },
     ],
-    name: "allowance",
     outputs: [
       {
-        internalType: "uint256",
         name: "",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "approve",
     inputs: [
       {
-        internalType: "address",
         name: "spender",
         type: "address",
+        internalType: "address",
       },
       {
-        internalType: "uint256",
         name: "amount",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
-    name: "approve",
     outputs: [
       {
-        internalType: "bool",
         name: "",
         type: "bool",
+        internalType: "bool",
       },
     ],
     stateMutability: "nonpayable",
-    type: "function",
   },
   {
-    inputs: [],
+    type: "function",
     name: "baseAccrualScale",
+    inputs: [],
     outputs: [
       {
-        internalType: "uint64",
         name: "",
         type: "uint64",
+        internalType: "uint64",
       },
     ],
     stateMutability: "pure",
-    type: "function",
   },
   {
+    type: "function",
+    name: "baseBorrowMin",
     inputs: [],
-    name: "baseIndexScale",
     outputs: [
       {
-        internalType: "uint64",
-        name: "",
-        type: "uint64",
-      },
-    ],
-    stateMutability: "pure",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "baseTrackingAccrued",
-    outputs: [
-      {
-        internalType: "uint64",
-        name: "",
-        type: "uint64",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-    ],
-    name: "collateralBalanceOf",
-    outputs: [
-      {
-        internalType: "uint128",
-        name: "",
-        type: "uint128",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "factorScale",
-    outputs: [
-      {
-        internalType: "uint64",
-        name: "",
-        type: "uint64",
-      },
-    ],
-    stateMutability: "pure",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "manager",
-        type: "address",
-      },
-    ],
-    name: "hasPermission",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "isAllowed",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "liquidatorPoints",
-    outputs: [
-      {
-        internalType: "uint32",
-        name: "numAbsorbs",
-        type: "uint32",
-      },
-      {
-        internalType: "uint64",
-        name: "numAbsorbed",
-        type: "uint64",
-      },
-      {
-        internalType: "uint128",
-        name: "approxSpend",
-        type: "uint128",
-      },
-      {
-        internalType: "uint32",
-        name: "_reserved",
-        type: "uint32",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "maxAssets",
-    outputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "pure",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "name",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "priceScale",
-    outputs: [
-      {
-        internalType: "uint64",
-        name: "",
-        type: "uint64",
-      },
-    ],
-    stateMutability: "pure",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "symbol",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalsBasic",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint64",
-            name: "baseSupplyIndex",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "baseBorrowIndex",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "trackingSupplyIndex",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "trackingBorrowIndex",
-            type: "uint64",
-          },
-          {
-            internalType: "uint104",
-            name: "totalSupplyBase",
-            type: "uint104",
-          },
-          {
-            internalType: "uint104",
-            name: "totalBorrowBase",
-            type: "uint104",
-          },
-          {
-            internalType: "uint40",
-            name: "lastAccrualTime",
-            type: "uint40",
-          },
-          {
-            internalType: "uint8",
-            name: "pauseFlags",
-            type: "uint8",
-          },
-        ],
-        internalType: "struct CometStorage.TotalsBasic",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "totalsCollateral",
-    outputs: [
-      {
-        internalType: "uint128",
-        name: "totalSupplyAsset",
-        type: "uint128",
-      },
-      {
-        internalType: "uint128",
-        name: "_reserved",
-        type: "uint128",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "userBasic",
-    outputs: [
-      {
-        internalType: "int104",
-        name: "principal",
-        type: "int104",
-      },
-      {
-        internalType: "uint64",
-        name: "baseTrackingIndex",
-        type: "uint64",
-      },
-      {
-        internalType: "uint64",
-        name: "baseTrackingAccrued",
-        type: "uint64",
-      },
-      {
-        internalType: "uint16",
-        name: "assetsIn",
-        type: "uint16",
-      },
-      {
-        internalType: "uint8",
-        name: "_reserved",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "userCollateral",
-    outputs: [
-      {
-        internalType: "uint128",
-        name: "balance",
-        type: "uint128",
-      },
-      {
-        internalType: "uint128",
-        name: "_reserved",
-        type: "uint128",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "userNonce",
-    outputs: [
-      {
-        internalType: "uint256",
         name: "",
         type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "view",
-    type: "function",
   },
   {
+    type: "function",
+    name: "baseIndexScale",
     inputs: [],
-    name: "version",
     outputs: [
       {
-        internalType: "string",
         name: "",
-        type: "string",
+        type: "uint64",
+        internalType: "uint64",
+      },
+    ],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    name: "baseMinForRewards",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "view",
+  },
+  {
     type: "function",
+    name: "baseScale",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "baseToken",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "baseTokenPriceFeed",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "baseTrackingAccrued",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint64",
+        internalType: "uint64",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "baseTrackingBorrowSpeed",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "baseTrackingSupplySpeed",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "borrowKink",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "borrowPerSecondInterestRateBase",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "borrowPerSecondInterestRateSlopeHigh",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "borrowPerSecondInterestRateSlopeLow",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "collateralAssetAddress",
+    inputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "uint8",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "collateralAssetIndex",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "uint8",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "collateralAssets",
+    inputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "collateralToken",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "priceFeed",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "supplyCap",
+        type: "uint128",
+        internalType: "uint128",
+      },
+      {
+        name: "borrowCollateralFactor",
+        type: "uint64",
+        internalType: "uint64",
+      },
+      {
+        name: "liquidateCollateralFactor",
+        type: "uint64",
+        internalType: "uint64",
+      },
+      {
+        name: "liquidationFactor",
+        type: "uint64",
+        internalType: "uint64",
+      },
+      {
+        name: "scale",
+        type: "uint64",
+        internalType: "uint64",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "collateralBalanceOf",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "asset",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "configController",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "extension",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "factorScale",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint64",
+        internalType: "uint64",
+      },
+    ],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    name: "factory",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getConfiguration",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        internalType: "struct ICometExtension.Configuration",
+        components: [
+          {
+            name: "configController",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "baseToken",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "baseTokenPriceFeed",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "extensionDelegate",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "supplyKink",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "supplyPerYearInterestRateSlopeLow",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "supplyPerYearInterestRateSlopeHigh",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "supplyPerYearInterestRateBase",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "borrowKink",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "borrowPerYearInterestRateSlopeLow",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "borrowPerYearInterestRateSlopeHigh",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "borrowPerYearInterestRateBase",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "storeFrontPriceFactor",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "trackingIndexScale",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "baseTrackingSupplySpeed",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "baseTrackingBorrowSpeed",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "baseMinForRewards",
+            type: "uint104",
+            internalType: "uint104",
+          },
+          {
+            name: "baseBorrowMin",
+            type: "uint104",
+            internalType: "uint104",
+          },
+          {
+            name: "targetPercent",
+            type: "uint104",
+            internalType: "uint104",
+          },
+          {
+            name: "seedReserves",
+            type: "uint104",
+            internalType: "uint104",
+          },
+          {
+            name: "unlockTimestamp",
+            type: "uint104",
+            internalType: "uint104",
+          },
+          {
+            name: "assetConfigs",
+            type: "tuple[]",
+            internalType: "struct IConfigController.CollateralTokenConfig[]",
+            components: [
+              {
+                name: "collateralToken",
+                type: "address",
+                internalType: "address",
+              },
+              {
+                name: "priceFeed",
+                type: "address",
+                internalType: "address",
+              },
+              {
+                name: "supplyCap",
+                type: "uint128",
+                internalType: "uint128",
+              },
+              {
+                name: "borrowCollateralFactor",
+                type: "uint64",
+                internalType: "uint64",
+              },
+              {
+                name: "liquidateCollateralFactor",
+                type: "uint64",
+                internalType: "uint64",
+              },
+              {
+                name: "liquidationFactor",
+                type: "uint64",
+                internalType: "uint64",
+              },
+              {
+                name: "scale",
+                type: "uint64",
+                internalType: "uint64",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "hasPermission",
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "manager",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "isAllowed",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "maxAssets",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "uint8",
+      },
+    ],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    name: "name",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "numAssets",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "uint8",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "sandboxController",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "seedReserves",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "storeFrontPriceFactor",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "supplyKink",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "supplyPerSecondInterestRateBase",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "supplyPerSecondInterestRateSlopeHigh",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "supplyPerSecondInterestRateSlopeLow",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "symbol",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "targetPercent",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "totalsBasic",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        internalType: "struct CometStorage.TotalsBasic",
+        components: [
+          {
+            name: "baseSupplyIndex",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "baseBorrowIndex",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "trackingSupplyIndex",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "trackingBorrowIndex",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "totalSupplyBase",
+            type: "uint104",
+            internalType: "uint104",
+          },
+          {
+            name: "totalBorrowBase",
+            type: "uint104",
+            internalType: "uint104",
+          },
+          {
+            name: "lastAccrualTime",
+            type: "uint40",
+            internalType: "uint40",
+          },
+          {
+            name: "pauseFlags",
+            type: "uint8",
+            internalType: "uint8",
+          },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "totalsCollateral",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "trackingIndexScale",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "unlockTimestamp",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "userBasic",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "principal",
+        type: "int104",
+        internalType: "int104",
+      },
+      {
+        name: "baseTrackingIndex",
+        type: "uint64",
+        internalType: "uint64",
+      },
+      {
+        name: "baseTrackingAccrued",
+        type: "uint64",
+        internalType: "uint64",
+      },
+      {
+        name: "assetsIn",
+        type: "uint24",
+        internalType: "uint24",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "userCollateral",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "userNonce",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "version",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "event",
+    name: "Approval",
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "spender",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "error",
+    name: "BadAmount",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "BadNonce",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "BadSignatory",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidInt104",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidInt256",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidUInt104",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidUInt128",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidUInt64",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidValueS",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidValueV",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NegativeNumber",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "SignatureExpired",
+    inputs: [],
   },
 ] as const;

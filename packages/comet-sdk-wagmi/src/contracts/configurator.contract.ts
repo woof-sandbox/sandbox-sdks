@@ -5,13 +5,13 @@ import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
 
 export interface AssetConfig {
-  asset: `0x${string}`;
+  collateralToken: `0x${string}`;
   priceFeed: `0x${string}`;
-  decimals: bigint;
   borrowCollateralFactor: bigint;
   liquidateCollateralFactor: bigint;
   liquidationFactor: bigint;
   supplyCap: bigint;
+  scale: bigint;
 }
 
 export interface MarketConfig {

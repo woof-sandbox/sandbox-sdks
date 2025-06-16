@@ -4,6 +4,7 @@ import { cometAbi } from "../abis";
 import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
+import { MarketConfig } from "./configurator.contract";
 
 export class CometContract extends WagmiContract {
   constructor(
@@ -200,5 +201,10 @@ export class CometContract extends WagmiContract {
   getBaseScaleCall(): ContractFunctionParameters {
     // Requires additional ABI. Works while it is not showing on scan
     return this.getCall("baseScale");
+  }
+
+  async getConfiguration(): Promise<MarketConfig> {
+    const configuration = await this.read("getConfiguration");
+    return configuration as MarketConfig;
   }
 }

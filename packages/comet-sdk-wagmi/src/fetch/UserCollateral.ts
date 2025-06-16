@@ -18,25 +18,22 @@ export async function fetchUserCollaterals(
   userAddress: `0x${string}`,
   chainId: WagmiChainId,
 ): Promise<UserCollateral[]> {
-  const configurator = new ConfiguratorContract(
-    Addresses[chainId].configurator,
-    chainId,
-  );
-  const cometConfig = await configurator.getConfiguration(cometProxyAddress);
   const comet = new CometContract(cometProxyAddress, chainId);
+
+  const cometConfig = await comet.getConfiguration();
 
   const multicallBatch: ContractFunctionParameters[] = [];
   for (const config of cometConfig.assetConfigs) {
-    const asset = new Erc20Contract(config.asset, chainId);
+    const asset = new Erc20Contract(config.collateralToken, chainId);
     multicallBatch.push(
       asset.getSymbolCall(),
       asset.getDecimalsCall(),
       asset.getBalanceOfCall(userAddress),
       comet.getPriceCall(config.priceFeed),
-      comet.getUserCollateralCall(userAddress, config.asset),
+      comet.getUserCollateralCall(userAddress, config.collateralToken),
       asset.getBalanceOfCall(cometProxyAddress),
-      comet.getTotalsCollateralCall(config.asset),
-      comet.getCollateralReservesCall(config.asset),
+      comet.getTotalsCollateralCall(config.collateralToken),
+      comet.getCollateralReservesCall(config.collateralToken),
     );
   }
 
@@ -78,7 +75,7 @@ export async function fetchUserCollaterals(
     ++index;
 
     results[i] = new UserCollateral({
-      tokenAddress: config.asset,
+      tokenAddress: config.collateralToken,
       symbol,
       decimals,
       userBalance,

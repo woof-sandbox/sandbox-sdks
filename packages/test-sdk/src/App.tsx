@@ -8,31 +8,31 @@ import { config } from './web3/wagmi';
 import { SandboxController, UserMarket } from '@woof-software/comet-sdk-wagmi';
 import type { WagmiChainId } from '@woof-software/comet-sdk-wagmi/lib';
 
-const marketsArbitrum = [
-  {
-    address: '0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07',
-    name: 'USDT',
-  },
-  {
-    address: '0x6f7D514bbD4aFf3BcD1140B7344b32f063dEe486',
-    name: 'WETH',
-  },
-  {
-    address: '0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf',
-    name: 'USDC',
-  },
-  {
-    address: '0xA5EDBDD9646f8dFF606d7448e414884C7d905dCA',
-    name: 'USDC.e',
-  },
-];
+// const marketsArbitrum = [
+//   {
+//     address: '0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07',
+//     name: 'USDT',
+//   },
+//   {
+//     address: '0x6f7D514bbD4aFf3BcD1140B7344b32f063dEe486',
+//     name: 'WETH',
+//   },
+//   {
+//     address: '0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf',
+//     name: 'USDC',
+//   },
+//   {
+//     address: '0xA5EDBDD9646f8dFF606d7448e414884C7d905dCA',
+//     name: 'USDC.e',
+//   },
+// ];
 const marketsSepolia = [
-  // {
-  //   address: '0xebd83DD60944Aaf935a0765ddaB5422310f520EB',
-  //   name: 'BaseSep',
-  // },
   {
     address: '0x752cbab5343ad101144d0dfc6ebc2d5e40bccca8',
+    name: 'BaseSep',
+  },
+  {
+    address: '0xebd83dd60944aaf935a0765ddab5422310f520eb',
     name: 'second',
   },
 ];
@@ -133,12 +133,6 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    if (currentMarket) {
-      console.log('--data--', currentMarket.interestRateChartData);
-    }
-  }, [currentMarket]);
-
   return (
     <>
       <div
@@ -167,7 +161,7 @@ function App() {
           )}
 
           <select onChange={(e) => handleChangeMarket(e.target.value)}>
-            {marketsArbitrum.map((market) => (
+            {marketsSepolia.map((market) => (
               <option
                 key={market.address}
                 value={market.address}
