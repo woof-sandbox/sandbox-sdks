@@ -4,13 +4,8 @@ import {
   UserCollateral,
 } from "@woof-software/comet-sdk";
 import { type ContractFunctionParameters, formatUnits } from "viem";
-import { Addresses, type WagmiChainId } from "../config";
-import {
-  CometContract,
-  ConfiguratorContract,
-  Erc20Contract,
-  wagmiConfig,
-} from "../contracts";
+import { type WagmiChainId } from "../config";
+import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 
 export async function fetchUserCollaterals(

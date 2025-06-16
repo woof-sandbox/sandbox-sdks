@@ -4,7 +4,40 @@ import { cometAbi } from "../abis";
 import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
-import { MarketConfig } from "./configurator.contract";
+
+export interface AssetConfig {
+  collateralToken: `0x${string}`;
+  priceFeed: `0x${string}`;
+  borrowCollateralFactor: bigint;
+  liquidateCollateralFactor: bigint;
+  liquidationFactor: bigint;
+  supplyCap: bigint;
+  scale: bigint;
+}
+
+export interface MarketConfig {
+  governor: `0x${string}`;
+  pauseGuardian: `0x${string}`;
+  baseToken: `0x${string}`;
+  baseTokenPriceFeed: `0x${string}`;
+  extensionDelegate: `0x${string}`;
+  supplyKink: bigint;
+  supplyPerYearInterestRateSlopeLow: bigint;
+  supplyPerYearInterestRateSlopeHigh: bigint;
+  supplyPerYearInterestRateBase: bigint;
+  borrowKink: bigint;
+  borrowPerYearInterestRateSlopeLow: bigint;
+  borrowPerYearInterestRateSlopeHigh: bigint;
+  borrowPerYearInterestRateBase: bigint;
+  storeFrontPriceFactor: bigint;
+  trackingIndexScale: bigint;
+  baseTrackingSupplySpeed: bigint;
+  baseTrackingBorrowSpeed: bigint;
+  baseMinForRewards: bigint;
+  baseBorrowMin: bigint;
+  targetReserves: bigint;
+  assetConfigs: AssetConfig[];
+}
 
 export class CometContract extends WagmiContract {
   constructor(

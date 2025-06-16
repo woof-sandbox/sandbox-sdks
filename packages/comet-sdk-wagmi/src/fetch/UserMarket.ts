@@ -230,8 +230,6 @@ export async function fetchUserMarket(
     chainId,
   );
 
-  console.log("--collaterals--", collaterals);
-
   const userMarket = new UserMarket({
     chain: chainId,
     borrowMinAmount,
