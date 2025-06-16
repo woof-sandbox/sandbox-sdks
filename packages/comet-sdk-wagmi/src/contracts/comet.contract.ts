@@ -5,6 +5,40 @@ import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
 
+export interface AssetConfig {
+  collateralToken: `0x${string}`;
+  priceFeed: `0x${string}`;
+  borrowCollateralFactor: bigint;
+  liquidateCollateralFactor: bigint;
+  liquidationFactor: bigint;
+  supplyCap: bigint;
+  scale: bigint;
+}
+
+export interface MarketConfig {
+  governor: `0x${string}`;
+  pauseGuardian: `0x${string}`;
+  baseToken: `0x${string}`;
+  baseTokenPriceFeed: `0x${string}`;
+  extensionDelegate: `0x${string}`;
+  supplyKink: bigint;
+  supplyPerYearInterestRateSlopeLow: bigint;
+  supplyPerYearInterestRateSlopeHigh: bigint;
+  supplyPerYearInterestRateBase: bigint;
+  borrowKink: bigint;
+  borrowPerYearInterestRateSlopeLow: bigint;
+  borrowPerYearInterestRateSlopeHigh: bigint;
+  borrowPerYearInterestRateBase: bigint;
+  storeFrontPriceFactor: bigint;
+  trackingIndexScale: bigint;
+  baseTrackingSupplySpeed: bigint;
+  baseTrackingBorrowSpeed: bigint;
+  baseMinForRewards: bigint;
+  baseBorrowMin: bigint;
+  targetReserves: bigint;
+  assetConfigs: AssetConfig[];
+}
+
 export class CometContract extends WagmiContract {
   constructor(
     address: `0x${string}`,
@@ -200,5 +234,10 @@ export class CometContract extends WagmiContract {
   getBaseScaleCall(): ContractFunctionParameters {
     // Requires additional ABI. Works while it is not showing on scan
     return this.getCall("baseScale");
+  }
+
+  async getConfiguration(): Promise<MarketConfig> {
+    const configuration = await this.read("getConfiguration");
+    return configuration as MarketConfig;
   }
 }

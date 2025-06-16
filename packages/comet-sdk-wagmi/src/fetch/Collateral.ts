@@ -1,13 +1,8 @@
 import { multicall } from "@wagmi/core";
 import { Collateral, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
 import { type ContractFunctionParameters, formatUnits } from "viem";
-import { Addresses, type WagmiChainId } from "../config";
-import {
-  CometContract,
-  ConfiguratorContract,
-  Erc20Contract,
-  wagmiConfig,
-} from "../contracts";
+import { type WagmiChainId } from "../config";
+import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 
 export async function fetchCollateralsMocks(
@@ -203,23 +198,20 @@ export async function fetchCollaterals(
   cometProxyAddress: `0x${string}`,
   chainId: WagmiChainId,
 ): Promise<Collateral[]> {
-  const configurator = new ConfiguratorContract(
-    Addresses[chainId].configurator,
-    chainId,
-  );
-  const cometConfig = await configurator.getConfiguration(cometProxyAddress);
   const comet = new CometContract(cometProxyAddress, chainId);
+
+  const cometConfig = await comet.getConfiguration();
 
   const multicallBatch: ContractFunctionParameters[] = [];
   for (const config of cometConfig.assetConfigs) {
-    const asset = new Erc20Contract(config.asset, chainId);
+    const asset = new Erc20Contract(config.collateralToken, chainId);
     multicallBatch.push(
       asset.getSymbolCall(),
       asset.getDecimalsCall(),
       comet.getPriceCall(config.priceFeed),
       asset.getBalanceOfCall(cometProxyAddress),
-      comet.getTotalsCollateralCall(config.asset),
-      comet.getCollateralReservesCall(config.asset),
+      comet.getTotalsCollateralCall(config.collateralToken),
+      comet.getCollateralReservesCall(config.collateralToken),
     );
   }
 
@@ -253,7 +245,7 @@ export async function fetchCollaterals(
 
     results[i] = new Collateral({
       cometBalance,
-      tokenAddress: config.asset,
+      tokenAddress: config.collateralToken,
       symbol,
       decimals,
       totalSupplyAsset,
