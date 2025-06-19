@@ -1,7 +1,7 @@
 import { multicall } from "@wagmi/core";
 import { Collateral, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
 import { type ContractFunctionParameters, formatUnits } from "viem";
-import { type WagmiChainId } from "../config";
+import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 

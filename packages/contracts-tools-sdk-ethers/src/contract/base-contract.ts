@@ -4,7 +4,6 @@ import {
   type Interface,
   type InterfaceAbi,
   type Listener,
-  type LogDescription,
   type Provider,
   type Signer,
   WebSocketProvider,
@@ -22,6 +21,7 @@ import {
   type ContractCall,
   type ContractCallOptions,
   type ContractGetLogsOptions,
+  type ContractLog,
   type ContractOptions,
   type DynamicContractConstructor,
   type StateMutability,
@@ -267,7 +267,10 @@ export class BaseContract {
     };
   }
 
-  public async listenEvent(eventName: string, listener: Listener) {
+  public async listenEvent(
+    eventName: string,
+    listener: Listener,
+  ): Promise<EthersContract> {
     if (!this.isCallable)
       throw CONTRACTS_ERRORS.NON_CALLABLE_CONTRACT_INVOCATION;
     if (!(this.provider instanceof WebSocketProvider))
@@ -281,7 +284,7 @@ export class BaseContract {
     eventsNames: string[] = [],
     toBlock = 0,
     options: ContractGetLogsOptions = {},
-  ) {
+  ): Promise<ContractLog[]> {
     const descriptions = [];
     for await (const description of this.getLogsStream(
       fromBlock,
@@ -300,7 +303,7 @@ export class BaseContract {
     eventsNames: string[] = [],
     toBlock = 0, // Latest by default
     options: ContractGetLogsOptions = {},
-  ): AsyncGenerator<LogDescription, void> {
+  ): AsyncGenerator<ContractLog, void> {
     if (!this.isCallable)
       throw CONTRACTS_ERRORS.NON_CALLABLE_CONTRACT_INVOCATION;
 
@@ -343,7 +346,10 @@ export class BaseContract {
         checkSignals(options.signals);
         const description = this.interface.parseLog(log);
         if (!description) continue;
-        yield description;
+        yield {
+          log,
+          description,
+        };
       }
 
       await waitWithSignals(streamOptions.delayMs, options.signals);
