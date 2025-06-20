@@ -145,7 +145,7 @@ export async function fetchUserMarkets(
             rewardTokens: [], // TODO
           });
 
-          return new UserMarketWrapper(userMarket, config);
+          return new UserMarketWrapper(userMarket, config, chain);
         }),
       );
     },
@@ -259,5 +259,5 @@ export async function fetchUserMarket(
     rewardTokens: [], // TODO
   });
 
-  return new UserMarketWrapper(userMarket, config);
+  return new UserMarketWrapper(userMarket, config, chainId);
 }

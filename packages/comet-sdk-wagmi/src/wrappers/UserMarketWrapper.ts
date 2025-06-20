@@ -57,7 +57,7 @@ export class UserMarketWrapper extends UserMarket {
   private readonly baseTokenContract: Erc20Contract;
   private readonly migrationContract: MigratorContract;
 
-  constructor(userMarket: IUserMarket, config: Config, chainId?: WagmiChainId) {
+  constructor(userMarket: IUserMarket, config: Config, chainId: WagmiChainId) {
     super(userMarket);
     this.config = config;
     this.chainId = chainId;
@@ -316,9 +316,10 @@ export class UserMarketWrapper extends UserMarket {
       );
     });
 
-    const supplyRepayValue =
+    const supplyRepayValue = (
       lendActions.reduce((a, b) => a + Number(b.value), 0) +
-      repayActions.reduce((a, b) => a + Number(b.value), 0).toString();
+      repayActions.reduce((a, b) => a + Number(b.value), 0)
+    ).toString();
 
     if (Boolean(lendActions.length) || Boolean(repayActions.length)) {
       const supplyValue = DataUtils.toBigNumber(
