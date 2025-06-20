@@ -1,6 +1,6 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-import { arbitrum, sepolia } from '@wagmi/core/chains';
+import { sepolia } from '@wagmi/core/chains';
 import { useEffect, useState } from 'react';
 import { useAccount, useTransactionReceipt, useWaitForTransactionReceipt } from 'wagmi';
 import { config } from './web3/wagmi';
@@ -31,10 +31,10 @@ const marketsSepolia = [
     address: '0xdC502E9bad9396b4d3916b4510460C49449D75F5',
     name: 'BaseSep',
   },
-  // {
-  //   address: "0xebd83dd60944aaf935a0765ddab5422310f520eb",
-  //   name: "second",
-  // },
+  {
+    address: '0x82478f6d1dc4d64f4678f55360d5d1a05628059b',
+    name: 'second',
+  },
 ];
 
 function App() {
@@ -246,20 +246,20 @@ function App() {
                   handleFunction(() =>
                     currentMarket?.createAction([
                       {
-                        address: '0x912CE59144191C1204E64559FE8253a0e49E6548',
-                        value: '1.4',
+                        address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
+                        value: '0.001',
                         action: 'supply',
                       },
-                      {
-                        address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-                        value: '0.001',
-                        action: 'withdraw',
-                      },
-                      {
-                        address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
-                        value: '0.4',
-                        action: 'repay',
-                      },
+                      // {
+                      //   address: '0xA512C74c637108FD1Cae88163176480452B1Fb8E',
+                      //   value: '10',
+                      //   action: 'borrow',
+                      // },
+                      // {
+                      //   address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+                      //   value: '0.4',
+                      //   action: 'repay',
+                      // },
                       // {
                       //   address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
                       //   value: '1',
@@ -338,7 +338,7 @@ function App() {
                           isNative: false,
                         },
                       ],
-                      arbitrum.id
+                      sepolia.id
                     )
                   )
                 }
@@ -376,7 +376,7 @@ function App() {
                           isNative: false,
                         },
                       ],
-                      arbitrum.id
+                      sepolia.id
                     )
                   )
                 }
