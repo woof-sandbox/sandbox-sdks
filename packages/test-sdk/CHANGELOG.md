@@ -1,5 +1,11 @@
 # test-sdk
 
+## 0.0.6
+
+### Patch Changes
+
+- Auto-generated changeset from CI
+
 ## 0.0.5
 
 ### Patch Changes
