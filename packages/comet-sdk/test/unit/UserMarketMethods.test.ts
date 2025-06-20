@@ -14,7 +14,7 @@ const mockCollateral = (data = {}) =>
     price: "2000",
     priceFeedAddress: "0xFeed",
     userBalance: 0n,
-    userSupplyBalance: [DataUtils.toBigNumber("1", 18)],
+    userSupplyBalance: DataUtils.toBigNumber("1", 18),
     totalSupplyAsset: [0n],
     collateralReserves: 0n,
     cometBalance: 0n,
@@ -243,7 +243,7 @@ describe("UserMarketMethods", () => {
   it("availableToBorrow: considers available for borrowing", () => {
     const collaterals = [
       mockCollateral({
-        userSupplyBalance: [DataUtils.toBigNumber("10", 18)],
+        userSupplyBalance: DataUtils.toBigNumber("10", 18),
         collateralFactor: BigInt("1000000000000000000"),
       }),
     ];

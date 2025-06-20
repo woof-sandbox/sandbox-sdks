@@ -60,7 +60,7 @@ export namespace UserMarketMethods {
         (collateral) =>
           Number(
             formatUnits(
-              collateral.userSupplyBalance[0] ?? 0n,
+              collateral.userSupplyBalance ?? 0n,
               Number(collateral.decimals),
             ),
           ) *
@@ -87,7 +87,7 @@ export namespace UserMarketMethods {
         return (
           (Number(
             formatUnits(
-              collateral.userSupplyBalance[0] ?? 0n,
+              collateral.userSupplyBalance ?? 0n,
               Number(collateral.decimals),
             ),
           ) +
@@ -111,7 +111,7 @@ export namespace UserMarketMethods {
         (collateral) =>
           Number(
             formatUnits(
-              collateral.userSupplyBalance[0] ?? 0n,
+              collateral.userSupplyBalance ?? 0n,
               Number(collateral.decimals),
             ),
           ) *
@@ -141,7 +141,7 @@ export namespace UserMarketMethods {
         return (
           (Number(
             formatUnits(
-              collateral.userSupplyBalance[0] ?? 0n,
+              collateral.userSupplyBalance ?? 0n,
               Number(collateral.decimals),
             ),
           ) +
@@ -251,7 +251,7 @@ export namespace UserMarketMethods {
         (collateral) =>
           Number(
             formatUnits(
-              collateral.userSupplyBalance[0] ?? 0n,
+              collateral.userSupplyBalance ?? 0n,
               Number(collateral.decimals),
             ),
           ) *

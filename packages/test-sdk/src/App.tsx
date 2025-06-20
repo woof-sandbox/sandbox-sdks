@@ -133,6 +133,14 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    if (!currentMarket) {
+      return;
+    }
+    const result = currentMarket.borrowCapacityMarketUSD;
+    console.log('--result--', result);
+  }, [currentMarket]);
+
   return (
     <>
       <div
