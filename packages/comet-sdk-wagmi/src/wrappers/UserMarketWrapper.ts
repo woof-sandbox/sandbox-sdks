@@ -43,10 +43,10 @@ import {
 } from "../errors/wrappers/user-market-wrapper.errors";
 
 import { type ActionData, ActionType } from "../contracts/entities/actions";
-//import { DataUtils } from "../utils";
 
 // Todo need to find where to get Bulker Address
-const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum
+const bulkerAddress = "0xa3607ff0a0f7bb9571b8a6155d4b32042890aeff"; // arbitrum
+// const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum
 
 export class UserMarketWrapper extends UserMarket {
   private readonly config: Config;

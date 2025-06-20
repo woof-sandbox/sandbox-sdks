@@ -137,7 +137,10 @@ export class CometContract extends WagmiContract {
     bulker: `0x${string}`,
     status: boolean,
   ): Promise<WriteContractReturnType> {
-    return this.write("allow", this.chainId, [bulker, status]);
+    return this.write("approve", this.chainId, [
+      bulker,
+      "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", // MAX amount
+    ]);
   }
 
   getAllowCall(
