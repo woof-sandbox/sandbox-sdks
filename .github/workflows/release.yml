@@ -48,7 +48,25 @@ jobs:
             exit 0
           fi
 
-          changed_packages=$(git diff --name-only HEAD~1...HEAD | grep '^packages/' | cut -d '/' -f2 | sort -u)
+          # changed_packages=$(git diff --name-only HEAD~1...HEAD | grep '^packages/' | cut -d '/' -f2 | sort -u)
+          echo "🧪 Running: git diff --name-only HEAD~1...HEAD"
+          git_diff_output=$(git diff --name-only HEAD~1...HEAD || { echo "❌ git diff failed"; exit 1; })
+          
+          echo "📄 Files changed:"
+          echo "$git_diff_output"
+          
+          echo "🔍 Filtering only files inside 'packages/'..."
+          packages_only=$(echo "$git_diff_output" | grep '^packages/' || true)
+          
+          if [ -z "$packages_only" ]; then
+          echo "🟢 No files in packages/* changed."
+          changed_packages=""
+          else
+          echo "📦 Changed files in packages/:"
+          echo "$packages_only"
+          
+          changed_packages=$(echo "$packages_only" | cut -d '/' -f2 | sort -u)
+          fi
 
           if [ -z "$changed_packages" ]; then
             echo "🟢 No changed packages, skipping release."
