@@ -59,7 +59,7 @@ export async function fetchUserCollaterals(
     const cometBalance = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
 
-    const totalSupplyAsset = WagmiUtils.resultOrThrow<bigint[]>(
+    const totalSupplyAsset = WagmiUtils.resultOrThrow<bigint>(
       assetsData[index]!,
     );
     ++index;

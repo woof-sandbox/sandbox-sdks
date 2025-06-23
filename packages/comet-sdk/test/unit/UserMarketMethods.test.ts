@@ -15,7 +15,7 @@ const mockCollateral = (data = {}) =>
     priceFeedAddress: "0xFeed",
     userBalance: 0n,
     userSupplyBalance: DataUtils.toBigNumber("1", 18),
-    totalSupplyAsset: [0n],
+    totalSupplyAsset: 0n,
     collateralReserves: 0n,
     cometBalance: 0n,
     collateralFactor: BigInt("500000000000000000"),
