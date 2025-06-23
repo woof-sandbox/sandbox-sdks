@@ -278,6 +278,8 @@ export namespace UserMarketMethods {
   }
 
   function customUtilization(totalBorrow: bigint, totalSupply: bigint): bigint {
+    if (totalSupply === 0n) return 0n;
+
     return DataUtils.toBigNumber((totalBorrow / totalSupply).toString(), 18);
   }
 
