@@ -13,14 +13,8 @@
   "license": "MIT",
   "main": "src/index.ts",
   "type": "module",
-  "keywords": [
-    "local",
-    "library",
-    "npm"
-  ],
-  "files": [
-    "lib"
-  ],
+  "keywords": ["local", "library", "npm"],
+  "files": ["lib"],
   "scripts": {
     "prepublish": "$npm_execpath build",
     "build": "tsc --build tsconfig.build.json --force && node ../../scripts/compile/post-compile.js",
