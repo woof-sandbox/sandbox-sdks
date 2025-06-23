@@ -1,7 +1,7 @@
 import type { IToken } from "../IToken";
 
 export interface ICollateral extends IToken {
-  totalSupplyAsset: bigint[];
+  totalSupplyAsset: bigint;
   collateralReserves: bigint;
   cometBalance: bigint; // balance of comet in token
   collateralFactor: bigint; // 0 - only user can edit it, assetInfo -> borrowCollateralFactor, mock: 500000000000000000
