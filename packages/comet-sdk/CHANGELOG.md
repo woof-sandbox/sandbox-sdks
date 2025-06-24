@@ -1,5 +1,17 @@
 # @woof-software/comet-sdk
 
+## 0.0.30
+
+### Patch Changes
+
+- Auto-generated changeset from CI
+
+## 0.0.29
+
+### Patch Changes
+
+- Auto-generated changeset from CI
+
 ## 0.0.28
 
 ### Patch Changes

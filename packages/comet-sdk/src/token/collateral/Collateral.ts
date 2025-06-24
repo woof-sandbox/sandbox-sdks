@@ -9,7 +9,7 @@ export class Collateral extends Token implements ICollateral {
   public supplyCap: bigint;
   public cometBalance: bigint;
   public collateralReserves: bigint;
-  public totalSupplyAsset: bigint[];
+  public totalSupplyAsset: bigint;
 
   constructor(collateralData: ICollateral) {
     super(collateralData);
@@ -26,7 +26,7 @@ export class Collateral extends Token implements ICollateral {
     return CollateralMethods.getTotalSupplyUSD(
       this.decimals,
       this.price,
-      this.totalSupplyAsset[0],
+      this.totalSupplyAsset,
     );
   }
 

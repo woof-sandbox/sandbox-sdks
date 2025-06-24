@@ -12,7 +12,7 @@ export async function fetchCollateralsMocks(
   // for USDt comet
   return [
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 35027723652721944326765n,
       collateralFactor: 500000000000000000n,
@@ -27,7 +27,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0xdbd020CAeF83eFd542f4De03e3cF0C28A4428bd5",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 12117355922641259954364n,
       collateralFactor: 830000000000000000n,
@@ -42,7 +42,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 140523006387n,
       collateralFactor: 800000000000000000n,
@@ -57,7 +57,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0x4E64E54c9f0313852a230782B3ba4B3B0952B499",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 107289863723008177633341n,
       collateralFactor: 680000000000000000n,
@@ -72,7 +72,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0x553303d460EE0afB37EdFf9bE42922D8FF63220e",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 208318770012408717958779n,
       collateralFactor: 730000000000000000n,
@@ -87,7 +87,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0x2c1d072e956AFFC0D435Cb7AC38EF18d24d9127c",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 46928176653511787713918n,
       collateralFactor: 800000000000000000n,
@@ -102,7 +102,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0x023ee795361B28cDbB94e302983578486A0A5f1B",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 14310372018n,
       collateralFactor: 800000000000000000n,
@@ -117,7 +117,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0x2D09142Eae60Fd8BD454a276E95AeBdFFD05722d",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 184999996802880975784n,
       collateralFactor: 760000000000000000n,
@@ -132,7 +132,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0x7b03a016dBC36dB8e05C480192faDcdB0a06bC37",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 452117739980n,
       collateralFactor: 880000000000000000n,
@@ -147,7 +147,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0xe3a409eD15CD53aFdEFdd191ad945cEC528A2496",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 28750977989188964083475517n,
       collateralFactor: 880000000000000000n,
@@ -162,7 +162,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0x403F2083B6E220147f8a8832f0B284B4Ed5777d1",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 1000000000000000000n,
       collateralFactor: 800000000000000000n,
@@ -177,7 +177,7 @@ export async function fetchCollateralsMocks(
       priceFeedAddress: "0x2f7439252Da796Ab9A93f7E478E70DED43Db5B89",
     }),
     new Collateral({
-      totalSupplyAsset: [0n, 0n],
+      totalSupplyAsset: 0n,
       collateralReserves: 0n,
       cometBalance: 11999105242216432177492n,
       collateralFactor: 750000000000000000n,
@@ -234,7 +234,7 @@ export async function fetchCollaterals(
     ++index;
     const cometBalance = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
-    const totalSupplyAsset = WagmiUtils.resultOrThrow<bigint[]>(
+    const totalSupplyAsset = WagmiUtils.resultOrThrow<bigint>(
       assetsData[index]!,
     );
     ++index;
