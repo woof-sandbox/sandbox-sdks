@@ -116,7 +116,8 @@ export class BaseContract {
 
   public get provider(): Provider | null {
     if (!this.driver) return null;
-    return this.driver.provider;
+    if (isSigner(this.driver)) return this.driver.provider;
+    return this.driver as Provider;
   }
 
   public get signer(): Signer | null {
