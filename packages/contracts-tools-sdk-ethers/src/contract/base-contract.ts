@@ -274,8 +274,7 @@ export class BaseContract {
   ): Promise<EthersContract> {
     if (!this.isCallable)
       throw CONTRACTS_ERRORS.NON_CALLABLE_CONTRACT_INVOCATION;
-    if (!(this.provider instanceof WebSocketProvider))
-      throw CONTRACTS_ERRORS.MISSING_WEBSOCKET_PROVIDER;
+    // Removed WS check
 
     return this.contract.on(eventName, listener);
   }

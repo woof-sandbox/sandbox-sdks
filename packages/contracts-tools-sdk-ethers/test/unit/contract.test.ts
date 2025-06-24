@@ -44,7 +44,7 @@ describe("RegistryContract Metadata & Behavior", () => {
     expect(fromWallet).toBeInstanceOf(Wallet);
   });
 
-  test("listening to logs should throw if no WebSocket provider is used", async () => {
+  /*test("listening to logs should throw if no WebSocket provider is used", async () => {
     let error;
     try {
       await registryProvider.listenEvent("", () => {});
@@ -53,5 +53,5 @@ describe("RegistryContract Metadata & Behavior", () => {
     }
 
     expect(error).toEqual(CONTRACTS_ERRORS.MISSING_WEBSOCKET_PROVIDER);
-  });
+  });*/
 });
