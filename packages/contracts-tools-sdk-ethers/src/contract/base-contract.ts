@@ -98,13 +98,13 @@ export class BaseContract {
   constructor(
     abi: Interface | InterfaceAbi,
     address = "0x0000000000000000000000000000000000000000",
-    driver: Signer | Provider,
+    driver?: Signer | Provider,
     options: ContractOptions = {},
   ) {
     this.address = address;
     this.driver = driver;
     this.isCallable = !!address && !!driver;
-    this.isReadonly = !this.isCallable || !isSigner(driver);
+    this.isReadonly = !this.isCallable || !isSigner(driver!);
     this.contract = new EthersContract(address, abi, driver);
     this.contractOptions = {
       staticCallsTimeoutMs: config.contract.staticCalls.timeoutMs,
