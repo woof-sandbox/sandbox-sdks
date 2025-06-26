@@ -6,7 +6,6 @@ import {
   type Listener,
   type Provider,
   type Signer,
-  WebSocketProvider,
 } from "ethers";
 import { config } from "../config";
 import { CONTRACTS_ERRORS } from "../errors";
