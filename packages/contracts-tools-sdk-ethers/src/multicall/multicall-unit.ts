@@ -252,7 +252,7 @@ export class MulticallUnit extends BaseContract {
 
     checkSignals(runOptions.signals);
 
-    const { mutableCalls, mutableTags } = this.splitCalls(
+    const { mutableCalls } = this.splitCalls(
       calls,
       tags,
       options.forceMutability!,
@@ -273,11 +273,9 @@ export class MulticallUnit extends BaseContract {
         mutableCalls.length,
       );
       const iterationCalls = mutableCalls.slice(i, border); // half-opened interval
-      const iterationTags = mutableTags.slice(i, border);
 
       const estimation = await this.estimateMutableCallsBatch(
         iterationCalls,
-        iterationTags,
         runOptions,
       );
       estimates.push(estimation);
@@ -379,7 +377,6 @@ export class MulticallUnit extends BaseContract {
 
   private async estimateMutableCallsBatch(
     iterationCalls: ContractCall[],
-    iterationTags: Tagable[],
     runOptions: MulticallOptions,
   ) {
     return this.estimate(aggregate3, [iterationCalls], {
