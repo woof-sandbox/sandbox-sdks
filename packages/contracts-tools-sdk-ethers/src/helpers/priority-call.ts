@@ -1,4 +1,10 @@
-import type { Contract, FeeData, Provider, Signer } from "ethers";
+import type {
+  Contract,
+  FeeData,
+  Provider,
+  Signer,
+  TransactionResponse,
+} from "ethers";
 import { config } from "../config";
 import type { PriorityCallOptions } from "../types";
 import { checkSignals, createTimeoutSignal } from "../utils";
@@ -10,7 +16,7 @@ export async function priorityCall(
   method: string,
   args: any[] = [],
   options: PriorityCallOptions = {},
-): Promise<any> {
+): Promise<TransactionResponse> {
   const txn = await formTx(provider, signer, contract, method, args, options);
 
   return signer.sendTransaction(txn);

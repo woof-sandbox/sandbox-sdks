@@ -29,10 +29,10 @@ import {
   waitWithSignals,
 } from "../utils";
 import { multicallErrorEventName } from "./multicall-error-event-name";
+import { multicallGenerateTag } from "./multicall-generate-tag";
 import { multicallNormalizeTags } from "./multicall-normalize-tags";
 import { multicallResultEventName } from "./multicall-result-event-name";
 import { multicallSplitCalls } from "./multicall-split-calls";
-import {multicallGenerateTag} from "./multicall-generate-tag";
 
 export type Response = [success: boolean, rawData: string];
 
@@ -84,7 +84,10 @@ export class MulticallUnit extends BaseContract {
     this._lastSuccess = undefined;
   }
 
-  public add(contractCall: ContractCall, tags: MulticallTags = multicallGenerateTag()): MulticallTags {
+  public add(
+    contractCall: ContractCall,
+    tags: MulticallTags = multicallGenerateTag(),
+  ): MulticallTags {
     this._units.set(multicallNormalizeTags(tags), contractCall);
     return tags;
   }
