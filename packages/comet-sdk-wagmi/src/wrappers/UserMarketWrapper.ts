@@ -10,6 +10,7 @@ import {
   ACTION_SUPPLY_TOKEN,
   ACTION_WITHDRAW_ASSET,
   ACTION_WITHDRAW_NATIVE_TOKEN,
+  MAX_UINT,
 } from "../constants";
 import {
   BulkerContract,
@@ -712,8 +713,14 @@ export class UserMarketWrapper extends UserMarket {
     if (supplyBalance < inputAmount) throw OVER_WITHDRAW();
 
     const abiEncodeData = isNative
-      ? this._encodeWithdrawNative(userAddress, isMax ? MAX_UINT : inputAmount)
-      : this._encodeWithdrawSimple(userAddress, isMax ? MAX_UINT : inputAmount);
+      ? this._encodeWithdrawNative(
+          userAddress,
+          isMax ? BigInt(MAX_UINT) : inputAmount,
+        )
+      : this._encodeWithdrawSimple(
+          userAddress,
+          isMax ? BigInt(MAX_UINT) : inputAmount,
+        );
 
     try {
       return await this.bulkerContract.invoke(
@@ -721,7 +728,8 @@ export class UserMarketWrapper extends UserMarket {
           [isNative ? ACTION_WITHDRAW_NATIVE_TOKEN : ACTION_WITHDRAW_ASSET],
           [abiEncodeData],
         ],
-        isNative ? (isMax ? MAX_UINT : inputAmount) : undefined,
+        isNative ? (isMax ? BigInt(MAX_UINT) : inputAmount) : undefined,
+
       );
     } catch (e) {
       throw WITHDRAW_FAILED();
