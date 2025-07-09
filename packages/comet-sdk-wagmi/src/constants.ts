@@ -12,3 +12,6 @@ export const ACTION_WITHDRAW_NATIVE_TOKEN =
 
 export const ACTION_WITHDRAW_ASSET =
   "0x414354494f4e5f57495448445241575f41535345540000000000000000000000";
+
+export const MAX_UINT =
+  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";

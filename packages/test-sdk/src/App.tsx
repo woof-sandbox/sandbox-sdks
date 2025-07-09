@@ -1,16 +1,12 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-import { sepolia } from "@wagmi/core/chains";
-import { useEffect, useState } from "react";
-import {
-  useAccount,
-  useTransactionReceipt,
-  useWaitForTransactionReceipt,
-} from "wagmi";
-import { config } from "./web3/wagmi";
+import { sepolia } from '@wagmi/core/chains';
+import { useEffect, useState } from 'react';
+import { useAccount, useTransactionReceipt, useWaitForTransactionReceipt } from 'wagmi';
+import { config } from './web3/wagmi';
 
-import { SandboxController, UserMarket } from "@woof-software/comet-sdk-wagmi";
-import type { WagmiChainId } from "@woof-software/comet-sdk-wagmi/lib";
+import { SandboxController, UserMarket, Market } from '@woof-software/comet-sdk-wagmi';
+import type { WagmiChainId } from '@woof-software/comet-sdk-wagmi/lib';
 
 // const marketsArbitrum = [
 //   {
@@ -32,21 +28,19 @@ import type { WagmiChainId } from "@woof-software/comet-sdk-wagmi/lib";
 // ];
 const marketsSepolia = [
   {
-    address: "0xdC502E9bad9396b4d3916b4510460C49449D75F5",
-    name: "BaseSep",
+    address: '0xdC502E9bad9396b4d3916b4510460C49449D75F5',
+    name: 'BaseSep',
   },
   {
-    address: "0x82478f6d1dc4d64f4678f55360d5d1a05628059b",
-    name: "second",
+    address: '0x82478f6d1dc4d64f4678f55360d5d1a05628059b',
+    name: 'second',
   },
 ];
 
 function App() {
   const { address } = useAccount();
 
-  const [selectedAddress, setSelectedAddress] = useState<string>(
-    marketsSepolia[0].address,
-  );
+  const [selectedAddress, setSelectedAddress] = useState<string>(marketsSepolia[0].address);
 
   const [currentMarket, setCurrentMarket] = useState<any>(null);
   const [currentConfigController, setConfigController] = useState<any>(null);
@@ -59,32 +53,40 @@ function App() {
   const { isLoading: isLoadingTransactionReceipt } = useTransactionReceipt({
     hash: transactionHash,
   });
-  const {
-    isLoading: isLoadingWaitForTransactionReceipt,
-    isSuccess: isSuccessToken,
-  } = useWaitForTransactionReceipt({
-    hash: transactionHash,
-  });
+  const { isLoading: isLoadingWaitForTransactionReceipt, isSuccess: isSuccessToken } =
+    useWaitForTransactionReceipt({
+      hash: transactionHash,
+    });
 
-  const isAbsoluteLoading =
-    isLoadingTransactionReceipt || isLoadingWaitForTransactionReceipt;
+  const isAbsoluteLoading = isLoadingTransactionReceipt || isLoadingWaitForTransactionReceipt;
 
   const handleGetUserMarket = async () => {
     if (!address) {
       return;
     }
     try {
+      const markets123 = await Market.fetchMarkets(
+        {
+          [sepolia.id]: [
+            '0xdC502E9bad9396b4d3916b4510460C49449D75F5',
+            '0x82478f6d1dc4d64f4678f55360d5d1a05628059b',
+          ],
+        },
+        config
+      );
+      console.log('--markets123--', markets123);
+
       const market = await UserMarket.fetchUserMarket(
         selectedAddress as `0x${string}`,
         address,
         sepolia.id as WagmiChainId,
-        config,
+        config
       );
       // arbitrum.id as WagmiChainId,
       setCurrentMarket(market);
-      console.log("Market data:", market);
+      console.log('Market data:', market);
     } catch (error) {
-      console.error("Error fetching market:", error);
+      console.error('Error fetching market:', error);
       setViewError(error);
     }
   };
@@ -107,7 +109,7 @@ function App() {
 
       setTransactionHash(result);
     } catch (error: any) {
-      const message = error?.message || "Something went wrong";
+      const message = error?.message || 'Something went wrong';
       setViewError(message);
     }
   };
@@ -130,14 +132,14 @@ function App() {
   const handleGetSandBoxControllerData = async () => {
     try {
       const sandboxController = await SandboxController.fetch(
-        "0xaf39746D87b067267B23C2169BF727F237f303b9",
+        '0xaf39746D87b067267B23C2169BF727F237f303b9',
         sepolia.id,
-        config,
+        config
       );
       setSandBoxController(sandboxController);
-      console.log("sandboxController data:", sandboxController);
+      console.log('sandboxController data:', sandboxController);
     } catch (error) {
-      console.error("Error fetching sandboxController:", error);
+      console.error('Error fetching sandboxController:', error);
       setViewError(error);
     }
   };
@@ -147,45 +149,43 @@ function App() {
       return;
     }
     const result = currentMarket.borrowCapacityMarketUSD;
-    console.log("--result--", result);
+
+    console.log('--result--', result);
   }, [currentMarket]);
 
   return (
     <>
       <div
         style={{
-          color: "#000",
-          display: "flex",
-          gap: "20px",
-          flexDirection: "column",
+          color: '#000',
+          display: 'flex',
+          gap: '20px',
+          flexDirection: 'column',
         }}
       >
-        <header style={{ display: "flex", justifyContent: "space-between" }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between' }}>
           <h1>Markets Data</h1>
           <ConnectButton />
         </header>
 
         {!address && <h2>Connect Wallet</h2>}
 
-        <div style={{ display: "flex", gap: "10px" }}>
-          {address && (
-            <button onClick={handleGetUserMarket}>get User Market Data</button>
-          )}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          {address && <button onClick={handleGetUserMarket}>get User Market Data</button>}
 
           {address && (
-            <button onClick={handleGetConfigControllerData}>
-              get Config Controller Data
-            </button>
+            <button onClick={handleGetConfigControllerData}>get Config Controller Data</button>
           )}
           {address && (
-            <button onClick={handleGetSandBoxControllerData}>
-              get SandBox Controller Data
-            </button>
+            <button onClick={handleGetSandBoxControllerData}>get SandBox Controller Data</button>
           )}
 
           <select onChange={(e) => handleChangeMarket(e.target.value)}>
             {marketsSepolia.map((market) => (
-              <option key={market.address} value={market.address}>
+              <option
+                key={market.address}
+                value={market.address}
+              >
                 {market.name}
               </option>
             ))}
@@ -195,9 +195,9 @@ function App() {
         {viewError && (
           <div
             style={{
-              border: "1px solid #ffaaaa",
-              padding: "10px",
-              borderRadius: "20px",
+              border: '1px solid #ffaaaa',
+              padding: '10px',
+              borderRadius: '20px',
             }}
           >
             <h2>Error Area</h2>
@@ -209,9 +209,9 @@ function App() {
         {isAbsoluteLoading && (
           <div
             style={{
-              border: "1px solid #FFFF00",
-              padding: "10px",
-              borderRadius: "20px",
+              border: '1px solid #FFFF00',
+              padding: '10px',
+              borderRadius: '20px',
             }}
           >
             <h2>Loading...</h2>
@@ -221,9 +221,9 @@ function App() {
         {isSuccessToken && (
           <div
             style={{
-              border: "1px solid #008000",
-              padding: "10px",
-              borderRadius: "20px",
+              border: '1px solid #008000',
+              padding: '10px',
+              borderRadius: '20px',
             }}
           >
             <h2>Successful...</h2>
@@ -231,7 +231,7 @@ function App() {
         )}
 
         {currentMarket && (
-          <div style={{ display: "flex", gap: "10px" }}>
+          <div style={{ display: 'flex', gap: '10px' }}>
             <table>
               <thead>
                 <tr>
@@ -250,15 +250,15 @@ function App() {
                   <th>{currentMarket?.supplyBalance}</th>
                   <th>{currentMarket?.borrowBalance}</th>
                   <th>{currentMarket?.totalBorrow}</th>
-                  <th>{currentMarket?.earnAprCustom("100000000")}</th>
+                  <th>{currentMarket?.earnAprCustom('100000000')}</th>
                 </tr>
               </tbody>
             </table>
             <div
               style={{
-                display: "grid",
-                gap: "10px",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                display: 'grid',
+                gap: '10px',
+                gridTemplateColumns: 'repeat(3, 1fr)',
               }}
             >
               <button
@@ -266,9 +266,9 @@ function App() {
                   handleFunction(() =>
                     currentMarket?.createAction([
                       {
-                        address: "0xb01f67f936b018edf565311A0ab55F3e1A05dBaf",
-                        value: "0.001",
-                        action: "supply",
+                        address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
+                        value: '0.001',
+                        action: 'supply',
                       },
                       // {
                       //   address: '0xA512C74c637108FD1Cae88163176480452B1Fb8E',
@@ -285,62 +285,40 @@ function App() {
                       //   value: '1',
                       //   action: 'borrow',
                       // },
-                    ]),
+                    ])
                   )
                 }
               >
                 call custom action
               </button>
 
-              <button
-                onClick={() =>
-                  handleFunction(() => currentMarket?.supplyMarket("0.01"))
-                }
-              >
+              <button onClick={() => handleFunction(() => currentMarket?.supplyMarket('0.01'))}>
                 supply market 0.01
               </button>
 
               <button
                 onClick={() =>
-                  handleFunction(() =>
-                    currentMarket?.supplyMarket("0.00000038307", true),
-                  )
+                  handleFunction(() => currentMarket?.supplyMarket('0.00000038307', true))
                 }
               >
                 supply base token 0.00000038307
               </button>
               <button
-                onClick={() =>
-                  handleFunction(() =>
-                    currentMarket?.approveMarketBaseToken("0.01"),
-                  )
-                }
+                onClick={() => handleFunction(() => currentMarket?.approveMarketBaseToken('0.01'))}
               >
                 approve market base asset 0.01
               </button>
 
-              <button
-                onClick={() =>
-                  handleFunction(() => currentMarket?.allowMarket())
-                }
-              >
+              <button onClick={() => handleFunction(() => currentMarket?.allowMarket())}>
                 allow market
               </button>
 
-              <button
-                onClick={() =>
-                  handleFunction(() => currentMarket?.borrowMarket("0.01"))
-                }
-              >
+              <button onClick={() => handleFunction(() => currentMarket?.borrowMarket('0.01'))}>
                 borrow market 0.01
               </button>
 
               <button
-                onClick={() =>
-                  handleFunction(() =>
-                    currentMarket?.withdrawMarket("0.01", false),
-                  )
-                }
+                onClick={() => handleFunction(() => currentMarket?.withdrawMarket('0.01', false))}
               >
                 withdraw market 0.01
               </button>
@@ -348,11 +326,7 @@ function App() {
               <button
                 onClick={() =>
                   handleFunction(() =>
-                    currentMarket?.withdrawMarket(
-                      "0.000200000229887368",
-                      false,
-                      true,
-                    ),
+                    currentMarket?.withdrawMarket('0.000200000229887368', false, true)
                   )
                 }
               >
@@ -361,9 +335,7 @@ function App() {
 
               <button
                 onClick={() =>
-                  handleFunction(() =>
-                    currentMarket?.supplyMarket("0.000071161671297822", true),
-                  )
+                  handleFunction(() => currentMarket?.supplyMarket('0.000071161671297822', true))
                 }
               >
                 repay market in Native 0.000071161671297822
@@ -373,23 +345,21 @@ function App() {
                 onClick={() =>
                   handleFunction(() =>
                     currentMarket?.borrowAndSupplyMarket(
-                      "0.5",
+                      '0.5',
                       [
                         {
-                          tokenAddress:
-                            "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-                          inputAmount: "0.0003",
+                          tokenAddress: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+                          inputAmount: '0.0003',
                           isNative: true,
                         },
                         {
-                          tokenAddress:
-                            "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-                          inputAmount: "0.0002",
+                          tokenAddress: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+                          inputAmount: '0.0002',
                           isNative: false,
                         },
                       ],
-                      sepolia.id,
-                    ),
+                      sepolia.id
+                    )
                   )
                 }
               >
@@ -400,10 +370,10 @@ function App() {
                 onClick={() =>
                   handleFunction(() =>
                     currentMarket?.approveToken(
-                      "0x912ce59144191c1204e64559fe8253a0e49e6548",
-                      "0.01",
-                      18,
-                    ),
+                      '0x912ce59144191c1204e64559fe8253a0e49e6548',
+                      '0.01',
+                      18
+                    )
                   )
                 }
               >
@@ -416,20 +386,18 @@ function App() {
                     currentMarket?.supplyCollaterals(
                       [
                         {
-                          tokenAddress:
-                            "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-                          inputAmount: "0.0003",
+                          tokenAddress: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+                          inputAmount: '0.0003',
                           isNative: true,
                         },
                         {
-                          tokenAddress:
-                            "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-                          inputAmount: "0.0001",
+                          tokenAddress: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+                          inputAmount: '0.0001',
                           isNative: false,
                         },
                       ],
-                      sepolia.id,
-                    ),
+                      sepolia.id
+                    )
                   )
                 }
               >
@@ -440,11 +408,10 @@ function App() {
                   handleFunction(() =>
                     currentMarket?.withDrawCollateral([
                       {
-                        tokenAddress:
-                          "0x912ce59144191c1204e64559fe8253a0e49e6548",
-                        inputAmount: "0.01",
+                        tokenAddress: '0x912ce59144191c1204e64559fe8253a0e49e6548',
+                        inputAmount: '0.01',
                       },
-                    ]),
+                    ])
                   )
                 }
               >
@@ -460,17 +427,13 @@ function App() {
 
           <div
             style={{
-              display: "grid",
-              gap: "10px",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              display: 'grid',
+              gap: '10px',
+              gridTemplateColumns: 'repeat(3, 1fr)',
             }}
           >
             <button
-              onClick={() =>
-                handleFunction(() =>
-                  currentConfigController?.proposeCurator(address),
-                )
-              }
+              onClick={() => handleFunction(() => currentConfigController?.proposeCurator(address))}
             >
               propose curator ${address}
             </button>

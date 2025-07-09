@@ -129,3 +129,84 @@ export async function fetchMarket(
     rewardTokens: [], // TODO
   });
 }
+
+export async function fetchMarkets(
+  marketConfig: Record<number, `0x${string}`[]>,
+  config: Config,
+): Promise<Market[]> {
+  const marketInChain = Object.entries(marketConfig).flatMap(
+    async ([chainId, marketsComets]) => {
+      const chain = Number(chainId) as WagmiChainId;
+
+      return Promise.all(
+        marketsComets.map(async (cometProxyAddress, index) => {
+          const comet = new CometContract(cometProxyAddress, chain);
+
+          const utilization = await comet.getUtilization();
+          const collaterals = await fetchCollaterals(cometProxyAddress, chain);
+          const baseToken = await fetchBase(cometProxyAddress, chain, config);
+          const baseContract = new Erc20Contract(
+            baseToken.tokenAddress as `0x${string}`,
+            chain,
+          );
+
+          const marketData = await multicall(wagmiConfig, {
+            chainId: chain,
+            contracts: [
+              comet.getBorrowRateCall(utilization),
+              comet.getSupplyRateCall(utilization),
+              comet.getTotalBorrowCall(),
+              comet.getTotalSupplyCall(),
+              comet.getReservesCall(),
+              baseContract.getBalanceOfCall(cometProxyAddress),
+              comet.getBaseBorrowMinCall(),
+            ],
+          });
+          const borrowRate = WagmiUtils.resultOrThrow<bigint>(marketData[0]);
+          const supplyRate = WagmiUtils.resultOrThrow<bigint>(marketData[1]);
+          const totalBorrow = WagmiUtils.resultOrThrow<bigint>(marketData[2]);
+          const totalSupply = WagmiUtils.resultOrThrow<bigint>(marketData[3]);
+          const totalReserves = WagmiUtils.resultOrThrow<bigint>(marketData[4]);
+          const availableLiquidity = WagmiUtils.resultOrThrow<bigint>(
+            marketData[5],
+          );
+          const borrowMinAmount = WagmiUtils.resultOrThrow<bigint>(
+            marketData[6],
+          );
+
+          return new Market({
+            chain: chain,
+            cometAddress: cometProxyAddress,
+            borrowMinAmount,
+            utilization,
+            supplyRate,
+            borrowRate,
+            //
+            totalBorrow,
+            totalSupply,
+            totalReserves,
+            baseToken,
+            collaterals,
+            availableLiquidity,
+            // TODO: update after contracts
+            configControllerAddress:
+              "0x0000000000000000000000000000000000000000", // TODO
+            ownerAddress: "0x0000000000000000000000000000000000000000", // TODO
+            guardianAddress: "0x0000000000000000000000000000000000000000", // TODO
+            curatorAddress: "0x0000000000000000000000000000000000000000", // TODO
+            curatorFee: 0, // TODO
+            //
+            proposals: [], // TODO
+            //
+            compToken: await fetchBaseMock(), // TODO
+            rewardTokens: [], // TODO
+          });
+        }),
+      );
+    },
+  );
+
+  return Promise.all(marketInChain).then((markets) => {
+    return markets.flat();
+  });
+}
