@@ -165,7 +165,7 @@ export class UserMarketWrapper extends UserMarket {
 
   async allowMarket() {
     try {
-      return await this.cometContract.allow(bulkerAddress, true);
+      return await this.cometContract.allow(bulkerAddress, false);
     } catch (e) {
       throw ALLOW_FAILED();
     }
@@ -295,25 +295,15 @@ export class UserMarketWrapper extends UserMarket {
           : ACTION_SUPPLY_TOKEN,
       );
 
-      const supplyBalance = this.supplyBalance;
-
       const amount = DataUtils.toBigNumber(
         collateral.inputAmount,
         Number(currentCollateralData.decimals),
       );
 
-      const sendAmount =
-        index < withdrawData.length && amount > supplyBalance
-          ? supplyBalance
-          : DataUtils.toBigNumber(
-              collateral.inputAmount,
-              Number(currentCollateralData.decimals),
-            );
-
       return this._encodeSupplyOrWithdrawWithToken(
         userAddress,
         collateral.tokenAddress,
-        sendAmount,
+        amount,
       );
     });
 
@@ -729,7 +719,6 @@ export class UserMarketWrapper extends UserMarket {
           [abiEncodeData],
         ],
         isNative ? (isMax ? BigInt(MAX_UINT) : inputAmount) : undefined,
-
       );
     } catch (e) {
       throw WITHDRAW_FAILED();
@@ -835,8 +824,10 @@ export class UserMarketWrapper extends UserMarket {
 
     const maxWithDrawAmount = this.maxWithDrawCollateralAmount;
 
-    if (Number(sumOfWithdraw) > Number(maxWithDrawAmount))
-      throw EXCESSIVE_COLLATERAL_WITHDRAW();
+    if (this.borrowBalance > BigInt(0)) {
+      if (Number(sumOfWithdraw) > Number(maxWithDrawAmount))
+        throw EXCESSIVE_COLLATERAL_WITHDRAW();
+    }
 
     const action = collaterals.map(() => ACTION_WITHDRAW_ASSET);
 

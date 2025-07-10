@@ -43,6 +43,7 @@ function App() {
   const [selectedAddress, setSelectedAddress] = useState<string>(marketsSepolia[0].address);
 
   const [currentMarket, setCurrentMarket] = useState<any>(null);
+  console.log('--currentMarket--', currentMarket);
   const [currentConfigController, setConfigController] = useState<any>(null);
   const [currentSandBoxController, setSandBoxController] = useState<any>(null);
 
@@ -268,7 +269,7 @@ function App() {
                       {
                         address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
                         value: '0.001',
-                        action: 'supply',
+                        action: 'withdraw',
                       },
                       // {
                       //   address: '0xA512C74c637108FD1Cae88163176480452B1Fb8E',
@@ -406,16 +407,16 @@ function App() {
               <button
                 onClick={() =>
                   handleFunction(() =>
-                    currentMarket?.withDrawCollateral([
+                    currentMarket?.withdrawCollateral([
                       {
-                        tokenAddress: '0x912ce59144191c1204e64559fe8253a0e49e6548',
-                        inputAmount: '0.01',
+                        tokenAddress: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
+                        inputAmount: '0.001',
                       },
                     ])
                   )
                 }
               >
-                withdraw collateral ARB 0.01
+                withdraw collateral WBTC 0.001
               </button>
             </div>
           </div>
