@@ -13,4 +13,5 @@ export interface MulticallOptions {
   mutableCallsTimeoutMs?: number;
   waitCallsTimeoutMs?: number;
   batchDelayMs?: number;
+  maxAsyncReadBatches?: number;
 }

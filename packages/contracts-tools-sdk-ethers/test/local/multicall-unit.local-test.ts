@@ -379,4 +379,100 @@ describe("MulticallUnit - Local Test", () => {
     expect(estimate01).to.be.eq(receipt01!.gasUsed);
     expect(estimate23).to.be.eq(receipt02!.gasUsed);
   });
+  test("single-threaded read batch execution (maxAsyncReadBatches = 1)", async () => {
+    const unit = new MulticallUnit(
+        WALLET,
+        { maxStaticCallsStack: 2, maxAsyncReadBatches: 1 },
+        MULTICALL_ADDRESS,
+    );
+
+    for (let i = 0; i < 6; i++) {
+      if (i % 2 === 0) {
+        unit.add(storage.getFirstCall(), [i]);
+      }
+      else {
+        unit.add(storage.getSecondCall(), [i]);
+      }
+    }
+    const result = await unit.run();
+    expect(result).to.be.true;
+    for (let i = 0; i < 6; i++) {
+      expect(unit.isSuccess([i])).to.be.true;
+      if (i % 2 === 0) {
+        expect(unit.getSingle([i])).to.be.eq(40n);
+      }
+      else {
+        expect(unit.getSingle([i])).to.be.eq(41n);
+      }
+    }
+  });
+
+  test("multi-threaded read batch execution (maxAsyncReadBatches = 3)", async () => {
+    const unit = new MulticallUnit(
+        WALLET,
+        { maxStaticCallsStack: 2, maxAsyncReadBatches: 3 },
+        MULTICALL_ADDRESS,
+    );
+    for (let i = 0; i < 9; i++) {
+      if (i % 2 === 0) {
+        unit.add(storage.getFirstCall(), [i]);
+      }
+      else {
+        unit.add(storage.getSecondCall(), [i]);
+      }
+    }
+    const result = await unit.run();
+    expect(result).to.be.true;
+    for (let i = 0; i < 9; i++) {
+      expect(unit.isSuccess([i])).to.be.true;
+      if (i % 2 === 0) {
+        expect(unit.getSingle([i])).to.be.eq(40n);
+      }
+      else {
+        expect(unit.getSingle([i])).to.be.eq(41n);
+      }
+    }
+  });
+
+  test("mixed read/write flows with multi-threaded reads", async () => {
+    await waitForAddressTxs(WALLET.address, WALLET.provider!);
+    const unit = new MulticallUnit(
+        WALLET,
+        {
+          maxStaticCallsStack: 2,
+          maxAsyncReadBatches: 2,
+          maxMutableCallsStack: 2,
+          highPriorityTxs: true,
+        },
+        MULTICALL_ADDRESS,
+    );
+    // Add reads
+    for (let i = 0; i < 4; i++) {
+      if (i % 2 === 0) {
+        unit.add(storage.getFirstCall(), [i]);
+      }
+      else {
+        unit.add(storage.getSecondCall(), [i]);
+      }
+    }
+    // Add writes
+    unit.add(storage.setFirstCall(42), "w1");
+    unit.add(storage.setSecondCall(43), "w2");
+    const result = await unit.run();
+    expect(result).to.be.true;
+    // Check reads
+    for (let i = 0; i < 4; i++) {
+      expect(unit.isSuccess([i])).to.be.true;
+      if (i % 2 === 0) {
+        expect(unit.getSingle([i])).to.be.eq(42n);
+      } else {
+        expect(unit.getSingle([i])).to.be.eq(43n);
+      }
+      // Check writes
+      expect(unit.isSuccess("w1")).to.be.true;
+      expect(unit.isSuccess("w2")).to.be.true;
+      expect(unit.getTxReceipt("w1")).to.be.instanceOf(TransactionReceipt);
+      expect(unit.getTxReceipt("w2")).to.be.instanceOf(TransactionReceipt);
+    }
+  });
 });

@@ -43,7 +43,6 @@ function App() {
   const [selectedAddress, setSelectedAddress] = useState<string>(marketsSepolia[0].address);
 
   const [currentMarket, setCurrentMarket] = useState<any>(null);
-
   const [currentConfigController, setConfigController] = useState<any>(null);
   const [currentSandBoxController, setSandBoxController] = useState<any>(null);
 
