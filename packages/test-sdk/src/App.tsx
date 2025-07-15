@@ -43,7 +43,6 @@ function App() {
   const [selectedAddress, setSelectedAddress] = useState<string>(marketsSepolia[0].address);
 
   const [currentMarket, setCurrentMarket] = useState<any>(null);
-  console.log('--currentMarket--', currentMarket);
   const [currentConfigController, setConfigController] = useState<any>(null);
   const [currentSandBoxController, setSandBoxController] = useState<any>(null);
 
@@ -144,15 +143,6 @@ function App() {
       setViewError(error);
     }
   };
-
-  useEffect(() => {
-    if (!currentMarket) {
-      return;
-    }
-    const result = currentMarket.borrowCapacityMarketUSD;
-
-    console.log('--result--', result);
-  }, [currentMarket]);
 
   return (
     <>
@@ -267,10 +257,29 @@ function App() {
                   handleFunction(() =>
                     currentMarket?.createAction([
                       {
-                        address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
-                        value: '0.001',
+                        address: '0x4F8037F0A814A191fBF03E7F31e77cc118F19A95',
+                        value: '0.1',
                         action: 'withdraw',
+                        // isNative: true,
+                        isMax: false,
                       },
+                      {
+                        address: '0x306134121e8B55dfA9faBA05De590E639a1F7D6B',
+                        value: '1',
+                        action: 'borrow',
+                        // isNative: true,
+                        // isMax: true,
+                      },
+                      // {
+                      //   address: '0x306134121e8B55dfA9faBA05De590E639a1F7D6B',
+                      //   value: '10',
+                      //   action: 'borrow',
+                      // },
+                      // {
+                      //   address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
+                      //   value: '0.001',
+                      //   action: 'withdraw',
+                      // },
                       // {
                       //   address: '0xA512C74c637108FD1Cae88163176480452B1Fb8E',
                       //   value: '10',
@@ -387,22 +396,22 @@ function App() {
                     currentMarket?.supplyCollaterals(
                       [
                         {
-                          tokenAddress: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-                          inputAmount: '0.0003',
+                          tokenAddress: '0x4F8037F0A814A191fBF03E7F31e77cc118F19A95',
+                          inputAmount: '0.0001',
                           isNative: true,
                         },
-                        {
-                          tokenAddress: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-                          inputAmount: '0.0001',
-                          isNative: false,
-                        },
+                        // {
+                        //   tokenAddress: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+                        //   inputAmount: '0.0001',
+                        //   isNative: false,
+                        // },
                       ],
                       sepolia.id
                     )
                   )
                 }
               >
-                supply collateral ARB 0.01
+                supply collateral WETH 0.01
               </button>
               <button
                 onClick={() =>
