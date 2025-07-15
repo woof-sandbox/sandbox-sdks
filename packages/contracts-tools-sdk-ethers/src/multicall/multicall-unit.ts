@@ -72,6 +72,7 @@ export class MulticallUnit extends BaseContract {
       waitForTxs: config.multicallUnit.waitForTxs,
       waitCallsTimeoutMs: config.multicallUnit.waitCalls.timeoutMs,
       batchDelayMs: config.multicallUnit.batchDelayMs,
+      maxAsyncReadBatches: config.multicallUnit.maxAsyncReadBatches,
       ...options,
     };
   }
@@ -207,26 +208,28 @@ export class MulticallUnit extends BaseContract {
       }
 
       // Process static
-      for (
-        let i = 0;
-        i < staticCalls.length;
-        i += runOptions.maxStaticCallsStack!
-      ) {
+      const staticBatchSize = runOptions.maxStaticCallsStack!;
+      const maxAsync = runOptions.maxAsyncReadBatches!;
+      const staticBatches: ContractCall[][] = [];
+      const staticIndexesBatches: number[][] = [];
+      for (let i = 0; i < staticCalls.length; i += staticBatchSize) {
+        staticBatches.push(staticCalls.slice(i, i + staticBatchSize));
+        staticIndexesBatches.push(staticIndexes.slice(i, i + staticBatchSize));
+      }
+      for (let i = 0; i < staticBatches.length; i += maxAsync) {
         checkSignals(runOptions.signals);
-
-        const border = Math.min(
-          i + runOptions.maxStaticCallsStack!,
-          staticCalls.length,
+        const batchGroup = staticBatches.slice(i, i + maxAsync);
+        const indexGroup = staticIndexesBatches.slice(i, i + maxAsync);
+        const results = await Promise.all(
+          batchGroup.map((batch) => this.processStaticCalls(batch, runOptions))
         );
-        const iterationCalls = staticCalls.slice(i, border); // half-opened interval
-        const iterationIndexes = staticIndexes.slice(i, border); // half-opened interval
-
-        const iterationResponse = await this.processStaticCalls(
-          iterationCalls,
-          runOptions,
-        );
-
-        this.saveResponse(iterationResponse, iterationIndexes, tags);
+        for (let j = 0; j < results.length; j++) {
+          this.saveResponse(
+            results[j] as MulticallResponse[],
+            indexGroup[j] as number[],
+            tags
+          );
+        }
         await waitWithSignals(runOptions.batchDelayMs!, runOptions.signals);
       }
     } catch (error) {
