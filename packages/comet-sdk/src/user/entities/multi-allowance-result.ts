@@ -4,5 +4,5 @@ export type MultiAllowanceResponseType = {
   tokenAddress: Address;
   inputAmount: string;
   allowance?: bigint;
-  isNative: boolean;
+  isNative?: boolean;
 };
