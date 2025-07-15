@@ -186,7 +186,7 @@ export class UserMarketWrapper extends UserMarket {
 
   async allowMarket() {
     try {
-      return await this.cometContract.allow(bulkerAddress, false);
+      return await this.cometContract.allow(bulkerAddress, true);
     } catch (e) {
       throw ALLOW_FAILED();
     }
