@@ -1,5 +1,11 @@
 # @woof-software/contracts-tools-sdk-ethers
 
+## 0.0.20
+
+### Patch Changes
+
+- Auto-generated changeset from CI
+
 ## 0.0.19
 
 ### Patch Changes
