@@ -221,13 +221,13 @@ export class MulticallUnit extends BaseContract {
         const batchGroup = staticBatches.slice(i, i + maxAsync);
         const indexGroup = staticIndexesBatches.slice(i, i + maxAsync);
         const results = await Promise.all(
-          batchGroup.map((batch) => this.processStaticCalls(batch, runOptions))
+          batchGroup.map((batch) => this.processStaticCalls(batch, runOptions)),
         );
         for (let j = 0; j < results.length; j++) {
           this.saveResponse(
             results[j] as MulticallResponse[],
             indexGroup[j] as number[],
-            tags
+            tags,
           );
         }
         await waitWithSignals(runOptions.batchDelayMs!, runOptions.signals);

@@ -381,16 +381,15 @@ describe("MulticallUnit - Local Test", () => {
   });
   test("single-threaded read batch execution (maxAsyncReadBatches = 1)", async () => {
     const unit = new MulticallUnit(
-        WALLET,
-        { maxStaticCallsStack: 2, maxAsyncReadBatches: 1 },
-        MULTICALL_ADDRESS,
+      WALLET,
+      { maxStaticCallsStack: 2, maxAsyncReadBatches: 1 },
+      MULTICALL_ADDRESS,
     );
 
     for (let i = 0; i < 6; i++) {
       if (i % 2 === 0) {
         unit.add(storage.getFirstCall(), [i]);
-      }
-      else {
+      } else {
         unit.add(storage.getSecondCall(), [i]);
       }
     }
@@ -400,8 +399,7 @@ describe("MulticallUnit - Local Test", () => {
       expect(unit.isSuccess([i])).to.be.true;
       if (i % 2 === 0) {
         expect(unit.getSingle([i])).to.be.eq(40n);
-      }
-      else {
+      } else {
         expect(unit.getSingle([i])).to.be.eq(41n);
       }
     }
@@ -409,15 +407,14 @@ describe("MulticallUnit - Local Test", () => {
 
   test("multi-threaded read batch execution (maxAsyncReadBatches = 3)", async () => {
     const unit = new MulticallUnit(
-        WALLET,
-        { maxStaticCallsStack: 2, maxAsyncReadBatches: 3 },
-        MULTICALL_ADDRESS,
+      WALLET,
+      { maxStaticCallsStack: 2, maxAsyncReadBatches: 3 },
+      MULTICALL_ADDRESS,
     );
     for (let i = 0; i < 9; i++) {
       if (i % 2 === 0) {
         unit.add(storage.getFirstCall(), [i]);
-      }
-      else {
+      } else {
         unit.add(storage.getSecondCall(), [i]);
       }
     }
@@ -427,8 +424,7 @@ describe("MulticallUnit - Local Test", () => {
       expect(unit.isSuccess([i])).to.be.true;
       if (i % 2 === 0) {
         expect(unit.getSingle([i])).to.be.eq(40n);
-      }
-      else {
+      } else {
         expect(unit.getSingle([i])).to.be.eq(41n);
       }
     }
@@ -437,21 +433,20 @@ describe("MulticallUnit - Local Test", () => {
   test("mixed read/write flows with multi-threaded reads", async () => {
     await waitForAddressTxs(WALLET.address, WALLET.provider!);
     const unit = new MulticallUnit(
-        WALLET,
-        {
-          maxStaticCallsStack: 2,
-          maxAsyncReadBatches: 2,
-          maxMutableCallsStack: 2,
-          highPriorityTxs: true,
-        },
-        MULTICALL_ADDRESS,
+      WALLET,
+      {
+        maxStaticCallsStack: 2,
+        maxAsyncReadBatches: 2,
+        maxMutableCallsStack: 2,
+        highPriorityTxs: true,
+      },
+      MULTICALL_ADDRESS,
     );
     // Add reads
     for (let i = 0; i < 4; i++) {
       if (i % 2 === 0) {
         unit.add(storage.getFirstCall(), [i]);
-      }
-      else {
+      } else {
         unit.add(storage.getSecondCall(), [i]);
       }
     }
