@@ -1,7 +1,7 @@
 {
   "name": "@woof-software/comet-sdk",
   "description": "Framework-agnostic package that defines Comet-related entity classes (such as `Market`, `Token`).",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
@@ -13,7 +13,9 @@
   "license": "MIT",
   "main": "src/index.ts",
   "type": "module",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "prepublish": "$npm_execpath build",
     "build": "tsc --build tsconfig.build.json --force && node ../../scripts/compile/post-compile.js",
