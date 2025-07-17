@@ -11,6 +11,7 @@ import {
   ACTION_WITHDRAW_ASSET,
   ACTION_WITHDRAW_NATIVE_TOKEN,
   MAX_UINT,
+  MIN_ALLOWANCE,
 } from "../constants";
 import {
   BulkerContract,
@@ -163,7 +164,7 @@ export class UserMarketWrapper extends UserMarket {
     );
 
     const isSomeSmallAllowance = allowances.some(
-      (allowance) => allowance <= BigInt(100000),
+      (allowance) => allowance <= MIN_ALLOWANCE,
     );
 
     if (isSomeSmallAllowance) throw BULKER_NOT_ALLOWED();
@@ -198,7 +199,7 @@ export class UserMarketWrapper extends UserMarket {
       this.collaterals,
     );
     const isAllAllowed = allowances.some(
-      (allowance) => allowance > BigInt(100000),
+      (allowance) => allowance > MIN_ALLOWANCE,
     );
     return isAllAllowed;
   }

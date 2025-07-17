@@ -1,10 +1,14 @@
-import { Config, multicall, WriteContractReturnType } from "@wagmi/core";
-import type { Address, ContractFunctionParameters } from "viem";
+import {
+  type Config,
+  type WriteContractReturnType,
+  multicall,
+} from "@wagmi/core";
+import type { UserCollateral } from "@woof-software/comet-sdk/lib";
+import type { ContractFunctionParameters } from "viem";
 import { cometAbi } from "../abis";
 import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
-import { UserCollateral } from "@woof-software/comet-sdk/lib";
 
 export interface AssetConfig {
   collateralToken: `0x${string}`;
