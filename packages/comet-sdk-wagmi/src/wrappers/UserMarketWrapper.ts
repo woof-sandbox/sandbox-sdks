@@ -46,7 +46,7 @@ import {
 import { type ActionData, ActionType } from "../contracts/entities/actions";
 
 // Todo need to find where to get Bulker Address
-const bulkerAddress = "0xa3607ff0a0f7bb9571b8a6155d4b32042890aeff"; // arbitrum
+const bulkerAddress = "0x6fCFf84a7ded10cE3Fa6C4a6b7B90a97f9be3d80"; // sepolia
 // const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum
 
 export class UserMarketWrapper extends UserMarket {
@@ -155,8 +155,18 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   async ensureBulkerAllowed(user: Address) {
-    const allowed = await this.cometContract.isAllowed(user, bulkerAddress);
-    if (!allowed) throw BULKER_NOT_ALLOWED();
+    const allowances = await this.cometContract.isAllowed(
+      user,
+      bulkerAddress,
+      this.baseToken.tokenAddress as Address,
+      this.collaterals,
+    );
+
+    const isSomeSmallAllowance = allowances.some(
+      (allowance) => allowance === BigInt(0),
+    );
+
+    if (isSomeSmallAllowance) throw BULKER_NOT_ALLOWED();
   }
 
   getActionType = (action: ActionType, isNative?: boolean) => {
@@ -181,12 +191,21 @@ export class UserMarketWrapper extends UserMarket {
   };
 
   async getBulkerAllowed(user: Address) {
-    return await this.cometContract.isAllowed(user, bulkerAddress);
+    return await this.cometContract.isAllowed(
+      user,
+      bulkerAddress,
+      this.baseToken.tokenAddress as Address,
+      this.collaterals,
+    );
   }
 
   async allowMarket() {
     try {
-      return await this.cometContract.allow(bulkerAddress, true);
+      return await this.cometContract.allow(
+        bulkerAddress,
+        this.baseToken.tokenAddress as Address,
+        this.collaterals,
+      );
     } catch (e) {
       throw ALLOW_FAILED();
     }

@@ -28,13 +28,13 @@ import type { WagmiChainId } from '@woof-software/comet-sdk-wagmi/lib';
 // ];
 const marketsSepolia = [
   {
-    address: '0xdC502E9bad9396b4d3916b4510460C49449D75F5',
+    address: '0x95e4aac15fee4230f843573a8c964a84d048993c',
     name: 'BaseSep',
   },
-  {
-    address: '0x82478f6d1dc4d64f4678f55360d5d1a05628059b',
-    name: 'second',
-  },
+  // {
+  //   address: '0x82478f6d1dc4d64f4678f55360d5d1a05628059b',
+  //   name: 'second',
+  // },
 ];
 
 function App() {
@@ -65,16 +65,15 @@ function App() {
       return;
     }
     try {
-      const markets123 = await Market.fetchMarkets(
-        {
-          [sepolia.id]: [
-            '0xdC502E9bad9396b4d3916b4510460C49449D75F5',
-            '0x82478f6d1dc4d64f4678f55360d5d1a05628059b',
-          ],
-        },
-        config
-      );
-      console.log('--markets123--', markets123);
+      // const markets123 = await Market.fetchMarkets(
+      //   {
+      //     [sepolia.id]: [
+      //       '0xdC502E9bad9396b4d3916b4510460C49449D75F5',
+      //       '0x82478f6d1dc4d64f4678f55360d5d1a05628059b',
+      //     ],
+      //   },
+      //   config
+      // );
 
       const market = await UserMarket.fetchUserMarket(
         selectedAddress as `0x${string}`,
@@ -108,6 +107,8 @@ function App() {
       const result = await fn();
 
       setTransactionHash(result);
+
+      console.log('result--', result);
     } catch (error: any) {
       const message = error?.message || 'Something went wrong';
       setViewError(message);
@@ -258,23 +259,23 @@ function App() {
                     currentMarket?.createAction([
                       {
                         address: '0x4F8037F0A814A191fBF03E7F31e77cc118F19A95',
-                        value: '0.1',
+                        value: '1',
                         action: 'withdraw',
                         // isNative: true,
-                        isMax: false,
+                        // isMax: false,
                       },
                       {
                         address: '0x306134121e8B55dfA9faBA05De590E639a1F7D6B',
-                        value: '1',
-                        action: 'borrow',
+                        value: '101.072573',
+                        action: 'repay',
                         // isNative: true,
-                        // isMax: true,
+                        isMax: true,
                       },
-                      // {
-                      //   address: '0x306134121e8B55dfA9faBA05De590E639a1F7D6B',
-                      //   value: '10',
-                      //   action: 'borrow',
-                      // },
+                      {
+                        address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
+                        value: '0.011',
+                        action: 'withdraw',
+                      },
                       // {
                       //   address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
                       //   value: '0.001',
@@ -300,6 +301,12 @@ function App() {
                 }
               >
                 call custom action
+              </button>
+
+              <button
+                onClick={() => handleFunction(() => currentMarket?.getBulkerAllowed(address))}
+              >
+                is Allowed
               </button>
 
               <button onClick={() => handleFunction(() => currentMarket?.supplyMarket('0.01'))}>
