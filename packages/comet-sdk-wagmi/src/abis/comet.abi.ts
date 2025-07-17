@@ -1,552 +1,32 @@
 export const cometAbi = [
   {
-    inputs: [],
-    name: "Absurd",
-    type: "error",
+    type: "constructor",
+    inputs: [{ name: "_name32", type: "bytes32", internalType: "bytes32" }],
+    stateMutability: "nonpayable",
   },
   {
+    type: "function",
+    name: "MAX_ASSETS",
     inputs: [],
-    name: "AlreadyInitialized",
-    type: "error",
+    outputs: [{ name: "", type: "uint8", internalType: "uint8" }],
+    stateMutability: "view",
   },
   {
-    inputs: [],
-    name: "BadAsset",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "BadDecimals",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "BadDiscount",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "BadPrice",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "BorrowCFTooLarge",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "BorrowTooSmall",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "IncorrectInitialization",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InsufficientReserves",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidInt104",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidInt256",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidUInt104",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidUInt128",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidUInt64",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "LiquidateCFTooLarge",
-    type: "error",
-  },
-  {
+    type: "function",
+    name: "allowBySig",
     inputs: [
-      {
-        internalType: "uint256",
-        name: "currrentTimestamp",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "unlockTimestamp",
-        type: "uint256",
-      },
+      { name: "owner", type: "address", internalType: "address" },
+      { name: "manager", type: "address", internalType: "address" },
+      { name: "asset", type: "address", internalType: "address" },
+      { name: "amount", type: "uint256", internalType: "uint256" },
+      { name: "nonce", type: "uint256", internalType: "uint256" },
+      { name: "expiry", type: "uint256", internalType: "uint256" },
+      { name: "v", type: "uint8", internalType: "uint8" },
+      { name: "r", type: "bytes32", internalType: "bytes32" },
+      { name: "s", type: "bytes32", internalType: "bytes32" },
     ],
-    name: "Locked",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "NegativeNumber",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "NoSelfTransfer",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "NotCollateralized",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "NotForSale",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "NotLiquidatable",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Paused",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "ReentrantCallBlocked",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "SupplyCapExceeded",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "TimestampTooLarge",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "TooManyAssets",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "TooMuchSlippage",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "TransferInFailed",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "TransferOutFailed",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "Unauthorized",
-    type: "error",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "absorber",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "borrower",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "collateralAbsorbed",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "usdValue",
-        type: "uint256",
-      },
-    ],
-    name: "AbsorbCollateral",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "absorber",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "borrower",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "basePaidOut",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "usdValue",
-        type: "uint256",
-      },
-    ],
-    name: "AbsorbDebt",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "buyer",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "baseAmount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "collateralAmount",
-        type: "uint256",
-      },
-    ],
-    name: "BuyCollateral",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "supplyPaused",
-        type: "bool",
-      },
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "transferPaused",
-        type: "bool",
-      },
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "withdrawPaused",
-        type: "bool",
-      },
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "absorbPaused",
-        type: "bool",
-      },
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "buyPaused",
-        type: "bool",
-      },
-    ],
-    name: "PauseAction",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "baseTrackingSupplySpeed",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "baseTrackingBorrowSpeed",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "dao_",
-        type: "bool",
-      },
-    ],
-    name: "SpeedsChanged",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "dst",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "Supply",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "dst",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "SupplyCollateral",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "Transfer",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "TransferCollateral",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "src",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "Withdraw",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "src",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "WithdrawCollateral",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "WithdrawReserves",
-    type: "event",
-  },
-  {
-    stateMutability: "payable",
-    type: "fallback",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "absorber",
-        type: "address",
-      },
-      {
-        internalType: "address[]",
-        name: "accounts",
-        type: "address[]",
-      },
-    ],
-    name: "absorb",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "accrueAccount",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
   },
   {
     inputs: [
@@ -569,7 +49,7 @@ export const cometAbi = [
   },
   {
     inputs: [],
-    name: "baseBorrowMin",
+    name: "getUtilization",
     outputs: [
       {
         internalType: "uint256",
@@ -582,7 +62,20 @@ export const cometAbi = [
   },
   {
     inputs: [],
-    name: "baseMinForRewards",
+    name: "getReserves",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "",
+        type: "int256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalSupply",
     outputs: [
       {
         internalType: "uint256",
@@ -595,7 +88,7 @@ export const cometAbi = [
   },
   {
     inputs: [],
-    name: "baseScale",
+    name: "totalBorrow",
     outputs: [
       {
         internalType: "uint256",
@@ -607,34 +100,52 @@ export const cometAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "baseToken",
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "utilization",
+        type: "uint256",
+      },
+    ],
+    name: "getSupplyRate",
     outputs: [
+      {
+        internalType: "uint64",
+        name: "",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "utilization",
+        type: "uint256",
+      },
+    ],
+    name: "getBorrowRate",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
       {
         internalType: "address",
-        name: "",
+        name: "priceFeed",
         type: "address",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "baseTokenPriceFeed",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "baseTrackingBorrowSpeed",
+    name: "getPrice",
     outputs: [
       {
         internalType: "uint256",
@@ -646,8 +157,14 @@ export const cometAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "baseTrackingSupplySpeed",
+    inputs: [
+      {
+        internalType: "address",
+        name: "asset",
+        type: "address",
+      },
+    ],
+    name: "getCollateralReserves",
     outputs: [
       {
         internalType: "uint256",
@@ -678,1682 +195,165 @@ export const cometAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "borrowKink",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "borrowPerSecondInterestRateBase",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "borrowPerSecondInterestRateSlopeHigh",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "borrowPerSecondInterestRateSlopeLow",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "minAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "baseAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "recipient",
-        type: "address",
-      },
-    ],
-    name: "buyCollateral",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    name: "collateralAssetAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "collateralAssetIndex",
-    outputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "collateralAssets",
-    outputs: [
-      {
-        internalType: "address",
-        name: "collateralToken",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "priceFeed",
-        type: "address",
-      },
-      {
-        internalType: "uint128",
-        name: "supplyCap",
-        type: "uint128",
-      },
-      {
-        internalType: "uint64",
-        name: "borrowCollateralFactor",
-        type: "uint64",
-      },
-      {
-        internalType: "uint64",
-        name: "liquidateCollateralFactor",
-        type: "uint64",
-      },
-      {
-        internalType: "uint64",
-        name: "liquidationFactor",
-        type: "uint64",
-      },
-      {
-        internalType: "uint64",
-        name: "scale",
-        type: "uint64",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "configController",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "extension",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "factory",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_configController",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_ext",
-        type: "address",
-      },
-    ],
-    name: "factoryInit",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint8",
-        name: "i",
-        type: "uint8",
-      },
-    ],
-    name: "getAssetInfo",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "collateralToken",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "priceFeed",
-            type: "address",
-          },
-          {
-            internalType: "uint128",
-            name: "supplyCap",
-            type: "uint128",
-          },
-          {
-            internalType: "uint64",
-            name: "borrowCollateralFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "liquidateCollateralFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "liquidationFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "scale",
-            type: "uint64",
-          },
-        ],
-        internalType: "struct IConfigController.CollateralTokenConfig",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-    ],
-    name: "getAssetInfoByAddress",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "collateralToken",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "priceFeed",
-            type: "address",
-          },
-          {
-            internalType: "uint128",
-            name: "supplyCap",
-            type: "uint128",
-          },
-          {
-            internalType: "uint64",
-            name: "borrowCollateralFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "liquidateCollateralFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "liquidationFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "scale",
-            type: "uint64",
-          },
-        ],
-        internalType: "struct IConfigController.CollateralTokenConfig",
-        name: "",
-        type: "tuple",
-      },
-      {
-        internalType: "uint8",
-        name: "index",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "utilization",
-        type: "uint256",
-      },
-    ],
-    name: "getBorrowRate",
-    outputs: [
-      {
-        internalType: "uint64",
-        name: "",
-        type: "uint64",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-    ],
-    name: "getCollateralReserves",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "priceFeed",
-        type: "address",
-      },
-    ],
-    name: "getPrice",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getReserves",
-    outputs: [
-      {
-        internalType: "int256",
-        name: "",
-        type: "int256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "utilization",
-        type: "uint256",
-      },
-    ],
-    name: "getSupplyRate",
-    outputs: [
-      {
-        internalType: "uint64",
-        name: "",
-        type: "uint64",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getUtilization",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "manager",
-        type: "address",
-      },
-    ],
-    name: "hasPermission",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "baseToken",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "baseTokenCurveId",
-            type: "uint256",
-          },
-          {
-            components: [
-              {
-                internalType: "uint256",
-                name: "baseTrackingSupplySpeed",
-                type: "uint256",
-              },
-              {
-                internalType: "uint256",
-                name: "baseTrackingBorrowSpeed",
-                type: "uint256",
-              },
-              {
-                internalType: "uint256",
-                name: "trackingIndexScale",
-                type: "uint256",
-              },
-              {
-                internalType: "uint256",
-                name: "baseMinForRewards",
-                type: "uint256",
-              },
-            ],
-            internalType: "struct IConfigController.CometOptions",
-            name: "options",
-            type: "tuple",
-          },
-          {
-            components: [
-              {
-                internalType: "address",
-                name: "collateralToken",
-                type: "address",
-              },
-              {
-                internalType: "address",
-                name: "priceFeed",
-                type: "address",
-              },
-              {
-                internalType: "uint128",
-                name: "supplyCap",
-                type: "uint128",
-              },
-              {
-                internalType: "uint64",
-                name: "borrowCollateralFactor",
-                type: "uint64",
-              },
-              {
-                internalType: "uint64",
-                name: "liquidateCollateralFactor",
-                type: "uint64",
-              },
-              {
-                internalType: "uint64",
-                name: "liquidationFactor",
-                type: "uint64",
-              },
-              {
-                internalType: "uint64",
-                name: "scale",
-                type: "uint64",
-              },
-            ],
-            internalType: "struct IConfigController.CollateralTokenConfig[]",
-            name: "collateralTokens",
-            type: "tuple[]",
-          },
-        ],
-        internalType: "struct IConfigController.CometConfig",
-        name: "comet",
-        type: "tuple",
-      },
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "targetPercent",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "storeFrontPriceFactor",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "minUpdateTime",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "maxUpdateTime",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "suggestedAmountOfSeedReserves",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "suggestedLockTimeOfSeedReserves",
-            type: "uint256",
-          },
-        ],
-        internalType:
-          "struct ISandboxController.SandboxControllerConfiguration",
-        name: "config",
-        type: "tuple",
-      },
-      {
-        internalType: "address",
-        name: "sandboxController_",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "baseBorrowMin_",
-        type: "uint256",
-      },
-    ],
-    name: "initialize",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isAbsorbPaused",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "isAllowed",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "isBorrowCollateralized",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isBuyPaused",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "isLiquidatable",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isSupplyPaused",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isTransferPaused",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isWithdrawPaused",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "numAssets",
-    outputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bool",
-        name: "supplyPaused",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "transferPaused",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "withdrawPaused",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "absorbPaused",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "buyPaused",
-        type: "bool",
-      },
-    ],
-    name: "pause",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "baseAmount",
-        type: "uint256",
-      },
-    ],
-    name: "quoteCollateral",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "sandboxController",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "seedReserves",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "storeFrontPriceFactor",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "supply",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "dst",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "supplyFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "supplyKink",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "supplyPerSecondInterestRateBase",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "supplyPerSecondInterestRateSlopeHigh",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "supplyPerSecondInterestRateSlopeLow",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "dst",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "supplyTo",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "targetPercent",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "targetReserves",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalBorrow",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "totalsCollateral",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "trackingIndexScale",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "dst",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "transfer",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "dst",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "transferAsset",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "src",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "dst",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "transferAssetFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "src",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "dst",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "transferFrom",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "unlockTimestamp",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "userBasic",
-    outputs: [
-      {
-        internalType: "int104",
-        name: "principal",
-        type: "int104",
-      },
-      {
-        internalType: "uint64",
-        name: "baseTrackingIndex",
-        type: "uint64",
-      },
-      {
-        internalType: "uint64",
-        name: "baseTrackingAccrued",
-        type: "uint64",
-      },
-      {
-        internalType: "uint24",
-        name: "assetsIn",
-        type: "uint24",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "userCollateral",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "userNonce",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "src",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "withdrawFrom",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "withdrawTo",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    type: "constructor",
-    inputs: [
-      {
-        name: "_name32",
-        type: "bytes32",
-        internalType: "bytes32",
-      },
-      {
-        name: "_symbol32",
-        type: "bytes32",
-        internalType: "bytes32",
-      },
-    ],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "allowBySig",
-    inputs: [
-      {
-        name: "owner",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "manager",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "isAllowed_",
-        type: "bool",
-        internalType: "bool",
-      },
-      {
-        name: "nonce",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "expiry",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "v",
-        type: "uint8",
-        internalType: "uint8",
-      },
-      {
-        name: "r",
-        type: "bytes32",
-        internalType: "bytes32",
-      },
-      {
-        name: "s",
-        type: "bytes32",
-        internalType: "bytes32",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
     type: "function",
     name: "allowance",
     inputs: [
-      {
-        name: "owner",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "spender",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "", type: "address", internalType: "address" },
+      { name: "", type: "address", internalType: "address" },
+      { name: "", type: "address", internalType: "address" },
     ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "approve",
     inputs: [
-      {
-        name: "spender",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "amount",
-        type: "uint256",
-        internalType: "uint256",
-      },
+      { name: "spender", type: "address", internalType: "address" },
+      { name: "asset", type: "address", internalType: "address" },
+      { name: "amount", type: "uint256", internalType: "uint256" },
     ],
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-    ],
+    outputs: [],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "approveAll",
+    inputs: [
+      { name: "spender bulker", type: "address", internalType: "address" },
+      { name: "baseTokenAmount", type: "uint256", internalType: "uint256" },
+      { name: "amounts", type: "uint256[]", internalType: "uint256[]" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "assetFeesController",
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "assetFeesDAO",
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
   },
   {
     type: "function",
     name: "baseAccrualScale",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint64",
-        internalType: "uint64",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "pure",
   },
   {
     type: "function",
     name: "baseBorrowMin",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "baseIndexScale",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint64",
-        internalType: "uint64",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "pure",
   },
   {
     type: "function",
     name: "baseMinForRewards",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "baseScale",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "baseToken",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "baseTokenPriceFeed",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "baseTrackingAccrued",
-    inputs: [
-      {
-        name: "account",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint64",
-        internalType: "uint64",
-      },
-    ],
+    inputs: [{ name: "account", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "baseTrackingBorrowSpeed",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "baseTrackingSupplySpeed",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "borrowKink",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "borrowPerSecondInterestRateBase",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "borrowPerSecondInterestRateSlopeHigh",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "borrowPerSecondInterestRateSlopeLow",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "collateralAssetAddress",
-    inputs: [
-      {
-        name: "",
-        type: "uint8",
-        internalType: "uint8",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "collateralAssetIndex",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint8",
-        internalType: "uint8",
-      },
-    ],
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint8", internalType: "uint8" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "collateralAssets",
-    inputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     outputs: [
-      {
-        name: "collateralToken",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "priceFeed",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "supplyCap",
-        type: "uint128",
-        internalType: "uint128",
-      },
+      { name: "collateralToken", type: "address", internalType: "address" },
+      { name: "priceFeed", type: "address", internalType: "address" },
+      { name: "supplyCap", type: "uint128", internalType: "uint128" },
       {
         name: "borrowCollateralFactor",
         type: "uint64",
@@ -2364,16 +364,8 @@ export const cometAbi = [
         type: "uint64",
         internalType: "uint64",
       },
-      {
-        name: "liquidationFactor",
-        type: "uint64",
-        internalType: "uint64",
-      },
-      {
-        name: "scale",
-        type: "uint64",
-        internalType: "uint64",
-      },
+      { name: "liquidationFactor", type: "uint64", internalType: "uint64" },
+      { name: "scale", type: "uint64", internalType: "uint64" },
     ],
     stateMutability: "view",
   },
@@ -2381,76 +373,38 @@ export const cometAbi = [
     type: "function",
     name: "collateralBalanceOf",
     inputs: [
-      {
-        name: "account",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "asset",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "account", type: "address", internalType: "address" },
+      { name: "asset", type: "address", internalType: "address" },
     ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "configController",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "extension",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "factorScale",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint64",
-        internalType: "uint64",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "pure",
   },
   {
     type: "function",
     name: "factory",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
@@ -2468,11 +422,7 @@ export const cometAbi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "baseToken",
-            type: "address",
-            internalType: "address",
-          },
+          { name: "baseToken", type: "address", internalType: "address" },
           {
             name: "baseTokenPriceFeed",
             type: "address",
@@ -2483,11 +433,7 @@ export const cometAbi = [
             type: "address",
             internalType: "address",
           },
-          {
-            name: "supplyKink",
-            type: "uint64",
-            internalType: "uint64",
-          },
+          { name: "supplyKink", type: "uint64", internalType: "uint64" },
           {
             name: "supplyPerYearInterestRateSlopeLow",
             type: "uint64",
@@ -2503,11 +449,7 @@ export const cometAbi = [
             type: "uint64",
             internalType: "uint64",
           },
-          {
-            name: "borrowKink",
-            type: "uint64",
-            internalType: "uint64",
-          },
+          { name: "borrowKink", type: "uint64", internalType: "uint64" },
           {
             name: "borrowPerYearInterestRateSlopeLow",
             type: "uint64",
@@ -2548,46 +490,22 @@ export const cometAbi = [
             type: "uint104",
             internalType: "uint104",
           },
-          {
-            name: "baseBorrowMin",
-            type: "uint104",
-            internalType: "uint104",
-          },
-          {
-            name: "targetPercent",
-            type: "uint104",
-            internalType: "uint104",
-          },
-          {
-            name: "seedReserves",
-            type: "uint104",
-            internalType: "uint104",
-          },
-          {
-            name: "unlockTimestamp",
-            type: "uint104",
-            internalType: "uint104",
-          },
+          { name: "baseBorrowMin", type: "uint104", internalType: "uint104" },
+          { name: "targetPercent", type: "uint64", internalType: "uint64" },
+          { name: "seedReserves", type: "uint104", internalType: "uint104" },
+          { name: "unlockTimestamp", type: "uint64", internalType: "uint64" },
           {
             name: "assetConfigs",
             type: "tuple[]",
-            internalType: "struct IConfigController.CollateralTokenConfig[]",
+            internalType: "struct CometStorage.CollateralAsset[]",
             components: [
               {
                 name: "collateralToken",
                 type: "address",
                 internalType: "address",
               },
-              {
-                name: "priceFeed",
-                type: "address",
-                internalType: "address",
-              },
-              {
-                name: "supplyCap",
-                type: "uint128",
-                internalType: "uint128",
-              },
+              { name: "priceFeed", type: "address", internalType: "address" },
+              { name: "supplyCap", type: "uint128", internalType: "uint128" },
               {
                 name: "borrowCollateralFactor",
                 type: "uint64",
@@ -2603,11 +521,7 @@ export const cometAbi = [
                 type: "uint64",
                 internalType: "uint64",
               },
-              {
-                name: "scale",
-                type: "uint64",
-                internalType: "uint64",
-              },
+              { name: "scale", type: "uint64", internalType: "uint64" },
             ],
           },
         ],
@@ -2619,204 +533,89 @@ export const cometAbi = [
     type: "function",
     name: "hasPermission",
     inputs: [
-      {
-        name: "owner",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "manager",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "owner", type: "address", internalType: "address" },
+      { name: "manager", type: "address", internalType: "address" },
+      { name: "asset", type: "address", internalType: "address" },
+      { name: "amount", type: "uint256", internalType: "uint256" },
     ],
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "isAllowed",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-    ],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "maxAssets",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint8",
-        internalType: "uint8",
-      },
-    ],
+    outputs: [{ name: "", type: "uint8", internalType: "uint8" }],
     stateMutability: "pure",
   },
   {
     type: "function",
     name: "name",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "string",
-        internalType: "string",
-      },
-    ],
+    outputs: [{ name: "", type: "string", internalType: "string" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "numAssets",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint8",
-        internalType: "uint8",
-      },
-    ],
+    outputs: [{ name: "", type: "uint8", internalType: "uint8" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "sandboxController",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "seedReserves",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "storeFrontPriceFactor",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "supplyKink",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "supplyPerSecondInterestRateBase",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "supplyPerSecondInterestRateSlopeHigh",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "supplyPerSecondInterestRateSlopeLow",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "symbol",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "string",
-        internalType: "string",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "targetPercent",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
@@ -2829,16 +628,8 @@ export const cometAbi = [
         type: "tuple",
         internalType: "struct CometStorage.TotalsBasic",
         components: [
-          {
-            name: "baseSupplyIndex",
-            type: "uint64",
-            internalType: "uint64",
-          },
-          {
-            name: "baseBorrowIndex",
-            type: "uint64",
-            internalType: "uint64",
-          },
+          { name: "baseSupplyIndex", type: "uint64", internalType: "uint64" },
+          { name: "baseBorrowIndex", type: "uint64", internalType: "uint64" },
           {
             name: "trackingSupplyIndex",
             type: "uint64",
@@ -2849,26 +640,10 @@ export const cometAbi = [
             type: "uint64",
             internalType: "uint64",
           },
-          {
-            name: "totalSupplyBase",
-            type: "uint104",
-            internalType: "uint104",
-          },
-          {
-            name: "totalBorrowBase",
-            type: "uint104",
-            internalType: "uint104",
-          },
-          {
-            name: "lastAccrualTime",
-            type: "uint40",
-            internalType: "uint40",
-          },
-          {
-            name: "pauseFlags",
-            type: "uint8",
-            internalType: "uint8",
-          },
+          { name: "totalSupplyBase", type: "uint104", internalType: "uint104" },
+          { name: "totalBorrowBase", type: "uint104", internalType: "uint104" },
+          { name: "lastAccrualTime", type: "uint40", internalType: "uint40" },
+          { name: "pauseFlags", type: "uint8", internalType: "uint8" },
         ],
       },
     ],
@@ -2877,79 +652,33 @@ export const cometAbi = [
   {
     type: "function",
     name: "totalsCollateral",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "trackingIndexScale",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "unlockTimestamp",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint64", internalType: "uint64" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "userBasic",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    inputs: [{ name: "", type: "address", internalType: "address" }],
     outputs: [
-      {
-        name: "principal",
-        type: "int104",
-        internalType: "int104",
-      },
-      {
-        name: "baseTrackingIndex",
-        type: "uint64",
-        internalType: "uint64",
-      },
-      {
-        name: "baseTrackingAccrued",
-        type: "uint64",
-        internalType: "uint64",
-      },
-      {
-        name: "assetsIn",
-        type: "uint24",
-        internalType: "uint24",
-      },
+      { name: "principal", type: "int104", internalType: "int104" },
+      { name: "baseTrackingIndex", type: "uint64", internalType: "uint64" },
+      { name: "baseTrackingAccrued", type: "uint64", internalType: "uint64" },
+      { name: "assetsIn", type: "uint24", internalType: "uint24" },
     ],
     stateMutability: "view",
   },
@@ -2957,57 +686,93 @@ export const cometAbi = [
     type: "function",
     name: "userCollateral",
     inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "", type: "address", internalType: "address" },
+      { name: "", type: "address", internalType: "address" },
     ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "userNonce",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
     type: "function",
     name: "version",
     inputs: [],
-    outputs: [
+    outputs: [{ name: "", type: "string", internalType: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "event",
+    name: "AbsorbCollateral",
+    inputs: [
       {
-        name: "",
-        type: "string",
-        internalType: "string",
+        name: "absorber",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "borrower",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "asset",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "collateralAbsorbed",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+      {
+        name: "usdValue",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
       },
     ],
-    stateMutability: "view",
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "AbsorbDebt",
+    inputs: [
+      {
+        name: "absorber",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "borrower",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "basePaidOut",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+      {
+        name: "usdValue",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
   },
   {
     type: "event",
@@ -3026,6 +791,12 @@ export const cometAbi = [
         internalType: "address",
       },
       {
+        name: "asset",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
         name: "amount",
         type: "uint256",
         indexed: false,
@@ -3035,63 +806,254 @@ export const cometAbi = [
     anonymous: false,
   },
   {
-    type: "error",
-    name: "BadAmount",
-    inputs: [],
+    type: "event",
+    name: "BuyCollateral",
+    inputs: [
+      {
+        name: "buyer",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "asset",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "baseAmount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+      {
+        name: "collateralAmount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
   },
   {
-    type: "error",
-    name: "BadNonce",
-    inputs: [],
+    type: "event",
+    name: "ControllerFeeDisabled",
+    inputs: [
+      { name: "disabled", type: "bool", indexed: false, internalType: "bool" },
+    ],
+    anonymous: false,
   },
   {
-    type: "error",
-    name: "BadSignatory",
-    inputs: [],
+    type: "event",
+    name: "FeesExtracted",
+    inputs: [
+      {
+        name: "comet",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "asset",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "amoint",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+      { name: "to", type: "address", indexed: false, internalType: "address" },
+    ],
+    anonymous: false,
   },
   {
-    type: "error",
-    name: "InvalidInt104",
-    inputs: [],
+    type: "event",
+    name: "PauseAction",
+    inputs: [
+      {
+        name: "supplyPaused",
+        type: "bool",
+        indexed: false,
+        internalType: "bool",
+      },
+      {
+        name: "transferPaused",
+        type: "bool",
+        indexed: false,
+        internalType: "bool",
+      },
+      {
+        name: "withdrawPaused",
+        type: "bool",
+        indexed: false,
+        internalType: "bool",
+      },
+      {
+        name: "absorbPaused",
+        type: "bool",
+        indexed: false,
+        internalType: "bool",
+      },
+      { name: "buyPaused", type: "bool", indexed: false, internalType: "bool" },
+    ],
+    anonymous: false,
   },
   {
-    type: "error",
-    name: "InvalidInt256",
-    inputs: [],
+    type: "event",
+    name: "Supply",
+    inputs: [
+      { name: "from", type: "address", indexed: true, internalType: "address" },
+      { name: "dst", type: "address", indexed: true, internalType: "address" },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
   },
   {
-    type: "error",
-    name: "InvalidUInt104",
-    inputs: [],
+    type: "event",
+    name: "SupplyCollateral",
+    inputs: [
+      { name: "from", type: "address", indexed: true, internalType: "address" },
+      { name: "dst", type: "address", indexed: true, internalType: "address" },
+      {
+        name: "asset",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
   },
   {
-    type: "error",
-    name: "InvalidUInt128",
-    inputs: [],
+    type: "event",
+    name: "Transfer",
+    inputs: [
+      { name: "from", type: "address", indexed: true, internalType: "address" },
+      { name: "to", type: "address", indexed: true, internalType: "address" },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
   },
   {
-    type: "error",
-    name: "InvalidUInt64",
-    inputs: [],
+    type: "event",
+    name: "TransferCollateral",
+    inputs: [
+      { name: "from", type: "address", indexed: true, internalType: "address" },
+      { name: "to", type: "address", indexed: true, internalType: "address" },
+      {
+        name: "asset",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
   },
   {
-    type: "error",
-    name: "InvalidValueS",
-    inputs: [],
+    type: "event",
+    name: "Withdraw",
+    inputs: [
+      { name: "src", type: "address", indexed: true, internalType: "address" },
+      { name: "to", type: "address", indexed: true, internalType: "address" },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
   },
   {
-    type: "error",
-    name: "InvalidValueV",
-    inputs: [],
+    type: "event",
+    name: "WithdrawCollateral",
+    inputs: [
+      { name: "src", type: "address", indexed: true, internalType: "address" },
+      { name: "to", type: "address", indexed: true, internalType: "address" },
+      {
+        name: "asset",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
   },
+  { type: "error", name: "AlreadyInitialized", inputs: [] },
+  { type: "error", name: "AmountTooSmall", inputs: [] },
+  { type: "error", name: "BadAsset", inputs: [] },
+  { type: "error", name: "BadDecimals", inputs: [] },
+  { type: "error", name: "BadNonce", inputs: [] },
+  { type: "error", name: "BadPrice", inputs: [] },
+  { type: "error", name: "BadSignatory", inputs: [] },
+  { type: "error", name: "BorrowTooSmall", inputs: [] },
+  { type: "error", name: "IncorrectInitialization", inputs: [] },
   {
     type: "error",
-    name: "NegativeNumber",
-    inputs: [],
+    name: "InsufficientAllowance",
+    inputs: [
+      { name: "token", type: "address", internalType: "address" },
+      { name: "owner", type: "address", internalType: "address" },
+      { name: "manager", type: "address", internalType: "address" },
+    ],
   },
+  { type: "error", name: "InsufficientReserves", inputs: [] },
+  { type: "error", name: "InvalidInt104", inputs: [] },
+  { type: "error", name: "InvalidInt256", inputs: [] },
+  { type: "error", name: "InvalidLength", inputs: [] },
+  { type: "error", name: "InvalidUInt104", inputs: [] },
+  { type: "error", name: "InvalidUInt128", inputs: [] },
+  { type: "error", name: "InvalidUInt64", inputs: [] },
+  { type: "error", name: "InvalidValueS", inputs: [] },
+  { type: "error", name: "InvalidValueV", inputs: [] },
+  { type: "error", name: "NegativeNumber", inputs: [] },
+  { type: "error", name: "NoSelfTransfer", inputs: [] },
+  { type: "error", name: "NotCollateralized", inputs: [] },
+  { type: "error", name: "NotLiquidatable", inputs: [] },
+  { type: "error", name: "Paused", inputs: [] },
+  { type: "error", name: "ReentrantCallBlocked", inputs: [] },
+  { type: "error", name: "SignatureExpired", inputs: [] },
+  { type: "error", name: "SupplyCapExceeded", inputs: [] },
+  { type: "error", name: "TimestampTooLarge", inputs: [] },
+  { type: "error", name: "TooManyAssets", inputs: [] },
+  { type: "error", name: "TooMuchSlippage", inputs: [] },
+  { type: "error", name: "Unauthorized", inputs: [] },
   {
     type: "error",
-    name: "SignatureExpired",
-    inputs: [],
+    name: "WrongToken",
+    inputs: [{ name: "token", type: "address", internalType: "address" }],
   },
+  { type: "error", name: "ZeroAddress", inputs: [] },
+  { type: "error", name: "ZeroAmount", inputs: [] },
 ] as const;

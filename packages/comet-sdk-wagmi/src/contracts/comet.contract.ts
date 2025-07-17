@@ -1,4 +1,9 @@
-import type { Config, WriteContractReturnType } from "@wagmi/core";
+import {
+  type Config,
+  type WriteContractReturnType,
+  multicall,
+} from "@wagmi/core";
+import type { UserCollateral } from "@woof-software/comet-sdk/lib";
 import type { ContractFunctionParameters } from "viem";
 import { cometAbi } from "../abis";
 import type { WagmiChainId } from "../config";
@@ -118,28 +123,44 @@ export class CometContract extends WagmiContract {
   async isAllowed(
     owner: `0x${string}`,
     bulker: `0x${string}`,
-  ): Promise<boolean> {
-    const isAllowed = await this.read("isAllowed", this.chainId, [
-      owner,
-      bulker,
-    ]);
-    return isAllowed as boolean;
-  }
+    baseTokenAddress: `0x${string}`,
+    collaterals: UserCollateral[],
+  ): Promise<bigint[]> {
+    const data = collaterals.map(({ tokenAddress }) =>
+      this.getCallAddress(this.address, "allowance", [
+        owner,
+        bulker,
+        tokenAddress,
+      ]),
+    );
 
-  getIsAllowedCall(
-    owner: `0x${string}`,
-    bulker: `0x${string}`,
-  ): ContractFunctionParameters {
-    return this.getCall("isAllowed", [owner, bulker]);
+    data.push(
+      this.getCallAddress(this.address, "allowance", [
+        owner,
+        bulker,
+        baseTokenAddress,
+      ]),
+    );
+    const allAllowances = await multicall(wagmiConfig, {
+      chainId: this.chainId,
+      contracts: data,
+    });
+
+    return allAllowances.map((data, index) => data?.result as bigint);
   }
 
   async allow(
     bulker: `0x${string}`,
-    status: boolean,
+    baseTokenAddress: `0x${string}`,
+    collaterals: UserCollateral[],
   ): Promise<WriteContractReturnType> {
-    return this.write("approve", this.chainId, [
+    return this.write("approveAll", this.chainId, [
       bulker,
-      "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", // MAX amount
+      baseTokenAddress,
+      collaterals.map(
+        () =>
+          "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      ),
     ]);
   }
 
