@@ -1,7 +1,7 @@
 {
   "name": "@woof-software/contracts-tools-sdk-ethers",
   "description": "Module simplify smart contract interactions and multicall3 aggregation on the Ethereum blockchain and other EVM-compatible networks.",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/woof-compound/sandbox-sdks.git"
@@ -13,8 +13,14 @@
   "license": "MIT",
   "main": "src/index.ts",
   "type": "module",
-  "keywords": ["local", "library", "npm"],
-  "files": ["lib"],
+  "keywords": [
+    "local",
+    "library",
+    "npm"
+  ],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "prepublish": "$npm_execpath build",
     "build": "tsc --build tsconfig.build.json --force && node ../../scripts/compile/post-compile.js",
