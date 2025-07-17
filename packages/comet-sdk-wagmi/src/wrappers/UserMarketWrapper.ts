@@ -163,7 +163,7 @@ export class UserMarketWrapper extends UserMarket {
     );
 
     const isSomeSmallAllowance = allowances.some(
-      (allowance) => allowance === BigInt(0),
+      (allowance) => allowance <= BigInt(100000),
     );
 
     if (isSomeSmallAllowance) throw BULKER_NOT_ALLOWED();
@@ -191,12 +191,16 @@ export class UserMarketWrapper extends UserMarket {
   };
 
   async getBulkerAllowed(user: Address) {
-    return await this.cometContract.isAllowed(
+    const allowances = await this.cometContract.isAllowed(
       user,
       bulkerAddress,
       this.baseToken.tokenAddress as Address,
       this.collaterals,
     );
+    const isAllAllowed = allowances.some(
+      (allowance) => allowance > BigInt(100000),
+    );
+    return isAllAllowed;
   }
 
   async allowMarket() {
