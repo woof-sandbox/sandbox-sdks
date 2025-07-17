@@ -7,6 +7,10 @@ export const userActiveMarketQuery =
     `{
           users(where: { userAddress: ${userAddress}, principal_not: "0" }, orderBy: createdAt, orderDirection: asc, skip: ${skip}, first: ${pageSize}) {
             principal
-            proxyCometAddress
+            comet {
+                market {
+                    id
+                }
+            }
           }
         }`;
