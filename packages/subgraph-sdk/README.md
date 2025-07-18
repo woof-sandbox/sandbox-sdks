@@ -127,7 +127,7 @@ const where = formWhere({ id: '0x123', status: ['active', 'pending'] });
 
 ## Scripts & Testing
 
-- `npm run build` — build the package
-- `npm test` — run unit tests (Vitest)
+- `pnpm run build` — build the package
+- `pnpm test` — run unit tests (Vitest)
 
 

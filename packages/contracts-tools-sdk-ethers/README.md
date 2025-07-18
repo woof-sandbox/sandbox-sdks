@@ -107,9 +107,8 @@ class RegistryContract extends BaseContract {
  */
 
 const registry = new RegistryContract(ADDRESS, PROVIDER);
-const unit = new MulticallUnit(PROVIDER); // Unit-of-Work - like
+const unit = new MulticallUnit(PROVIDER);
 
-// Tag creation
 const addressesProvidersListTag = 'getAddressesProvidersList';
 const ownerTag = 'owner';
 
@@ -366,7 +365,7 @@ Since in the case of a **mutable call**, the result is not returned but rather *
 
 ## Config
 
-In addition to setting configuration at specific points—such as when creating objects or making calls—you can also modify the **global configuration** for the entire project.
+Configuration can be set globally or at specific points, such as when creating objects or making calls.
 
 ```typescript
 import { config } from '@woof-software/contracts-tools-sdk-ethers';

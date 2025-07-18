@@ -13,9 +13,9 @@
 pnpm add @woof-software/comet-sdk
 ```
 
-## Quickstart <a href="#quickstart" id="quickstart"></a>
+## Quickstart
 
-### Market Entity <a href="#market-entity" id="market-entity"></a>
+### Market Entity
 
 ```typescript
 import { Market } from '@woof-software/comet-sdk';
@@ -28,7 +28,7 @@ console.log(market.utilizationPercent); // Utilization %
 console.log(market.interestRateChartData); // Interest rate model chart points
 ```
 
-### User Entity <a href="#user-entity" id="user-entity"></a>
+### User Entity
 
 ```typescript
 import { User } from '@woof-software/comet-sdk';
@@ -40,7 +40,7 @@ console.log(user.address); // User address
 console.log(user.borrowMarkets); // List of borrowed market addresses
 ```
 
-### Token Entity <a href="#token-entity" id="token-entity"></a>
+### Token Entity
 
 ```typescript
 import { Token } from '@woof-software/comet-sdk';
@@ -52,7 +52,7 @@ console.log(token.symbol); // Token symbol
 console.log(token.price); // Token price (string)
 ```
 
-### Curve Entity <a href="#curve-entity" id="curve-entity"></a>
+### Curve Entity
 
 ```typescript
 import { Curve } from '@woof-software/comet-sdk';
@@ -63,7 +63,7 @@ const curve = new Curve(curveData);
 console.log(curve.supplyKink); // Supply kink point
 ```
 
-### Market Analytics & Methods <a href="#market-analytics--methods" id="market-analytics--methods"></a>
+### Market Analytics & Methods
 
 ```typescript
 import { MarketMethods } from '@woof-software/comet-sdk';
@@ -73,7 +73,7 @@ const tvl = MarketMethods.getTVL(1000n, baseToken, collaterals); // Calculate TV
 const utilization = MarketMethods.getUtilization(500000000000000000n); // Utilization %
 ```
 
-## Market <a href="#market" id="market"></a>
+## Market
 
 ### **Description**
 
@@ -161,7 +161,7 @@ constructor(userMarket: IUserMarket)
 * `.netEarnAprsCustom(userSupplyValue)` // Custom net earn APRs for the user
 * `.netBorrowAprsCustom(userBorrowValue)` // Custom net borrow APRs for the user
 
-## User <a href="#user" id="user"></a>
+## User
 
 ### **Description**
 
@@ -177,7 +177,7 @@ constructor(userData: IUser)
 * `.borrowMarkets` // Array of borrowed market addresses
 * `.lendMarkets` // Array of supplied market addresses
 
-## Token <a href="#token" id="token"></a>
+## Token
 
 ### **Description**
 
@@ -195,7 +195,7 @@ constructor(tokenData: IToken)
 * `.price` // Token price (string)
 * `.priceFeedAddress` // Price feed contract address
 
-## Curve <a href="#curve" id="curve"></a>
+## Curve
 
 ### **Description**
 
@@ -217,7 +217,7 @@ constructor(curveData: ICurve)
 * `.borrowPerYearInterestRateSlopeHigh` // Slope high (bigint)
 * `.borrowPerYearInterestRateBase` // Base rate (bigint)
 
-## MarketMethods <a href="#marketmethods" id="marketmethods"></a>
+## MarketMethods
 
 ### **Description**
 
@@ -234,7 +234,7 @@ constructor(curveData: ICurve)
 * `netEarnAprs(baseToken, totalSupplied, compToken, rewardTokens, supplyApr): number[]` // Net earn APRs
 * `netBorrowAprs(baseToken, totalBorrowed, compToken, rewardTokens, borrowApr): number[]` // Net borrow APRs
 
-## UserMarketMethods <a href="#usermarketmethods" id="usermarketmethods"></a>
+## UserMarketMethods
 
 **Description**
 
@@ -255,7 +255,7 @@ constructor(curveData: ICurve)
 * `isAllCollateralsFromMarket(collaterals: UserCollateral[], supplyCollaterals: ICustomCollateral[]): boolean`// Checks if all supplied collaterals are present in the market.
 * `availableToBorrow(collaterals: UserCollateral[], basePriceUsd: string, borrowBalance: bigint): string`// Calculates the amount available for the user to borrow.
 
-### CollateralMethods <a href="#collateralmethods" id="collateralmethods"></a>
+### CollateralMethods
 
 #### **Description**
 
@@ -288,7 +288,7 @@ static parseTokenInput(input: string): string  // Parse user input
 static validateNumericInput(input: string): boolean // Validate numeric inpu
 ```
 
-## Types <a href="#types" id="types"></a>
+## Types
 
 ### IMarket
 

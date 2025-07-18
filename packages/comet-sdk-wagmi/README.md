@@ -1,8 +1,8 @@
 # @woof-software/comet-sdk-wagmi
 
-## Description <a href="#description" id="description"></a>
+## Description
 
-**comet-sdk-wagmi** is a TypeScript library that extends `@woof-software/comet-sdk` with wagmi/viem-powered contract wrappers, fetchers, and utilities. It enables seamless, type-safe interaction with Comet protocol entities and DeFi analytics in modern React/TypeScript dApps, supporting multicall, user/market analytics, and high-level DeFi operations.
+comet-sdk-wagmi is a TypeScript library that extends @woof-software/comet-sdk with wagmi/viem-based contract wrappers, fetchers, and utilities. It enables interaction with Comet protocol entities and DeFi analytics in React/TypeScript dApps, supporting multicall, user/market analytics, and DeFi operations.
 
 * **Wagmi-based contract wrappers** for Comet, ERC20, Bulker, ConfigController, and more
 * **Augmented fetchers** for user, market, collateral, and protocol data (multichain-ready)
@@ -26,9 +26,9 @@ Then:
 
 `pnpm add @woof-software/comet-sdk-wagmi`
 
-## Quickstart <a href="#quickstart" id="quickstart"></a>
+## Quickstart
 
-### Configure wagmi <a href="#id-1-configure-wagmi" id="id-1-configure-wagmi"></a>
+### Configure wagmi
 
 ```ts
 import { createConfig, http } from "@wagmi/core";
@@ -49,7 +49,7 @@ Or use the built-in config:
 import { wagmiConfig } from "@woof-software/comet-sdk-wagmi";
 ```
 
-### Fetch market data <a href="#id-2-fetch-market-data" id="id-2-fetch-market-data"></a>
+### Fetch market data
 
 ```ts
 import { Market } from "@woof-software/comet-sdk-wagmi";
@@ -62,7 +62,7 @@ const market = await Market.fetchMarket(
 console.log(market.supplyApr, market.borrowApr, market.availableLiquidity);
 ```
 
-### Fetch user market data <a href="#id-3-fetch-user-market-data" id="id-3-fetch-user-market-data"></a>
+### Fetch user market data
 
 ```ts
 import { UserMarket } from "@woof-software/comet-sdk-wagmi";
@@ -76,7 +76,7 @@ const userMarket = await UserMarket.fetchUserMarket(
 console.log(userMarket.supplyBalance, userMarket.borrowBalance);
 ```
 
-### Use high-level wrappers for operations <a href="#id-4-use-high-level-wrappers-for-operations" id="id-4-use-high-level-wrappers-for-operations"></a>
+### Use wrappers for operations
 
 ```ts
 import { UserMarketWrapper } from "@woof-software/comet-sdk-wagmi";
@@ -92,9 +92,9 @@ await wrapper.supplyCollaterals([
 ], 42161);
 ```
 
-## Main Entities & API <a href="#main-entities--api" id="main-entities--api"></a>
+## Main Entities & API
 
-### Augmented Entities <a href="#augmented-entities" id="augmented-entities"></a>
+### Entities
 
 * **Base, Curve, Collateral, Market, User, UserMarket, SandboxController, ConfigController**
 * Each class extends the base SDK with wagmi-powered fetchers and helpers.
@@ -117,10 +117,10 @@ const userMarket = await UserMarket.fetchUserMarket("0xCometAddress", "0xUserAdd
 console.log(userMarket.supplyBalanceUSD, userMarket.borrowBalanceUSD);
 ```
 
-### Contract Wrappers <a href="#contract-wrappers" id="contract-wrappers"></a>
+### Contract Wrappers
 
-* **CometContract, Erc20Contract, BulkerContract, ConfigControllerContract, ControllerContract, MigratorContract**
-* All inherit from `WagmiContract` (provides `read`, `write`, multicall, calldata helpers).
+* CometContract, Erc20Contract, BulkerContract, ConfigControllerContract, ControllerContract, MigratorContract
+* All inherit from WagmiContract (provides read, write, multicall, calldata helpers).
 
 **Example: Direct contract call**
 
@@ -131,7 +131,7 @@ const comet = new CometContract("0xCometAddress", 42161, wagmiConfig);
 const utilization = await comet.read("getUtilization");
 ```
 
-### High-level Wrappers <a href="#high-level-wrappers" id="high-level-wrappers"></a>
+### Wrappers
 
 * **UserMarketWrapper, ConfigControllerWrapper, SandboxControllerWrapper**
 * Simplify user and admin operations (supply, borrow, approve, migrate, etc.)
@@ -146,7 +146,7 @@ await wrapper.approveToken("0xTokenAddress", "0.01", 18);
 await wrapper.supplyCollaterals([{ tokenAddress: "0xTokenAddress", inputAmount: "0.01" }], 42161);
 ```
 
-### Fetchers <a href="#fetchers" id="fetchers"></a>
+### Fetchers
 
 * `fetchMarket`, `fetchMarkets`, `fetchUserMarket`, `fetchUserMarkets`, `fetchUserCollaterals`, `fetchBase`, etc.
 * All use wagmi multicall and return fully-typed objects.
@@ -167,7 +167,7 @@ const userMarkets = await UserMarket.fetchUserMarkets(
 );
 ```
 
-### Utilities <a href="#utilities" id="utilities"></a>
+### Utilities
 
 * **FormattingUtils** — formatting for numbers, tokens, percentages, addresses
 * **WagmiUtils** — multicall result helper,  etc
@@ -178,12 +178,12 @@ import { FormattingUtils } from "@woof-software/comet-sdk-wagmi";
 console.log(FormattingUtils.formatTokenValue(1234567890123456789n, 18)); // "1.234567890123456789"
 ```
 
-### Config & ABI <a href="#config--abi" id="config--abi"></a>
+### Config & ABI
 
 * All contract ABIs exported
 * Chain, address, and subgraph config exports
 
-## API Structure <a href="#api-structure" id="api-structure"></a>
+## API Structure
 
 * `@woof-software/comet-sdk-wagmi/augment` — augmented entities and fetchers
 * `@woof-software/comet-sdk-wagmi/contracts` — contract wrappers
