@@ -40,6 +40,9 @@ export async function fetchUser(
 export async function fetchUserActiveMarkets(
   address: string,
   subgraphUrl: string,
+  options: {
+    token?: string;
+  } = {}
 ): Promise<[string[], string[]]> {
   const borrowMarkets: Set<string> = new Set();
   const lendMarkets: Set<string> = new Set();
@@ -51,14 +54,14 @@ export async function fetchUserActiveMarkets(
     }
     subgraphUser.forEach((user: IUser) => {
       if (BigInt(user.principal) < 0n) {
-        borrowMarkets.add(user.proxyCometAddress);
+        borrowMarkets.add(user.comet.market.id);
       } else {
-        lendMarkets.add(user.proxyCometAddress);
+        lendMarkets.add(user.comet.market.id);
       }
     });
   };
 
-  await fetchCollection(userActiveMarketQuery(address), callback, subgraphUrl);
+  await fetchCollection(userActiveMarketQuery(address), callback, subgraphUrl, options);
 
   return [Array.from(borrowMarkets), Array.from(lendMarkets)];
 }

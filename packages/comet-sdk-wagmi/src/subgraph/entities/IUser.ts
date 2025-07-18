@@ -1,4 +1,8 @@
 export interface IUser {
   principal: string;
-  proxyCometAddress: string;
+  comet: {
+    market: {
+      id: string
+    }
+  };
 }
