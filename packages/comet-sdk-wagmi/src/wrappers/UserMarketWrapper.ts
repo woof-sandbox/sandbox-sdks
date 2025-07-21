@@ -206,11 +206,7 @@ export class UserMarketWrapper extends UserMarket {
 
   async allowMarket() {
     try {
-      return await this.cometContract.allow(
-        bulkerAddress,
-        this.baseToken.tokenAddress as Address,
-        this.collaterals,
-      );
+      return await this.cometContract.allow(bulkerAddress, this.collaterals);
     } catch (e) {
       throw ALLOW_FAILED();
     }
@@ -332,7 +328,9 @@ export class UserMarketWrapper extends UserMarket {
     for (const action of actions) {
       const marketData = this.findMarketCollateralByAddress(action.address);
       const decimals = marketData?.decimals ?? this.baseToken.decimals;
-      const inputAmount = DataUtils.toBigNumber(action.value, Number(decimals));
+      const inputAmount = action.isMax
+        ? BigInt(MAX_UINT)
+        : DataUtils.toBigNumber(action.value, Number(decimals));
 
       if (action.isNative && action.action !== ActionType.Withdraw) {
         ethValue = (ethValue ?? BigInt(0)) + inputAmount;

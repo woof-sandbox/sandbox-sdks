@@ -146,21 +146,22 @@ export class CometContract extends WagmiContract {
       contracts: data,
     });
 
-    return allAllowances.map((data, index) => data?.result as bigint);
+    return allAllowances.map((data) => data?.result as bigint);
   }
 
   async allow(
     bulker: `0x${string}`,
-    baseTokenAddress: `0x${string}`,
     collaterals: UserCollateral[],
   ): Promise<WriteContractReturnType> {
     return this.write("approveAll", this.chainId, [
       bulker,
-      baseTokenAddress,
-      collaterals.map(
-        () =>
-          "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      ),
+      "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      [
+        ...collaterals.map(
+          () =>
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        ),
+      ],
     ]);
   }
 
