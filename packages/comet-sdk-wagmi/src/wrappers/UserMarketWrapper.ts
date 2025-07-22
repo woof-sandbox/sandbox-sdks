@@ -3,7 +3,7 @@ import { UserMarket } from "../augment";
 
 import { type Config, getWalletClient } from "@wagmi/core";
 import type { Address } from "viem";
-import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
+import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
 import type { WagmiChainId } from "../config";
 import {
   ACTION_SUPPLY_NATIVE_TOKEN,
@@ -326,10 +326,16 @@ export class UserMarketWrapper extends UserMarket {
     let ethValue: bigint | undefined;
 
     for (const action of actions) {
-      const marketData = this.findMarketCollateralByAddress(action.address);
-      const decimals = marketData?.decimals ?? this.baseToken.decimals;
+      const collateralData = this.findMarketCollateralByAddress(action.address);
+
+      const decimals = collateralData?.decimals ?? this.baseToken.decimals;
+
       const inputAmount = action.isMax
-        ? BigInt(MAX_UINT)
+        ? ActionType.Withdraw && collateralData
+          ? collateralData.userSupplyBalance
+          : ActionType.WithdrawBase
+            ? this.supplyBalance
+            : BigInt(MAX_UINT)
         : DataUtils.toBigNumber(action.value, Number(decimals));
 
       if (action.isNative && action.action !== ActionType.Withdraw) {

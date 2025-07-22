@@ -278,7 +278,7 @@ function App() {
                       // },
                       // {
                       //   address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
-                      //   value: '0.011',
+                      //   value: '0.00012330',
                       //   action: 'withdraw',
                       //   isMax: true,
                       // },
