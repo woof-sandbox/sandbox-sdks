@@ -9,6 +9,10 @@ import { cometAbi } from "../abis";
 import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
+import {
+  MultiAllowanceCallType,
+  MultiAllowanceCallTypeBigInt,
+} from "./entities/multi-allowance-call";
 
 export interface AssetConfig {
   collateralToken: `0x${string}`;
@@ -120,46 +124,131 @@ export class CometContract extends WagmiContract {
     return this.getCall("baseToken");
   }
 
+  async getContractName(): Promise<string> {
+    const nonce = await this.read("name", this.chainId);
+
+    return nonce as string;
+  }
+
+  async getContractVersion(): Promise<string> {
+    const nonce = await this.read("version", this.chainId);
+
+    return nonce as string;
+  }
+
+  async getUserNonce(owner: `0x${string}`): Promise<number> {
+    const nonce = await this.read("userNonce", this.chainId, [owner]);
+
+    return nonce as number;
+  }
+  /**
+   * THIS allow for full amount withdraw or repay
+   */
+  async writeAllowAllBySig(
+    owner: `0x${string}`,
+    bulker: `0x${string}`,
+    nonce: number,
+    expiry: bigint,
+    v: number,
+    r: string,
+    s: string,
+  ): Promise<WriteContractReturnType> {
+    return await this.write("allowAllBySig", this.chainId, [
+      owner,
+      bulker,
+      true,
+      nonce,
+      expiry,
+      v,
+      r,
+      s,
+    ]);
+  }
+  /**
+   * Check allow for full amount withdraw or repay
+   */
   async isAllowed(
     owner: `0x${string}`,
     bulker: `0x${string}`,
-    baseTokenAddress: `0x${string}`,
-    collaterals: UserCollateral[],
-  ): Promise<bigint[]> {
-    const data = collaterals.map(({ tokenAddress }) =>
-      this.getCallAddress(this.address, "allowance", [
-        owner,
-        bulker,
-        tokenAddress,
-      ]),
-    );
+  ): Promise<boolean> {
+    const isAllowed = await this.read("allowanceAll", this.chainId, [
+      owner,
+      bulker,
+    ]);
 
-    data.push(
-      this.getCallAddress(this.address, "allowance", [
-        owner,
-        bulker,
-        baseTokenAddress,
-      ]),
-    );
-    const allAllowances = await multicall(wagmiConfig, {
-      chainId: this.chainId,
-      contracts: data,
-    });
-
-    return allAllowances.map((data) => data?.result as bigint);
+    return isAllowed as boolean;
   }
 
+  /**
+   * Check allow for not full amount withdraw or repay
+   */
+  async isAllowedToken(
+    owner: `0x${string}`,
+    bulker: `0x${string}`,
+    tokenAddress: `0x${string}`,
+    amount: bigint,
+  ): Promise<boolean> {
+    const result: any = await this.read("allowance", this.chainId, [
+      owner,
+      bulker,
+      tokenAddress,
+    ]);
+
+    const allowAmount = result as bigint;
+
+    return allowAmount >= amount;
+  }
+
+  /**
+   * Check allow for not full amount withdraw or repay
+   */
+  async isAllowedTokens(
+    owner: `0x${string}`,
+    bulker: `0x${string}`,
+    tokensData: MultiAllowanceCallTypeBigInt[],
+  ): Promise<boolean> {
+    const tokensAllowance = await multicall(wagmiConfig, {
+      chainId: this.chainId,
+      contracts: tokensData.map(({ tokenAddress }) =>
+        this.getCallAddress(this.address, "allowance", [
+          owner,
+          bulker,
+          tokenAddress,
+        ]),
+      ),
+    });
+
+    const isSomeSmall = tokensData.some((tokenData, index) => {
+      const currentTokenAllowance = tokensAllowance[index]?.result as bigint;
+
+      if (!currentTokenAllowance) {
+        return true;
+      }
+
+      return currentTokenAllowance < tokenData.inputAmount;
+    });
+
+    return !isSomeSmall;
+  }
+
+  /**
+   * This allow is for collaterals and not full amount withdraw and repay
+   */
   async allow(
     bulker: `0x${string}`,
     collaterals: UserCollateral[],
   ): Promise<WriteContractReturnType> {
-    return this.write("approveAll", this.chainId, [
+    return this.write("approveAllTokens", this.chainId, [
       bulker,
-      "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      BigInt(
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      ) - BigInt(1),
       [
         ...collaterals.map(
           () =>
-            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            BigInt(
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            ) - BigInt(1),
         ),
       ],
     ]);

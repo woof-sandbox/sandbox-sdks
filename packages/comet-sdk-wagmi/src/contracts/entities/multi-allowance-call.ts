@@ -5,3 +5,8 @@ export type MultiAllowanceCallType = {
   inputAmount: string;
   isNative?: boolean;
 };
+
+export type MultiAllowanceCallTypeBigInt = {
+  tokenAddress: Address;
+  inputAmount: bigint;
+};

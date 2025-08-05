@@ -1,17 +1,19 @@
 import { DataUtils, type IUserMarket } from "@woof-software/comet-sdk";
 import { UserMarket } from "../augment";
 
-import { type Config, getWalletClient } from "@wagmi/core";
+import { type Config, getWalletClient, signTypedData } from "@wagmi/core";
 import type { Address } from "viem";
+import { Signature } from "ethers";
 import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
 import type { WagmiChainId } from "../config";
 import {
+  ACTION_REPAY_ALL,
   ACTION_SUPPLY_NATIVE_TOKEN,
   ACTION_SUPPLY_TOKEN,
   ACTION_WITHDRAW_ASSET,
+  ACTION_WITHDRAW_ASSET_ALL,
   ACTION_WITHDRAW_NATIVE_TOKEN,
   MAX_UINT,
-  MIN_ALLOWANCE,
 } from "../constants";
 import {
   BulkerContract,
@@ -19,7 +21,10 @@ import {
   Erc20Contract,
   MigratorContract,
 } from "../contracts";
-import type { MultiAllowanceCallType } from "../contracts/entities/multi-allowance-call";
+import {
+  MultiAllowanceCallType,
+  MultiAllowanceCallTypeBigInt,
+} from "../contracts/entities/multi-allowance-call";
 import {
   ACTION_FAILED,
   ALLOW_FAILED,
@@ -45,9 +50,10 @@ import {
 } from "../errors/wrappers/user-market-wrapper.errors";
 
 import { type ActionData, ActionType } from "../contracts/entities/actions";
+import { sepolia } from "viem/chains";
 
 // Todo need to find where to get Bulker Address
-const bulkerAddress = "0x6fCFf84a7ded10cE3Fa6C4a6b7B90a97f9be3d80"; // sepolia
+const bulkerAddress = "0x469b5fE7bdb82f93F3a11a6c62e94b99D3C728c2"; // sepolia
 // const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum
 
 export class UserMarketWrapper extends UserMarket {
@@ -145,6 +151,25 @@ export class UserMarketWrapper extends UserMarket {
     );
   }
 
+  private _encodeWithdrawRepayAll(
+    userAddress: string,
+  ): EncodeAbiParametersReturnType {
+    return encodeAbiParameters(
+      [
+        { type: "address" },
+        { type: "address" },
+        { type: "address" },
+        { type: "address" },
+      ],
+      [
+        this.cometAddress as Address,
+        userAddress as Address,
+        userAddress as Address,
+        userAddress as Address,
+      ],
+    );
+  }
+
   private _encodeWithdrawNative(
     userAddress: string,
     amount: bigint,
@@ -155,22 +180,118 @@ export class UserMarketWrapper extends UserMarket {
     );
   }
 
-  async ensureBulkerAllowed(user: Address) {
-    const allowances = await this.cometContract.isAllowed(
-      user,
-      bulkerAddress,
-      this.baseToken.tokenAddress as Address,
-      this.collaterals,
-    );
-
-    const isSomeSmallAllowance = allowances.some(
-      (allowance) => allowance <= MIN_ALLOWANCE,
-    );
-
-    if (isSomeSmallAllowance) throw BULKER_NOT_ALLOWED();
+  private splitSignature(signature: `0x${string}`) {
+    const sig = signature.slice(2); // remove 0x
+    const r = `0x${sig.slice(0, 64)}` as `0x${string}`;
+    const s = `0x${sig.slice(64, 128)}` as `0x${string}`;
+    const v = parseInt(sig.slice(128, 130), 16);
+    return { r, s, v };
   }
 
-  getActionType = (action: ActionType, isNative?: boolean) => {
+  /**
+   * THIS allow for full amount withdraw or repay
+   */
+  async approveViaSignature(userAddress: Address) {
+    const name = await this.cometContract.getContractName();
+
+    const version = await this.cometContract.getContractVersion();
+
+    const nonce = await this.cometContract.getUserNonce(userAddress);
+
+    const expiry = BigInt(Math.floor(Date.now() / 1000) + 3600);
+
+    const message = {
+      owner: userAddress,
+      manager: bulkerAddress,
+      approved: true,
+      nonce,
+      expiry,
+    };
+
+    const types = {
+      AuthorizationAll: [
+        { name: "owner", type: "address" },
+        { name: "manager", type: "address" },
+        { name: "approved", type: "bool" },
+        { name: "nonce", type: "uint256" },
+        { name: "expiry", type: "uint256" },
+      ],
+    };
+
+    const domain = {
+      name,
+      version,
+      chainId: sepolia.id,
+      verifyingContract: this.cometAddress as Address,
+    };
+
+    try {
+      const signature = await signTypedData(this.config, {
+        domain,
+        types,
+        primaryType: "AuthorizationAll",
+        message,
+      });
+
+      const sig = Signature.from(signature);
+
+      return await this.cometContract.writeAllowAllBySig(
+        userAddress,
+        bulkerAddress,
+        nonce,
+        expiry,
+        sig.v,
+        sig.r,
+        sig.s,
+      );
+    } catch (e) {
+      throw ALLOW_FAILED();
+    }
+  }
+  /**
+   * THIS check allow for full amount withdraw or repay
+   */
+  async ensureBulkerAllowed(user: Address) {
+    const isAllowed = await this.cometContract.isAllowed(user, bulkerAddress);
+
+    if (!isAllowed) throw BULKER_NOT_ALLOWED();
+  }
+
+  /**
+   * THIS check allow for not full amount withdraw or repay
+   */
+  async ensureBulkerAllowedToken(
+    user: Address,
+    tokenAddress: Address,
+    amount: bigint,
+  ) {
+    const isAllowed = await this.cometContract.isAllowedToken(
+      user,
+      bulkerAddress,
+      tokenAddress,
+      amount,
+    );
+
+    if (!isAllowed) throw BULKER_NOT_ALLOWED();
+  }
+
+  /**
+   * THIS check allow for not full amount withdraw or repay
+   */
+  async getBulkerTokensAllowed(
+    user: Address,
+    tokensData: MultiAllowanceCallTypeBigInt[],
+  ) {
+    const isAllAllowed = await this.cometContract.isAllowedTokens(
+      user,
+      bulkerAddress,
+      tokensData,
+    );
+
+    return isAllAllowed;
+  }
+
+  getActionType = (action: ActionType, isNative?: boolean, isMax?: boolean) => {
     const actionsMap = isNative
       ? {
           [ActionType.Supply]: ACTION_SUPPLY_NATIVE_TOKEN,
@@ -185,22 +306,20 @@ export class UserMarketWrapper extends UserMarket {
           [ActionType.Withdraw]: ACTION_WITHDRAW_ASSET,
           [ActionType.Borrow]: ACTION_WITHDRAW_ASSET,
           [ActionType.Lend]: ACTION_SUPPLY_TOKEN,
-          [ActionType.WithdrawBase]: ACTION_WITHDRAW_ASSET,
-          [ActionType.Repay]: ACTION_SUPPLY_TOKEN,
+          [ActionType.WithdrawBase]: !isMax
+            ? ACTION_WITHDRAW_ASSET
+            : ACTION_WITHDRAW_ASSET_ALL,
+          [ActionType.Repay]: !isMax ? ACTION_SUPPLY_TOKEN : ACTION_REPAY_ALL,
         };
     return actionsMap[action] as Address;
   };
 
   async getBulkerAllowed(user: Address) {
-    const allowances = await this.cometContract.isAllowed(
+    const isAllAllowed = await this.cometContract.isAllowed(
       user,
       bulkerAddress,
-      this.baseToken.tokenAddress as Address,
-      this.collaterals,
     );
-    const isAllAllowed = allowances.some(
-      (allowance) => allowance > MIN_ALLOWANCE,
-    );
+
     return isAllAllowed;
   }
 
@@ -257,8 +376,6 @@ export class UserMarketWrapper extends UserMarket {
   async createAction(actions: ActionData[]): Promise<Address> {
     const walletClient = await getWalletClient(this.config);
     const userAddress = walletClient.account.address;
-
-    await this.ensureBulkerAllowed(userAddress);
 
     const byType = (type: ActionType) => this.findByActionType(actions, type);
     const supplyActions = byType(ActionType.Supply);
@@ -330,6 +447,16 @@ export class UserMarketWrapper extends UserMarket {
 
       const decimals = collateralData?.decimals ?? this.baseToken.decimals;
 
+      if (action.isMax) {
+        await this.ensureBulkerAllowed(userAddress);
+      } else {
+        await this.ensureBulkerAllowedToken(
+          userAddress,
+          action.address,
+          DataUtils.toBigNumber(action.value, Number(decimals)),
+        );
+      }
+
       const inputAmount = action.isMax
         ? ActionType.Withdraw && collateralData
           ? collateralData.userSupplyBalance
@@ -344,13 +471,17 @@ export class UserMarketWrapper extends UserMarket {
 
       const encoded = action.isNative
         ? this._encodeSupplyNativeToken(userAddress, inputAmount)
-        : this._encodeSupplyOrWithdrawWithToken(
-            userAddress,
-            action.address,
-            inputAmount,
-          );
+        : action.isMax
+          ? this._encodeWithdrawRepayAll(userAddress)
+          : this._encodeSupplyOrWithdrawWithToken(
+              userAddress,
+              action.address,
+              inputAmount,
+            );
 
-      invokeActions.push(this.getActionType(action.action, action.isNative));
+      invokeActions.push(
+        this.getActionType(action.action, action.isNative, action.isMax),
+      );
       encodedActions.push(encoded);
     }
 
@@ -368,15 +499,20 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this.ensureBulkerAllowed(userAddress);
-
-    const allowance = await this.getTokenAllowance(
-      this.baseToken.tokenAddress as Address,
-    );
 
     const supplyValue = DataUtils.toBigNumber(
       inputValue,
       Number(this.baseToken.decimals),
+    );
+
+    await this.ensureBulkerAllowedToken(
+      userAddress,
+      this.baseToken.tokenAddress as Address,
+      supplyValue,
+    );
+
+    const allowance = await this.getTokenAllowance(
+      this.baseToken.tokenAddress as Address,
     );
 
     if (!isNative && allowance < supplyValue)
@@ -407,11 +543,16 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this.ensureBulkerAllowed(userAddress);
 
     const borrowValue = DataUtils.toBigNumber(
       inputValue,
       Number(this.baseToken.decimals),
+    );
+
+    await this.ensureBulkerAllowedToken(
+      userAddress,
+      this.baseToken.tokenAddress as Address,
+      borrowValue,
     );
 
     const minBorrowValue = this.borrowMinAmount + this.supplyBalance;
@@ -449,7 +590,17 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this.ensureBulkerAllowed(userAddress);
+
+    const supplyValue = DataUtils.toBigNumber(
+      inputValue,
+      Number(this.baseToken.decimals),
+    );
+
+    await this.ensureBulkerAllowedToken(
+      userAddress,
+      this.baseToken.tokenAddress as Address,
+      supplyValue,
+    );
 
     const isCollateralsFromThisMarket =
       this.isAllCollateralsFromMarket(supplyCollaterals);
@@ -484,6 +635,17 @@ export class UserMarketWrapper extends UserMarket {
       if (!currentCollateralData)
         throw COLLATERAL_NOT_FOUND(collateral.tokenAddress);
 
+      (async () => {
+        await this.ensureBulkerAllowedToken(
+          userAddress,
+          collateral.tokenAddress,
+          DataUtils.toBigNumber(
+            collateral.inputAmount,
+            Number(currentCollateralData.decimals),
+          ),
+        );
+      })();
+
       if (collateral.isNative) {
         nativeTokenAmount = DataUtils.toBigNumber(
           collateral.inputAmount,
@@ -508,11 +670,6 @@ export class UserMarketWrapper extends UserMarket {
             ),
           );
     });
-
-    const supplyValue = DataUtils.toBigNumber(
-      inputValue,
-      Number(this.baseToken.decimals),
-    );
 
     const baseTokenAllowance = await this.getTokenAllowance(
       this.baseToken.tokenAddress as Address,
@@ -566,7 +723,17 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this.ensureBulkerAllowed(userAddress);
+
+    const borrowValue = DataUtils.toBigNumber(
+      inputValue,
+      Number(this.baseToken.decimals),
+    );
+
+    await this.ensureBulkerAllowedToken(
+      userAddress,
+      this.baseToken.tokenAddress as Address,
+      borrowValue,
+    );
 
     const isCollateralsFromThisMarket =
       this.isAllCollateralsFromMarket(supplyCollaterals);
@@ -601,6 +768,17 @@ export class UserMarketWrapper extends UserMarket {
       if (!currentCollateralData)
         throw COLLATERAL_NOT_FOUND(collateral.tokenAddress);
 
+      (async () => {
+        await this.ensureBulkerAllowedToken(
+          userAddress,
+          collateral.tokenAddress,
+          DataUtils.toBigNumber(
+            collateral.inputAmount,
+            Number(currentCollateralData.decimals),
+          ),
+        );
+      })();
+
       if (collateral.isNative) {
         nativeTokenAmount = DataUtils.toBigNumber(
           collateral.inputAmount,
@@ -625,11 +803,6 @@ export class UserMarketWrapper extends UserMarket {
             ),
           );
     });
-
-    const borrowValue = DataUtils.toBigNumber(
-      inputValue,
-      Number(this.baseToken.decimals),
-    );
 
     const minBorrowValue = this.borrowMinAmount + this.supplyBalance;
 
@@ -672,12 +845,21 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this.ensureBulkerAllowed(userAddress);
 
     const inputAmount = DataUtils.toBigNumber(
       inputValue,
       Number(this.baseToken.decimals),
     );
+
+    if (isMax) {
+      await this.ensureBulkerAllowed(userAddress);
+    } else {
+      await this.ensureBulkerAllowedToken(
+        userAddress,
+        this.baseToken.tokenAddress as Address,
+        inputAmount,
+      );
+    }
 
     const borrowBalance = this.borrowBalance;
     const supplyBalance = this.supplyBalance;
@@ -686,22 +868,24 @@ export class UserMarketWrapper extends UserMarket {
     if (supplyBalance < inputAmount) throw OVER_WITHDRAW();
 
     const abiEncodeData = isNative
-      ? this._encodeWithdrawNative(
-          userAddress,
-          isMax ? BigInt(MAX_UINT) : inputAmount,
-        )
-      : this._encodeWithdrawSimple(
-          userAddress,
-          isMax ? BigInt(MAX_UINT) : inputAmount,
-        );
+      ? this._encodeWithdrawNative(userAddress, inputAmount)
+      : isMax
+        ? this._encodeWithdrawRepayAll(userAddress)
+        : this._encodeWithdrawSimple(userAddress, inputAmount);
 
     try {
       return await this.bulkerContract.invoke(
         [
-          [isNative ? ACTION_WITHDRAW_NATIVE_TOKEN : ACTION_WITHDRAW_ASSET],
+          [
+            isNative
+              ? ACTION_WITHDRAW_NATIVE_TOKEN
+              : isMax
+                ? ACTION_WITHDRAW_ASSET_ALL
+                : ACTION_WITHDRAW_ASSET,
+          ],
           [abiEncodeData],
         ],
-        isNative ? (isMax ? BigInt(MAX_UINT) : inputAmount) : undefined,
+        isNative ? inputAmount : undefined,
       );
     } catch (e) {
       throw WITHDRAW_FAILED();
@@ -715,7 +899,6 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this.ensureBulkerAllowed(userAddress);
 
     const isCollateralsFromThisMarket =
       this.isAllCollateralsFromMarket(collaterals);
@@ -757,6 +940,14 @@ export class UserMarketWrapper extends UserMarket {
         Number(currentCollateralData?.decimals),
       );
 
+      (async () => {
+        await this.ensureBulkerAllowedToken(
+          userAddress,
+          collateral.tokenAddress as Address,
+          inputValue,
+        );
+      })();
+
       if (collateral.isNative) {
         supplyValue = supplyValue + inputValue;
       }
@@ -786,7 +977,6 @@ export class UserMarketWrapper extends UserMarket {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
-    await this.ensureBulkerAllowed(userAddress);
 
     const isCollateralsFromThisMarket =
       this.isAllCollateralsFromMarket(collaterals);
@@ -831,6 +1021,14 @@ export class UserMarketWrapper extends UserMarket {
         collateral.inputAmount,
         Number(currentCollateralData?.decimals),
       );
+
+      (async () => {
+        await this.ensureBulkerAllowedToken(
+          userAddress,
+          collateral.tokenAddress as Address,
+          withdrawAmount,
+        );
+      })();
 
       return this._encodeWithdrawSimple(
         userAddress,

@@ -7,6 +7,7 @@ import { config } from './web3/wagmi';
 
 import { SandboxController, UserMarket } from '@woof-software/comet-sdk-wagmi';
 import type { WagmiChainId } from '@woof-software/comet-sdk-wagmi/lib';
+import { type Address, parseUnits } from 'viem';
 
 // const marketsArbitrum = [
 //   {
@@ -28,17 +29,17 @@ import type { WagmiChainId } from '@woof-software/comet-sdk-wagmi/lib';
 // ];
 const marketsSepolia = [
   {
-    address: '0xce56294c40e8f479f709f207870c41450070c611',
+    address: '0xaCb1C4D4de3ce962673326fb9c53d56ce4881cf4',
     name: 'BaseSep',
   },
-  {
-    address: '0x14bc5e66ff4e49d18bff96c11d72a894df285e5f',
-    name: 'second',
-  },
-  {
-    address: '0xdC502E9bad9396b4d3916b4510460C49449D75F5',
-    name: 'old one',
-  },
+  // {
+  //   address: '0x14bc5e66ff4e49d18bff96c11d72a894df285e5f',
+  //   name: 'second',
+  // },
+  // {
+  //   address: '0xdC502E9bad9396b4d3916b4510460C49449D75F5',
+  //   name: 'old one',
+  // },
 ];
 
 function App() {
@@ -64,7 +65,6 @@ function App() {
 
   const isAbsoluteLoading = isLoadingTransactionReceipt || isLoadingWaitForTransactionReceipt;
 
-  console.log('--currentMarket--', currentMarket);
   const handleGetUserMarket = async () => {
     if (!address) {
       return;
@@ -270,18 +270,19 @@ function App() {
                         isMax: true,
                       },
                       // {
+                      //   address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
+                      //   value: '0.01',
+                      //   action: 'supply',
+                      //   // isMax: true,
+                      // },
+                      // {
                       //   address: '0x306134121e8B55dfA9faBA05De590E639a1F7D6B',
                       //   value: '101.072573',
                       //   action: 'repay',
                       //   // isNative: true,
                       //   isMax: true,
                       // },
-                      // {
-                      //   address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
-                      //   value: '0.00012330',
-                      //   action: 'withdraw',
-                      //   isMax: true,
-                      // },
+
                       // {
                       //   address: '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
                       //   value: '0.001',
@@ -310,6 +311,34 @@ function App() {
               </button>
 
               <button
+                onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.approveViaSignature('0x619Cd39439791D6B4f55F6eDf2a3b52bd6f30c22')
+                  )
+                }
+              >
+                allow market sign
+              </button>
+
+              <button
+                onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.getBulkerTokensAllowed(
+                      '0x619Cd39439791D6B4f55F6eDf2a3b52bd6f30c22',
+                      [
+                        {
+                          tokenAddress: currentMarket.baseToken.tokenAddress,
+                          inputAmount: parseUnits('100', Number(currentMarket.baseToken.decimals)),
+                        },
+                      ]
+                    )
+                  )
+                }
+              >
+                is Allowed Base token
+              </button>
+
+              <button
                 onClick={() => handleFunction(() => currentMarket?.getBulkerAllowed(address))}
               >
                 is Allowed
@@ -327,9 +356,9 @@ function App() {
                 supply base token 0.00000038307
               </button>
               <button
-                onClick={() => handleFunction(() => currentMarket?.approveMarketBaseToken('0.01'))}
+                onClick={() => handleFunction(() => currentMarket?.approveMarketBaseToken('100'))}
               >
-                approve market base asset 0.01
+                approve market base asset 100
               </button>
 
               <button onClick={() => handleFunction(() => currentMarket?.allowMarket())}>
@@ -393,14 +422,14 @@ function App() {
                 onClick={() =>
                   handleFunction(() =>
                     currentMarket?.approveToken(
-                      '0x912ce59144191c1204e64559fe8253a0e49e6548',
+                      '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
                       '0.01',
-                      18
+                      8
                     )
                   )
                 }
               >
-                approve collateral ARB 0.01
+                approve collateral WBTC 0.01
               </button>
 
               <button
