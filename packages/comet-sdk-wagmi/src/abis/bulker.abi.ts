@@ -1,15 +1,10 @@
 export const bulkerAbi = [
   {
     inputs: [
+      { internalType: "address", name: "admin_", type: "address" },
       {
-        internalType: "address",
-        name: "admin_",
-        type: "address",
-      },
-      { internalType: "address payable", name: "weth_", type: "address" },
-      {
-        internalType: "address",
-        name: "wsteth_",
+        internalType: "address payable",
+        name: "wrappedNativeToken_",
         type: "address",
       },
     ],
@@ -17,29 +12,17 @@ export const bulkerAbi = [
     type: "constructor",
   },
   { inputs: [], name: "FailedToSendNativeToken", type: "error" },
-  {
-    inputs: [],
-    name: "InvalidAddress",
-    type: "error",
-  },
+  { inputs: [], name: "InvalidAddress", type: "error" },
   { inputs: [], name: "InvalidArgument", type: "error" },
   {
-    inputs: [],
-    name: "TransferInFailed",
+    inputs: [{ internalType: "address", name: "token", type: "address" }],
+    name: "SafeERC20FailedOperation",
     type: "error",
   },
+  { inputs: [], name: "TransferInFailed", type: "error" },
   { inputs: [], name: "TransferOutFailed", type: "error" },
-  {
-    inputs: [],
-    name: "Unauthorized",
-    type: "error",
-  },
+  { inputs: [], name: "Unauthorized", type: "error" },
   { inputs: [], name: "UnhandledAction", type: "error" },
-  {
-    inputs: [],
-    name: "UnsupportedBaseAsset",
-    type: "error",
-  },
   {
     anonymous: false,
     inputs: [
@@ -68,6 +51,13 @@ export const bulkerAbi = [
   },
   {
     inputs: [],
+    name: "ACTION_REPAY_ALL_FROM",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "ACTION_SUPPLY_ASSET",
     outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "view",
@@ -82,7 +72,7 @@ export const bulkerAbi = [
   },
   {
     inputs: [],
-    name: "ACTION_SUPPLY_STETH",
+    name: "ACTION_TRANSFER_ALL_FROM",
     outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "view",
     type: "function",
@@ -90,6 +80,13 @@ export const bulkerAbi = [
   {
     inputs: [],
     name: "ACTION_TRANSFER_ASSET",
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "ACTION_WITHDRAW_ALL_FROM",
     outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "view",
     type: "function",
@@ -110,13 +107,6 @@ export const bulkerAbi = [
   },
   {
     inputs: [],
-    name: "ACTION_WITHDRAW_STETH",
-    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "admin",
     outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
@@ -125,22 +115,11 @@ export const bulkerAbi = [
   {
     inputs: [
       { internalType: "bytes32[]", name: "actions", type: "bytes32[]" },
-      {
-        internalType: "bytes[]",
-        name: "data",
-        type: "bytes[]",
-      },
+      { internalType: "bytes[]", name: "data", type: "bytes[]" },
     ],
     name: "invoke",
     outputs: [],
     stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "steth",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -153,11 +132,7 @@ export const bulkerAbi = [
   {
     inputs: [
       { internalType: "address", name: "recipient", type: "address" },
-      {
-        internalType: "address",
-        name: "asset",
-        type: "address",
-      },
+      { internalType: "address", name: "asset", type: "address" },
     ],
     name: "sweepToken",
     outputs: [],
@@ -175,13 +150,6 @@ export const bulkerAbi = [
     inputs: [],
     name: "wrappedNativeToken",
     outputs: [{ internalType: "address payable", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "wsteth",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },

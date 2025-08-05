@@ -1,5 +1,19 @@
 export const cometAbi = [
   {
+    name: "name",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "string" }],
+  },
+  {
+    name: "version",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "string" }],
+  },
+  {
     type: "constructor",
     inputs: [{ name: "_name32", type: "bytes32", internalType: "bytes32" }],
     stateMutability: "nonpayable",
@@ -206,6 +220,32 @@ export const cometAbi = [
     stateMutability: "view",
   },
   {
+    inputs: [
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "address", name: "", type: "address" },
+    ],
+    name: "allowanceAll",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "address", name: "manager", type: "address" },
+      { internalType: "bool", name: "approved", type: "bool" },
+      { internalType: "uint256", name: "nonce", type: "uint256" },
+      { internalType: "uint256", name: "expiry", type: "uint256" },
+      { internalType: "uint8", name: "v", type: "uint8" },
+      { internalType: "bytes32", name: "r", type: "bytes32" },
+      { internalType: "bytes32", name: "s", type: "bytes32" },
+    ],
+    name: "allowAllBySig",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     type: "function",
     name: "approve",
     inputs: [
@@ -218,7 +258,7 @@ export const cometAbi = [
   },
   {
     type: "function",
-    name: "approveAll",
+    name: "approveAllTokens",
     inputs: [
       { name: "spender bulker", type: "address", internalType: "address" },
       { name: "baseTokenAmount", type: "uint256", internalType: "uint256" },
