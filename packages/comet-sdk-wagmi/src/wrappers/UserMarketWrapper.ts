@@ -188,6 +188,9 @@ export class UserMarketWrapper extends UserMarket {
     return { r, s, v };
   }
 
+  /**
+   * THIS allow for full amount withdraw or repay
+   */
   async approveViaSignature(userAddress: Address) {
     const name = await this.cometContract.getContractName();
 
@@ -245,13 +248,18 @@ export class UserMarketWrapper extends UserMarket {
       throw ALLOW_FAILED();
     }
   }
-
+  /**
+   * THIS check allow for full amount withdraw or repay
+   */
   async ensureBulkerAllowed(user: Address) {
     const isAllowed = await this.cometContract.isAllowed(user, bulkerAddress);
 
     if (!isAllowed) throw BULKER_NOT_ALLOWED();
   }
 
+  /**
+   * THIS check allow for not full amount withdraw or repay
+   */
   async ensureBulkerAllowedToken(
     user: Address,
     tokenAddress: Address,
@@ -267,6 +275,9 @@ export class UserMarketWrapper extends UserMarket {
     if (!isAllowed) throw BULKER_NOT_ALLOWED();
   }
 
+  /**
+   * THIS check allow for not full amount withdraw or repay
+   */
   async getBulkerTokensAllowed(
     user: Address,
     tokensData: MultiAllowanceCallTypeBigInt[],

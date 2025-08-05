@@ -141,7 +141,9 @@ export class CometContract extends WagmiContract {
 
     return nonce as number;
   }
-
+  /**
+   * THIS allow for full amount withdraw or repay
+   */
   async writeAllowAllBySig(
     owner: `0x${string}`,
     bulker: `0x${string}`,
@@ -162,7 +164,9 @@ export class CometContract extends WagmiContract {
       s,
     ]);
   }
-
+  /**
+   * Check allow for full amount withdraw or repay
+   */
   async isAllowed(
     owner: `0x${string}`,
     bulker: `0x${string}`,
@@ -175,6 +179,9 @@ export class CometContract extends WagmiContract {
     return isAllowed as boolean;
   }
 
+  /**
+   * Check allow for not full amount withdraw or repay
+   */
   async isAllowedToken(
     owner: `0x${string}`,
     bulker: `0x${string}`,
@@ -189,12 +196,12 @@ export class CometContract extends WagmiContract {
 
     const allowAmount = result as bigint;
 
-    console.log("--allowAmount--", allowAmount);
-    console.log("--amount--", amount);
-
     return allowAmount >= amount;
   }
 
+  /**
+   * Check allow for not full amount withdraw or repay
+   */
   async isAllowedTokens(
     owner: `0x${string}`,
     bulker: `0x${string}`,
@@ -211,8 +218,6 @@ export class CometContract extends WagmiContract {
       ),
     });
 
-    console.log("--tokensAllowance--", tokensAllowance);
-
     const isSomeSmall = tokensData.some((tokenData, index) => {
       const currentTokenAllowance = tokensAllowance[index]?.result as bigint;
 
@@ -220,14 +225,15 @@ export class CometContract extends WagmiContract {
         return true;
       }
 
-      console.log("--currentTokenAllowance--", currentTokenAllowance);
-      console.log("--tokenData.inputAmount--", tokenData.inputAmount);
       return currentTokenAllowance < tokenData.inputAmount;
     });
 
     return !isSomeSmall;
   }
 
+  /**
+   * This allow is for collaterals and not full amount withdraw and repay
+   */
   async allow(
     bulker: `0x${string}`,
     collaterals: UserCollateral[],
