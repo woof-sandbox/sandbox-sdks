@@ -283,6 +283,15 @@ export namespace UserMarketMethods {
     return DataUtils.toBigNumber((totalBorrow / totalSupply).toString(), 18);
   }
 
+  function calculateUtilization(
+    totalBorrow: bigint,
+    totalSupply: bigint,
+  ): bigint {
+    if (totalSupply === 0n) return 0n;
+
+    return (totalBorrow * 10n ** 18n) / totalSupply;
+  }
+
   export function earnAprCustom(
     userSupplyValue: string,
     baseToken: IBase,
@@ -294,13 +303,35 @@ export namespace UserMarketMethods {
       totalSupplied +
       DataUtils.toBigNumber(userSupplyValue, Number(baseToken.decimals));
 
+    const utilization = customUtilization(totalBorrowed, totalSupply);
+
     return MarketMethods.getApr(
-      customUtilization(totalBorrowed, totalSupply),
+      utilization,
       curvePresets.supplyKink,
       curvePresets.supplyPerYearInterestRateBase,
       curvePresets.supplyPerYearInterestRateSlopeLow,
       curvePresets.supplyPerYearInterestRateSlopeHigh,
     );
+  }
+
+  function calculateApr(
+    utilization: bigint,
+    kink: bigint,
+    baseRate: bigint,
+    slopeLow: bigint,
+    slopeHigh: bigint,
+  ): number {
+    let rate: bigint;
+
+    if (utilization <= kink) {
+      rate = baseRate + (slopeLow * utilization) / 10n ** 18n;
+    } else {
+      const slopeLowPart = (slopeLow * kink) / 10n ** 18n;
+      const slopeHighPart = (slopeHigh * (utilization - kink)) / 10n ** 18n;
+      rate = baseRate + slopeLowPart + slopeHighPart;
+    }
+
+    return (Number(rate) / 1e18) * 100;
   }
 
   export function borrowAprCustom(
@@ -309,13 +340,21 @@ export namespace UserMarketMethods {
     totalSupplied: bigint,
     totalBorrowed: bigint,
     curvePresets: ICurve,
-  ) {
-    const totalBorrow =
-      totalBorrowed +
-      DataUtils.toBigNumber(userBorrowValue, Number(baseToken.decimals));
+  ): number {
+    const userBorrowAmount = DataUtils.toBigNumber(
+      userBorrowValue,
+      Number(baseToken.decimals),
+    );
 
-    return MarketMethods.getApr(
-      customUtilization(totalBorrow, totalSupplied),
+    const updatedTotalBorrowed = totalBorrowed + userBorrowAmount;
+
+    const utilization = calculateUtilization(
+      updatedTotalBorrowed,
+      totalSupplied,
+    );
+
+    return calculateApr(
+      utilization,
       curvePresets.borrowKink,
       curvePresets.borrowPerYearInterestRateBase,
       curvePresets.borrowPerYearInterestRateSlopeLow,

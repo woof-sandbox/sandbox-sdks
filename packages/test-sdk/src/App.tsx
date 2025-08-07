@@ -158,6 +158,11 @@ function App() {
       setViewError(error);
     }
   };
+  useEffect(() => {
+    console.log('--currentMarket--', currentMarket?.borrowApr);
+
+    console.log('--currentMarket--', currentMarket?.borrowAprCustom('440'));
+  }, [currentMarket]);
 
   return (
     <>

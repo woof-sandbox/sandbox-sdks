@@ -108,6 +108,7 @@ export namespace MarketMethods {
     // Returns 90.00000 % format value
     // Borrow APR(%)= Borrow Rate / (10 ^ 18) * Seconds Per Year * 100
     // https://docs.compound.finance/interest-rates/
+    console.log("--rate--", rate);
     return getAprCoef(rate) * 100;
   }
 
