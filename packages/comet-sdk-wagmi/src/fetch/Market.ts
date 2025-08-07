@@ -4,6 +4,7 @@ import {
   Market,
   Token,
 } from "@woof-software/comet-sdk";
+import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
@@ -11,7 +12,7 @@ import { fetchBase, fetchBaseMock } from "./Base";
 import { fetchCollaterals, fetchCollateralsMocks } from "./Collateral";
 
 export async function fetchMarketMock(
-  cometProxyAddress: `0x${string}`,
+  cometProxyAddress: Address,
   chainId: WagmiChainId,
 ): Promise<Market> {
   // USDt comet
@@ -68,7 +69,7 @@ export async function fetchMarketMock(
 }
 
 export async function fetchMarket(
-  cometProxyAddress: `0x${string}`,
+  cometProxyAddress: Address,
   chainId: WagmiChainId,
   config: Config,
 ): Promise<Market> {
@@ -78,7 +79,7 @@ export async function fetchMarket(
   const collaterals = await fetchCollaterals(cometProxyAddress, chainId);
   const baseToken = await fetchBase(cometProxyAddress, chainId, config);
   const baseContract = new Erc20Contract(
-    baseToken.tokenAddress as `0x${string}`,
+    baseToken.tokenAddress as Address,
     chainId,
   );
 
@@ -131,7 +132,7 @@ export async function fetchMarket(
 }
 
 export async function fetchMarkets(
-  marketConfig: Record<number, `0x${string}`[]>,
+  marketConfig: Record<number, Address[]>,
   config: Config,
 ): Promise<Market[]> {
   const marketInChain = Object.entries(marketConfig).flatMap(
@@ -146,7 +147,7 @@ export async function fetchMarkets(
           const collaterals = await fetchCollaterals(cometProxyAddress, chain);
           const baseToken = await fetchBase(cometProxyAddress, chain, config);
           const baseContract = new Erc20Contract(
-            baseToken.tokenAddress as `0x${string}`,
+            baseToken.tokenAddress as Address,
             chain,
           );
 

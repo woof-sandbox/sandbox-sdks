@@ -9,8 +9,8 @@ import { fetchBase, fetchBaseMock } from "./Base";
 import { fetchUserCollaterals } from "./UserCollateral";
 
 export async function fetchUserMarkets(
-  marketConfig: Record<number, `0x${string}`[]>,
-  userAddress: `0x${string}`,
+  marketConfig: Record<number, Address[]>,
+  userAddress: Address,
   config: Config,
 ): Promise<UserMarketWrapper[]> {
   const marketInChain = Object.entries(marketConfig).flatMap(
@@ -157,8 +157,8 @@ export async function fetchUserMarkets(
 }
 
 export async function fetchUserMarket(
-  cometProxyAddress: `0x${string}`,
-  userAddress: `0x${string}`,
+  cometProxyAddress: Address,
+  userAddress: Address,
   chainId: WagmiChainId,
   config: Config,
 ): Promise<UserMarketWrapper> {

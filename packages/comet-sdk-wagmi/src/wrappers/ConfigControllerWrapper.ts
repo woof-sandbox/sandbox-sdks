@@ -1,5 +1,6 @@
 import type { Config, WriteContractReturnType } from "@wagmi/core";
 import { ConfigController } from "@woof-software/comet-sdk";
+import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
 import { ConfigControllerContract } from "../contracts";
 import {
@@ -56,7 +57,7 @@ export class ConfigControllerWrapper extends ConfigController {
   }
 
   async acceptMarketTransferProposal(
-    market: `0x${string}`,
+    market: Address,
   ): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.acceptMarketTransferProposal(
@@ -69,7 +70,7 @@ export class ConfigControllerWrapper extends ConfigController {
   }
 
   async accumulateRevenue(
-    token: `0x${string}`,
+    token: Address,
     amount: bigint,
   ): Promise<WriteContractReturnType> {
     try {
@@ -94,7 +95,7 @@ export class ConfigControllerWrapper extends ConfigController {
   }
 
   async cancelMarketConfigProposal(
-    market: `0x${string}`,
+    market: Address,
   ): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.cancelMarketConfigProposal(
@@ -107,7 +108,7 @@ export class ConfigControllerWrapper extends ConfigController {
   }
 
   async cancelMarketTransferProposal(
-    market: `0x${string}`,
+    market: Address,
   ): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.cancelMarketTransferProposal(
@@ -127,7 +128,7 @@ export class ConfigControllerWrapper extends ConfigController {
     }
   }
 
-  async claimRevenue(token: `0x${string}`): Promise<WriteContractReturnType> {
+  async claimRevenue(token: Address): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.claimRevenue(
         token,
@@ -152,7 +153,7 @@ export class ConfigControllerWrapper extends ConfigController {
   }
 
   async executeMarketConfigProposal(
-    market: `0x${string}`,
+    market: Address,
   ): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.executeMarketConfigProposal(
@@ -164,9 +165,7 @@ export class ConfigControllerWrapper extends ConfigController {
     }
   }
 
-  async grantOwnership(
-    newOwner: `0x${string}`,
-  ): Promise<WriteContractReturnType> {
+  async grantOwnership(newOwner: Address): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.grantOwnership(
         newOwner,
@@ -178,15 +177,15 @@ export class ConfigControllerWrapper extends ConfigController {
   }
 
   async initialize(
-    owner: `0x${string}`,
-    guardian: `0x${string}`,
-    sandboxController: `0x${string}`,
-    marketFactory: `0x${string}`,
+    owner: Address,
+    guardian: Address,
+    sandboxController: Address,
+    marketFactory: Address,
     curatorFee: bigint,
     name: string,
     curatorProposalDuration: bigint,
     proposalDuration: bigint,
-    configControllerFactory: `0x${string}`,
+    configControllerFactory: Address,
   ): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.initialize(
@@ -206,9 +205,7 @@ export class ConfigControllerWrapper extends ConfigController {
     }
   }
 
-  async proposeCurator(
-    curator: `0x${string}`,
-  ): Promise<WriteContractReturnType> {
+  async proposeCurator(curator: Address): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.proposeCurator(
         curator,
@@ -220,7 +217,7 @@ export class ConfigControllerWrapper extends ConfigController {
   }
 
   async proposeMarketCollateralTokens(
-    market: `0x${string}`,
+    market: Address,
     collateralTokens: Parameters<
       ConfigControllerContract["proposeMarketCollateralTokens"]
     >[1],
@@ -237,8 +234,8 @@ export class ConfigControllerWrapper extends ConfigController {
   }
 
   async proposeMarketTransfer(
-    market: `0x${string}`,
-    newController: `0x${string}`,
+    market: Address,
+    newController: Address,
   ): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.proposeMarketTransfer(
@@ -252,7 +249,7 @@ export class ConfigControllerWrapper extends ConfigController {
   }
 
   async removeClaimRevenueToken(
-    token: `0x${string}`,
+    token: Address,
   ): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.removeClaimRevenueToken(
@@ -283,9 +280,7 @@ export class ConfigControllerWrapper extends ConfigController {
     }
   }
 
-  async setGuardian(
-    newGuardian: `0x${string}`,
-  ): Promise<WriteContractReturnType> {
+  async setGuardian(newGuardian: Address): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.setGuardian(
         newGuardian,

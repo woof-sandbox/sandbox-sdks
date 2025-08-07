@@ -1,5 +1,6 @@
 import { type Config, multicall } from "@wagmi/core";
 import { ConfigController } from "@woof-software/comet-sdk";
+import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
 import { wagmiConfig } from "../contracts";
 import { ConfigControllerContract } from "../contracts";
@@ -7,7 +8,7 @@ import { WagmiUtils } from "../utils";
 import { ConfigControllerWrapper } from "../wrappers";
 
 export async function fetchConfigControllerData(
-  controllerAddress: `0x${string}`,
+  controllerAddress: Address,
   chainId: WagmiChainId,
   config: Config,
 ): Promise<ConfigControllerWrapper> {
@@ -25,9 +26,9 @@ export async function fetchConfigControllerData(
     ],
   });
 
-  const owner = WagmiUtils.resultOrThrow<`0x${string}`>(baseData[0]);
-  const guardian = WagmiUtils.resultOrThrow<`0x${string}`>(baseData[1]);
-  const curator = WagmiUtils.resultOrThrow<`0x${string}`>(baseData[2]);
+  const owner = WagmiUtils.resultOrThrow<Address>(baseData[0]);
+  const guardian = WagmiUtils.resultOrThrow<Address>(baseData[1]);
+  const curator = WagmiUtils.resultOrThrow<Address>(baseData[2]);
   const curatorFee = WagmiUtils.resultOrThrow<bigint>(baseData[3]);
   const marketsLength = WagmiUtils.resultOrThrow<bigint>(baseData[4]);
   const revenueTokensLength = WagmiUtils.resultOrThrow<bigint>(baseData[5]);

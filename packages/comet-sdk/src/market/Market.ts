@@ -143,7 +143,7 @@ export class Market implements IMarket {
     return MarketMethods.getTotalCollateralsSupply(this.collaterals);
   }
 
-  marketsToMigrate(marketsList: Market[]) {
+  marketsToMigrate(marketsList: Market[]): Market[] {
     return MarketMethods.getMarketsToMigrate(
       marketsList,
       this.baseToken,

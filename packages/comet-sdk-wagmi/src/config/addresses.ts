@@ -1,38 +1,47 @@
+import type { Address } from "viem";
 import { Chain } from "./chains";
 
 export interface IAddresses {
-  configurator: `0x${string}`;
-  sandboxController: `0x${string}`;
+  configurator: Address;
+  sandboxController: Address;
+  bulker: Address;
 }
 // !: change it
 export const Addresses: Record<Chain, IAddresses> = {
   [Chain.Arbitrum]: {
-    configurator: "0xb21b06d71c75973babde35b49ffdac3f82ad3775",
-    sandboxController: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
+    configurator: "0x0000000000000000000000000000000000000000",
+    sandboxController: "0x0000000000000000000000000000000000000000",
+    bulker: "0x0000000000000000000000000000000000000000",
   },
   [Chain.Base]: {
-    configurator: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
-    sandboxController: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
+    configurator: "0x0000000000000000000000000000000000000000",
+    sandboxController: "0x0000000000000000000000000000000000000000",
+    bulker: "0x0000000000000000000000000000000000000000",
   },
   [Chain.Ethereum]: {
-    configurator: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
-    sandboxController: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
+    configurator: "0x0000000000000000000000000000000000000000",
+    sandboxController: "0x0000000000000000000000000000000000000000",
+    bulker: "0x0000000000000000000000000000000000000000",
   },
   [Chain.Optimism]: {
-    configurator: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
-    sandboxController: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
+    configurator: "0x0000000000000000000000000000000000000000",
+    sandboxController: "0x0000000000000000000000000000000000000000",
+    bulker: "0x0000000000000000000000000000000000000000",
   },
   [Chain.Polygon]: {
-    configurator: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
-    sandboxController: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
+    configurator: "0x0000000000000000000000000000000000000000",
+    sandboxController: "0x0000000000000000000000000000000000000000",
+    bulker: "0x0000000000000000000000000000000000000000",
   },
   //
   [Chain.Sepolia]: {
-    configurator: "0xc28aD44975C614EaBe0Ed090207314549e1c6624",
-    sandboxController: "0xaf39746D87b067267B23C2169BF727F237f303b9",
+    configurator: "0xc28ad44975c614eabe0ed090207314549e1c6624",
+    sandboxController: "0xaf39746d87b067267b23c2169bf727f237f303b9",
+    bulker: "0x469b5fe7bdb82f93f3a11a6c62e94b99d3c728c2",
   },
   [Chain.Anvil]: {
-    configurator: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
-    sandboxController: "0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3",
+    configurator: "0x316f9708bb98af7da9c68c1c3b5e79039cd336e3",
+    sandboxController: "0x316f9708bb98af7da9c68c1c3b5e79039cd336e3",
+    bulker: "0x0000000000000000000000000000000000000000",
   },
 } as const;

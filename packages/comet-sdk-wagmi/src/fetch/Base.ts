@@ -1,23 +1,27 @@
 import { type Config, multicall } from "@wagmi/core";
-import { Base, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
-import { formatUnits } from "viem";
+import {
+  Base,
+  PRICE_FEED_FACTOR_UNITS,
+  SECONDS_PER_YEAR,
+} from "@woof-software/comet-sdk";
+import { type Address, formatUnits } from "viem";
 import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract } from "../contracts";
 import { WagmiUtils } from "../utils";
 import { fetchCurves, fetchCurvesMocks } from "./Curve";
 
-const secsPerYear = 60n * 60n * 24n * 365n;
+const secsPerYear = BigInt(SECONDS_PER_YEAR);
 
 export async function fetchBaseMock(
-  cometProxyAddress?: `0x${string}`,
+  cometProxyAddress?: Address,
   chainId?: WagmiChainId,
 ): Promise<Base> {
   // for USDt comet
-  const tokenAddress = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
+  const tokenAddress = "0xdac17f958d2ee523a2206206994597c13d831ec7";
   const symbol = "USDT";
   const decimals = 6n;
   const price = "1";
-  const priceFeedAddress = "0x3E7d1eAB13ad0104d2750B8863b489D65364e32D"; // comet -> baseTokenPriceFeed
+  const priceFeedAddress = "0x3e7d1eab13ad0104d2750b8863b489d65364e32d"; // comet -> baseTokenPriceFeed
 
   const curves = await fetchCurvesMocks(cometProxyAddress, chainId);
 
@@ -38,7 +42,7 @@ export async function fetchBaseMock(
 }
 
 export async function fetchBase(
-  cometProxyAddress: `0x${string}`,
+  cometProxyAddress: Address,
   chainId: WagmiChainId,
   config: Config,
 ): Promise<Base> {
@@ -49,12 +53,8 @@ export async function fetchBase(
     contracts: [comet.getBaseTokenCall(), comet.getBaseTokenPriceFeedCall()],
   });
 
-  const tokenAddress = WagmiUtils.resultOrThrow<`0x${string}`>(
-    cometBaseData[0],
-  );
-  const priceFeedAddress = WagmiUtils.resultOrThrow<`0x${string}`>(
-    cometBaseData[1],
-  );
+  const tokenAddress = WagmiUtils.resultOrThrow<Address>(cometBaseData[0]);
+  const priceFeedAddress = WagmiUtils.resultOrThrow<Address>(cometBaseData[1]);
 
   const erc20 = new Erc20Contract(tokenAddress, chainId);
 

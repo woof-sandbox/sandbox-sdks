@@ -11,7 +11,7 @@ export class WagmiContract {
   constructor(
     protected readonly config: Config,
     public readonly abi: Abi,
-    public readonly address: `0x${string}`,
+    public readonly address: Address,
     public readonly chainId?: WagmiChainId,
   ) {}
 
