@@ -1,11 +1,16 @@
 import { DataUtils, type IUserMarket } from "@woof-software/comet-sdk";
 import { UserMarket } from "../augment";
 
-import { type Config, getWalletClient, signTypedData } from "@wagmi/core";
-import type { Address } from "viem";
+import {
+  type Config,
+  type WriteContractReturnType,
+  getWalletClient,
+  signTypedData,
+} from "@wagmi/core";
 import { Signature } from "ethers";
-import { encodeAbiParameters, type EncodeAbiParametersReturnType } from "viem";
-import type { WagmiChainId } from "../config";
+import type { Address, Hex } from "viem";
+import { type EncodeAbiParametersReturnType, encodeAbiParameters } from "viem";
+import { Addresses, type WagmiChainId } from "../config";
 import {
   ACTION_REPAY_ALL,
   ACTION_SUPPLY_NATIVE_TOKEN,
@@ -21,7 +26,7 @@ import {
   Erc20Contract,
   MigratorContract,
 } from "../contracts";
-import {
+import type {
   MultiAllowanceCallType,
   MultiAllowanceCallTypeBigInt,
 } from "../contracts/entities/multi-allowance-call";
@@ -33,6 +38,7 @@ import {
   BORROW_POSITION_OPEN,
   BORROW_SUPPLY_FAILED,
   BULKER_NOT_ALLOWED,
+  CHAIN_ID_WAS_NOT_PROVIDED,
   COLLATERAL_NOT_FOUND,
   EXCESSIVE_COLLATERAL_WITHDRAW,
   FULL_MIGRATE_FAILED,
@@ -49,12 +55,9 @@ import {
   WITHDRAW_FAILED,
 } from "../errors/wrappers/user-market-wrapper.errors";
 
-import { type ActionData, ActionType } from "../contracts/entities/actions";
 import { sepolia } from "viem/chains";
-
-// Todo need to find where to get Bulker Address
-const bulkerAddress = "0x469b5fE7bdb82f93F3a11a6c62e94b99D3C728c2"; // sepolia
-// const bulkerAddress = "0xbde8f31d2ddda895264e27dd990fab3dc87b372d"; // arbitrum
+import { type ActionData, ActionType } from "../contracts/entities/actions";
+import type { MigrateArgs } from "../contracts/entities/migrate-args";
 
 export class UserMarketWrapper extends UserMarket {
   private readonly config: Config;
@@ -76,7 +79,7 @@ export class UserMarketWrapper extends UserMarket {
       config,
     );
     this.bulkerContract = new BulkerContract(
-      bulkerAddress as Address,
+      Addresses[chainId].bulker,
       chainId,
       config,
     );
@@ -180,18 +183,28 @@ export class UserMarketWrapper extends UserMarket {
     );
   }
 
-  private splitSignature(signature: `0x${string}`) {
+  private splitSignature(signature: Hex): { r: Hex; s: Hex; v: number } {
     const sig = signature.slice(2); // remove 0x
-    const r = `0x${sig.slice(0, 64)}` as `0x${string}`;
-    const s = `0x${sig.slice(64, 128)}` as `0x${string}`;
-    const v = parseInt(sig.slice(128, 130), 16);
+    const r = `0x${sig.slice(0, 64)}` as Hex;
+    const s = `0x${sig.slice(64, 128)}` as Hex;
+    const v = Number.parseInt(sig.slice(128, 130), 16);
     return { r, s, v };
   }
 
   /**
-   * THIS allow for full amount withdraw or repay
+   * THIS allows for full amount withdraw or repay
    */
-  async approveViaSignature(userAddress: Address) {
+  async approveViaSignature(
+    userAddress: Address,
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    const chain = chainId ?? this.chainId;
+    if (chain === undefined) {
+      throw CHAIN_ID_WAS_NOT_PROVIDED();
+    }
+
+    const bulker = Addresses[chain].bulker;
+
     const name = await this.cometContract.getContractName();
 
     const version = await this.cometContract.getContractVersion();
@@ -202,7 +215,7 @@ export class UserMarketWrapper extends UserMarket {
 
     const message = {
       owner: userAddress,
-      manager: bulkerAddress,
+      manager: bulker,
       approved: true,
       nonce,
       expiry,
@@ -237,7 +250,7 @@ export class UserMarketWrapper extends UserMarket {
 
       return await this.cometContract.writeAllowAllBySig(
         userAddress,
-        bulkerAddress,
+        bulker,
         nonce,
         expiry,
         sig.v,
@@ -251,8 +264,18 @@ export class UserMarketWrapper extends UserMarket {
   /**
    * THIS check allow for full amount withdraw or repay
    */
-  async ensureBulkerAllowed(user: Address) {
-    const isAllowed = await this.cometContract.isAllowed(user, bulkerAddress);
+  async ensureBulkerAllowed(
+    user: Address,
+    chainId?: WagmiChainId,
+  ): Promise<void> {
+    const chain = chainId ?? this.chainId;
+    if (chain === undefined) {
+      throw CHAIN_ID_WAS_NOT_PROVIDED();
+    }
+    const isAllowed = await this.cometContract.isAllowed(
+      user,
+      Addresses[chain].bulker,
+    );
 
     if (!isAllowed) throw BULKER_NOT_ALLOWED();
   }
@@ -264,10 +287,15 @@ export class UserMarketWrapper extends UserMarket {
     user: Address,
     tokenAddress: Address,
     amount: bigint,
-  ) {
+    chainId?: WagmiChainId,
+  ): Promise<void> {
+    const chain = chainId ?? this.chainId;
+    if (chain === undefined) {
+      throw CHAIN_ID_WAS_NOT_PROVIDED();
+    }
     const isAllowed = await this.cometContract.isAllowedToken(
       user,
-      bulkerAddress,
+      Addresses[chain].bulker,
       tokenAddress,
       amount,
     );
@@ -276,22 +304,29 @@ export class UserMarketWrapper extends UserMarket {
   }
 
   /**
-   * THIS check allow for not full amount withdraw or repay
+   * THIS checks allow for not full amount withdraw or repay
    */
   async getBulkerTokensAllowed(
     user: Address,
     tokensData: MultiAllowanceCallTypeBigInt[],
-  ) {
-    const isAllAllowed = await this.cometContract.isAllowedTokens(
+    chainId?: WagmiChainId,
+  ): Promise<boolean> {
+    const chain = chainId ?? this.chainId;
+    if (chain === undefined) {
+      throw CHAIN_ID_WAS_NOT_PROVIDED();
+    }
+    return this.cometContract.isAllowedTokens(
       user,
-      bulkerAddress,
+      Addresses[chain].bulker,
       tokensData,
     );
-
-    return isAllAllowed;
   }
 
-  getActionType = (action: ActionType, isNative?: boolean, isMax?: boolean) => {
+  getActionType = (
+    action: ActionType,
+    isNative?: boolean,
+    isMax?: boolean,
+  ): Hex => {
     const actionsMap = isNative
       ? {
           [ActionType.Supply]: ACTION_SUPPLY_NATIVE_TOKEN,
@@ -314,24 +349,35 @@ export class UserMarketWrapper extends UserMarket {
     return actionsMap[action] as Address;
   };
 
-  async getBulkerAllowed(user: Address) {
-    const isAllAllowed = await this.cometContract.isAllowed(
-      user,
-      bulkerAddress,
-    );
-
-    return isAllAllowed;
+  async getBulkerAllowed(
+    user: Address,
+    chainId?: WagmiChainId,
+  ): Promise<boolean> {
+    const chain = chainId ?? this.chainId;
+    if (chain === undefined) {
+      throw CHAIN_ID_WAS_NOT_PROVIDED();
+    }
+    return this.cometContract.isAllowed(user, Addresses[chain].bulker);
   }
 
-  async allowMarket() {
+  async allowMarket(chainId?: WagmiChainId): Promise<WriteContractReturnType> {
+    const chain = chainId ?? this.chainId;
+    if (chain === undefined) {
+      throw CHAIN_ID_WAS_NOT_PROVIDED();
+    }
     try {
-      return await this.cometContract.allow(bulkerAddress, this.collaterals);
+      return await this.cometContract.allow(
+        Addresses[chain].bulker,
+        this.collaterals,
+      );
     } catch (e) {
       throw ALLOW_FAILED();
     }
   }
 
-  async approveMarketBaseToken(amount: string) {
+  async approveMarketBaseToken(
+    amount: string,
+  ): Promise<WriteContractReturnType> {
     try {
       return await this.baseTokenContract.approve(
         this.cometAddress as Address,
@@ -346,7 +392,7 @@ export class UserMarketWrapper extends UserMarket {
     tokenAddress: Address,
     amount: string,
     tokenDecimals: number,
-  ) {
+  ): Promise<WriteContractReturnType> {
     const token = new Erc20Contract(tokenAddress, this.chainId, this.config);
 
     try {
@@ -359,7 +405,7 @@ export class UserMarketWrapper extends UserMarket {
     }
   }
 
-  async getTokenAllowance(tokenAddress: Address) {
+  async getTokenAllowance(tokenAddress: Address): Promise<bigint> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -369,11 +415,14 @@ export class UserMarketWrapper extends UserMarket {
     return await token.allowance(userAddress, this.cometAddress as Address);
   }
 
-  findByActionType(actions: ActionData[], actionType: ActionType) {
+  findByActionType(
+    actions: ActionData[],
+    actionType: ActionType,
+  ): ActionData[] {
     return actions.filter((action) => action.action === actionType);
   }
 
-  async createAction(actions: ActionData[]): Promise<Address> {
+  async createAction(actions: ActionData[]): Promise<WriteContractReturnType> {
     const walletClient = await getWalletClient(this.config);
     const userAddress = walletClient.account.address;
 
@@ -409,9 +458,9 @@ export class UserMarketWrapper extends UserMarket {
       if (supplyData.length) {
         const allowances = await this.baseTokenContract.getMultiAllowance(
           supplyData,
-          this.chainId,
           userAddress,
           this.cometAddress as Address,
+          this.chainId,
         );
 
         if (this.isSomeTokenSmallAllowance(allowances)) {
@@ -466,7 +515,7 @@ export class UserMarketWrapper extends UserMarket {
         : DataUtils.toBigNumber(action.value, Number(decimals));
 
       if (action.isNative && action.action !== ActionType.Withdraw) {
-        ethValue = (ethValue ?? BigInt(0)) + inputAmount;
+        ethValue = (ethValue ?? 0n) + inputAmount;
       }
 
       const encoded = action.isNative
@@ -495,7 +544,10 @@ export class UserMarketWrapper extends UserMarket {
     }
   }
 
-  async supplyMarket(inputValue: string, isNative: boolean): Promise<Address> {
+  async supplyMarket(
+    inputValue: string,
+    isNative: boolean,
+  ): Promise<WriteContractReturnType> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -539,7 +591,7 @@ export class UserMarketWrapper extends UserMarket {
     }
   }
 
-  async borrowMarket(inputValue: string): Promise<Address> {
+  async borrowMarket(inputValue: string): Promise<WriteContractReturnType> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -586,7 +638,7 @@ export class UserMarketWrapper extends UserMarket {
     inputValue: string,
     isNative: boolean,
     supplyCollaterals: MultiAllowanceCallType[],
-  ): Promise<Address> {
+  ): Promise<WriteContractReturnType> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -610,9 +662,9 @@ export class UserMarketWrapper extends UserMarket {
     const collateralsAllowances =
       await this.baseTokenContract.getMultiAllowance(
         supplyCollaterals,
-        this.chainId,
         userAddress,
         this.cometAddress as Address,
+        this.chainId,
       );
 
     const isSmallAllowance = this.isSomeTokenSmallAllowance(
@@ -697,7 +749,7 @@ export class UserMarketWrapper extends UserMarket {
     let value: bigint | undefined;
 
     if (isNative && isSomeIsNative) {
-      value = supplyValue + (nativeTokenAmount || BigInt(0));
+      value = supplyValue + (nativeTokenAmount || 0n);
     } else if (isSomeIsNative) {
       value = nativeTokenAmount;
     } else if (isNative) {
@@ -719,7 +771,7 @@ export class UserMarketWrapper extends UserMarket {
   async borrowAndSupplyMarket(
     inputValue: string,
     supplyCollaterals: MultiAllowanceCallType[],
-  ): Promise<Address> {
+  ): Promise<WriteContractReturnType> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -743,9 +795,9 @@ export class UserMarketWrapper extends UserMarket {
     const collateralsAllowances =
       await this.baseTokenContract.getMultiAllowance(
         supplyCollaterals,
-        this.chainId,
         userAddress,
         this.cometAddress as Address,
+        this.chainId,
       );
 
     const isSmallAllowance = this.isSomeTokenSmallAllowance(
@@ -841,7 +893,7 @@ export class UserMarketWrapper extends UserMarket {
     inputValue: string,
     isMax: boolean,
     isNative: boolean,
-  ): Promise<Address> {
+  ): Promise<WriteContractReturnType> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -864,7 +916,7 @@ export class UserMarketWrapper extends UserMarket {
     const borrowBalance = this.borrowBalance;
     const supplyBalance = this.supplyBalance;
 
-    if (borrowBalance > BigInt(0)) throw BORROW_POSITION_OPEN();
+    if (borrowBalance > 0n) throw BORROW_POSITION_OPEN();
     if (supplyBalance < inputAmount) throw OVER_WITHDRAW();
 
     const abiEncodeData = isNative
@@ -895,7 +947,7 @@ export class UserMarketWrapper extends UserMarket {
   async supplyCollaterals(
     collaterals: MultiAllowanceCallType[],
     chainId: WagmiChainId,
-  ): Promise<Address> {
+  ): Promise<WriteContractReturnType> {
     const walletClient = await getWalletClient(this.config);
 
     const userAddress = walletClient.account.address;
@@ -908,9 +960,9 @@ export class UserMarketWrapper extends UserMarket {
     const collateralsAllowances =
       await this.baseTokenContract.getMultiAllowance(
         collaterals,
-        chainId,
         userAddress,
         this.cometAddress as Address,
+        chainId,
       );
 
     const isSmallAllowance = this.isSomeTokenSmallAllowance(
@@ -925,7 +977,7 @@ export class UserMarketWrapper extends UserMarket {
       data.isNative ? ACTION_SUPPLY_NATIVE_TOKEN : ACTION_SUPPLY_TOKEN,
     );
 
-    let supplyValue = BigInt(0);
+    let supplyValue = 0n;
 
     const abiEncodeData = collateralsAllowances.map((collateral) => {
       const currentCollateralData = this.findMarketCollateralByAddress(
@@ -964,7 +1016,7 @@ export class UserMarketWrapper extends UserMarket {
     try {
       return await this.bulkerContract.invoke(
         [actions, abiEncodeData],
-        supplyValue > BigInt(0) ? supplyValue : undefined,
+        supplyValue > 0n ? supplyValue : undefined,
       );
     } catch (e) {
       throw SUPPLY_COLLATERAL_FAILED();
@@ -998,11 +1050,11 @@ export class UserMarketWrapper extends UserMarket {
           Number(currentCollateralData?.decimals),
         )
       );
-    }, BigInt(0));
+    }, 0n);
 
     const maxWithDrawAmount = this.maxWithDrawCollateralAmount;
 
-    if (this.borrowBalance > BigInt(0)) {
+    if (this.borrowBalance > 0n) {
       if (Number(sumOfWithdraw) > Number(maxWithDrawAmount))
         throw EXCESSIVE_COLLATERAL_WITHDRAW();
     }
@@ -1049,26 +1101,23 @@ export class UserMarketWrapper extends UserMarket {
     toCometAddress: Address,
     flashAmount: bigint,
     collateralsData?: MultiAllowanceCallType[],
-  ) {
+  ): Promise<WriteContractReturnType> {
+    const args: MigrateArgs = {
+      fromCometAddress,
+      toCometAddress,
+      flashAmount,
+      collateralsData,
+    };
     if (Boolean(collateralsData?.length)) {
       try {
-        return await this.migrationContract.partialMigrate([
-          fromCometAddress,
-          toCometAddress,
-          collateralsData,
-          flashAmount,
-        ]);
+        return await this.migrationContract.partialMigrate(args);
       } catch (e) {
         throw PART_MIGRATE_FAILED();
       }
     }
 
     try {
-      return await this.migrationContract.fullMigrate([
-        fromCometAddress,
-        toCometAddress,
-        flashAmount,
-      ]);
+      return await this.migrationContract.fullMigrate(args);
     } catch (e) {
       throw FULL_MIGRATE_FAILED();
     }

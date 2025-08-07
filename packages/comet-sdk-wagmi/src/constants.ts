@@ -21,5 +21,3 @@ export const ACTION_WITHDRAW_ASSET_ALL =
 
 export const MAX_UINT =
   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-
-export const MIN_ALLOWANCE = 100000n;

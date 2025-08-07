@@ -1,4 +1,5 @@
 import type { Config, WriteContractReturnType } from "@wagmi/core";
+import type { Address, ContractFunctionParameters } from "viem";
 import { configControllerAbi } from "../abis";
 import type { WagmiChainId } from "../config";
 import { WagmiContract } from "./wagmi-contract";
@@ -6,34 +7,34 @@ import { wagmiConfig } from "./wagmiConfig";
 
 export class ConfigControllerContract extends WagmiContract {
   constructor(
-    address: `0x${string}`,
+    address: Address,
     chainId?: WagmiChainId,
     config: Config = wagmiConfig,
   ) {
     super(config, configControllerAbi, address, chainId);
   }
 
-  getOwnerCall() {
+  getOwnerCall(): ContractFunctionParameters {
     return this.getCall("owner");
   }
 
-  getGuardianCall() {
+  getGuardianCall(): ContractFunctionParameters {
     return this.getCall("guardian");
   }
 
-  getCuratorCall() {
+  getCuratorCall(): ContractFunctionParameters {
     return this.getCall("curator");
   }
 
-  getCuratorFeeCall() {
+  getCuratorFeeCall(): ContractFunctionParameters {
     return this.getCall("curatorFee");
   }
 
-  getMarketsLengthCall() {
+  getMarketsLengthCall(): ContractFunctionParameters {
     return this.getCall("marketsLength");
   }
 
-  getRevenueTokensLengthCall() {
+  getRevenueTokensLengthCall(): ContractFunctionParameters {
     return this.getCall("revenueTokensLength");
   }
 
@@ -44,14 +45,14 @@ export class ConfigControllerContract extends WagmiContract {
   }
 
   async acceptMarketTransferProposal(
-    market: `0x${string}`,
+    market: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("acceptMarketTransferProposal", chainId, [market]);
   }
 
   async accumulateRevenue(
-    token: `0x${string}`,
+    token: Address,
     amount: bigint,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
@@ -65,14 +66,14 @@ export class ConfigControllerContract extends WagmiContract {
   }
 
   async cancelMarketConfigProposal(
-    market: `0x${string}`,
+    market: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("cancelMarketConfigProposal", chainId, [market]);
   }
 
   async cancelMarketTransferProposal(
-    market: `0x${string}`,
+    market: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("cancelMarketTransferProposal", chainId, [market]);
@@ -85,7 +86,7 @@ export class ConfigControllerContract extends WagmiContract {
   }
 
   async claimRevenue(
-    token: `0x${string}`,
+    token: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("claimRevenue", chainId, [token]);
@@ -93,11 +94,11 @@ export class ConfigControllerContract extends WagmiContract {
 
   async createMarket(
     marketConfig: {
-      baseToken: `0x${string}`;
-      priceFeed: `0x${string}`;
-      collateraTokens: {
-        collateralToken: `0x${string}`;
-        priceFeed: `0x${string}`;
+      baseToken: Address;
+      priceFeed: Address;
+      collateralTokens: {
+        collateralToken: Address;
+        priceFeed: Address;
         borrowCollateralFactor: bigint;
         liquidateCollateralFactor: bigint;
         liquidationFactor: bigint;
@@ -111,29 +112,29 @@ export class ConfigControllerContract extends WagmiContract {
   }
 
   async executeMarketConfigProposal(
-    market: `0x${string}`,
+    market: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("executeMarketConfigProposal", chainId, [market]);
   }
 
   async grantOwnership(
-    newOwner: `0x${string}`,
+    newOwner: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("grantOwnership", chainId, [newOwner]);
   }
 
   async initialize(
-    _owner: `0x${string}`,
-    _guardian: `0x${string}`,
-    _sandboxController: `0x${string}`,
-    _marketFactory: `0x${string}`,
+    _owner: Address,
+    _guardian: Address,
+    _sandboxController: Address,
+    _marketFactory: Address,
     _curatorFee: bigint,
     _name: string,
     _curatorProposalDuration: bigint,
     _proposalDuration: bigint,
-    _configControllerFactory: `0x${string}`,
+    _configControllerFactory: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("initialize", chainId, [
@@ -150,17 +151,17 @@ export class ConfigControllerContract extends WagmiContract {
   }
 
   async proposeCurator(
-    proposedCurator: `0x${string}`,
+    proposedCurator: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("proposeCurator", chainId, [proposedCurator]);
   }
 
   async proposeMarketCollateralTokens(
-    market: `0x${string}`,
+    market: Address,
     collateralTokens: {
-      collateralToken: `0x${string}`;
-      priceFeed: `0x${string}`;
+      collateralToken: Address;
+      priceFeed: Address;
       borrowCollateralFactor: bigint;
       liquidateCollateralFactor: bigint;
       liquidationFactor: bigint;
@@ -175,8 +176,8 @@ export class ConfigControllerContract extends WagmiContract {
   }
 
   async proposeMarketTransfer(
-    market: `0x${string}`,
-    newController: `0x${string}`,
+    market: Address,
+    newController: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("proposeMarketTransfer", chainId, [
@@ -186,7 +187,7 @@ export class ConfigControllerContract extends WagmiContract {
   }
 
   async removeClaimRevenueToken(
-    token: `0x${string}`,
+    token: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("removeClaimRevenueToken", chainId, [token]);
@@ -206,7 +207,7 @@ export class ConfigControllerContract extends WagmiContract {
   }
 
   async setGuardian(
-    newGuardian: `0x${string}`,
+    newGuardian: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("setGuardian", chainId, [newGuardian]);

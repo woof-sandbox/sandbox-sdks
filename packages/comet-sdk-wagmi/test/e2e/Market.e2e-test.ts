@@ -1,6 +1,7 @@
 import { http, createConfig } from "@wagmi/core";
 import { arbitrum } from "@wagmi/core/chains";
 import { type IMarket, PERCENT_PRECISION } from "@woof-software/comet-sdk";
+import type { Address } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
 import { wagmiConfig } from "../../lib";
 import { Market } from "../../src/augment";
@@ -23,7 +24,7 @@ describe("MarketMethods", () => {
     });
 
     market = await Market.fetchMarket(
-      data.cometAddress as `0x${string}`,
+      data.cometAddress as Address,
       arbitrum.id,
       wagmiConfig,
     );

@@ -4,19 +4,16 @@ import {
   multicall,
 } from "@wagmi/core";
 import type { UserCollateral } from "@woof-software/comet-sdk/lib";
-import type { ContractFunctionParameters } from "viem";
+import type { Address, ContractFunctionParameters } from "viem";
 import { cometAbi } from "../abis";
 import type { WagmiChainId } from "../config";
+import type { MultiAllowanceCallTypeBigInt } from "./entities/multi-allowance-call";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
-import {
-  MultiAllowanceCallType,
-  MultiAllowanceCallTypeBigInt,
-} from "./entities/multi-allowance-call";
 
 export interface AssetConfig {
-  collateralToken: `0x${string}`;
-  priceFeed: `0x${string}`;
+  collateralToken: Address;
+  priceFeed: Address;
   borrowCollateralFactor: bigint;
   liquidateCollateralFactor: bigint;
   liquidationFactor: bigint;
@@ -25,11 +22,11 @@ export interface AssetConfig {
 }
 
 export interface MarketConfig {
-  governor: `0x${string}`;
-  pauseGuardian: `0x${string}`;
-  baseToken: `0x${string}`;
-  baseTokenPriceFeed: `0x${string}`;
-  extensionDelegate: `0x${string}`;
+  governor: Address;
+  pauseGuardian: Address;
+  baseToken: Address;
+  baseTokenPriceFeed: Address;
+  extensionDelegate: Address;
   supplyKink: bigint;
   supplyPerYearInterestRateSlopeLow: bigint;
   supplyPerYearInterestRateSlopeHigh: bigint;
@@ -50,7 +47,7 @@ export interface MarketConfig {
 
 export class CometContract extends WagmiContract {
   constructor(
-    address: `0x${string}`,
+    address: Address,
     chainId?: WagmiChainId,
     config: Config = wagmiConfig,
   ) {
@@ -58,13 +55,13 @@ export class CometContract extends WagmiContract {
   }
 
   getTotalsCollateralCall(
-    collateralAddress: `0x${string}`,
+    collateralAddress: Address,
   ): ContractFunctionParameters {
     return this.getCall("totalsCollateral", [collateralAddress]);
   }
 
   getCollateralReservesCall(
-    collateralAddress: `0x${string}`,
+    collateralAddress: Address,
   ): ContractFunctionParameters {
     return this.getCall("getCollateralReserves", [collateralAddress]);
   }
@@ -136,17 +133,17 @@ export class CometContract extends WagmiContract {
     return nonce as string;
   }
 
-  async getUserNonce(owner: `0x${string}`): Promise<number> {
+  async getUserNonce(owner: Address): Promise<number> {
     const nonce = await this.read("userNonce", this.chainId, [owner]);
 
     return nonce as number;
   }
   /**
-   * THIS allow for full amount withdraw or repay
+   * THIS allows full amount withdraw or repay
    */
   async writeAllowAllBySig(
-    owner: `0x${string}`,
-    bulker: `0x${string}`,
+    owner: Address,
+    bulker: Address,
     nonce: number,
     expiry: bigint,
     v: number,
@@ -167,10 +164,7 @@ export class CometContract extends WagmiContract {
   /**
    * Check allow for full amount withdraw or repay
    */
-  async isAllowed(
-    owner: `0x${string}`,
-    bulker: `0x${string}`,
-  ): Promise<boolean> {
+  async isAllowed(owner: Address, bulker: Address): Promise<boolean> {
     const isAllowed = await this.read("allowanceAll", this.chainId, [
       owner,
       bulker,
@@ -183,12 +177,12 @@ export class CometContract extends WagmiContract {
    * Check allow for not full amount withdraw or repay
    */
   async isAllowedToken(
-    owner: `0x${string}`,
-    bulker: `0x${string}`,
-    tokenAddress: `0x${string}`,
+    owner: Address,
+    bulker: Address,
+    tokenAddress: Address,
     amount: bigint,
   ): Promise<boolean> {
-    const result: any = await this.read("allowance", this.chainId, [
+    const result = await this.read("allowance", this.chainId, [
       owner,
       bulker,
       tokenAddress,
@@ -203,8 +197,8 @@ export class CometContract extends WagmiContract {
    * Check allow for not full amount withdraw or repay
    */
   async isAllowedTokens(
-    owner: `0x${string}`,
-    bulker: `0x${string}`,
+    owner: Address,
+    bulker: Address,
     tokensData: MultiAllowanceCallTypeBigInt[],
   ): Promise<boolean> {
     const tokensAllowance = await multicall(wagmiConfig, {
@@ -235,46 +229,39 @@ export class CometContract extends WagmiContract {
    * This allow is for collaterals and not full amount withdraw and repay
    */
   async allow(
-    bulker: `0x${string}`,
+    bulker: Address,
     collaterals: UserCollateral[],
   ): Promise<WriteContractReturnType> {
     return this.write("approveAllTokens", this.chainId, [
       bulker,
       BigInt(
         "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      ) - BigInt(1),
+      ) - 1n,
       [
         ...collaterals.map(
           () =>
             BigInt(
               "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-            ) - BigInt(1),
+            ) - 1n,
         ),
       ],
     ]);
   }
 
-  getAllowCall(
-    bulker: `0x${string}`,
-    status: boolean,
-  ): ContractFunctionParameters {
+  getAllowCall(bulker: Address, status: boolean): ContractFunctionParameters {
     return this.getCall("allow", [bulker, status]);
   }
 
   //
-  getBalanceOfCall(userAddress: `0x${string}`): ContractFunctionParameters {
+  getBalanceOfCall(userAddress: Address): ContractFunctionParameters {
     return this.getCall("balanceOf", [userAddress]);
   }
 
-  getBorrowBalanceOfCall(
-    userAddress: `0x${string}`,
-  ): ContractFunctionParameters {
+  getBorrowBalanceOfCall(userAddress: Address): ContractFunctionParameters {
     return this.getCall("borrowBalanceOf", [userAddress]);
   }
 
-  getCollateralBalanceOfCall(
-    userAddress: `0x${string}`,
-  ): ContractFunctionParameters {
+  getCollateralBalanceOfCall(userAddress: Address): ContractFunctionParameters {
     return this.getCall("collateralBalanceOf", [userAddress]);
   }
 
@@ -322,13 +309,13 @@ export class CometContract extends WagmiContract {
     return this.getCall("baseTokenPriceFeed");
   }
 
-  getPriceCall(priceFeedAddress: `0x${string}`): ContractFunctionParameters {
+  getPriceCall(priceFeedAddress: Address): ContractFunctionParameters {
     return this.getCall("getPrice", [priceFeedAddress]);
   }
 
   getUserCollateralCall(
-    userAddress: `0x${string}`,
-    tokenAddress: `0x${string}`,
+    userAddress: Address,
+    tokenAddress: Address,
   ): ContractFunctionParameters {
     return this.getCall("userCollateral", [userAddress, tokenAddress]);
   }

@@ -375,7 +375,7 @@ export namespace MarketMethods {
         acc +
         Number(
           DataUtils.fromBigNumber(
-            collateral.totalSupplyAsset || BigInt(0),
+            collateral.totalSupplyAsset,
             Number(collateral.decimals),
           ),
         )

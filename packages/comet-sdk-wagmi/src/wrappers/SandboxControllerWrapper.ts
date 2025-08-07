@@ -1,6 +1,7 @@
 import type { Config, WriteContractReturnType } from "@wagmi/core";
 import { type ICurve, SandboxController } from "@woof-software/comet-sdk";
 import type { ISandboxController } from "@woof-software/comet-sdk/src/sandbox-controller";
+import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
 import { ControllerContract, wagmiConfig } from "../contracts";
 import {
@@ -36,7 +37,7 @@ export class SandboxControllerWrapper extends SandboxController {
   }
 
   async addBaseAssetCurve(
-    token: `0x${string}`,
+    token: Address,
     baseAssetCurve: ICurve,
   ): Promise<WriteContractReturnType> {
     try {
@@ -51,7 +52,7 @@ export class SandboxControllerWrapper extends SandboxController {
   }
 
   async changeBaseAssetCurve(
-    token: `0x${string}`,
+    token: Address,
     curveIndex: bigint,
     newCurve: ICurve,
   ): Promise<WriteContractReturnType> {
@@ -94,7 +95,7 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async transferDao(newDao: `0x${string}`): Promise<WriteContractReturnType> {
+  async transferDao(newDao: Address): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.transferDao(newDao, this.chainId);
     } catch {
@@ -102,9 +103,7 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async transferOwner(
-    newOwner: `0x${string}`,
-  ): Promise<WriteContractReturnType> {
+  async transferOwner(newOwner: Address): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.transferOwner(
         newOwner,
@@ -115,7 +114,7 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async setTreasury(treasury: `0x${string}`): Promise<WriteContractReturnType> {
+  async setTreasury(treasury: Address): Promise<WriteContractReturnType> {
     try {
       return await this.controllerContract.setTreasury(treasury, this.chainId);
     } catch {
@@ -137,8 +136,8 @@ export class SandboxControllerWrapper extends SandboxController {
   }
 
   async whitelistBaseAsset(
-    token: `0x${string}`,
-    priceFeed: `0x${string}`,
+    token: Address,
+    priceFeed: Address,
     baseAssetCurve: ICurve,
     minBorrow: bigint,
   ): Promise<WriteContractReturnType> {

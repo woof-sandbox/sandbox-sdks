@@ -1,5 +1,8 @@
 export const ALLOW_FAILED = () => new Error("Failed to allow bulker contract.");
 
+export const CHAIN_ID_WAS_NOT_PROVIDED = () =>
+  new Error("ChainID was not provided!");
+
 export const COLLATERAL_NOT_FOUND = (collateral: string) =>
   new Error(`Collateral not found: ${collateral}`);
 
