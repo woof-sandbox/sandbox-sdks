@@ -158,6 +158,11 @@ function App() {
       setViewError(error);
     }
   };
+  useEffect(() => {
+    console.log('--currentMarket--', currentMarket?.borrowApr);
+
+    console.log('--currentMarket--', currentMarket?.borrowAprCustom('440'));
+  }, [currentMarket]);
 
   return (
     <>
@@ -325,6 +330,34 @@ function App() {
               <button
                 onClick={() =>
                   handleFunction(() =>
+                    currentMarket?.approveViaSignature('0x619Cd39439791D6B4f55F6eDf2a3b52bd6f30c22')
+                  )
+                }
+              >
+                allow market sign
+              </button>
+
+              <button
+                onClick={() =>
+                  handleFunction(() =>
+                    currentMarket?.getBulkerTokensAllowed(
+                      '0x619Cd39439791D6B4f55F6eDf2a3b52bd6f30c22',
+                      [
+                        {
+                          tokenAddress: currentMarket.baseToken.tokenAddress,
+                          inputAmount: parseUnits('100', Number(currentMarket.baseToken.decimals)),
+                        },
+                      ]
+                    )
+                  )
+                }
+              >
+                is Allowed Base token
+              </button>
+
+              <button
+                onClick={() =>
+                  handleFunction(() =>
                     currentMarket?.approveViaSignature(
                       "0x619Cd39439791D6B4f55F6eDf2a3b52bd6f30c22",
                     ),
@@ -471,10 +504,10 @@ function App() {
                 onClick={() =>
                   handleFunction(() =>
                     currentMarket?.approveToken(
-                      "0xb01f67f936b018edf565311A0ab55F3e1A05dBaf",
-                      "0.01",
-                      8,
-                    ),
+                      '0xb01f67f936b018edf565311A0ab55F3e1A05dBaf',
+                      '0.01',
+                      8
+                    )
                   )
                 }
               >
