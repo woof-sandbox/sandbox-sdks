@@ -11,6 +11,9 @@ export async function fetchCurvesMocks(
   cometProxyAddress?: Address,
   chainId?: WagmiChainId,
 ): Promise<Curve[]> {
+  void cometProxyAddress;
+  void chainId;
+
   return [
     new Curve({
       id: "42",

@@ -13,6 +13,8 @@ export async function fetchCollateralsMocks(
   cometProxyAddress?: Address,
   chainId?: WagmiChainId,
 ): Promise<Collateral[]> {
+  void cometProxyAddress;
+  void chainId;
   // for USDt comet
   return [
     new Collateral({

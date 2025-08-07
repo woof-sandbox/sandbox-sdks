@@ -10,6 +10,8 @@ export async function fetchUserMock(
   userAddress?: string,
   subgraphUrl?: string,
 ): Promise<User> {
+  void subgraphUrl;
+
   const address = userAddress || "0xd0e4a05a84ce039be8647ca8089266117a7e96c5";
   const borrowMarkets = ["0x3afdc9bca9213a35503b077a6072f3d0d5ab0840"]; // USDt comet
   const lendMarkets = ["0x3afdc9bca9213a35503b077a6072f3d0d5ab0840"];
