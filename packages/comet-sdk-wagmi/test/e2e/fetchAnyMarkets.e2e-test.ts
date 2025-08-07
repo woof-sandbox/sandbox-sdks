@@ -1,19 +1,19 @@
 import { UserMarket } from "../../src/augment";
 
-import {arbitrum, mainnet, sepolia} from "@wagmi/core/chains";
+import { arbitrum, mainnet, sepolia } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";
 import { UserMarketWrapper } from "../../src/wrappers/UserMarketWrapper";
 import { Address } from "viem";
 import { wagmiConfig } from "../../src";
 
 const marketsArbitrum: Address[] = [
-  "0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07", // USDT
-  "0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf", // USDC
-  "0x6f7D514bbD4aFf3BcD1140B7344b32f063dEe486", // WETH
+  "0xd98be00b5d27fc98112bde293e487f8d4ca57d07", // USDT
+  "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf", // USDC
+  "0x6f7d514bbd4aff3bcd1140b7344b32f063dee486", // WETH
 ];
 const marketsMainnet: Address[] = [
-  "0x3Afdc9BCA9213A35503b077a6072F3D0d5AB0840", // USDT
-  "0xc3d688B66703497DAA19211EEdff47f25384cdc3", // USDC
+  "0x3afdc9bca9213a35503b077a6072f3d0d5ab0840", // USDT
+  "0xc3d688b66703497daa19211eedff47f25384cdc3", // USDC
 ];
 
 let market: UserMarketWrapper[];
@@ -25,7 +25,7 @@ describe("UserMarketWrapper", () => {
         [arbitrum.id]: marketsArbitrum,
         [mainnet.id]: marketsMainnet,
       },
-      "0x23eEF61AB548a8852117561689886f583FC0E2B7",
+      "0x23eef61ab548a8852117561689886f583fc0e2b7",
       wagmiConfig,
     );
 

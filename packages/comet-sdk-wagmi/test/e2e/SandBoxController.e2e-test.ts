@@ -1,6 +1,6 @@
 import { SandboxController } from "../../src/augment";
 
-import { arbitrum } from "@wagmi/core/chains";
+import { sepolia } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";
 
 let controller: SandboxController;
@@ -8,8 +8,8 @@ let controller: SandboxController;
 describe("SandboxController", () => {
   beforeAll(async () => {
     controller = await SandboxController.fetch(
-      "0x23eEF61AB548a8852117561689886f583FC0E2B7",
-      arbitrum.id,
+      "0x989c545362a6ad8534f91b970cf2ac5d97fa8dff",
+      sepolia.id,
     );
   });
 

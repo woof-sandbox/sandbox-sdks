@@ -1,12 +1,12 @@
 import type { IMarket } from "@woof-software/comet-sdk";
-import { arbitrum } from "@wagmi/core/chains";
+import { sepolia } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";
 import { UserMarketWrapper } from "../../src/wrappers/UserMarketWrapper";
 import {wagmiConfig} from "../../src";
-import {Address} from "viem";
+import { Address } from "viem";
 
 const data: Partial<IMarket> = {
-  cometAddress: "0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07",
+  cometAddress: "0xacb1c4d4de3ce962673326fb9c53d56ce4881cf4",
 } as const;
 
 let market: UserMarketWrapper;
@@ -15,8 +15,8 @@ describe("UserMarketWrapper", () => {
   beforeAll(async () => {
     market = await UserMarketWrapper.fetchUserMarket(
       data.cometAddress as Address,
-      "0x23eEF61AB548a8852117561689886f583FC0E2B7",
-      arbitrum.id,
+      "0xacb1c4d4de3ce962673326fb9c53d56ce4881cf40044908ef517c28de800222a9f2030efbb01ee9afe",
+      sepolia.id,
       wagmiConfig,
     );
   });
@@ -28,7 +28,7 @@ describe("UserMarketWrapper", () => {
 
   test("check approve", async () => {
     const approve = market.approveToken(
-      "0x912ce59144191c1204e64559fe8253a0e49e6548",
+      "0x306134121e8b55dfa9faba05de590e639a1f7d6b",
       "0.01",
       18,
     );
@@ -39,11 +39,11 @@ describe("UserMarketWrapper", () => {
     const supplyCollaterals = market.supplyCollaterals(
       [
         {
-          tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
+          tokenAddress: "0x306134121e8b55dfa9faba05de590e639a1f7d6b",
           inputAmount: "0.01",
         },
       ],
-      arbitrum.id,
+      sepolia.id,
     );
     console.log("--supplyCollaterals-", supplyCollaterals);
   });
@@ -62,7 +62,7 @@ describe("UserMarketWrapper", () => {
     const borrowAndSupplyCollaterals = market.borrowAndSupplyMarket("0.01", [
       {
         inputAmount: "0.01",
-        tokenAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
+        tokenAddress: "0x306134121e8b55dfa9faba05de590e639a1f7d6b",
       },
     ]);
     console.log("--borrowAndSupplyCollaterals-", borrowAndSupplyCollaterals);

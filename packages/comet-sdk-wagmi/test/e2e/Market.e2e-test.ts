@@ -1,15 +1,15 @@
 import { http, createConfig } from "@wagmi/core";
-import { arbitrum } from "@wagmi/core/chains";
+import { sepolia } from "@wagmi/core/chains";
 import { type IMarket, PERCENT_PRECISION } from "@woof-software/comet-sdk";
 import type { Address } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
 import { Market } from "../../src/augment";
-import {wagmiConfig} from "../../src";
+import { wagmiConfig } from "../../src";
 
 const percentsReg = new RegExp(`^\\d+\\.\\d{${PERCENT_PRECISION}}$`);
-const RPC_URL = "https://eth.llamarpc.com";
+const RPC_URL = "https://1rpc.io/sepolia";
 const data: Partial<IMarket> = {
-  cometAddress: "0x3afdc9bca9213a35503b077a6072f3d0d5ab0840",
+  cometAddress: "0x4e24e491b68f2718fce98f0bc5064716db695619",
 } as const;
 
 let market: Market;
@@ -17,15 +17,15 @@ let market: Market;
 describe("MarketMethods", () => {
   beforeAll(async () => {
     createConfig({
-      chains: [arbitrum],
+      chains: [sepolia],
       transports: {
-        [arbitrum.id]: http(RPC_URL),
+        [sepolia.id]: http(RPC_URL),
       },
     });
 
     market = await Market.fetchMarket(
       data.cometAddress as Address,
-      arbitrum.id,
+      sepolia.id,
       wagmiConfig,
     );
     console.log();

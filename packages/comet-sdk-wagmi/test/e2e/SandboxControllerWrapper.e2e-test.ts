@@ -1,20 +1,20 @@
 import { SandboxController } from "@woof-software/comet-sdk";
-import { arbitrum } from "@wagmi/core/chains";
+import { sepolia } from "@wagmi/core/chains";
 import { beforeAll, describe, test } from "vitest";
 import { SandboxControllerWrapper } from "../../src/wrappers/SandboxControllerWrapper";
 
 let controller: SandboxControllerWrapper;
 
-const controllerAddress = "0x23eEF61AB548a8852117561689886f583FC0E2B7";
-const token = "0x23eEF61AB548a8852117561689886f583FC0E2B7";
+const controllerAddress = "0x989c545362a6ad8534f91b970cf2ac5d97fa8dff";
+const token = "0x306134121e8b55dfa9faba05de590e639a1f7d6b";
 
 describe("SandboxControllerWrapper", () => {
   beforeAll(async () => {
     const sandBoxController = await SandboxController.fetch(
       controllerAddress,
-      arbitrum.id,
+      sepolia.id,
     );
-    controller = new SandboxControllerWrapper(sandBoxController, arbitrum.id);
+    controller = new SandboxControllerWrapper(sandBoxController, sepolia.id);
   });
 
   test("addBaseAssetCurve", async () => {
