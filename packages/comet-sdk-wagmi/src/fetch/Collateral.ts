@@ -1,12 +1,16 @@
 import { multicall } from "@wagmi/core";
 import { Collateral, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
-import { type ContractFunctionParameters, formatUnits } from "viem";
+import {
+  type Address,
+  type ContractFunctionParameters,
+  formatUnits,
+} from "viem";
 import type { WagmiChainId } from "../config";
 import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 
 export async function fetchCollateralsMocks(
-  cometProxyAddress?: `0x${string}`,
+  cometProxyAddress?: Address,
   chainId?: WagmiChainId,
 ): Promise<Collateral[]> {
   // for USDt comet
@@ -195,7 +199,7 @@ export async function fetchCollateralsMocks(
 }
 
 export async function fetchCollaterals(
-  cometProxyAddress: `0x${string}`,
+  cometProxyAddress: Address,
   chainId: WagmiChainId,
 ): Promise<Collateral[]> {
   const comet = new CometContract(cometProxyAddress, chainId);

@@ -6,6 +6,7 @@ import {
 import type { Address, ContractFunctionParameters } from "viem";
 import { erc20Abi } from "../abis";
 import type { WagmiChainId } from "../config";
+import { CHAIN_ID_WAS_NOT_PROVIDED } from "../errors/wrappers/user-market-wrapper.errors";
 import type { MultiAllowanceCallType } from "./entities/multi-allowance-call";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
 import { WagmiContract } from "./wagmi-contract";
@@ -13,17 +14,14 @@ import { wagmiConfig } from "./wagmiConfig";
 
 export class Erc20Contract extends WagmiContract {
   constructor(
-    address: `0x${string}`,
+    address: Address,
     chainId?: WagmiChainId,
     config: Config = wagmiConfig,
   ) {
     super(config, erc20Abi, address, chainId);
   }
 
-  async allowance(
-    owner: `0x${string}`,
-    spender: `0x${string}`,
-  ): Promise<bigint> {
+  async allowance(owner: Address, spender: Address): Promise<bigint> {
     const allowance = await this.read("allowance", this.chainId, [
       owner,
       spender,
@@ -33,12 +31,17 @@ export class Erc20Contract extends WagmiContract {
 
   async getMultiAllowance(
     tokensData: MultiAllowanceCallType[],
-    chainId: any,
     owner: Address,
     spender: Address,
+    chainId?: WagmiChainId,
   ): Promise<MultiAllowanceResponseType[]> {
+    const chain = chainId ?? this.chainId;
+    if (chain === undefined) {
+      throw CHAIN_ID_WAS_NOT_PROVIDED();
+    }
+
     const tokensAllowance = await multicall(wagmiConfig, {
-      chainId,
+      chainId: chain,
       contracts: tokensData.map(({ tokenAddress }) =>
         this.getCallAddress(tokenAddress, "allowance", [owner, spender]),
       ),
@@ -54,25 +57,17 @@ export class Erc20Contract extends WagmiContract {
   }
 
   async approve(
-    spender: `0x${string}`,
+    spender: Address,
     amount: bigint,
   ): Promise<WriteContractReturnType> {
     return this.write("approve", this.chainId, [spender, amount]);
   }
 
   getAllowanceCall(
-    owner: `0x${string}`,
-    spender: `0x${string}`,
+    owner: Address,
+    spender: Address,
   ): ContractFunctionParameters {
     return this.getCall("allowance", [owner, spender]);
-  }
-
-  // ?: will be removed
-  getApproveCall(
-    spender: `0x${string}`,
-    amount: bigint,
-  ): ContractFunctionParameters {
-    return this.getCall("approve", [spender, amount]);
   }
 
   // BASE
@@ -86,7 +81,7 @@ export class Erc20Contract extends WagmiContract {
   }
 
   // MARKET - Base (availableLiquidity)
-  getBalanceOfCall(address: `0x${string}`): ContractFunctionParameters {
+  getBalanceOfCall(address: Address): ContractFunctionParameters {
     return this.getCall("balanceOf", [address]);
   }
 }

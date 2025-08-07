@@ -1,25 +1,23 @@
 import type { Config, WriteContractReturnType } from "@wagmi/core";
-import type { ContractFunctionParameters } from "viem";
+import type { Address, ContractFunctionParameters } from "viem";
 import { controllerAbi } from "../abis";
 import type { WagmiChainId } from "../config";
+import type { ControllerConfiguration } from "./entities/controller-configuration";
 import { WagmiContract } from "./wagmi-contract";
 import { wagmiConfig } from "./wagmiConfig";
 
 export class ControllerContract extends WagmiContract {
   constructor(
-    address: `0x${string}`,
+    address: Address,
     chainId?: WagmiChainId,
     config: Config = wagmiConfig,
   ) {
     super(config, controllerAbi, address, chainId);
   }
 
-  async _controllerConfiguration(chainId?: WagmiChainId): Promise<{
-    storeFrontPriceFactor: bigint;
-    minUpdateTime: bigint;
-    suggestedAmountOfSeedReserves: bigint;
-    suggestedLockTimeOfSeedReserves: bigint;
-  }> {
+  async _controllerConfiguration(
+    chainId?: WagmiChainId,
+  ): Promise<ControllerConfiguration> {
     const result = await this.read("_controllerConfiguration", chainId);
 
     const [
@@ -52,21 +50,21 @@ export class ControllerContract extends WagmiContract {
   async baseAssetTokens(
     arg0: bigint,
     chainId?: WagmiChainId,
-  ): Promise<`0x${string}`> {
+  ): Promise<Address> {
     const result = await this.read("baseAssetTokens", chainId, [arg0]);
-    return result as `0x${string}`;
+    return result as Address;
   }
 
   baseAssetTokensCall(arg0: bigint): ContractFunctionParameters {
     return this.getCall("baseAssetTokens", [arg0]);
   }
 
-  async baseAssets(token: `0x${string}`, chainId?: WagmiChainId): Promise<any> {
+  async baseAssets(token: Address, chainId?: WagmiChainId): Promise<any> {
     const result = await this.read("baseAssets", chainId, [token]);
     return result as any;
   }
 
-  baseAssetsCall(token: `0x${string}`): ContractFunctionParameters {
+  baseAssetsCall(token: Address): ContractFunctionParameters {
     return this.getCall("baseAssets", [token]);
   }
 
@@ -82,39 +80,38 @@ export class ControllerContract extends WagmiContract {
   async collateralAssetTokens(
     arg0: bigint,
     chainId?: WagmiChainId,
-  ): Promise<`0x${string}`> {
+  ): Promise<Address> {
     const result = await this.read("collateralAssetTokens", chainId, [arg0]);
-    return result as `0x${string}`;
+    return result as Address;
   }
 
   collateralAssetTokensCall(arg0: bigint): ContractFunctionParameters {
     return this.getCall("collateralAssetTokens", [arg0]);
   }
 
-  async collateralAssets(
-    token: `0x${string}`,
-    chainId?: WagmiChainId,
-  ): Promise<any> {
+  async collateralAssets(token: Address, chainId?: WagmiChainId): Promise<any> {
     const result = await this.read("collateralAssets", chainId, [token]);
     return result as any;
   }
 
-  collateralAssetsCall(token: `0x${string}`): ContractFunctionParameters {
+  collateralAssetsCall(token: Address): ContractFunctionParameters {
     return this.getCall("collateralAssets", [token]);
   }
 
-  async controllerConfiguration(chainId?: WagmiChainId): Promise<any> {
+  async controllerConfiguration(
+    chainId?: WagmiChainId,
+  ): Promise<ControllerConfiguration> {
     const result = await this.read("controllerConfiguration", chainId);
-    return result as any;
+    return result as ControllerConfiguration;
   }
 
   controllerConfigurationCall(): ContractFunctionParameters {
     return this.getCall("controllerConfiguration");
   }
 
-  async dao(chainId?: WagmiChainId): Promise<`0x${string}`> {
+  async dao(chainId?: WagmiChainId): Promise<Address> {
     const result = await this.read("dao", chainId);
-    return result as `0x${string}`;
+    return result as Address;
   }
 
   daoCall(): ContractFunctionParameters {
@@ -131,31 +128,31 @@ export class ControllerContract extends WagmiContract {
   }
 
   async getBaseAssetCurves(
-    token: `0x${string}`,
+    token: Address,
     chainId?: WagmiChainId,
   ): Promise<any> {
     const result = await this.read("getBaseAssetCurves", chainId, [token]);
     return result as any;
   }
 
-  getBaseAssetCurvesCall(token: `0x${string}`): ContractFunctionParameters {
+  getBaseAssetCurvesCall(token: Address): ContractFunctionParameters {
     return this.getCall("getBaseAssetCurves", [token]);
   }
 
   async isBaseTokenWhitelisted(
-    token: `0x${string}`,
+    token: Address,
     chainId?: WagmiChainId,
   ): Promise<boolean> {
     const result = await this.read("isBaseTokenWhitelisted", chainId, [token]);
     return result as boolean;
   }
 
-  isBaseTokenWhitelistedCall(token: `0x${string}`): ContractFunctionParameters {
+  isBaseTokenWhitelistedCall(token: Address): ContractFunctionParameters {
     return this.getCall("isBaseTokenWhitelisted", [token]);
   }
 
   async isCollateralTokenWhitelisted(
-    token: `0x${string}`,
+    token: Address,
     chainId?: WagmiChainId,
   ): Promise<boolean> {
     const result = await this.read("isCollateralTokenWhitelisted", chainId, [
@@ -164,9 +161,7 @@ export class ControllerContract extends WagmiContract {
     return result as boolean;
   }
 
-  isCollateralTokenWhitelistedCall(
-    token: `0x${string}`,
-  ): ContractFunctionParameters {
+  isCollateralTokenWhitelistedCall(token: Address): ContractFunctionParameters {
     return this.getCall("isCollateralTokenWhitelisted", [token]);
   }
 
@@ -185,14 +180,14 @@ export class ControllerContract extends WagmiContract {
   }
 
   async isPriceFeedWhitelisted(
-    arg0: `0x${string}`,
+    arg0: Address,
     chainId?: WagmiChainId,
   ): Promise<boolean> {
     const result = await this.read("isPriceFeedWhitelisted", chainId, [arg0]);
     return result as boolean;
   }
 
-  isPriceFeedWhitelistedCall(arg0: `0x${string}`): ContractFunctionParameters {
+  isPriceFeedWhitelistedCall(arg0: Address): ContractFunctionParameters {
     return this.getCall("isPriceFeedWhitelisted", [arg0]);
   }
 
@@ -205,9 +200,9 @@ export class ControllerContract extends WagmiContract {
     return this.getCall("maxCollateralAssets");
   }
 
-  async owner(chainId?: WagmiChainId): Promise<`0x${string}`> {
+  async owner(chainId?: WagmiChainId): Promise<Address> {
     const result = await this.read("owner", chainId);
-    return result as `0x${string}`;
+    return result as Address;
   }
 
   ownerCall(): ContractFunctionParameters {
@@ -292,9 +287,9 @@ export class ControllerContract extends WagmiContract {
     return this.getCall("threshold", [arg0]);
   }
 
-  async treasury(chainId?: WagmiChainId): Promise<`0x${string}`> {
+  async treasury(chainId?: WagmiChainId): Promise<Address> {
     const result = await this.read("treasury", chainId);
-    return result as `0x${string}`;
+    return result as Address;
   }
 
   treasuryCall(): ContractFunctionParameters {
@@ -302,7 +297,7 @@ export class ControllerContract extends WagmiContract {
   }
 
   async addBaseAssetCurve(
-    token: `0x${string}`,
+    token: Address,
     baseAssetCurve: {
       supplyKink: bigint;
       supplyPerYearInterestRateBase: bigint;
@@ -319,7 +314,7 @@ export class ControllerContract extends WagmiContract {
   }
 
   async changeBaseAssetCurve(
-    token: `0x${string}`,
+    token: Address,
     curveIndex: bigint,
     newCurve: {
       supplyKink: bigint;
@@ -388,29 +383,29 @@ export class ControllerContract extends WagmiContract {
   }
 
   async setTreasury(
-    treasury: `0x${string}`,
+    treasury: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("setTreasury", chainId, [treasury]);
   }
 
   async transferDao(
-    newDao: `0x${string}`,
+    newDao: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("transferDao", chainId, [newDao]);
   }
 
   async transferOwner(
-    newOwner: `0x${string}`,
+    newOwner: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("transferOwner", chainId, [newOwner]);
   }
 
   async whitelistBaseAsset(
-    token: `0x${string}`,
-    priceFeed: `0x${string}`,
+    token: Address,
+    priceFeed: Address,
     baseAssetCurve: {
       supplyKink: bigint;
       supplyPerYearInterestRateBase: bigint;
@@ -433,8 +428,8 @@ export class ControllerContract extends WagmiContract {
   }
 
   async whitelistCollateralAsset(
-    token: `0x${string}`,
-    priceFeed: `0x${string}`,
+    token: Address,
+    priceFeed: Address,
     minBorrowCollateralFactor: bigint,
     maxBorrowCollateralFactor: bigint,
     minLiquidateCollateralFactor: bigint,

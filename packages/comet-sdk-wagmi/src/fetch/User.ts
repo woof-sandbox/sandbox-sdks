@@ -2,7 +2,7 @@ import { User } from "@woof-software/comet-sdk";
 import {
   type CollectionCallback,
   fetchCollection,
-} from "@woof-software/subgraph-sdk"; // Ensure the package is installed using `npm install @woof-software/subgraph-sdk`
+} from "@woof-software/subgraph-sdk";
 import type { IUser } from "../subgraph/entities";
 import { userActiveMarketQuery } from "../subgraph/queries";
 
@@ -10,9 +10,9 @@ export async function fetchUserMock(
   userAddress?: string,
   subgraphUrl?: string,
 ): Promise<User> {
-  const address = userAddress || "0xd0E4A05a84ce039be8647cA8089266117a7E96C5";
-  const borrowMarkets = ["0x3Afdc9BCA9213A35503b077a6072F3D0d5AB0840"]; // USDt comet
-  const lendMarkets = ["0x3Afdc9BCA9213A35503b077a6072F3D0d5AB0840"];
+  const address = userAddress || "0xd0e4a05a84ce039be8647ca8089266117a7e96c5";
+  const borrowMarkets = ["0x3afdc9bca9213a35503b077a6072f3d0d5ab0840"]; // USDt comet
+  const lendMarkets = ["0x3afdc9bca9213a35503b077a6072f3d0d5ab0840"];
 
   return new User({
     address,
@@ -42,7 +42,7 @@ export async function fetchUserActiveMarkets(
   subgraphUrl: string,
   options: {
     token?: string;
-  } = {}
+  } = {},
 ): Promise<[string[], string[]]> {
   const borrowMarkets: Set<string> = new Set();
   const lendMarkets: Set<string> = new Set();
@@ -53,15 +53,21 @@ export async function fetchUserActiveMarkets(
       params.loopFlag = false;
     }
     subgraphUser.forEach((user: IUser) => {
-      if (BigInt(user.principal) < 0n) {
+      const principal = BigInt(user.principal);
+      if (principal < 0n) {
         borrowMarkets.add(user.comet.market.id);
-      } else {
+      } else if (principal > 0n) {
         lendMarkets.add(user.comet.market.id);
       }
     });
   };
 
-  await fetchCollection(userActiveMarketQuery(address), callback, subgraphUrl, options);
+  await fetchCollection(
+    userActiveMarketQuery(address),
+    callback,
+    subgraphUrl,
+    options,
+  );
 
   return [Array.from(borrowMarkets), Array.from(lendMarkets)];
 }

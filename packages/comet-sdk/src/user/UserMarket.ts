@@ -70,7 +70,7 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  get maxWithDrawCollateralAmount() {
+  get maxWithDrawCollateralAmount(): string {
     return UserMarketMethods.maxWithdrawCollateralAmount(
       this.borrowCapacityMarketUSD,
       this.supplyBalance,
@@ -80,7 +80,9 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  findMarketCollateralByAddress(collateralAddress: Address) {
+  findMarketCollateralByAddress(
+    collateralAddress: Address,
+  ): UserCollateral | undefined {
     return UserMarketMethods.findMarketCollateralByAddress(
       collateralAddress,
       this.collaterals,
