@@ -2,9 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import { DataUtils, PRICE_FEED_FACTOR_UNITS, UserCollateral } from "../../src";
 import { MISSING_COLLATERAL_DATA } from "../../src/errors/methods/user-market-methods.errors";
 import { UserMarketMethods } from "../../src/user/UserMarketMethods";
+import { Address } from "viem";
 
-const mockAddress1 = "0xToken1" as `0x${string}`;
-const mockAddress2 = "0xToken2" as `0x${string}`;
+const mockAddress1 = "0xToken1" as Address;
+const mockAddress2 = "0xToken2" as Address;
 
 const mockCollateral = (data = {}) =>
   new UserCollateral({
@@ -39,7 +40,7 @@ const mockCall = ({ tokenAddress = mockAddress1, inputAmount = "1" } = {}) => ({
   inputAmount,
 });
 const mockBaseToken = {
-  tokenAddress: "0xBase" as `0x${string}`,
+  tokenAddress: "0xBase" as Address,
   symbol: "USDC",
   decimals: BigInt(6),
   price: "1",
@@ -52,14 +53,14 @@ const mockBaseToken = {
   curvePresets: [],
 };
 const mockCompToken = {
-  tokenAddress: "0xComp" as `0x${string}`,
+  tokenAddress: "0xComp" as Address,
   symbol: "COMP",
   decimals: BigInt(18),
   price: "50",
   priceFeedAddress: "0xFeed",
 };
 const mockRewardToken = {
-  tokenAddress: "0xReward" as `0x${string}`,
+  tokenAddress: "0xReward" as Address,
   symbol: "RWD",
   decimals: BigInt(18),
   price: "2",

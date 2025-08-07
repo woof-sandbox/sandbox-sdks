@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, test } from "vitest";
-import { wagmiConfig } from "../../lib/contracts";
 import { ConfigController } from "../../src/augment/ConfigController";
 import { Chain } from "../../src/config/chains";
+import {wagmiConfig} from "../../src";
 
 const configController = "0xDF539a3B60172779Be6cBa11B26bBE0913b5316A";
 let configC: ConfigController;
