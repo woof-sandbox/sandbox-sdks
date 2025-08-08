@@ -26,9 +26,10 @@ import {
   Erc20Contract,
   MigratorContract,
 } from "../contracts";
-import type {
+import {
   MultiAllowanceCallType,
   MultiAllowanceCallTypeBigInt,
+  MultiMigrateCollaterals,
 } from "../contracts/entities/multi-allowance-call";
 import {
   ACTION_FAILED,
@@ -90,7 +91,7 @@ export class UserMarketWrapper extends UserMarket {
     );
 
     this.migrationContract = new MigratorContract(
-      this.baseToken.tokenAddress as Address, // TODO change with migration address
+      Addresses[chainId].migrator,
       chainId,
       config,
     );
@@ -399,6 +400,29 @@ export class UserMarketWrapper extends UserMarket {
       return await token.approve(
         this.cometAddress as Address,
         DataUtils.toBigNumber(amount, tokenDecimals),
+      );
+    } catch (e) {
+      throw APPROVE_FAILED();
+    }
+  }
+
+  /**
+   * Approve for migrator
+   */
+  async approveMigrate(
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    const chain = chainId ?? this.chainId;
+    if (chain === undefined) {
+      throw CHAIN_ID_WAS_NOT_PROVIDED();
+    }
+
+    try {
+      return await this.cometContract.approve(
+        Addresses[chain].migrator,
+        BigInt(
+          "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        ),
       );
     } catch (e) {
       throw APPROVE_FAILED();
@@ -1100,7 +1124,7 @@ export class UserMarketWrapper extends UserMarket {
     fromCometAddress: Address,
     toCometAddress: Address,
     flashAmount: bigint,
-    collateralsData?: MultiAllowanceCallType[],
+    collateralsData?: MultiMigrateCollaterals[],
   ): Promise<WriteContractReturnType> {
     const args: MigrateArgs = {
       fromCometAddress,

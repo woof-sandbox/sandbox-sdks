@@ -248,6 +248,13 @@ export class CometContract extends WagmiContract {
     ]);
   }
 
+  async approve(
+    migrator: Address,
+    amount: bigint,
+  ): Promise<WriteContractReturnType> {
+    return this.write("approve", this.chainId, [migrator, amount]);
+  }
+
   getAllowCall(bulker: Address, status: boolean): ContractFunctionParameters {
     return this.getCall("allow", [bulker, status]);
   }
