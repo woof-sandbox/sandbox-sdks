@@ -10,3 +10,8 @@ export type MultiAllowanceCallTypeBigInt = {
   tokenAddress: Address;
   inputAmount: bigint;
 };
+
+export type MultiMigrateCollaterals = {
+  asset: Address;
+  amount: bigint;
+};
