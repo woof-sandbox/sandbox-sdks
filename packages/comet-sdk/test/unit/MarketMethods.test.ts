@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MarketMethods } from "../../src";
+import {MarketMethods, IBase, Market, IToken, Collateral, type IMarket} from "../../src";
 
 const SECONDS_PER_YEAR = 31536000;
 
@@ -8,21 +8,21 @@ const mockBaseTrackingSpeed = 100000000000000n;
 const mockBaseTotalSupply = 1000000000000000000000n; // 1e21
 const mockBaseTotalBorrow = 500000000000000000000n; // 5e20
 
-const mockCompToken = {
+const mockCompToken: IToken = {
   tokenAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   symbol: "USDT",
   decimals: BigInt(6n),
   price: "1.0",
   priceFeedAddress: "0x3E7d1eAB13ad0104d2750B8863b489D65364e32D",
 };
-const mockRewardToken = {
+const mockRewardToken: IToken = {
   tokenAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   symbol: "USDT",
   decimals: BigInt(6n),
   price: "1.0",
   priceFeedAddress: "0x3E7d1eAB13ad0104d2750B8863b489D65364e32D",
 };
-const mockBaseToken = {
+const mockBaseToken: IBase = {
   baseMinBorrow: BigInt(100000000000),
   baseMinForRewards: BigInt(100000000000), // 1e9
   baseTrackingBorrowSpeed: BigInt(578703703703),
@@ -47,15 +47,47 @@ describe("MarketMethods", () => {
     expect(MarketMethods.calcApr(undefined)).toBe(0);
   });
 
+  it("should calculate APR using getApr", () => {
+    const utilization = 50n * BigInt(1e16); // 50%
+    const kink = 80n * BigInt(1e16); // 80%
+    const perSecondInterestRateBase = 2n * BigInt(1e18);
+    const perSecondInterestRateSlopeLow = BigInt(0.05 * 1e18);
+    const perSecondInterestRateSlopeHigh = BigInt(0.5 * 1e18);
+    const result = MarketMethods.getApr(
+        utilization,
+        kink,
+        perSecondInterestRateBase,
+        perSecondInterestRateSlopeLow,
+        perSecondInterestRateSlopeHigh,
+    );
+    expect(result).toBeCloseTo(202.5, 2);
+  });
+
+  it("should calculate APR using getApr above kink", () => {
+    const utilization = 90n * BigInt(1e16); // 90%
+    const kink = 80n * BigInt(1e16); // 80%
+    const perSecondInterestRateBase = 2n * BigInt(1e18);
+    const perSecondInterestRateSlopeLow = BigInt(0.05 * 1e18);
+    const perSecondInterestRateSlopeHigh = BigInt(0.5 * 1e18);
+    const result = MarketMethods.getApr(
+        utilization,
+        kink,
+        perSecondInterestRateBase,
+        perSecondInterestRateSlopeLow,
+        perSecondInterestRateSlopeHigh,
+    );
+    expect(result).toBeCloseTo(209, 2);
+  });
+
   it("should calculate net APRs correctly for supply", () => {
     const supplyApr = 5.0;
     const result = MarketMethods.calcNetAprs(
-      mockBaseToken,
-      mockBaseTrackingSpeed,
-      mockBaseTotalSupply,
-      mockCompToken,
-      [mockRewardToken],
-      supplyApr,
+        mockBaseToken,
+        mockBaseTrackingSpeed,
+        mockBaseTotalSupply,
+        mockCompToken,
+        [mockRewardToken],
+        supplyApr,
     );
 
     expect(result.length).toBe(3);
@@ -66,12 +98,12 @@ describe("MarketMethods", () => {
 
   it("should handle zero total supply", () => {
     const result = MarketMethods.calcNetAprs(
-      mockBaseToken,
-      mockBaseTrackingSpeed,
-      BigInt(0),
-      mockCompToken,
-      [mockRewardToken],
-      5.0,
+        mockBaseToken,
+        mockBaseTrackingSpeed,
+        BigInt(0),
+        mockCompToken,
+        [mockRewardToken],
+        5.0,
     );
 
     expect(result[0]).toBe(5.0);
@@ -82,11 +114,11 @@ describe("MarketMethods", () => {
   it("should delegate to calcNetAprs with supply parameters", () => {
     const supplyApr = 3.0;
     const result = MarketMethods.netEarnAprs(
-      mockBaseToken,
-      mockBaseTotalSupply,
-      mockCompToken,
-      [mockRewardToken],
-      supplyApr,
+        mockBaseToken,
+        mockBaseTotalSupply,
+        mockCompToken,
+        [mockRewardToken],
+        supplyApr,
     );
 
     expect(result.length).toBe(3);
@@ -98,11 +130,11 @@ describe("MarketMethods", () => {
   it("should delegate to calcNetAprs with borrow parameters", () => {
     const borrowApr = 4.0;
     const result = MarketMethods.netBorrowAprs(
-      mockBaseToken,
-      mockBaseTotalBorrow,
-      mockCompToken,
-      [mockRewardToken],
-      borrowApr,
+        mockBaseToken,
+        mockBaseTotalBorrow,
+        mockCompToken,
+        [mockRewardToken],
+        borrowApr,
     );
 
     expect(result.length).toBe(3);
@@ -111,7 +143,7 @@ describe("MarketMethods", () => {
     expect(result[2]).toBeGreaterThanOrEqual(0);
   });
 
-  it("calculates correctly with basic values", () => {
+  it("calculates correctly with basic values for totalEarned", () => {
     const price = "2";
     const supply = 1000n;
 
@@ -119,7 +151,7 @@ describe("MarketMethods", () => {
     expect(result).toBe(2000n);
   });
 
-  it("handles decimal price correctly", () => {
+  it("handles decimal price correctly for totalEarned", () => {
     const price = "0.5";
     const supply = 4000n;
 
@@ -127,17 +159,17 @@ describe("MarketMethods", () => {
     expect(result).toBe(2000n);
   });
 
-  it("returns 0 for zero supply", () => {
+  it("returns 0 for zero supply in totalEarned", () => {
     const result = MarketMethods.totalEarned("1.23", 0n);
     expect(result).toBe(0n);
   });
 
-  it("returns 0 for zero price", () => {
+  it("returns 0 for zero price in totalEarned", () => {
     const result = MarketMethods.totalEarned("0", 1000n);
     expect(result).toBe(0n);
   });
 
-  it("calculates correctly with basic values", () => {
+  it("calculates correctly with basic values for totalBorrowed", () => {
     const price = "3";
     const borrowed = 100n;
 
@@ -145,7 +177,7 @@ describe("MarketMethods", () => {
     expect(result).toBe(300n);
   });
 
-  it("handles decimal price correctly", () => {
+  it("handles decimal price correctly for totalBorrowed", () => {
     const price = "0.25";
     const borrowed = 8000n;
 
@@ -153,12 +185,12 @@ describe("MarketMethods", () => {
     expect(result).toBe(2000n);
   });
 
-  it("returns 0 for zero borrowed", () => {
+  it("returns 0 for zero borrowed in totalBorrowed", () => {
     const result = MarketMethods.totalBorrowed("4.56", 0n);
     expect(result).toBe(0n);
   });
 
-  it("returns 0 for zero price", () => {
+  it("returns 0 for zero price in totalBorrowed", () => {
     const result = MarketMethods.totalBorrowed("0", 123n);
     expect(result).toBe(0n);
   });
@@ -206,9 +238,9 @@ describe("MarketMethods", () => {
     const totalSupplied = 2000n;
     const baseToken = { ...mockBaseToken, price: "2.0", decimals: BigInt(6) };
     const ratio = MarketMethods.getCollateralization(
-      totalBorrowed,
-      totalSupplied,
-      baseToken,
+        totalBorrowed,
+        totalSupplied,
+        baseToken,
     );
     expect(typeof ratio).toBe("number");
     expect(ratio).toBeGreaterThan(0);
@@ -227,6 +259,273 @@ describe("MarketMethods", () => {
     const usd = MarketMethods.getTotalReservesUSD(totalReserves, baseToken);
     expect(typeof usd).toBe("number");
     expect(usd).toBeGreaterThanOrEqual(0);
+  });
+
+  it("should calculate total borrow in USD", () => {
+    const totalBorrow = 1000n;
+    const baseToken = { ...mockBaseToken, price: "2.0", decimals: BigInt(6) };
+    const usd = MarketMethods.totalBorrowUSD(totalBorrow, baseToken);
+    expect(typeof usd).toBe("number");
+    expect(usd).toBeCloseTo(0.002, 5); // 1000 / 1e6 * 2.0
+  });
+
+  it("should handle zero borrow in totalBorrowUSD", () => {
+    const totalBorrow = 0n;
+    const baseToken = { ...mockBaseToken, price: "2.0", decimals: BigInt(6) };
+    const usd = MarketMethods.totalBorrowUSD(totalBorrow, baseToken);
+    expect(usd).toBe(0);
+  });
+
+  it("should calculate total supply in USD", () => {
+    const totalSupply = 2000n;
+    const baseToken = { ...mockBaseToken, price: "1.5", decimals: BigInt(6) };
+    const usd = MarketMethods.getTotalSupplyUSD(totalSupply, baseToken);
+    expect(typeof usd).toBe("number");
+    expect(usd).toBeCloseTo(0.003, 5); // 2000 / 1e6 * 1.5
+  });
+
+  it("should handle zero supply in getTotalSupplyUSD", () => {
+    const totalSupply = 0n;
+    const baseToken = { ...mockBaseToken, price: "1.5", decimals: BigInt(6) };
+    const usd = MarketMethods.getTotalSupplyUSD(totalSupply, baseToken);
+    expect(usd).toBe(0);
+  });
+
+  it("should calculate total collaterals supply", () => {
+    const collaterals = [
+      {
+        tokenAddress: "0x1",
+        symbol: "COL1",
+        decimals: BigInt(6),
+        price: "1.5",
+        priceFeedAddress: "0xfeed1",
+        totalSupplyAsset: 1000n,
+        collateralReserves: 10n,
+        cometBalance: 500n,
+        collateralFactor: 500000000000000000n,
+        liquidationFactor: 700000000000000000n,
+        liquidationPenalty: 250000000000000000n,
+        supplyCap: 100000000000000000000000n,
+      },
+      {
+        tokenAddress: "0x2",
+        symbol: "COL2",
+        decimals: BigInt(8),
+        price: "3.0",
+        priceFeedAddress: "0xfeed2",
+        totalSupplyAsset: 2000n,
+        collateralReserves: 20n,
+        cometBalance: 200n,
+        collateralFactor: 500000000000000000n,
+        liquidationFactor: 700000000000000000n,
+        liquidationPenalty: 250000000000000000n,
+        supplyCap: 100000000000000000000000n,
+      },
+    ];
+    const total = MarketMethods.getTotalCollateralsSupply(collaterals);
+    expect(typeof total).toBe("number");
+    expect(total).toBeCloseTo(0.00102, 5); // 1000 / 1e6 + 2000 / 1e8
+  });
+
+  it("should handle empty collaterals in getTotalCollateralsSupply", () => {
+    const total = MarketMethods.getTotalCollateralsSupply([]);
+    expect(total).toBe(0);
+  });
+
+  it("should find markets to migrate with matching base token and collaterals", () => {
+    const markets: Market[] = [
+      new Market({
+        chain: 1,
+        cometAddress: "0xComet1",
+        utilization: 0n,
+        supplyRate: 0n,
+        borrowRate: 0n,
+        borrowMinAmount: 0n,
+        totalBorrow: 0n,
+        totalSupply: 0n,
+        totalReserves: 0n,
+        baseToken: mockBaseToken,
+        collaterals: [
+          new Collateral({
+            tokenAddress: "0x1",
+            symbol: "COL1",
+            decimals: BigInt(6),
+            price: "1.5",
+            priceFeedAddress: "0xfeed1",
+            totalSupplyAsset: 1000n,
+            collateralReserves: 10n,
+            cometBalance: 500n,
+            collateralFactor: 500000000000000000n,
+            liquidationFactor: 700000000000000000n,
+            liquidationPenalty: 250000000000000000n,
+            supplyCap: 100000000000000000000000n,
+          }),
+        ],
+        availableLiquidity: 0n,
+        configControllerAddress: "0xConfig1",
+        ownerAddress: "0xOwner1",
+        guardianAddress: "0xGuardian1",
+        curatorAddress: "0xCurator1",
+        curatorFee: 0,
+        proposals: [],
+        compToken: mockCompToken,
+        rewardTokens: [mockRewardToken],
+      }),
+      new Market({
+        chain: 1,
+        cometAddress: "0xComet2",
+        utilization: 0n,
+        supplyRate: 0n,
+        borrowRate: 0n,
+        borrowMinAmount: 0n,
+        totalBorrow: 0n,
+        totalSupply: 0n,
+        totalReserves: 0n,
+        baseToken: { ...mockBaseToken, tokenAddress: "0xDifferent" },
+        collaterals: [
+          new Collateral({
+            tokenAddress: "0x1",
+            symbol: "COL1",
+            decimals: BigInt(6),
+            price: "1.5",
+            priceFeedAddress: "0xfeed1",
+            totalSupplyAsset: 1000n,
+            collateralReserves: 10n,
+            cometBalance: 500n,
+            collateralFactor: 500000000000000000n,
+            liquidationFactor: 700000000000000000n,
+            liquidationPenalty: 250000000000000000n,
+            supplyCap: 100000000000000000000000n,
+          }),
+        ],
+        availableLiquidity: 0n,
+        configControllerAddress: "0xConfig2",
+        ownerAddress: "0xOwner2",
+        guardianAddress: "0xGuardian2",
+        curatorAddress: "0xCurator2",
+        curatorFee: 0,
+        proposals: [],
+        compToken: mockCompToken,
+        rewardTokens: [mockRewardToken],
+      }),
+      new Market({
+        chain: 1,
+        cometAddress: "0xComet3",
+        utilization: 0n,
+        supplyRate: 0n,
+        borrowRate: 0n,
+        borrowMinAmount: 0n,
+        totalBorrow: 0n,
+        totalSupply: 0n,
+        totalReserves: 0n,
+        baseToken: mockBaseToken,
+        collaterals: [
+          new Collateral({
+            tokenAddress: "0x2",
+            symbol: "COL2",
+            decimals: BigInt(6),
+            price: "3.0",
+            priceFeedAddress: "0xfeed2",
+            totalSupplyAsset: 2000n,
+            collateralReserves: 20n,
+            cometBalance: 200n,
+            collateralFactor: 500000000000000000n,
+            liquidationFactor: 700000000000000000n,
+            liquidationPenalty: 250000000000000000n,
+            supplyCap: 100000000000000000000000n,
+          }),
+        ],
+        availableLiquidity: 0n,
+        configControllerAddress: "0xConfig3",
+        ownerAddress: "0xOwner3",
+        guardianAddress: "0xGuardian3",
+        curatorAddress: "0xCurator3",
+        curatorFee: 0,
+        proposals: [],
+        compToken: mockCompToken,
+        rewardTokens: [mockRewardToken],
+      }),
+    ];
+    const collaterals = [
+      new Collateral({
+        tokenAddress: "0x1",
+        symbol: "COL1",
+        decimals: BigInt(6),
+        price: "1.5",
+        priceFeedAddress: "0xfeed1",
+        totalSupplyAsset: 1000n,
+        collateralReserves: 10n,
+        cometBalance: 500n,
+        collateralFactor: 500000000000000000n,
+        liquidationFactor: 700000000000000000n,
+        liquidationPenalty: 250000000000000000n,
+        supplyCap: 100000000000000000000000n,
+      }),
+    ];
+    const result = MarketMethods.getMarketsToMigrate(markets, mockBaseToken, collaterals);
+    expect(result.length).toBe(1);
+    expect(result[0]!.baseToken.tokenAddress).toBe(mockBaseToken.tokenAddress);
+    expect(result[0]!.collaterals[0]!.tokenAddress).toBe(collaterals[0]!.tokenAddress);
+  });
+
+  it("should return empty array for no matching markets in getMarketsToMigrate", () => {
+    const markets: Market[] = [
+      new Market({
+        chain: 1,
+        cometAddress: "0xComet2",
+        utilization: 0n,
+        supplyRate: 0n,
+        borrowRate: 0n,
+        borrowMinAmount: 0n,
+        totalBorrow: 0n,
+        totalSupply: 0n,
+        totalReserves: 0n,
+        baseToken: { ...mockBaseToken, tokenAddress: "0xDifferent" },
+        collaterals: [
+          new Collateral({
+            tokenAddress: "0x2",
+            symbol: "COL2",
+            decimals: BigInt(6),
+            price: "3.0",
+            priceFeedAddress: "0xfeed2",
+            totalSupplyAsset: 2000n,
+            collateralReserves: 20n,
+            cometBalance: 200n,
+            collateralFactor: 500000000000000000n,
+            liquidationFactor: 700000000000000000n,
+            liquidationPenalty: 250000000000000000n,
+            supplyCap: 100000000000000000000000n,
+          }),
+        ],
+        availableLiquidity: 0n,
+        configControllerAddress: "0xConfig2",
+        ownerAddress: "0xOwner2",
+        guardianAddress: "0xGuardian2",
+        curatorAddress: "0xCurator2",
+        curatorFee: 0,
+        proposals: [],
+        compToken: mockCompToken,
+        rewardTokens: [mockRewardToken],
+      }),
+    ];
+    const collaterals = [
+      {
+        tokenAddress: "0x1",
+        symbol: "COL1",
+        decimals: BigInt(6),
+        price: "1.5",
+        priceFeedAddress: "0xfeed1",
+        totalSupplyAsset: 1000n,
+        collateralReserves: 10n,
+        cometBalance: 500n,
+        collateralFactor: 500000000000000000n,
+        liquidationFactor: 700000000000000000n,
+        liquidationPenalty: 250000000000000000n,
+        supplyCap: 100000000000000000000000n,
+      },
+    ];
+    const result = MarketMethods.getMarketsToMigrate(markets, mockBaseToken, collaterals);
+    expect(result).toEqual([]);
   });
 
   describe("getInterestRateChartData", () => {
@@ -305,8 +604,8 @@ describe("MarketMethods", () => {
         borrowPerYearInterestRateSlopeHigh: 20n * BigInt(1e18),
       };
       const data = MarketMethods.getInterestRateChartData(
-        50,
-        extremeCurvePresets,
+          50,
+          extremeCurvePresets,
       );
       const point = data[100];
 
@@ -330,8 +629,8 @@ describe("MarketMethods", () => {
     it("should respect provided utilization for exact match", () => {
       const utilization = 75;
       const data = MarketMethods.getInterestRateChartData(
-        utilization,
-        mockCurvePresets,
+          utilization,
+          mockCurvePresets,
       );
       const point = data[utilization];
 
