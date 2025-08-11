@@ -1,12 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { IMarket } from "../../src/market/IMarket";
+import type { IMarketInterestRateModel } from "../../src/market/IMarketInterestRateModel";
 import { Market } from "../../src/market/Market";
 import { MarketMethods } from "../../src/market/MarketMethods";
-import { Collateral } from "../../src/token/collateral/Collateral";
-import type { IMarket } from "../../src/market/IMarket";
-import type { IBase } from "../../src/token/base/IBase";
 import type { IToken } from "../../src/token/IToken";
+import type { IBase } from "../../src/token/base/IBase";
+import { Collateral } from "../../src/token/collateral/Collateral";
 import type { ICollateral } from "../../src/token/collateral/ICollateral";
-import type { IMarketInterestRateModel } from "../../src/market/IMarketInterestRateModel";
 
 const mockCurve = {
   id: "curve1",
@@ -105,7 +105,9 @@ const mockInterestRateModel: IMarketInterestRateModel = {
 describe("Market", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    vi.spyOn(MarketMethods, "getInterestRateChartData").mockReturnValue([mockInterestRateModel]);
+    vi.spyOn(MarketMethods, "getInterestRateChartData").mockReturnValue([
+      mockInterestRateModel,
+    ]);
     vi.spyOn(MarketMethods, "getTotalSupplyUSD").mockReturnValue(123);
     vi.spyOn(MarketMethods, "totalBorrowUSD").mockReturnValue(456);
     vi.spyOn(MarketMethods, "getTotalReservesUSD").mockReturnValue(789);
@@ -118,7 +120,9 @@ describe("Market", () => {
     vi.spyOn(MarketMethods, "netEarnAprs").mockReturnValue([1, 2, 3]);
     vi.spyOn(MarketMethods, "netBorrowAprs").mockReturnValue([4, 5, 6]);
     vi.spyOn(MarketMethods, "getTotalCollateralsSupply").mockReturnValue(555);
-    vi.spyOn(MarketMethods, "getMarketsToMigrate").mockReturnValue([{} as Market]);
+    vi.spyOn(MarketMethods, "getMarketsToMigrate").mockReturnValue([
+      {} as Market,
+    ]);
   });
 
   it("should assign all properties from constructor", () => {
@@ -135,7 +139,9 @@ describe("Market", () => {
     expect(market.baseToken).toBe(mockMarketData.baseToken);
     expect(market.collaterals).toBe(mockMarketData.collaterals);
     expect(market.availableLiquidity).toBe(mockMarketData.availableLiquidity);
-    expect(market.configControllerAddress).toBe(mockMarketData.configControllerAddress);
+    expect(market.configControllerAddress).toBe(
+      mockMarketData.configControllerAddress,
+    );
     expect(market.ownerAddress).toBe(mockMarketData.ownerAddress);
     expect(market.guardianAddress).toBe(mockMarketData.guardianAddress);
     expect(market.curatorAddress).toBe(mockMarketData.curatorAddress);
@@ -170,13 +176,17 @@ describe("Market", () => {
     expect(MarketMethods.getMarketsToMigrate).toHaveBeenCalledWith(
       [market],
       mockBaseToken,
-      [mockCollateral]
+      [mockCollateral],
     );
     expect(result).toEqual([{} as Market]);
   });
 
   it("should handle empty rewardTokens and proposals", () => {
-    const data: IMarket = { ...mockMarketData, rewardTokens: [], proposals: [] };
+    const data: IMarket = {
+      ...mockMarketData,
+      rewardTokens: [],
+      proposals: [],
+    };
     const market = new Market(data);
     expect(market.rewardTokens).toEqual([]);
     expect(market.proposals).toEqual([]);
@@ -194,7 +204,10 @@ describe("Market", () => {
   });
 
   it("should handle different baseToken and compToken", () => {
-    const data: IMarket = { ...mockMarketData, compToken: { ...mockCompToken, tokenAddress: "0xOther" } };
+    const data: IMarket = {
+      ...mockMarketData,
+      compToken: { ...mockCompToken, tokenAddress: "0xOther" },
+    };
     const market = new Market(data);
     expect(market.compToken.tokenAddress).toBe("0xOther");
   });

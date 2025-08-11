@@ -26,7 +26,7 @@ import {
   Erc20Contract,
   MigratorContract,
 } from "../contracts";
-import {
+import type {
   MultiAllowanceCallType,
   MultiAllowanceCallTypeBigInt,
   MultiMigrateCollaterals,

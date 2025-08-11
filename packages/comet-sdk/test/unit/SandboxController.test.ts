@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import type { Address } from "viem";
+import { describe, expect, it } from "vitest";
+import type { ISandboxController } from "../../src";
 import { SandboxController } from "../../src/sandbox-controller/SandboxController";
-import {Address} from "viem";
-import type {ISandboxController} from "../../src";
 
 describe("SandboxController", () => {
   it("should assign all properties from constructor", () => {
@@ -22,8 +22,12 @@ describe("SandboxController", () => {
     expect(controller.address).toBe(data.address);
     expect(controller.daoAddress).toBe(data.daoAddress);
     expect(controller.multisigAddress).toBe(data.multisigAddress);
-    expect(controller.suggestedAmountOfSeedReserves).toBe(data.suggestedAmountOfSeedReserves);
-    expect(controller.suggestedLockTimeOfSeedReserves).toBe(data.suggestedLockTimeOfSeedReserves);
+    expect(controller.suggestedAmountOfSeedReserves).toBe(
+      data.suggestedAmountOfSeedReserves,
+    );
+    expect(controller.suggestedLockTimeOfSeedReserves).toBe(
+      data.suggestedLockTimeOfSeedReserves,
+    );
     expect(controller.minUpdateTime).toBe(data.minUpdateTime);
     expect(controller.feeEnabled).toBe(data.feeEnabled);
     expect(controller.treasuryAddress).toBe(data.treasuryAddress);

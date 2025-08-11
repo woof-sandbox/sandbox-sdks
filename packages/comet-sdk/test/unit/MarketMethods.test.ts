@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import {MarketMethods, IBase, Market, IToken, Collateral, type IMarket} from "../../src";
+import {
+  Collateral,
+  type IBase,
+  type IToken,
+  Market,
+  MarketMethods,
+} from "../../src";
 
 const SECONDS_PER_YEAR = 31536000;
 
@@ -54,11 +60,11 @@ describe("MarketMethods", () => {
     const perSecondInterestRateSlopeLow = BigInt(0.05 * 1e18);
     const perSecondInterestRateSlopeHigh = BigInt(0.5 * 1e18);
     const result = MarketMethods.getApr(
-        utilization,
-        kink,
-        perSecondInterestRateBase,
-        perSecondInterestRateSlopeLow,
-        perSecondInterestRateSlopeHigh,
+      utilization,
+      kink,
+      perSecondInterestRateBase,
+      perSecondInterestRateSlopeLow,
+      perSecondInterestRateSlopeHigh,
     );
     expect(result).toBeCloseTo(202.5, 2);
   });
@@ -70,11 +76,11 @@ describe("MarketMethods", () => {
     const perSecondInterestRateSlopeLow = BigInt(0.05 * 1e18);
     const perSecondInterestRateSlopeHigh = BigInt(0.5 * 1e18);
     const result = MarketMethods.getApr(
-        utilization,
-        kink,
-        perSecondInterestRateBase,
-        perSecondInterestRateSlopeLow,
-        perSecondInterestRateSlopeHigh,
+      utilization,
+      kink,
+      perSecondInterestRateBase,
+      perSecondInterestRateSlopeLow,
+      perSecondInterestRateSlopeHigh,
     );
     expect(result).toBeCloseTo(209, 2);
   });
@@ -82,12 +88,12 @@ describe("MarketMethods", () => {
   it("should calculate net APRs correctly for supply", () => {
     const supplyApr = 5.0;
     const result = MarketMethods.calcNetAprs(
-        mockBaseToken,
-        mockBaseTrackingSpeed,
-        mockBaseTotalSupply,
-        mockCompToken,
-        [mockRewardToken],
-        supplyApr,
+      mockBaseToken,
+      mockBaseTrackingSpeed,
+      mockBaseTotalSupply,
+      mockCompToken,
+      [mockRewardToken],
+      supplyApr,
     );
 
     expect(result.length).toBe(3);
@@ -98,12 +104,12 @@ describe("MarketMethods", () => {
 
   it("should handle zero total supply", () => {
     const result = MarketMethods.calcNetAprs(
-        mockBaseToken,
-        mockBaseTrackingSpeed,
-        BigInt(0),
-        mockCompToken,
-        [mockRewardToken],
-        5.0,
+      mockBaseToken,
+      mockBaseTrackingSpeed,
+      BigInt(0),
+      mockCompToken,
+      [mockRewardToken],
+      5.0,
     );
 
     expect(result[0]).toBe(5.0);
@@ -114,11 +120,11 @@ describe("MarketMethods", () => {
   it("should delegate to calcNetAprs with supply parameters", () => {
     const supplyApr = 3.0;
     const result = MarketMethods.netEarnAprs(
-        mockBaseToken,
-        mockBaseTotalSupply,
-        mockCompToken,
-        [mockRewardToken],
-        supplyApr,
+      mockBaseToken,
+      mockBaseTotalSupply,
+      mockCompToken,
+      [mockRewardToken],
+      supplyApr,
     );
 
     expect(result.length).toBe(3);
@@ -130,11 +136,11 @@ describe("MarketMethods", () => {
   it("should delegate to calcNetAprs with borrow parameters", () => {
     const borrowApr = 4.0;
     const result = MarketMethods.netBorrowAprs(
-        mockBaseToken,
-        mockBaseTotalBorrow,
-        mockCompToken,
-        [mockRewardToken],
-        borrowApr,
+      mockBaseToken,
+      mockBaseTotalBorrow,
+      mockCompToken,
+      [mockRewardToken],
+      borrowApr,
     );
 
     expect(result.length).toBe(3);
@@ -238,9 +244,9 @@ describe("MarketMethods", () => {
     const totalSupplied = 2000n;
     const baseToken = { ...mockBaseToken, price: "2.0", decimals: BigInt(6) };
     const ratio = MarketMethods.getCollateralization(
-        totalBorrowed,
-        totalSupplied,
-        baseToken,
+      totalBorrowed,
+      totalSupplied,
+      baseToken,
     );
     expect(typeof ratio).toBe("number");
     expect(ratio).toBeGreaterThan(0);
@@ -462,10 +468,16 @@ describe("MarketMethods", () => {
         supplyCap: 100000000000000000000000n,
       }),
     ];
-    const result = MarketMethods.getMarketsToMigrate(markets, mockBaseToken, collaterals);
+    const result = MarketMethods.getMarketsToMigrate(
+      markets,
+      mockBaseToken,
+      collaterals,
+    );
     expect(result.length).toBe(1);
     expect(result[0]!.baseToken.tokenAddress).toBe(mockBaseToken.tokenAddress);
-    expect(result[0]!.collaterals[0]!.tokenAddress).toBe(collaterals[0]!.tokenAddress);
+    expect(result[0]!.collaterals[0]!.tokenAddress).toBe(
+      collaterals[0]!.tokenAddress,
+    );
   });
 
   it("should return empty array for no matching markets in getMarketsToMigrate", () => {
@@ -524,7 +536,11 @@ describe("MarketMethods", () => {
         supplyCap: 100000000000000000000000n,
       },
     ];
-    const result = MarketMethods.getMarketsToMigrate(markets, mockBaseToken, collaterals);
+    const result = MarketMethods.getMarketsToMigrate(
+      markets,
+      mockBaseToken,
+      collaterals,
+    );
     expect(result).toEqual([]);
   });
 
@@ -604,8 +620,8 @@ describe("MarketMethods", () => {
         borrowPerYearInterestRateSlopeHigh: 20n * BigInt(1e18),
       };
       const data = MarketMethods.getInterestRateChartData(
-          50,
-          extremeCurvePresets,
+        50,
+        extremeCurvePresets,
       );
       const point = data[100];
 
@@ -629,8 +645,8 @@ describe("MarketMethods", () => {
     it("should respect provided utilization for exact match", () => {
       const utilization = 75;
       const data = MarketMethods.getInterestRateChartData(
-          utilization,
-          mockCurvePresets,
+        utilization,
+        mockCurvePresets,
       );
       const point = data[utilization];
 

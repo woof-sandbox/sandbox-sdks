@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { Base } from "../../src/token/base/Base";
 
 const mockBaseData = {
@@ -25,8 +25,12 @@ describe("Base", () => {
     expect(base.priceFeedAddress).toBe(mockBaseData.priceFeedAddress);
     expect(base.baseMinBorrow).toBe(mockBaseData.baseMinBorrow);
     expect(base.baseMinForRewards).toBe(mockBaseData.baseMinForRewards);
-    expect(base.baseTrackingBorrowSpeed).toBe(mockBaseData.baseTrackingBorrowSpeed);
-    expect(base.baseTrackingSupplySpeed).toBe(mockBaseData.baseTrackingSupplySpeed);
+    expect(base.baseTrackingBorrowSpeed).toBe(
+      mockBaseData.baseTrackingBorrowSpeed,
+    );
+    expect(base.baseTrackingSupplySpeed).toBe(
+      mockBaseData.baseTrackingSupplySpeed,
+    );
     expect(base.baseIndexScale).toBe(mockBaseData.baseIndexScale);
     expect(base.curvePresets).toBe(mockBaseData.curvePresets);
   });

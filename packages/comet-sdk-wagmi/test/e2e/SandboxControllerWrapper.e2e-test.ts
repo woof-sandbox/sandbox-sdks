@@ -1,5 +1,5 @@
-import { SandboxController } from "@woof-software/comet-sdk";
 import { sepolia } from "@wagmi/core/chains";
+import { SandboxController } from "@woof-software/comet-sdk";
 import { beforeAll, describe, test } from "vitest";
 import { SandboxControllerWrapper } from "../../src/wrappers/SandboxControllerWrapper";
 

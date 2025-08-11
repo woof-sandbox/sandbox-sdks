@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+import type { IConfigController } from "../../src";
 import { ConfigController } from "../../src/config-controller/ConfigController";
-import type {IConfigController} from "../../src";
 
 describe("ConfigController", () => {
   it("should assign all properties from constructor", () => {

@@ -3,12 +3,62 @@ export const migratorAbi = [
     inputs: [
       {
         internalType: "address",
-        name: "multisig",
+        name: "admin_",
         type: "address",
+      },
+      {
+        internalType: "address",
+        name: "governance_",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "pauser_",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "baseToken",
+            type: "address",
+          },
+          {
+            components: [
+              {
+                internalType: "address",
+                name: "liquidityPool",
+                type: "address",
+              },
+              {
+                internalType: "bool",
+                name: "isToken0",
+                type: "bool",
+              },
+            ],
+            internalType: "struct Migrator.FlashData",
+            name: "flashData",
+            type: "tuple",
+          },
+        ],
+        internalType: "struct Migrator.InitialFlashData[]",
+        name: "initialFlashData",
+        type: "tuple[]",
       },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "baseToken",
+        type: "address",
+      },
+    ],
+    name: "AlreadyConfigured",
+    type: "error",
   },
   {
     inputs: [
@@ -27,8 +77,24 @@ export const migratorAbi = [
     type: "error",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "baseToken",
+        type: "address",
+      },
+    ],
+    name: "BaseTokenIsNotSupported",
+    type: "error",
+  },
+  {
     inputs: [],
     name: "BaseTokenMismatch",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "BaseTokenNotMatchPool",
     type: "error",
   },
   {
@@ -46,11 +112,11 @@ export const migratorAbi = [
     inputs: [
       {
         internalType: "address",
-        name: "comet",
+        name: "caller",
         type: "address",
       },
     ],
-    name: "CometAlreadyConfigured",
+    name: "CallerIsNotAuthorized",
     type: "error",
   },
   {
@@ -66,6 +132,11 @@ export const migratorAbi = [
   },
   {
     inputs: [],
+    name: "EmptyAssetsData",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "EnforcedPause",
     type: "error",
   },
@@ -75,8 +146,41 @@ export const migratorAbi = [
     type: "error",
   },
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "governance",
+        type: "address",
+      },
+    ],
+    name: "GovernanceAlreadySet",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "asset",
+        type: "address",
+      },
+    ],
     name: "InputZeroAssetAmount",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "requiredAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "flashAmount",
+        type: "uint256",
+      },
+    ],
+    name: "InsufficientFlashAmount",
     type: "error",
   },
   {
@@ -107,29 +211,12 @@ export const migratorAbi = [
   },
   {
     inputs: [],
+    name: "NativeTransferNotSupported",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "NothingToMigrate",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-    ],
-    name: "OwnableInvalidOwner",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "OwnableUnauthorizedAccount",
     type: "error",
   },
   {
@@ -161,7 +248,7 @@ export const migratorAbi = [
   },
   {
     inputs: [],
-    name: "SourceEqualsTarget",
+    name: "SourceEqualsTargetComet",
     type: "error",
   },
   {
@@ -170,19 +257,32 @@ export const migratorAbi = [
       {
         indexed: true,
         internalType: "address",
-        name: "comet",
+        name: "from",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+    ],
+    name: "AdminTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "baseToken",
         type: "address",
       },
       {
         indexed: true,
         internalType: "address",
         name: "liquidityPool",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "baseToken",
         type: "address",
       },
     ],
@@ -195,7 +295,7 @@ export const migratorAbi = [
       {
         indexed: true,
         internalType: "address",
-        name: "comet",
+        name: "baseToken",
         type: "address",
       },
     ],
@@ -208,17 +308,36 @@ export const migratorAbi = [
       {
         indexed: true,
         internalType: "address",
-        name: "previousOwner",
+        name: "newGovernance",
+        type: "address",
+      },
+    ],
+    name: "GovernanceSet",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
         type: "address",
       },
       {
         indexed: true,
         internalType: "address",
-        name: "newOwner",
+        name: "srcComet",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "trgComet",
         type: "address",
       },
     ],
-    name: "OwnershipTransferred",
+    name: "Migration",
     type: "event",
   },
   {
@@ -238,6 +357,19 @@ export const migratorAbi = [
     anonymous: false,
     inputs: [
       {
+        indexed: true,
+        internalType: "address",
+        name: "newPauser",
+        type: "address",
+      },
+    ],
+    name: "PauserSet",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: false,
         internalType: "address",
         name: "account",
@@ -246,6 +378,19 @@ export const migratorAbi = [
     ],
     name: "Unpaused",
     type: "event",
+  },
+  {
+    inputs: [],
+    name: "admin",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
@@ -274,7 +419,7 @@ export const migratorAbi = [
     inputs: [
       {
         internalType: "address",
-        name: "comet",
+        name: "baseToken",
         type: "address",
       },
     ],
@@ -285,11 +430,6 @@ export const migratorAbi = [
           {
             internalType: "address",
             name: "liquidityPool",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "baseToken",
             type: "address",
           },
           {
@@ -308,7 +448,7 @@ export const migratorAbi = [
   },
   {
     inputs: [],
-    name: "owner",
+    name: "governance",
     outputs: [
       {
         internalType: "address",
@@ -380,10 +520,23 @@ export const migratorAbi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "pauser",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
-        name: "comet",
+        name: "baseToken",
         type: "address",
       },
     ],
@@ -393,17 +546,10 @@ export const migratorAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
-        name: "comet",
+        name: "baseToken",
         type: "address",
       },
       {
@@ -411,11 +557,6 @@ export const migratorAbi = [
           {
             internalType: "address",
             name: "liquidityPool",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "baseToken",
             type: "address",
           },
           {
@@ -438,11 +579,37 @@ export const migratorAbi = [
     inputs: [
       {
         internalType: "address",
-        name: "newOwner",
+        name: "newGovernance",
         type: "address",
       },
     ],
-    name: "transferOwnership",
+    name: "setGovernance",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newPauser",
+        type: "address",
+      },
+    ],
+    name: "setPauser",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newAdmin",
+        type: "address",
+      },
+    ],
+    name: "transferAdmin",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

@@ -1,9 +1,9 @@
-import type { IMarket } from "@woof-software/comet-sdk";
 import { sepolia } from "@wagmi/core/chains";
+import type { IMarket } from "@woof-software/comet-sdk";
+import type { Address } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
+import { wagmiConfig } from "../../src";
 import { UserMarketWrapper } from "../../src/wrappers/UserMarketWrapper";
-import {wagmiConfig} from "../../src";
-import { Address } from "viem";
 
 const data: Partial<IMarket> = {
   cometAddress: "0xacb1c4d4de3ce962673326fb9c53d56ce4881cf4",

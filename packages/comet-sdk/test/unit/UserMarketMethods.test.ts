@@ -1,8 +1,8 @@
+import type { Address } from "viem";
 import { describe, expect, it, vi } from "vitest";
 import { DataUtils, PRICE_FEED_FACTOR_UNITS, UserCollateral } from "../../src";
 import { MISSING_COLLATERAL_DATA } from "../../src/errors/methods/user-market-methods.errors";
 import { UserMarketMethods } from "../../src/user/UserMarketMethods";
-import { Address } from "viem";
 
 const mockAddress1 = "0xToken1" as Address;
 const mockAddress2 = "0xToken2" as Address;

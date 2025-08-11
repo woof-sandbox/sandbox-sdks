@@ -1,10 +1,10 @@
 import { UserMarket } from "../../src/augment";
 
 import { arbitrum, mainnet, sepolia } from "@wagmi/core/chains";
+import type { Address } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
-import { UserMarketWrapper } from "../../src/wrappers/UserMarketWrapper";
-import { Address } from "viem";
 import { wagmiConfig } from "../../src";
+import { UserMarketWrapper } from "../../src/wrappers/UserMarketWrapper";
 
 const marketsArbitrum: Address[] = [
   "0xd98be00b5d27fc98112bde293e487f8d4ca57d07", // USDT
@@ -31,7 +31,8 @@ describe("UserMarketWrapper", () => {
 
     market = await Promise.all(
       userMarkets.map(
-        async (userMarket) => new UserMarketWrapper(userMarket, wagmiConfig, sepolia.id),
+        async (userMarket) =>
+          new UserMarketWrapper(userMarket, wagmiConfig, sepolia.id),
       ),
     );
   });

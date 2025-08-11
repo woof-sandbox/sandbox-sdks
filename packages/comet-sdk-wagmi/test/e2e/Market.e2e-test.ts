@@ -3,8 +3,8 @@ import { sepolia } from "@wagmi/core/chains";
 import { type IMarket, PERCENT_PRECISION } from "@woof-software/comet-sdk";
 import type { Address } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
-import { Market } from "../../src/augment";
 import { wagmiConfig } from "../../src";
+import { Market } from "../../src/augment";
 
 const percentsReg = new RegExp(`^\\d+\\.\\d{${PERCENT_PRECISION}}$`);
 const RPC_URL = "https://1rpc.io/sepolia";

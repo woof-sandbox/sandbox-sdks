@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { Curve } from "../../src/curve/Curve";
 
 const mockCurveData = {
@@ -18,12 +18,24 @@ describe("Curve", () => {
     const curve = new Curve(mockCurveData);
     expect(curve.id).toBe(mockCurveData.id);
     expect(curve.supplyKink).toBe(mockCurveData.supplyKink);
-    expect(curve.supplyPerYearInterestRateSlopeLow).toBe(mockCurveData.supplyPerYearInterestRateSlopeLow);
-    expect(curve.supplyPerYearInterestRateSlopeHigh).toBe(mockCurveData.supplyPerYearInterestRateSlopeHigh);
-    expect(curve.supplyPerYearInterestRateBase).toBe(mockCurveData.supplyPerYearInterestRateBase);
+    expect(curve.supplyPerYearInterestRateSlopeLow).toBe(
+      mockCurveData.supplyPerYearInterestRateSlopeLow,
+    );
+    expect(curve.supplyPerYearInterestRateSlopeHigh).toBe(
+      mockCurveData.supplyPerYearInterestRateSlopeHigh,
+    );
+    expect(curve.supplyPerYearInterestRateBase).toBe(
+      mockCurveData.supplyPerYearInterestRateBase,
+    );
     expect(curve.borrowKink).toBe(mockCurveData.borrowKink);
-    expect(curve.borrowPerYearInterestRateSlopeLow).toBe(mockCurveData.borrowPerYearInterestRateSlopeLow);
-    expect(curve.borrowPerYearInterestRateSlopeHigh).toBe(mockCurveData.borrowPerYearInterestRateSlopeHigh);
-    expect(curve.borrowPerYearInterestRateBase).toBe(mockCurveData.borrowPerYearInterestRateBase);
+    expect(curve.borrowPerYearInterestRateSlopeLow).toBe(
+      mockCurveData.borrowPerYearInterestRateSlopeLow,
+    );
+    expect(curve.borrowPerYearInterestRateSlopeHigh).toBe(
+      mockCurveData.borrowPerYearInterestRateSlopeHigh,
+    );
+    expect(curve.borrowPerYearInterestRateBase).toBe(
+      mockCurveData.borrowPerYearInterestRateBase,
+    );
   });
 });
