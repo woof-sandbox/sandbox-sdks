@@ -1,5 +1,14 @@
 # @woof-software/comet-sdk-wagmi
 
+## 0.0.53
+
+### Patch Changes
+
+- Auto-generated changeset from CI
+- Updated dependencies
+  - @woof-software/comet-sdk@0.0.40
+  - @woof-software/subgraph-sdk@0.0.26
+
 ## 0.0.52
 
 ### Patch Changes
