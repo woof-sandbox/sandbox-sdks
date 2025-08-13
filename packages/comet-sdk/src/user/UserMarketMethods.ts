@@ -277,12 +277,6 @@ export namespace UserMarketMethods {
     return availableToBorrow.toString();
   }
 
-  function customUtilization(totalBorrow: bigint, totalSupply: bigint): bigint {
-    if (totalSupply === 0n) return 0n;
-
-    return DataUtils.toBigNumber((totalBorrow / totalSupply).toString(), 18);
-  }
-
   function calculateUtilization(
     totalBorrow: bigint,
     totalSupply: bigint,
@@ -303,7 +297,7 @@ export namespace UserMarketMethods {
       totalSupplied +
       DataUtils.toBigNumber(userSupplyValue, Number(baseToken.decimals));
 
-    const utilization = customUtilization(totalBorrowed, totalSupply);
+    const utilization = calculateUtilization(totalBorrowed, totalSupply);
 
     return MarketMethods.getApr(
       utilization,
