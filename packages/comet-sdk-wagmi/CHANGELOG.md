@@ -1,5 +1,12 @@
 # @woof-software/comet-sdk-wagmi
 
+## 0.0.54
+
+### Patch Changes
+
+- Updated dependencies
+  - @woof-software/comet-sdk@0.0.41
+
 ## 0.0.53
 
 ### Patch Changes
