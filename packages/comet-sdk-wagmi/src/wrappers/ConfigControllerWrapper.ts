@@ -56,34 +56,6 @@ export class ConfigControllerWrapper extends ConfigController {
     }
   }
 
-  async acceptMarketTransferProposal(
-    market: Address,
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.acceptMarketTransferProposal(
-        market,
-        this.chainId,
-      );
-    } catch {
-      throw ACCEPT_MARKET_TRANSFER_FAILED();
-    }
-  }
-
-  async accumulateRevenue(
-    token: Address,
-    amount: bigint,
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.accumulateRevenue(
-        token,
-        amount,
-        this.chainId,
-      );
-    } catch {
-      throw ACCUMULATE_REVENUE_FAILED();
-    }
-  }
-
   async cancelCuratorProposal(): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.cancelCuratorProposal(
@@ -91,40 +63,6 @@ export class ConfigControllerWrapper extends ConfigController {
       );
     } catch {
       throw CANCEL_CURATOR_PROPOSAL_FAILED();
-    }
-  }
-
-  async cancelMarketConfigProposal(
-    market: Address,
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.cancelMarketConfigProposal(
-        market,
-        this.chainId,
-      );
-    } catch {
-      throw CANCEL_MARKET_CONFIG_PROPOSAL_FAILED();
-    }
-  }
-
-  async cancelMarketTransferProposal(
-    market: Address,
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.cancelMarketTransferProposal(
-        market,
-        this.chainId,
-      );
-    } catch {
-      throw CANCEL_MARKET_TRANSFER_PROPOSAL_FAILED();
-    }
-  }
-
-  async claimAllRevenue(): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.claimAllRevenue(this.chainId);
-    } catch {
-      throw CLAIM_ALL_REVENUE_FAILED();
     }
   }
 
@@ -136,32 +74,6 @@ export class ConfigControllerWrapper extends ConfigController {
       );
     } catch {
       throw CLAIM_REVENUE_FAILED();
-    }
-  }
-
-  async createMarket(
-    marketConfig: Parameters<ConfigControllerContract["createMarket"]>[0],
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.createMarket(
-        marketConfig,
-        this.chainId,
-      );
-    } catch {
-      throw CREATE_MARKET_FAILED();
-    }
-  }
-
-  async executeMarketConfigProposal(
-    market: Address,
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.executeMarketConfigProposal(
-        market,
-        this.chainId,
-      );
-    } catch {
-      throw EXECUTE_MARKET_CONFIG_PROPOSAL_FAILED();
     }
   }
 
@@ -216,67 +128,11 @@ export class ConfigControllerWrapper extends ConfigController {
     }
   }
 
-  async proposeMarketCollateralTokens(
-    market: Address,
-    collateralTokens: Parameters<
-      ConfigControllerContract["proposeMarketCollateralTokens"]
-    >[1],
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.proposeMarketCollateralTokens(
-        market,
-        collateralTokens,
-        this.chainId,
-      );
-    } catch {
-      throw PROPOSE_MARKET_COLLATERAL_FAILED();
-    }
-  }
-
-  async proposeMarketTransfer(
-    market: Address,
-    newController: Address,
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.proposeMarketTransfer(
-        market,
-        newController,
-        this.chainId,
-      );
-    } catch {
-      throw PROPOSE_MARKET_TRANSFER_FAILED();
-    }
-  }
-
-  async removeClaimRevenueToken(
-    token: Address,
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.removeClaimRevenueToken(
-        token,
-        this.chainId,
-      );
-    } catch {
-      throw REMOVE_CLAIM_REVENUE_TOKEN_FAILED();
-    }
-  }
-
   async removeCurator(): Promise<WriteContractReturnType> {
     try {
       return await this.configControllerContract.removeCurator(this.chainId);
     } catch {
       throw REMOVE_CURATOR_FAILED();
-    }
-  }
-
-  async setCuratorFee(fee: bigint): Promise<WriteContractReturnType> {
-    try {
-      return await this.configControllerContract.setCuratorFee(
-        fee,
-        this.chainId,
-      );
-    } catch {
-      throw SET_CURATOR_FEE_FAILED();
     }
   }
 

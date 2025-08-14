@@ -1,6 +1,8 @@
 export type ControllerConfiguration = {
+  targetPercent: bigint;
   storeFrontPriceFactor: bigint;
   minUpdateTime: bigint;
-  suggestedAmountOfSeedReserves: bigint;
+  maxUpdateTime: bigint;
   suggestedLockTimeOfSeedReserves: bigint;
+  suggestedAmountOfSeedReserves: bigint;
 };

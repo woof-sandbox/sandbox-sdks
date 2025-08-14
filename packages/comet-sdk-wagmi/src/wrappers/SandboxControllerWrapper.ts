@@ -122,19 +122,6 @@ export class SandboxControllerWrapper extends SandboxController {
     }
   }
 
-  async setThresholds(
-    thresholds: [bigint, bigint, bigint],
-  ): Promise<WriteContractReturnType> {
-    try {
-      return await this.controllerContract.setThresholds(
-        thresholds,
-        this.chainId,
-      );
-    } catch {
-      throw SET_THRESHOLDS_FAILED();
-    }
-  }
-
   async whitelistBaseAsset(
     token: Address,
     priceFeed: Address,

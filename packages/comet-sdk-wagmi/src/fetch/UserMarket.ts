@@ -74,7 +74,6 @@ export async function fetchUserMarkets(
             contracts: [
               baseTokenContract.getBalanceOfCall(userAddress),
               baseTokenContract.getBalanceOfCall(cometProxyAddress),
-              comet.getDecimalsCall(), // ?: not in use
               comet.getBaseScaleCall(), // ?: not in use
               comet.getTotalSupplyCall(),
               comet.getTotalBorrowCall(),
@@ -102,10 +101,10 @@ export async function fetchUserMarkets(
           const availableLiquidity = WagmiUtils.resultOrThrow<bigint>(
             fullData[1],
           );
-          const totalSupply = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
-          const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[5]);
-          const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
-          const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[10]);
+          const totalSupply = WagmiUtils.resultOrThrow<bigint>(fullData[3]);
+          const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
+          const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[8]);
+          const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
 
           const baseToken = await fetchBase(cometProxyAddress, chain, config);
 
@@ -193,7 +192,6 @@ export async function fetchUserMarket(
     contracts: [
       baseTokenContract.getBalanceOfCall(userAddress),
       baseTokenContract.getBalanceOfCall(cometProxyAddress),
-      comet.getDecimalsCall(), // ?: not in use
       comet.getBaseScaleCall(), // ?: not in use
       comet.getTotalSupplyCall(),
       comet.getTotalBorrowCall(),
@@ -217,10 +215,10 @@ export async function fetchUserMarket(
 
   const baseTokenBalance = WagmiUtils.resultOrThrow<bigint>(fullData[0]);
   const availableLiquidity = WagmiUtils.resultOrThrow<bigint>(fullData[1]);
-  const totalSupply = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
-  const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[5]);
-  const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
-  const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[10]);
+  const totalSupply = WagmiUtils.resultOrThrow<bigint>(fullData[3]);
+  const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
+  const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[8]);
+  const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
 
   const baseToken = await fetchBase(cometProxyAddress, chainId, config);
 

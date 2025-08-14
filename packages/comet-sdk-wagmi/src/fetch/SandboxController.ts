@@ -20,7 +20,7 @@ export async function fetchSandboxControllerData(
       controller.daoCall(),
       controller.treasuryCall(),
       controller.feeEnabledCall(),
-      controller.controllerConfigurationCall(),
+      controller._controllerConfigurationCall(),
     ],
   });
 
