@@ -1,5 +1,4 @@
-import { DataUtils, type IUserMarket } from "@woof-software/comet-sdk";
-import { UserMarket } from "../augment";
+import { DataUtils, type IUserMarket, UserMarket } from "@woof-software/comet-sdk";
 
 import {
   type Config,
@@ -57,10 +56,16 @@ import {
 } from "../errors/wrappers/user-market-wrapper.errors";
 
 import { sepolia } from "viem/chains";
+import {
+  fetchUserMarket as fetchUserMarketFn,
+  fetchUserMarkets as fetchUserMarketsFn,
+} from "../fetch/UserMarket";
 import { type ActionData, ActionType } from "../contracts/entities/actions";
 import type { MigrateArgs } from "../contracts/entities/migrate-args";
 
 export class UserMarketWrapper extends UserMarket {
+  static fetchUserMarket = fetchUserMarketFn;
+  static fetchUserMarkets = fetchUserMarketsFn;
   private readonly config: Config;
   private readonly chainId?: WagmiChainId;
 
