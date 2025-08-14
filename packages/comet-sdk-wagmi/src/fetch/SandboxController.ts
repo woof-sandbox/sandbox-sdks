@@ -7,7 +7,7 @@ import type { ControllerConfiguration } from "../contracts/entities/controller-c
 import { WagmiUtils } from "../utils";
 import { SandboxControllerWrapper } from "../wrappers";
 
-export async function fetchSandboxControllerData(
+export async function fetchSandboxController(
   controllerAddress: Address,
   chainId: WagmiChainId,
   config: Config = wagmiConfig,
