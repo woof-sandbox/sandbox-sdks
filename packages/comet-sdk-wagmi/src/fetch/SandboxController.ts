@@ -4,11 +4,13 @@ import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
 import { ControllerContract, wagmiConfig } from "../contracts";
 import type { ControllerConfiguration } from "../contracts/entities/controller-configuration";
+import type { ControllerConfigurationResponse } from "../contracts/entities/controller-configuration-response";
 import { WagmiUtils } from "../utils";
 import { SandboxControllerWrapper } from "../wrappers";
-import {ControllerConfigurationResponse} from "../contracts/entities/controller-configuration-response";
 
-function controllerConfigurationToObj(data: ControllerConfigurationResponse): ControllerConfiguration {
+function controllerConfigurationToObj(
+  data: ControllerConfigurationResponse,
+): ControllerConfiguration {
   return {
     targetPercent: data[0],
     storeFrontPriceFactor: data[1],
@@ -41,9 +43,10 @@ export async function fetchSandboxController(
     controllerBaseData[1],
   );
   const feeEnabled = WagmiUtils.resultOrThrow<boolean>(controllerBaseData[2]);
-  const controllerConfigList = WagmiUtils.resultOrThrow<ControllerConfigurationResponse>(
-    controllerBaseData[3],
-  );
+  const controllerConfigList =
+    WagmiUtils.resultOrThrow<ControllerConfigurationResponse>(
+      controllerBaseData[3],
+    );
   const controllerConfig = controllerConfigurationToObj(controllerConfigList);
 
   const sandboxController = new SandboxController({

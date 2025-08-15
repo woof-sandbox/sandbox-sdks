@@ -1,364 +1,579 @@
-export const configControllerAbi = [{"inputs": [], "name": "AlreadyInitialized", "type": "error"}, {
-    "inputs": [],
-    "name": "BaseTokenNotWhitelisted",
-    "type": "error"
-}, {"inputs": [], "name": "BorrowCollateralFactorTooHigh", "type": "error"}, {
-    "inputs": [],
-    "name": "BorrowCollateralFactorTooLow",
-    "type": "error"
-}, {"inputs": [], "name": "CollateralTokenAlreadyAdded", "type": "error"}, {
-    "inputs": [],
-    "name": "CollateralTokenNotWhitelisted",
-    "type": "error"
-}, {"inputs": [], "name": "IncorrectValue", "type": "error"}, {
-    "inputs": [],
-    "name": "InvalidCurator",
-    "type": "error"
-}, {"inputs": [], "name": "InvalidCurveId", "type": "error"}, {
-    "inputs": [],
-    "name": "InvalidFeePercentage",
-    "type": "error"
-}, {"inputs": [], "name": "LiquidateCollateralFactorTooHigh", "type": "error"}, {
-    "inputs": [],
-    "name": "LiquidateCollateralFactorTooLow",
-    "type": "error"
-}, {"inputs": [], "name": "LiquidationFactorTooHigh", "type": "error"}, {
-    "inputs": [],
-    "name": "LiquidationFactorTooLow",
-    "type": "error"
-}, {"inputs": [], "name": "NoActiveProposal", "type": "error"}, {
-    "inputs": [],
-    "name": "NoCurveRegistered",
-    "type": "error"
-}, {"inputs": [], "name": "ProposalDurationTooLong", "type": "error"}, {
-    "inputs": [],
-    "name": "ProposalDurationTooShort",
-    "type": "error"
-}, {"inputs": [], "name": "ProposalExpired", "type": "error"}, {
-    "inputs": [{
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-    }], "name": "SafeERC20FailedOperation", "type": "error"
-}, {"inputs": [], "name": "SupplyCapCantBeZero", "type": "error"}, {
-    "inputs": [],
-    "name": "Unauthorized",
-    "type": "error"
-}, {"inputs": [], "name": "UnknownComet", "type": "error"}, {
-    "inputs": [],
-    "name": "WrongCollateralTokenSettings",
-    "type": "error"
-}, {"inputs": [], "name": "ZeroAddress", "type": "error"}, {
-    "inputs": [],
-    "name": "ZeroCollateralAssets",
-    "type": "error"
-}, {
-    "anonymous": false,
-    "inputs": [{"indexed": false, "internalType": "address", "name": "comet", "type": "address"}, {
-        "indexed": false,
-        "internalType": "address",
-        "name": "baseToken",
-        "type": "address"
-    }, {"indexed": false, "internalType": "address", "name": "priceFeed", "type": "address"}, {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "cometId",
-        "type": "uint256"
-    }, {"indexed": false, "internalType": "uint256", "name": "baseTokenCurveId", "type": "uint256"}],
-    "name": "CometCreated",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{"indexed": true, "internalType": "address", "name": "controller", "type": "address"}, {
-        "indexed": true,
-        "internalType": "address",
-        "name": "comet",
-        "type": "address"
-    }, {"indexed": false, "internalType": "bool", "name": "enabled", "type": "bool"}],
-    "name": "CometFeeEnabled",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{"indexed": true, "internalType": "address", "name": "oldCurator", "type": "address"}, {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newCurator",
-        "type": "address"
-    }],
-    "name": "CuratorAccepted",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{"indexed": true, "internalType": "address", "name": "oldCurator", "type": "address"}],
-    "name": "CuratorCanceled",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{"indexed": true, "internalType": "address", "name": "proposedCurator", "type": "address"}],
-    "name": "CuratorProposalCancelled",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{
-        "indexed": true,
-        "internalType": "address",
-        "name": "currentCurator",
-        "type": "address"
-    }, {"indexed": true, "internalType": "address", "name": "proposedCurator", "type": "address"}, {
-        "indexed": false,
-        "internalType": "uint64",
-        "name": "expiry",
-        "type": "uint64"
-    }],
-    "name": "CuratorProposed",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{"indexed": true, "internalType": "address", "name": "oldGuardian", "type": "address"}, {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newGuardian",
-        "type": "address"
-    }],
-    "name": "GuardianUpdated",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{"indexed": true, "internalType": "address", "name": "oldOwner", "type": "address"}, {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-    }],
-    "name": "OwnershipGranted",
-    "type": "event"
-}, {
-    "anonymous": false,
-    "inputs": [{
-        "indexed": false,
-        "internalType": "uint40",
-        "name": "oldCuratorDuration",
-        "type": "uint40"
-    }, {"indexed": false, "internalType": "uint40", "name": "newCuratorDuration", "type": "uint40"}, {
-        "indexed": false,
-        "internalType": "uint40",
-        "name": "oldProposalDuration",
-        "type": "uint40"
-    }, {"indexed": false, "internalType": "uint40", "name": "newProposalDuration", "type": "uint40"}],
-    "name": "ProposalDurationsUpdated",
-    "type": "event"
-}, {
-    "inputs": [],
-    "name": "FEE_DIVISOR",
-    "outputs": [{"internalType": "uint32", "name": "", "type": "uint32"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "acceptCuratorRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "cancelCuratorProposal",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "cometFactory",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "name": "cometFeeEnabled",
-    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "name": "cometId",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "name": "comets",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "cometsLength",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "configControllerFactory",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{
-        "components": [{
-            "internalType": "address",
-            "name": "baseToken",
-            "type": "address"
-        }, {
-            "internalType": "uint256",
-            "name": "baseTokenCurveId",
-            "type": "uint256"
-        }, {
-            "components": [{
-                "internalType": "address",
-                "name": "collateralToken",
-                "type": "address"
-            }, {"internalType": "uint128", "name": "supplyCap", "type": "uint128"}, {
-                "internalType": "uint64",
-                "name": "borrowCollateralFactor",
-                "type": "uint64"
-            }, {
-                "internalType": "uint64",
-                "name": "liquidateCollateralFactor",
-                "type": "uint64"
-            }, {"internalType": "uint64", "name": "liquidationFactor", "type": "uint64"}],
-            "internalType": "struct IConfigController.CollateralTokenConfig[]",
-            "name": "collateralTokens",
-            "type": "tuple[]"
-        }, {"internalType": "string", "name": "name", "type": "string"}],
-        "internalType": "struct IConfigController.CometConfig",
-        "name": "_cometConfig",
-        "type": "tuple"
-    }],
-    "name": "createComet",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "curator",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "curatorFee",
-    "outputs": [{"internalType": "uint32", "name": "", "type": "uint32"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "curatorProposalDuration",
-    "outputs": [{"internalType": "uint40", "name": "", "type": "uint40"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "curatorProposalExpiry",
-    "outputs": [{"internalType": "uint64", "name": "", "type": "uint64"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{"internalType": "address", "name": "comet", "type": "address"}, {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-    }], "name": "extractFees", "outputs": [], "stateMutability": "nonpayable", "type": "function"
-}, {
-    "inputs": [{"internalType": "address", "name": "_newOwner", "type": "address"}],
-    "name": "grantOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "guardian",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{"internalType": "address", "name": "_owner", "type": "address"}, {
-        "internalType": "address",
-        "name": "_curator",
-        "type": "address"
-    }, {"internalType": "address", "name": "_guardian", "type": "address"}, {
-        "internalType": "address",
-        "name": "_cometFactory",
-        "type": "address"
-    }, {"internalType": "uint32", "name": "_curatorFee", "type": "uint32"}, {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-    }, {"internalType": "uint40", "name": "_curatorProposalDuration", "type": "uint40"}, {
-        "internalType": "uint40",
-        "name": "_proposalDuration",
-        "type": "uint40"
-    }], "name": "initialize", "outputs": [], "stateMutability": "nonpayable", "type": "function"
-}, {
-    "inputs": [],
-    "name": "name",
-    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "proposalDuration",
-    "outputs": [{"internalType": "uint40", "name": "", "type": "uint40"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{"internalType": "address", "name": "_proposedCurator", "type": "address"}],
-    "name": "proposeCurator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "proposedCurator",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "removeCurator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [],
-    "name": "sandboxController",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{"internalType": "address", "name": "comet", "type": "address"}, {
-        "internalType": "bool",
-        "name": "feeEnabled",
-        "type": "bool"
-    }], "name": "setCometFee", "outputs": [], "stateMutability": "nonpayable", "type": "function"
-}, {
-    "inputs": [{"internalType": "address", "name": "_newGuardian", "type": "address"}],
-    "name": "setGuardian",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}, {
-    "inputs": [{
-        "internalType": "uint40",
-        "name": "_curatorProposalDuration",
-        "type": "uint40"
-    }, {"internalType": "uint40", "name": "_proposalDuration", "type": "uint40"}],
-    "name": "setProposalDurations",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-}] as const;
+export const configControllerAbi = [
+  { inputs: [], name: "AlreadyInitialized", type: "error" },
+  {
+    inputs: [],
+    name: "BaseTokenNotWhitelisted",
+    type: "error",
+  },
+  { inputs: [], name: "BorrowCollateralFactorTooHigh", type: "error" },
+  {
+    inputs: [],
+    name: "BorrowCollateralFactorTooLow",
+    type: "error",
+  },
+  { inputs: [], name: "CollateralTokenAlreadyAdded", type: "error" },
+  {
+    inputs: [],
+    name: "CollateralTokenNotWhitelisted",
+    type: "error",
+  },
+  { inputs: [], name: "IncorrectValue", type: "error" },
+  {
+    inputs: [],
+    name: "InvalidCurator",
+    type: "error",
+  },
+  { inputs: [], name: "InvalidCurveId", type: "error" },
+  {
+    inputs: [],
+    name: "InvalidFeePercentage",
+    type: "error",
+  },
+  { inputs: [], name: "LiquidateCollateralFactorTooHigh", type: "error" },
+  {
+    inputs: [],
+    name: "LiquidateCollateralFactorTooLow",
+    type: "error",
+  },
+  { inputs: [], name: "LiquidationFactorTooHigh", type: "error" },
+  {
+    inputs: [],
+    name: "LiquidationFactorTooLow",
+    type: "error",
+  },
+  { inputs: [], name: "NoActiveProposal", type: "error" },
+  {
+    inputs: [],
+    name: "NoCurveRegistered",
+    type: "error",
+  },
+  { inputs: [], name: "ProposalDurationTooLong", type: "error" },
+  {
+    inputs: [],
+    name: "ProposalDurationTooShort",
+    type: "error",
+  },
+  { inputs: [], name: "ProposalExpired", type: "error" },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+    ],
+    name: "SafeERC20FailedOperation",
+    type: "error",
+  },
+  { inputs: [], name: "SupplyCapCantBeZero", type: "error" },
+  {
+    inputs: [],
+    name: "Unauthorized",
+    type: "error",
+  },
+  { inputs: [], name: "UnknownComet", type: "error" },
+  {
+    inputs: [],
+    name: "WrongCollateralTokenSettings",
+    type: "error",
+  },
+  { inputs: [], name: "ZeroAddress", type: "error" },
+  {
+    inputs: [],
+    name: "ZeroCollateralAssets",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "comet",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "baseToken",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "priceFeed",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "cometId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "baseTokenCurveId",
+        type: "uint256",
+      },
+    ],
+    name: "CometCreated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "controller",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "comet",
+        type: "address",
+      },
+      { indexed: false, internalType: "bool", name: "enabled", type: "bool" },
+    ],
+    name: "CometFeeEnabled",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "oldCurator",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newCurator",
+        type: "address",
+      },
+    ],
+    name: "CuratorAccepted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "oldCurator",
+        type: "address",
+      },
+    ],
+    name: "CuratorCanceled",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "proposedCurator",
+        type: "address",
+      },
+    ],
+    name: "CuratorProposalCancelled",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "currentCurator",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "proposedCurator",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "expiry",
+        type: "uint64",
+      },
+    ],
+    name: "CuratorProposed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "oldGuardian",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newGuardian",
+        type: "address",
+      },
+    ],
+    name: "GuardianUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "oldOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipGranted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint40",
+        name: "oldCuratorDuration",
+        type: "uint40",
+      },
+      {
+        indexed: false,
+        internalType: "uint40",
+        name: "newCuratorDuration",
+        type: "uint40",
+      },
+      {
+        indexed: false,
+        internalType: "uint40",
+        name: "oldProposalDuration",
+        type: "uint40",
+      },
+      {
+        indexed: false,
+        internalType: "uint40",
+        name: "newProposalDuration",
+        type: "uint40",
+      },
+    ],
+    name: "ProposalDurationsUpdated",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "FEE_DIVISOR",
+    outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "acceptCuratorRole",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "cancelCuratorProposal",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "cometFactory",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "cometFeeEnabled",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "cometId",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "comets",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "cometsLength",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "configControllerFactory",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "baseToken",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "baseTokenCurveId",
+            type: "uint256",
+          },
+          {
+            components: [
+              {
+                internalType: "address",
+                name: "collateralToken",
+                type: "address",
+              },
+              { internalType: "uint128", name: "supplyCap", type: "uint128" },
+              {
+                internalType: "uint64",
+                name: "borrowCollateralFactor",
+                type: "uint64",
+              },
+              {
+                internalType: "uint64",
+                name: "liquidateCollateralFactor",
+                type: "uint64",
+              },
+              {
+                internalType: "uint64",
+                name: "liquidationFactor",
+                type: "uint64",
+              },
+            ],
+            internalType: "struct IConfigController.CollateralTokenConfig[]",
+            name: "collateralTokens",
+            type: "tuple[]",
+          },
+          { internalType: "string", name: "name", type: "string" },
+        ],
+        internalType: "struct IConfigController.CometConfig",
+        name: "_cometConfig",
+        type: "tuple",
+      },
+    ],
+    name: "createComet",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "curator",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "curatorFee",
+    outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "curatorProposalDuration",
+    outputs: [{ internalType: "uint40", name: "", type: "uint40" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "curatorProposalExpiry",
+    outputs: [{ internalType: "uint64", name: "", type: "uint64" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "comet", type: "address" },
+      {
+        internalType: "address",
+        name: "asset",
+        type: "address",
+      },
+    ],
+    name: "extractFees",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_newOwner", type: "address" }],
+    name: "grantOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "guardian",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_owner", type: "address" },
+      {
+        internalType: "address",
+        name: "_curator",
+        type: "address",
+      },
+      { internalType: "address", name: "_guardian", type: "address" },
+      {
+        internalType: "address",
+        name: "_cometFactory",
+        type: "address",
+      },
+      { internalType: "uint32", name: "_curatorFee", type: "uint32" },
+      {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
+      {
+        internalType: "uint40",
+        name: "_curatorProposalDuration",
+        type: "uint40",
+      },
+      {
+        internalType: "uint40",
+        name: "_proposalDuration",
+        type: "uint40",
+      },
+    ],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [{ internalType: "string", name: "", type: "string" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "proposalDuration",
+    outputs: [{ internalType: "uint40", name: "", type: "uint40" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_proposedCurator", type: "address" },
+    ],
+    name: "proposeCurator",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "proposedCurator",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "removeCurator",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "sandboxController",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "comet", type: "address" },
+      {
+        internalType: "bool",
+        name: "feeEnabled",
+        type: "bool",
+      },
+    ],
+    name: "setCometFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "_newGuardian", type: "address" },
+    ],
+    name: "setGuardian",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint40",
+        name: "_curatorProposalDuration",
+        type: "uint40",
+      },
+      { internalType: "uint40", name: "_proposalDuration", type: "uint40" },
+    ],
+    name: "setProposalDurations",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+] as const;

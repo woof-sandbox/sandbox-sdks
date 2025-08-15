@@ -1,5 +1,5 @@
 import { User } from "@woof-software/comet-sdk";
-import { fetchUserActiveMarkets, fetchUserMock, fetchUser } from "../fetch";
+import { fetchUser, fetchUserActiveMarkets, fetchUserMock } from "../fetch";
 
 declare module "@woof-software/comet-sdk" {
   namespace User {

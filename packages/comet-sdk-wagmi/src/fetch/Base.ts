@@ -6,7 +6,7 @@ import {
 } from "@woof-software/comet-sdk";
 import { type Address, formatUnits } from "viem";
 import type { WagmiChainId } from "../config";
-import {CometContract, Erc20Contract} from "../contracts";
+import { CometContract, Erc20Contract } from "../contracts";
 import { WagmiUtils } from "../utils";
 import { fetchCurves, fetchCurvesMocks } from "./Curve";
 

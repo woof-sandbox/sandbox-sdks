@@ -4,7 +4,7 @@ import type { Address } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
 import { wagmiConfig } from "../../src";
 import { UserMarketWrapper } from "../../src/wrappers/UserMarketWrapper";
-import {sepoliaAddressConfig} from "../address-e2e.config";
+import { sepoliaAddressConfig } from "../address-e2e.config";
 
 const data: Partial<IMarket> = {
   cometAddress: sepoliaAddressConfig.comet1,
@@ -15,10 +15,10 @@ let market: UserMarketWrapper;
 describe("UserMarketWrapper", () => {
   beforeAll(async () => {
     market = await UserMarketWrapper.fetchUserMarket(
-        data.cometAddress as Address,
-        sepoliaAddressConfig.userMarket,
-        sepolia.id,
-        wagmiConfig,
+      data.cometAddress as Address,
+      sepoliaAddressConfig.userMarket,
+      sepolia.id,
+      wagmiConfig,
     );
   });
 

@@ -1,11 +1,11 @@
 import { http, createConfig } from "@wagmi/core";
 import { sepolia } from "@wagmi/core/chains";
 import { type IMarket, PERCENT_PRECISION } from "@woof-software/comet-sdk";
-import { Address, isAddress } from "viem";
+import { type Address, isAddress } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
 import { wagmiConfig } from "../../src";
 import { Market } from "../../src/augment";
-import {sepoliaAddressConfig} from "../address-e2e.config";
+import { sepoliaAddressConfig } from "../address-e2e.config";
 
 const percentsReg = new RegExp(`^\\d+\\.\\d{${PERCENT_PRECISION}}$`);
 const RPC_URL = sepoliaAddressConfig.rpcUrl;
@@ -25,9 +25,9 @@ describe("MarketMethods", () => {
     });
 
     market = await Market.fetchMarket(
-        data.cometAddress as Address,
-        sepolia.id,
-        wagmiConfig,
+      data.cometAddress as Address,
+      sepolia.id,
+      wagmiConfig,
     );
   });
 
@@ -43,17 +43,27 @@ describe("MarketMethods", () => {
 
   test("should contain ownerAddress", () => {
     expect(market.ownerAddress, "ownerAddress is missing").to.be.a("string");
-    expect(isAddress(market.ownerAddress), "ownerAddress is not valid").to.be.true;
+    expect(isAddress(market.ownerAddress), "ownerAddress is not valid").to.be
+      .true;
   });
 
   test("should contain guardianAddress", () => {
-    expect(market.guardianAddress, "guardianAddress is missing").to.be.a("string");
-    expect(isAddress(market.guardianAddress), "guardianAddress is not valid").to.be.true;
+    expect(market.guardianAddress, "guardianAddress is missing").to.be.a(
+      "string",
+    );
+    expect(isAddress(market.guardianAddress), "guardianAddress is not valid").to
+      .be.true;
   });
 
   test("should contain configControllerAddress", () => {
-    expect(market.configControllerAddress, "configControllerAddress is missing").to.be.a("string");
-    expect(isAddress(market.configControllerAddress), "configControllerAddress is not valid").to.be.true;
+    expect(
+      market.configControllerAddress,
+      "configControllerAddress is missing",
+    ).to.be.a("string");
+    expect(
+      isAddress(market.configControllerAddress),
+      "configControllerAddress is not valid",
+    ).to.be.true;
   });
 
   test("should contain curatorFee", () => {

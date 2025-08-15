@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, test } from "vitest";
 import { wagmiConfig } from "../../src";
 import { ConfigController } from "../../src/augment/ConfigController";
 import { Chain } from "../../src/config/chains";
-import {sepoliaAddressConfig} from "../address-e2e.config";
+import { sepoliaAddressConfig } from "../address-e2e.config";
 
 const configController = sepoliaAddressConfig.configControllerImplementation;
 let configC: ConfigController;
@@ -10,9 +10,9 @@ let configC: ConfigController;
 describe("Configurato Contract", () => {
   beforeAll(async () => {
     configC = await ConfigController.fetch(
-        configController,
-        Chain.Sepolia,
-        wagmiConfig,
+      configController,
+      Chain.Sepolia,
+      wagmiConfig,
     );
   });
 

@@ -1,17 +1,17 @@
 import { SandboxController } from "../../src/augment";
 
 import { sepolia } from "@wagmi/core/chains";
+import { isAddress } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
 import { sepoliaAddressConfig } from "../address-e2e.config";
-import { isAddress } from "viem";
 
 let controller: SandboxController;
 
 describe("SandboxController", () => {
   beforeAll(async () => {
     controller = await SandboxController.fetch(
-        sepoliaAddressConfig.sandboxController,
-        sepolia.id,
+      sepoliaAddressConfig.sandboxController,
+      sepolia.id,
     );
   });
 
@@ -22,16 +22,27 @@ describe("SandboxController", () => {
 
   test("should contain daoAddress", () => {
     expect(controller.daoAddress, "daoAddress is missing").to.be.a("string");
-    expect(isAddress(controller.daoAddress), "daoAddress is not valid").to.be.true;
+    expect(isAddress(controller.daoAddress), "daoAddress is not valid").to.be
+      .true;
   });
 
   test("should contain multisigAddress", () => {
-    expect(controller.multisigAddress, "multisigAddress is missing").to.be.a("string");
-    expect(isAddress(controller.multisigAddress), "multisigAddress is not valid").to.be.true;
+    expect(controller.multisigAddress, "multisigAddress is missing").to.be.a(
+      "string",
+    );
+    expect(
+      isAddress(controller.multisigAddress),
+      "multisigAddress is not valid",
+    ).to.be.true;
   });
 
   test("should contain treasuryAddress", () => {
-    expect(controller.treasuryAddress, "treasuryAddress is missing").to.be.a("string");
-    expect(isAddress(controller.treasuryAddress), "treasuryAddress is not valid").to.be.true;
+    expect(controller.treasuryAddress, "treasuryAddress is missing").to.be.a(
+      "string",
+    );
+    expect(
+      isAddress(controller.treasuryAddress),
+      "treasuryAddress is not valid",
+    ).to.be.true;
   });
 });
