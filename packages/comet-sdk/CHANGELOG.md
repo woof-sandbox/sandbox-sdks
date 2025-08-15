@@ -1,5 +1,16 @@
 # @woof-software/comet-sdk
 
+## 0.0.42
+
+### Patch Changes
+
+- Changed contract interaction and ABIs, removed deprecated contract methods, updated augment queries and fetchers.
+
+  - Added and updated e2e tests.
+  - Removed deprecated contract methods and updated code that called them.
+  - Replaced contract ABIs — this is a breaking change for consumers using ABI/type exports.
+  - Added/updated augment queries and fetchers to match new contract interfaces.
+
 ## 0.0.41
 
 ### Patch Changes
