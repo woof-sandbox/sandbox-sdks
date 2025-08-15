@@ -6,10 +6,11 @@ import {
 } from "@woof-software/comet-sdk";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
-import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
+import {CometContract, ConfigControllerContract, Erc20Contract, wagmiConfig} from "../contracts";
 import { WagmiUtils } from "../utils";
 import { fetchBase, fetchBaseMock } from "./Base";
 import { fetchCollaterals, fetchCollateralsMocks } from "./Collateral";
+import {fetchConfigController} from "./ConfigController";
 
 export async function fetchMarketMock(
   cometProxyAddress: Address,
@@ -26,7 +27,6 @@ export async function fetchMarketMock(
   const totalSupply = 185064689883219n;
   const totalReserves = 1368714199302n;
   const availableLiquidity = 71294244719270n;
-  // TODO: fulfill this block after adding new functionality to contracts
   const configControllerAddress = "0x0000000000000000000000000000000000000000";
   const ownerAddress = "0x0000000000000000000000000000000000000000";
   const guardianAddress = "0x0000000000000000000000000000000000000000";
@@ -93,6 +93,7 @@ export async function fetchMarket(
       comet.getReservesCall(),
       baseContract.getBalanceOfCall(cometProxyAddress),
       comet.getBaseBorrowMinCall(),
+      comet.getConfigControllerCall(),
     ],
   });
   const borrowRate = WagmiUtils.resultOrThrow<bigint>(marketData[0]);
@@ -102,6 +103,9 @@ export async function fetchMarket(
   const totalReserves = WagmiUtils.resultOrThrow<bigint>(marketData[4]);
   const availableLiquidity = WagmiUtils.resultOrThrow<bigint>(marketData[5]);
   const borrowMinAmount = WagmiUtils.resultOrThrow<bigint>(marketData[6]);
+  const configControllerAddress = WagmiUtils.resultOrThrow<Address>(marketData[7]);
+
+  const configController = await fetchConfigController(configControllerAddress, chainId, config);
 
   return new Market({
     chain: chainId,
@@ -117,12 +121,11 @@ export async function fetchMarket(
     baseToken,
     collaterals,
     availableLiquidity,
-    // TODO: update after contracts
-    configControllerAddress: "0x0000000000000000000000000000000000000000", // TODO
-    ownerAddress: "0x0000000000000000000000000000000000000000", // TODO
-    guardianAddress: "0x0000000000000000000000000000000000000000", // TODO
-    curatorAddress: "0x0000000000000000000000000000000000000000", // TODO
-    curatorFee: 0, // TODO
+    configControllerAddress,
+    ownerAddress: configController.owner,
+    guardianAddress: configController.guardian,
+    curatorAddress: configController.curator,
+    curatorFee: configController.curatorFee,
     //
     proposals: [], // TODO
     //
@@ -161,6 +164,7 @@ export async function fetchMarkets(
               comet.getReservesCall(),
               baseContract.getBalanceOfCall(cometProxyAddress),
               comet.getBaseBorrowMinCall(),
+              comet.getConfigControllerCall(),
             ],
           });
           const borrowRate = WagmiUtils.resultOrThrow<bigint>(marketData[0]);
@@ -174,6 +178,11 @@ export async function fetchMarkets(
           const borrowMinAmount = WagmiUtils.resultOrThrow<bigint>(
             marketData[6],
           );
+          const configControllerAddress = WagmiUtils.resultOrThrow<Address>(
+            marketData[7],
+          );
+
+          const configController = await fetchConfigController(configControllerAddress, chain, config);
 
           return new Market({
             chain: chain,
@@ -189,13 +198,11 @@ export async function fetchMarkets(
             baseToken,
             collaterals,
             availableLiquidity,
-            // TODO: update after contracts
-            configControllerAddress:
-              "0x0000000000000000000000000000000000000000", // TODO
-            ownerAddress: "0x0000000000000000000000000000000000000000", // TODO
-            guardianAddress: "0x0000000000000000000000000000000000000000", // TODO
-            curatorAddress: "0x0000000000000000000000000000000000000000", // TODO
-            curatorFee: 0, // TODO
+            configControllerAddress,
+            ownerAddress: configController.owner,
+            guardianAddress: configController.guardian,
+            curatorAddress: configController.curator,
+            curatorFee: configController.curatorFee,
             //
             proposals: [], // TODO
             //

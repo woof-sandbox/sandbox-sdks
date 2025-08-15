@@ -117,6 +117,10 @@ export class CometContract extends WagmiContract {
     return this.getCall("baseToken");
   }
 
+  getConfigControllerCall(): ContractFunctionParameters {
+    return this.getCall("configController");
+  }
+
   async getContractName(): Promise<string> {
     const nonce = await this.read("name", this.chainId);
 

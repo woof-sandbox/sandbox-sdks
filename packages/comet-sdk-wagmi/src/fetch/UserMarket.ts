@@ -7,6 +7,7 @@ import { WagmiUtils } from "../utils";
 import { UserMarketWrapper } from "../wrappers";
 import { fetchBase, fetchBaseMock } from "./Base";
 import { fetchUserCollaterals } from "./UserCollateral";
+import {fetchConfigController} from "./ConfigController";
 
 export async function fetchUserMarkets(
   marketConfig: Record<number, Address[]>,
@@ -92,6 +93,7 @@ export async function fetchUserMarkets(
               comet.getBorrowPerSecondInterestRateBaseCall(), // ?: not in use
               comet.getBorrowPerSecondInterestRateSlopeLowCall(), // ?: not in use
               comet.getBorrowPerSecondInterestRateSlopeHighCall(), // ?: not in use
+              comet.getConfigControllerCall()
             ],
           });
 
@@ -105,7 +107,11 @@ export async function fetchUserMarkets(
           const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
           const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[8]);
           const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
+          const configControllerAddress = WagmiUtils.resultOrThrow<Address>(
+            fullData[18],
+          );
 
+          const configController = await fetchConfigController(configControllerAddress, chain, config);
           const baseToken = await fetchBase(cometProxyAddress, chain, config);
 
           const collaterals = await fetchUserCollaterals(
@@ -130,13 +136,11 @@ export async function fetchUserMarkets(
             baseToken,
             collaterals: collaterals,
             availableLiquidity,
-            // TODO: update after contracts
-            configControllerAddress:
-              "0x0000000000000000000000000000000000000000", // TODO
-            ownerAddress: "0x0000000000000000000000000000000000000000", // TODO
-            guardianAddress: "0x0000000000000000000000000000000000000000", // TODO
-            curatorAddress: "0x0000000000000000000000000000000000000000", // TODO
-            curatorFee: 0, // TODO
+            configControllerAddress,
+            ownerAddress: configController.owner,
+            guardianAddress: configController.guardian,
+            curatorAddress: configController.curator,
+            curatorFee: configController.curatorFee,
             //
             proposals: [], // TODO
             //
@@ -210,6 +214,7 @@ export async function fetchUserMarket(
       comet.getBorrowPerSecondInterestRateBaseCall(), // ?: not in use
       comet.getBorrowPerSecondInterestRateSlopeLowCall(), // ?: not in use
       comet.getBorrowPerSecondInterestRateSlopeHighCall(), // ?: not in use
+      comet.getConfigControllerCall()
     ],
   });
 
@@ -219,7 +224,9 @@ export async function fetchUserMarket(
   const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
   const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[8]);
   const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
+  const configControllerAddress = WagmiUtils.resultOrThrow<Address>(fullData[18]);
 
+  const configController = await fetchConfigController(configControllerAddress, chainId, config);
   const baseToken = await fetchBase(cometProxyAddress, chainId, config);
 
   const collaterals = await fetchUserCollaterals(
@@ -244,12 +251,11 @@ export async function fetchUserMarket(
     baseToken,
     collaterals: collaterals,
     availableLiquidity,
-    // TODO: update after contracts
-    configControllerAddress: "0x0000000000000000000000000000000000000000", // TODO
-    ownerAddress: "0x0000000000000000000000000000000000000000", // TODO
-    guardianAddress: "0x0000000000000000000000000000000000000000", // TODO
-    curatorAddress: "0x0000000000000000000000000000000000000000", // TODO
-    curatorFee: 0, // TODO
+    configControllerAddress,
+    ownerAddress: configController.owner,
+    guardianAddress: configController.guardian,
+    curatorAddress: configController.curator,
+    curatorFee: configController.curatorFee,
     //
     proposals: [], // TODO
     //
