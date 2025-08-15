@@ -151,24 +151,6 @@ export class ControllerContract extends WagmiContract {
     return this.getCall("reserveCommission", [arg0]);
   }
 
-  async targetReserves(chainId?: WagmiChainId): Promise<bigint> {
-    const result = await this.read("targetReserves", chainId);
-    return result as bigint;
-  }
-
-  targetReservesCall(): ContractFunctionParameters {
-    return this.getCall("targetReserves");
-  }
-
-  async threshold(arg0: bigint, chainId?: WagmiChainId): Promise<bigint> {
-    const result = await this.read("threshold", chainId, [arg0]);
-    return result as bigint;
-  }
-
-  thresholdCall(arg0: bigint): ContractFunctionParameters {
-    return this.getCall("threshold", [arg0]);
-  }
-
   async treasury(chainId?: WagmiChainId): Promise<Address> {
     const result = await this.read("treasury", chainId);
     return result as Address;
@@ -176,23 +158,6 @@ export class ControllerContract extends WagmiContract {
 
   treasuryCall(): ContractFunctionParameters {
     return this.getCall("treasury");
-  }
-
-  async addBaseAssetCurve(
-    token: Address,
-    baseAssetCurve: {
-      supplyKink: bigint;
-      supplyPerYearInterestRateBase: bigint;
-      supplyPerYearInterestRateSlopeLow: bigint;
-      supplyPerYearInterestRateSlopeHigh: bigint;
-      borrowKink: bigint;
-      borrowPerYearInterestRateBase: bigint;
-      borrowPerYearInterestRateSlopeLow: bigint;
-      borrowPerYearInterestRateSlopeHigh: bigint;
-    },
-    chainId?: WagmiChainId,
-  ): Promise<WriteContractReturnType> {
-    return this.write("addBaseAssetCurve", chainId, [token, baseAssetCurve]);
   }
 
   async changeBaseAssetCurve(

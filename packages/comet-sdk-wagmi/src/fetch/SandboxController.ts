@@ -6,6 +6,18 @@ import { ControllerContract, wagmiConfig } from "../contracts";
 import type { ControllerConfiguration } from "../contracts/entities/controller-configuration";
 import { WagmiUtils } from "../utils";
 import { SandboxControllerWrapper } from "../wrappers";
+import {ControllerConfigurationResponse} from "../contracts/entities/controller-configuration-response";
+
+function controllerConfigurationToObj(data: ControllerConfigurationResponse): ControllerConfiguration {
+  return {
+    targetPercent: data[0],
+    storeFrontPriceFactor: data[1],
+    minUpdateTime: data[2],
+    maxUpdateTime: data[3],
+    suggestedLockTimeOfSeedReserves: data[4],
+    suggestedAmountOfSeedReserves: data[5],
+  };
+}
 
 export async function fetchSandboxController(
   controllerAddress: Address,
@@ -29,9 +41,10 @@ export async function fetchSandboxController(
     controllerBaseData[1],
   );
   const feeEnabled = WagmiUtils.resultOrThrow<boolean>(controllerBaseData[2]);
-  const controllerConfig = WagmiUtils.resultOrThrow<ControllerConfiguration>(
+  const controllerConfigList = WagmiUtils.resultOrThrow<ControllerConfigurationResponse>(
     controllerBaseData[3],
   );
+  const controllerConfig = controllerConfigurationToObj(controllerConfigList);
 
   const sandboxController = new SandboxController({
     address: controllerAddress,
