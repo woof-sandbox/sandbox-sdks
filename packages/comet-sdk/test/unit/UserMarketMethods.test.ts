@@ -22,6 +22,7 @@ const mockCollateral = (data = {}) =>
     collateralFactor: BigInt("500000000000000000"),
     liquidationFactor: BigInt("700000000000000000"),
     liquidationPenalty: BigInt("250000000000000000"),
+    cometScale: BigInt("18"),
     supplyCap: BigInt("100000000000000000000000"),
     ...data,
   });

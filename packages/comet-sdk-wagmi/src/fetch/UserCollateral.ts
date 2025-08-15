@@ -87,6 +87,7 @@ export async function fetchUserCollaterals(
       collateralFactor: config.borrowCollateralFactor,
       liquidationFactor: config.liquidateCollateralFactor,
       liquidationPenalty: BigInt(1e18) - config.liquidationFactor,
+      cometScale: config.scale,
       supplyCap: config.supplyCap,
     });
   }

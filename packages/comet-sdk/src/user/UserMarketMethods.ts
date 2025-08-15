@@ -44,11 +44,12 @@ export namespace UserMarketMethods {
     symbol: string,
     tokenPrice: bigint,
     basePriceUsd: string,
+    priceDecimals = PRICE_FEED_FACTOR_UNITS,
   ): number {
     return NON_USD_BASE_SYMBOLS.has(symbol)
-      ? Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS)) *
+      ? Number(formatUnits(tokenPrice, priceDecimals)) *
           Number(basePriceUsd)
-      : Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS));
+      : Number(formatUnits(tokenPrice, priceDecimals));
   }
 
   export function borrowCollateralValueUSD(
@@ -66,7 +67,7 @@ export namespace UserMarketMethods {
           ) *
           tokenPrice(
             collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            DataUtils.toBigNumber(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           ),
       )
@@ -94,7 +95,7 @@ export namespace UserMarketMethods {
             Number(collateralData)) *
           tokenPrice(
             collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            DataUtils.toBigNumber(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           )
         );
@@ -116,11 +117,11 @@ export namespace UserMarketMethods {
             ),
           ) *
           Number(
-            formatUnits(collateral.liquidationFactor, COMET_FACTOR_DECIMALS),
+            formatUnits(collateral.liquidationFactor, Number(collateral.cometScale)),
           ) *
           tokenPrice(
             collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            DataUtils.toBigNumber(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           ),
       )
@@ -147,11 +148,11 @@ export namespace UserMarketMethods {
           ) +
             Number(collateralData)) *
           Number(
-            formatUnits(collateral.liquidationFactor, COMET_FACTOR_DECIMALS),
+            formatUnits(collateral.liquidationFactor, Number(collateral.cometScale)),
           ) *
           tokenPrice(
             collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            DataUtils.toBigNumber(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           )
         );
@@ -256,11 +257,11 @@ export namespace UserMarketMethods {
             ),
           ) *
           Number(
-            formatUnits(collateral.collateralFactor, COMET_FACTOR_DECIMALS),
+            formatUnits(collateral.collateralFactor, Number(collateral.cometScale)),
           ) *
           tokenPrice(
             collateral.symbol,
-            parseUnits(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            parseUnits(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           ),
       )
