@@ -3,7 +3,6 @@ import type { IToken } from "../IToken";
 
 export interface IBase extends IToken {
   // mock: USDT
-  baseMinBorrow: bigint; // takes from the sandbox controller? (exists on market as baseBorrowMin)
   baseMinForRewards: bigint; // 0 by default, take from comet, mock: 100000000000
   baseTrackingBorrowSpeed: bigint; // 0 by default, take from comet, mock: 578703703703
   baseTrackingSupplySpeed: bigint; // 0 by default, take from comet, mock: 810185185185

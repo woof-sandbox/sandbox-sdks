@@ -12,7 +12,5 @@ export interface ISandboxController {
   feeEnabled: boolean; // is commission gathering from the whole protocol enabled
   treasuryAddress: string; // (still not available - mock with r address)
 
-  baseWhitelist: IBase[];
-  collateralsWhitelist: ICollateral[];
   storeFrontPriceFactor: number; // percents (1e18 == 100%)
 }

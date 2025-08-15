@@ -45,8 +45,6 @@ export async function fetchSandboxController(
     feeEnabled,
     treasuryAddress,
     storeFrontPriceFactor: Number(controllerConfig.storeFrontPriceFactor),
-    baseWhitelist: [], // TODO
-    collateralsWhitelist: [], // TODO
   });
 
   return new SandboxControllerWrapper(sandboxController, chainId, config);

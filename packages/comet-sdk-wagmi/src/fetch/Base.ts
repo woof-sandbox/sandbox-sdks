@@ -6,7 +6,7 @@ import {
 } from "@woof-software/comet-sdk";
 import { type Address, formatUnits } from "viem";
 import type { WagmiChainId } from "../config";
-import { CometContract, Erc20Contract } from "../contracts";
+import {CometContract, Erc20Contract} from "../contracts";
 import { WagmiUtils } from "../utils";
 import { fetchCurves, fetchCurvesMocks } from "./Curve";
 
@@ -26,7 +26,6 @@ export async function fetchBaseMock(
   const curves = await fetchCurvesMocks(cometProxyAddress, chainId);
 
   return new Base({
-    baseMinBorrow: 100000000n,
     baseMinForRewards: 900000000000000000n,
     baseTrackingBorrowSpeed: 1712328767n * secsPerYear,
     baseTrackingSupplySpeed: 96207508878n * secsPerYear,
@@ -86,7 +85,6 @@ export async function fetchBase(
   const curves = await fetchCurves(cometProxyAddress, chainId);
 
   return new Base({
-    baseMinBorrow: 100000000n, // TODO: takes from sandbox controller
     baseMinForRewards,
     baseTrackingBorrowSpeed: baseTrackingBorrowSpeed * secsPerYear,
     baseTrackingSupplySpeed: baseTrackingSupplySpeed * secsPerYear,
