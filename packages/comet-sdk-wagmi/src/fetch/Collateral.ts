@@ -272,7 +272,7 @@ export async function fetchCollaterals(
       priceFeedAddress: config.priceFeed,
       collateralFactor: config.borrowCollateralFactor,
       liquidationFactor: config.liquidateCollateralFactor,
-      liquidationPenalty: BigInt(1e18) - config.liquidationFactor,
+      liquidationPenalty: config.scale - config.liquidationFactor,
       cometScale: config.scale,
       supplyCap: config.supplyCap,
     });

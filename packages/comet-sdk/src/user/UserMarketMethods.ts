@@ -12,6 +12,7 @@ import { DataUtils } from "../utils";
 import type { ICustomCollateral } from "./ICustomCollateral";
 import type { UserCollateral } from "./UserCollateral";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
+import { scaleToDecimals } from '../utils';
 
 export namespace UserMarketMethods {
   export function borrowBalanceUsd(
@@ -117,7 +118,7 @@ export namespace UserMarketMethods {
             ),
           ) *
           Number(
-            formatUnits(collateral.liquidationFactor, Number(collateral.cometScale)),
+            formatUnits(collateral.liquidationFactor, scaleToDecimals(collateral.cometScale)),
           ) *
           tokenPrice(
             collateral.symbol,
@@ -148,7 +149,7 @@ export namespace UserMarketMethods {
           ) +
             Number(collateralData)) *
           Number(
-            formatUnits(collateral.liquidationFactor, Number(collateral.cometScale)),
+            formatUnits(collateral.liquidationFactor, scaleToDecimals(collateral.cometScale)),
           ) *
           tokenPrice(
             collateral.symbol,
@@ -257,7 +258,7 @@ export namespace UserMarketMethods {
             ),
           ) *
           Number(
-            formatUnits(collateral.collateralFactor, Number(collateral.cometScale)),
+            formatUnits(collateral.collateralFactor, scaleToDecimals(collateral.cometScale)),
           ) *
           tokenPrice(
             collateral.symbol,
