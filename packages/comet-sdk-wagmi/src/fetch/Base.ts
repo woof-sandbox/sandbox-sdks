@@ -94,7 +94,7 @@ export async function fetchBase(
     tokenAddress,
     symbol,
     decimals,
-    price: formatUnits(priceRaw, PRICE_FEED_FACTOR_UNITS),
+    price: formatUnits(priceRaw, Number(decimals)),
     priceFeedAddress,
   });
 }

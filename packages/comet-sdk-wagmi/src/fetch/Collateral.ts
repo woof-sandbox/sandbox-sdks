@@ -268,7 +268,7 @@ export async function fetchCollaterals(
       decimals,
       totalSupplyAsset,
       collateralReserves,
-      price: formatUnits(rawPrice, PRICE_FEED_FACTOR_UNITS),
+      price: formatUnits(rawPrice, Number(decimals)),
       priceFeedAddress: config.priceFeed,
       collateralFactor: config.borrowCollateralFactor,
       liquidationFactor: config.liquidateCollateralFactor,
