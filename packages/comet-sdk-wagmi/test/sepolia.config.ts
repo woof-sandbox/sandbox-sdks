@@ -1,6 +1,6 @@
 import type { Address } from "viem";
 
-export const sepoliaAddressConfig = {
+export const SepoliaConfig = {
   rpcUrl: "https://1rpc.io/sepolia",
   comet1: "0x4e24e491b68f2718fce98f0bc5064716db695619" as Address,
   configController1: "0x8659d18550969998d2e023be5a7a5fbeb1a77706" as Address,

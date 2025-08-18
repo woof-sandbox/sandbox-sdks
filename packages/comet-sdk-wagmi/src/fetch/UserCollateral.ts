@@ -1,15 +1,17 @@
 import { multicall } from "@wagmi/core";
-import {
-  PRICE_FEED_FACTOR_UNITS,
-  UserCollateral,
-} from "@woof-software/comet-sdk";
+import { UserCollateral } from "@woof-software/comet-sdk";
 import {
   type Address,
   type ContractFunctionParameters,
   formatUnits,
 } from "viem";
 import type { WagmiChainId } from "../config";
-import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
+import {
+  ChainlinkPriceFeedContract,
+  CometContract,
+  Erc20Contract,
+  wagmiConfig,
+} from "../contracts";
 import { WagmiUtils } from "../utils";
 
 export async function fetchUserCollaterals(
@@ -24,9 +26,13 @@ export async function fetchUserCollaterals(
   const multicallBatch: ContractFunctionParameters[] = [];
   for (const config of cometConfig.assetConfigs) {
     const asset = new Erc20Contract(config.collateralToken, chainId);
+    const chainlinkPriceFeed = new ChainlinkPriceFeedContract(
+      config.priceFeed,
+      chainId,
+    );
     multicallBatch.push(
       asset.getSymbolCall(),
-      asset.getDecimalsCall(),
+      chainlinkPriceFeed.getDecimalsCall(),
       asset.getBalanceOfCall(userAddress),
       comet.getPriceCall(config.priceFeed),
       comet.getUserCollateralCall(userAddress, config.collateralToken),
@@ -82,7 +88,7 @@ export async function fetchUserCollaterals(
       cometBalance,
       totalSupplyAsset,
       collateralReserves,
-      price: formatUnits(rawPrice, PRICE_FEED_FACTOR_UNITS),
+      price: formatUnits(rawPrice, Number(decimals)),
       priceFeedAddress: config.priceFeed,
       collateralFactor: config.borrowCollateralFactor,
       liquidationFactor: config.liquidateCollateralFactor,

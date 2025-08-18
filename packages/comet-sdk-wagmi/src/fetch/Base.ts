@@ -1,12 +1,12 @@
 import { type Config, multicall } from "@wagmi/core";
-import {
-  Base,
-  PRICE_FEED_FACTOR_UNITS,
-  SECONDS_PER_YEAR,
-} from "@woof-software/comet-sdk";
+import { Base, SECONDS_PER_YEAR } from "@woof-software/comet-sdk";
 import { type Address, formatUnits } from "viem";
 import type { WagmiChainId } from "../config";
-import { CometContract, Erc20Contract } from "../contracts";
+import {
+  ChainlinkPriceFeedContract,
+  CometContract,
+  Erc20Contract,
+} from "../contracts";
 import { WagmiUtils } from "../utils";
 import { fetchCurves, fetchCurvesMocks } from "./Curve";
 
@@ -56,6 +56,10 @@ export async function fetchBase(
   const priceFeedAddress = WagmiUtils.resultOrThrow<Address>(cometBaseData[1]);
 
   const erc20 = new Erc20Contract(tokenAddress, chainId);
+  const chainlinkPricefeed = new ChainlinkPriceFeedContract(
+    priceFeedAddress,
+    chainId,
+  );
 
   ///
 
@@ -63,7 +67,7 @@ export async function fetchBase(
     chainId,
     contracts: [
       comet.getPriceCall(priceFeedAddress),
-      erc20.getDecimalsCall(),
+      chainlinkPricefeed.getDecimalsCall(),
       erc20.getSymbolCall(),
       //
       comet.getBaseMinForRewardsCall(),

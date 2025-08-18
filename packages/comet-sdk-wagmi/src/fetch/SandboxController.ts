@@ -3,8 +3,10 @@ import { SandboxController } from "@woof-software/comet-sdk";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
 import { ControllerContract, wagmiConfig } from "../contracts";
-import type { ControllerConfiguration } from "../contracts/entities/controller-configuration";
-import type { ControllerConfigurationResponse } from "../contracts/entities/controller-configuration-response";
+import type {
+  ControllerConfiguration,
+  ControllerConfigurationResponse,
+} from "../contracts/entities";
 import { WagmiUtils } from "../utils";
 import { SandboxControllerWrapper } from "../wrappers";
 

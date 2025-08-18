@@ -4,11 +4,11 @@ import "../../src/augment/Collateral";
 import { Collateral, type IMarket } from "@woof-software/comet-sdk";
 import type { Address } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
-import { sepoliaAddressConfig } from "../address-e2e.config";
+import { SepoliaConfig } from "../sepolia.config";
 
-const RPC_URL = sepoliaAddressConfig.rpcUrl;
+const RPC_URL = SepoliaConfig.rpcUrl;
 const data: Partial<IMarket> = {
-  cometAddress: sepoliaAddressConfig.comet1,
+  cometAddress: SepoliaConfig.comet1,
 } as const;
 
 let collaterals: Collateral[];

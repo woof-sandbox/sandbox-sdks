@@ -2,9 +2,9 @@ import { beforeAll, describe, expect, test } from "vitest";
 import { wagmiConfig } from "../../src";
 import { ConfigController } from "../../src/augment/ConfigController";
 import { Chain } from "../../src/config/chains";
-import { sepoliaAddressConfig } from "../address-e2e.config";
+import { SepoliaConfig } from "../sepolia.config";
 
-const configController = sepoliaAddressConfig.configControllerImplementation;
+const configController = SepoliaConfig.configControllerImplementation;
 let configC: ConfigController;
 
 describe("Configurato Contract", () => {

@@ -1,12 +1,17 @@
 import { multicall } from "@wagmi/core";
-import { Collateral, PRICE_FEED_FACTOR_UNITS } from "@woof-software/comet-sdk";
+import { Collateral } from "@woof-software/comet-sdk";
 import {
   type Address,
   type ContractFunctionParameters,
   formatUnits,
 } from "viem";
 import type { WagmiChainId } from "../config";
-import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
+import {
+  ChainlinkPriceFeedContract,
+  CometContract,
+  Erc20Contract,
+  wagmiConfig,
+} from "../contracts";
 import { WagmiUtils } from "../utils";
 
 export async function fetchCollateralsMocks(
@@ -223,9 +228,14 @@ export async function fetchCollaterals(
   const multicallBatch: ContractFunctionParameters[] = [];
   for (const config of cometConfig.assetConfigs) {
     const asset = new Erc20Contract(config.collateralToken, chainId);
+    const chainlinkPriceFeed = new ChainlinkPriceFeedContract(
+      config.priceFeed,
+      chainId,
+    );
+
     multicallBatch.push(
       asset.getSymbolCall(),
-      asset.getDecimalsCall(),
+      chainlinkPriceFeed.getDecimalsCall(),
       comet.getPriceCall(config.priceFeed),
       asset.getBalanceOfCall(cometProxyAddress),
       comet.getTotalsCollateralCall(config.collateralToken),

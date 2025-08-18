@@ -5,12 +5,12 @@ import { type Address, isAddress } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
 import { wagmiConfig } from "../../src";
 import { Market } from "../../src/augment";
-import { sepoliaAddressConfig } from "../address-e2e.config";
+import { SepoliaConfig } from "../sepolia.config";
 
 const percentsReg = new RegExp(`^\\d+\\.\\d{${PERCENT_PRECISION}}$`);
-const RPC_URL = sepoliaAddressConfig.rpcUrl;
+const RPC_URL = SepoliaConfig.rpcUrl;
 const data: Partial<IMarket> = {
-  cometAddress: sepoliaAddressConfig.comet1,
+  cometAddress: SepoliaConfig.comet1,
 } as const;
 
 let market: Market;

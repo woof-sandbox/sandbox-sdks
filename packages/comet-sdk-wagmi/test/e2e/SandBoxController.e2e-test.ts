@@ -3,14 +3,14 @@ import { SandboxController } from "../../src/augment";
 import { sepolia } from "@wagmi/core/chains";
 import { isAddress } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
-import { sepoliaAddressConfig } from "../address-e2e.config";
+import { SepoliaConfig } from "../sepolia.config";
 
 let controller: SandboxController;
 
 describe("SandboxController", () => {
   beforeAll(async () => {
     controller = await SandboxController.fetch(
-      sepoliaAddressConfig.sandboxController,
+      SepoliaConfig.sandboxController,
       sepolia.id,
     );
   });

@@ -4,10 +4,10 @@ import { type Address, isAddress } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
 import { UserMarket } from "../../src/augment";
 import { wagmiConfig } from "../../src/contracts";
-import { sepoliaAddressConfig } from "../address-e2e.config";
+import { SepoliaConfig } from "../sepolia.config";
 
 const data: Partial<IMarket> = {
-  cometAddress: sepoliaAddressConfig.comet1,
+  cometAddress: SepoliaConfig.comet1,
 } as const;
 
 let market: UserMarket;
@@ -16,7 +16,7 @@ describe("MarketMethods", () => {
   beforeAll(async () => {
     market = await UserMarket.fetchUserMarket(
       data.cometAddress as Address,
-      sepoliaAddressConfig.userMarket,
+      SepoliaConfig.userMarket,
       sepolia.id,
       wagmiConfig,
     );

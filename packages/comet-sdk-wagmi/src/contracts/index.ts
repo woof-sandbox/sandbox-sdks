@@ -7,3 +7,4 @@ export * from "./config-controller.contract";
 export * from "./controller.contract";
 export * from "./erc20.contract";
 export * from "./migrator.contract";
+export * from "./chainlink-price-feed.contract";

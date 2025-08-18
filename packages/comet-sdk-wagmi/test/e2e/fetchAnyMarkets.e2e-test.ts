@@ -5,12 +5,9 @@ import type { Address } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
 import { wagmiConfig } from "../../src";
 import { UserMarketWrapper } from "../../src/wrappers/UserMarketWrapper";
-import { sepoliaAddressConfig } from "../address-e2e.config";
+import { SepoliaConfig } from "../sepolia.config";
 
-const marketsSepolia: Address[] = [
-  sepoliaAddressConfig.comet1!,
-  sepoliaAddressConfig.comet2!,
-];
+const marketsSepolia: Address[] = [SepoliaConfig.comet1, SepoliaConfig.comet2];
 
 let market: UserMarketWrapper[];
 
@@ -20,7 +17,7 @@ describe("UserMarketWrapper", () => {
       {
         [sepolia.id]: marketsSepolia,
       },
-      sepoliaAddressConfig.userMarket,
+      SepoliaConfig.userMarket,
       wagmiConfig,
     );
 

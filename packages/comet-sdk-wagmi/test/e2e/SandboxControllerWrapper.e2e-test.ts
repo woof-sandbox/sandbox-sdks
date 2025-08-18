@@ -2,12 +2,12 @@ import { sepolia } from "@wagmi/core/chains";
 import { beforeAll, describe, expect, test } from "vitest";
 import { SandboxController } from "../../src/augment";
 import { SandboxControllerWrapper } from "../../src/wrappers/SandboxControllerWrapper";
-import { sepoliaAddressConfig } from "../address-e2e.config";
+import { SepoliaConfig } from "../sepolia.config";
 
 let controller: SandboxControllerWrapper;
 
-const controllerAddress = sepoliaAddressConfig.sandboxController;
-const token = sepoliaAddressConfig.TokenAddresses.usdc;
+const controllerAddress = SepoliaConfig.sandboxController;
+const token = SepoliaConfig.TokenAddresses.usdc;
 
 describe("SandboxControllerWrapper", () => {
   beforeAll(async () => {

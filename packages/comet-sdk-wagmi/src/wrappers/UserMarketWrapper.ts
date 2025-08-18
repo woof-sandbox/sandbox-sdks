@@ -29,11 +29,14 @@ import {
   Erc20Contract,
   MigratorContract,
 } from "../contracts";
-import type {
-  MultiAllowanceCallType,
-  MultiAllowanceCallTypeBigInt,
-  MultiMigrateCollaterals,
-} from "../contracts/entities/multi-allowance-call";
+import {
+  type ActionData,
+  ActionType,
+  type MigrateArgs,
+  type MultiAllowanceCallType,
+  type MultiAllowanceCallTypeBigInt,
+  type MultiMigrateCollaterals,
+} from "../contracts/entities";
 import {
   ACTION_FAILED,
   ALLOW_FAILED,
@@ -60,8 +63,6 @@ import {
 } from "../errors/wrappers/user-market-wrapper.errors";
 
 import { sepolia } from "viem/chains";
-import { type ActionData, ActionType } from "../contracts/entities/actions";
-import type { MigrateArgs } from "../contracts/entities/migrate-args";
 import {
   fetchUserMarket as fetchUserMarketFn,
   fetchUserMarkets as fetchUserMarketsFn,
