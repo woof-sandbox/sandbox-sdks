@@ -14,6 +14,7 @@ const data: Partial<IMarket> = {
 } as const;
 
 let market: Market;
+let markets: Market[];
 
 describe("MarketMethods", () => {
   beforeAll(async () => {
@@ -70,4 +71,37 @@ describe("MarketMethods", () => {
     expect(market.curatorFee, "curatorFee is missing").to.be.a("number");
     expect(market.curatorFee).to.be.gte(0);
   });
+});
+
+describe ("MarketsMethods", () => {
+  beforeAll(async () => {
+    createConfig({
+      chains: [sepolia],
+      transports: {
+        [sepolia.id]: http(RPC_URL),
+      },
+    });
+
+    const marketConfig: Record<number, Address[]> = {
+    [sepolia.id]: [SepoliaConfig.comet1, SepoliaConfig.comet2],}
+
+    markets = await Market.fetchMarkets(marketConfig, wagmiConfig);
+  });
+
+    test("should fetch multiple markets", () => {
+        expect(markets).to.be.an("array");
+        expect(markets.length).to.be.greaterThan(0);
+        markets.forEach((m) => {
+        expect(m).to.be.instanceOf(Market);
+        expect(m.cometAddress).to.be.a("string");
+        expect(isAddress(m.cometAddress)).to.be.true;
+        });
+    });
+
+    test("should calculate the correct borrow APR for each market", () => {
+        markets.forEach((m) => {
+            const percents = m.borrowApr.toFixed(PERCENT_PRECISION);
+            expect(percents).to.be.match(percentsReg);
+        });
+    });
 });
