@@ -26,7 +26,6 @@ const mockBaseToken: IBase = {
   decimals: 18n,
   price: "1.0",
   priceFeedAddress: "0xFeed",
-  baseMinBorrow: 1n,
   baseMinForRewards: 2n,
   baseTrackingBorrowSpeed: 3n,
   baseTrackingSupplySpeed: 4n,
@@ -46,6 +45,7 @@ const mockCollateralData: ICollateral = {
   collateralFactor: 1n,
   liquidationFactor: 1n,
   liquidationPenalty: 1n,
+  cometScale: 8n,
   supplyCap: 1000n,
 };
 const mockCollateral = new Collateral(mockCollateralData);

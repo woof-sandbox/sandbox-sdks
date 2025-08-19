@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   Collateral,
-  type IBase,
+  type IBase, type ICollateral,
   type IToken,
   Market,
   MarketMethods,
@@ -203,7 +203,7 @@ describe("MarketMethods", () => {
   it("should calculate TVL correctly", () => {
     const cometBalance = 1000n;
     const baseToken = { ...mockBaseToken, price: "2.0", decimals: BigInt(6) };
-    const collaterals = [
+    const collaterals: ICollateral[] = [
       {
         tokenAddress: "0x1",
         symbol: "COL1",
@@ -216,6 +216,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
       {
@@ -230,6 +231,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
     ];
@@ -297,7 +299,7 @@ describe("MarketMethods", () => {
   });
 
   it("should calculate total collaterals supply", () => {
-    const collaterals = [
+    const collaterals: ICollateral[] = [
       {
         tokenAddress: "0x1",
         symbol: "COL1",
@@ -310,6 +312,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
       {
@@ -324,6 +327,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
     ];
@@ -363,6 +367,7 @@ describe("MarketMethods", () => {
             collateralFactor: 500000000000000000n,
             liquidationFactor: 700000000000000000n,
             liquidationPenalty: 250000000000000000n,
+            cometScale: 8n,
             supplyCap: 100000000000000000000000n,
           }),
         ],
@@ -400,6 +405,7 @@ describe("MarketMethods", () => {
             collateralFactor: 500000000000000000n,
             liquidationFactor: 700000000000000000n,
             liquidationPenalty: 250000000000000000n,
+            cometScale: 8n,
             supplyCap: 100000000000000000000000n,
           }),
         ],
@@ -437,6 +443,7 @@ describe("MarketMethods", () => {
             collateralFactor: 500000000000000000n,
             liquidationFactor: 700000000000000000n,
             liquidationPenalty: 250000000000000000n,
+            cometScale: 8n,
             supplyCap: 100000000000000000000000n,
           }),
         ],
@@ -464,6 +471,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       }),
     ];
@@ -505,6 +513,7 @@ describe("MarketMethods", () => {
             collateralFactor: 500000000000000000n,
             liquidationFactor: 700000000000000000n,
             liquidationPenalty: 250000000000000000n,
+            cometScale: 8n,
             supplyCap: 100000000000000000000000n,
           }),
         ],
@@ -519,7 +528,7 @@ describe("MarketMethods", () => {
         rewardTokens: [mockRewardToken],
       }),
     ];
-    const collaterals = [
+    const collaterals: ICollateral[] = [
       {
         tokenAddress: "0x1",
         symbol: "COL1",
@@ -532,6 +541,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
     ];
