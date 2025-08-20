@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Base, IBase } from "../../src/token/base";
+import { Base, type IBase } from "../../src/token/base";
 
 const mockBaseData: IBase = {
   tokenAddress: "0xBase",

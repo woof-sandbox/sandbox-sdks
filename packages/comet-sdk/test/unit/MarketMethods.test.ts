@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   Collateral,
-  type IBase, type ICollateral,
+  type IBase,
+  type ICollateral,
   type IToken,
   Market,
   MarketMethods,

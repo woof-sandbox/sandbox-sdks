@@ -1,5 +1,5 @@
 import { multicall } from "@wagmi/core";
-import { UserCollateral, COMET_FACTOR_SCALE } from "@woof-software/comet-sdk";
+import { COMET_FACTOR_SCALE, UserCollateral } from "@woof-software/comet-sdk";
 import {
   type Address,
   type ContractFunctionParameters,

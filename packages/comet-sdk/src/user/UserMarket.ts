@@ -36,7 +36,7 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  getTokenPrice(tokenPrice: bigint, usdToken=false): number {
+  getTokenPrice(tokenPrice: bigint, usdToken = false): number {
     return UserMarketMethods.tokenPrice(tokenPrice, this.price, usdToken);
   }
 

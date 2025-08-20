@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { ConfigController, IConfigController } from "../../src/config-controller";
+import {
+  ConfigController,
+  type IConfigController,
+} from "../../src/config-controller";
 
 describe("ConfigController", () => {
   it("should assign all properties from constructor", () => {

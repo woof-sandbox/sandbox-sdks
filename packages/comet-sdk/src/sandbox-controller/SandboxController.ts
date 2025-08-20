@@ -1,5 +1,4 @@
 import type { Address } from "viem";
-import type { IBase, ICollateral } from "../token";
 import type { ISandboxController } from "./ISandboxController";
 
 export class SandboxController implements ISandboxController {

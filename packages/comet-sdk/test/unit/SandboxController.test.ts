@@ -1,6 +1,9 @@
 import type { Address } from "viem";
 import { describe, expect, it } from "vitest";
-import { SandboxController, ISandboxController } from "../../src/sandbox-controller";
+import {
+  type ISandboxController,
+  SandboxController,
+} from "../../src/sandbox-controller";
 
 describe("SandboxController", () => {
   it("should assign all properties from constructor", () => {

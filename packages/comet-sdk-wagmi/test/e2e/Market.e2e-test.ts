@@ -73,7 +73,7 @@ describe("MarketMethods", () => {
   });
 });
 
-describe ("MarketsMethods", () => {
+describe("MarketsMethods", () => {
   beforeAll(async () => {
     createConfig({
       chains: [sepolia],
@@ -83,25 +83,26 @@ describe ("MarketsMethods", () => {
     });
 
     const marketConfig: Record<number, Address[]> = {
-    [sepolia.id]: [SepoliaConfig.comet1, SepoliaConfig.comet2],}
+      [sepolia.id]: [SepoliaConfig.comet1, SepoliaConfig.comet2],
+    };
 
     markets = await Market.fetchMarkets(marketConfig, wagmiConfig);
   });
 
-    test("should fetch multiple markets", () => {
-        expect(markets).to.be.an("array");
-        expect(markets.length).to.be.greaterThan(0);
-        markets.forEach((m) => {
-        expect(m).to.be.instanceOf(Market);
-        expect(m.cometAddress).to.be.a("string");
-        expect(isAddress(m.cometAddress)).to.be.true;
-        });
+  test("should fetch multiple markets", () => {
+    expect(markets).to.be.an("array");
+    expect(markets.length).to.be.greaterThan(0);
+    markets.forEach((m) => {
+      expect(m).to.be.instanceOf(Market);
+      expect(m.cometAddress).to.be.a("string");
+      expect(isAddress(m.cometAddress)).to.be.true;
     });
+  });
 
-    test("should calculate the correct borrow APR for each market", () => {
-        markets.forEach((m) => {
-            const percents = m.borrowApr.toFixed(PERCENT_PRECISION);
-            expect(percents).to.be.match(percentsReg);
-        });
+  test("should calculate the correct borrow APR for each market", () => {
+    markets.forEach((m) => {
+      const percents = m.borrowApr.toFixed(PERCENT_PRECISION);
+      expect(percents).to.be.match(percentsReg);
     });
+  });
 });

@@ -118,22 +118,16 @@ export namespace MarketMethods {
     priceDecimals = PRICE_FEED_FACTOR_UNITS,
   ): bigint {
     const priceInBigInt = parseUnits(baseTokenPrice, priceDecimals);
-    return (
-      (marketTotalSupply * priceInBigInt) /
-      BigInt(10 ** priceDecimals)
-    );
+    return (marketTotalSupply * priceInBigInt) / BigInt(10 ** priceDecimals);
   }
 
   export function totalBorrowed(
     baseTokenPrice: string,
     marketTotalBorrow: bigint,
-    priceDecimals = PRICE_FEED_FACTOR_UNITS
+    priceDecimals = PRICE_FEED_FACTOR_UNITS,
   ): bigint {
     const priceInBigInt = parseUnits(baseTokenPrice, priceDecimals);
-    return (
-      (marketTotalBorrow * priceInBigInt) /
-      BigInt(10 ** priceDecimals)
-    );
+    return (marketTotalBorrow * priceInBigInt) / BigInt(10 ** priceDecimals);
   }
 
   //

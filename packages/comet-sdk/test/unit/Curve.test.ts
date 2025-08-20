@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Curve, ICurve } from "../../src/curve";
+import { Curve, type ICurve } from "../../src/curve";
 
 const mockCurveData: ICurve = {
   supplyKink: 80n,
