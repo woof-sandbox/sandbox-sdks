@@ -92,8 +92,8 @@ describe("UserMarketMethods", () => {
 
   it("tokenPrice: counts correctly for USD and non-USD", () => {
     const price = DataUtils.toBigNumber("2000", PRICE_FEED_FACTOR_UNITS);
-    expect(UserMarketMethods.tokenPrice("USDC", price, "1")).toBeCloseTo(2000);
-    expect(UserMarketMethods.tokenPrice("ETH", price, "2")).toBeCloseTo(4000);
+    expect(UserMarketMethods.tokenPrice(price, "1")).toBeCloseTo(2000);
+    expect(UserMarketMethods.tokenPrice(price, "2")).toBeCloseTo(4000);
   });
 
   it("borrowCollateralValueUSD: counts the sum of all collaterals", () => {
