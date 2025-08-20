@@ -36,8 +36,8 @@ export class UserMarket extends Market implements IUserMarket {
     );
   }
 
-  getTokenPrice(symbol: string, tokenPrice: bigint): number {
-    return UserMarketMethods.tokenPrice(symbol, tokenPrice, this.price);
+  getTokenPrice(tokenPrice: bigint, usdToken=false): number {
+    return UserMarketMethods.tokenPrice(tokenPrice, this.price, usdToken);
   }
 
   get borrowCollateralValueUSD(): number {

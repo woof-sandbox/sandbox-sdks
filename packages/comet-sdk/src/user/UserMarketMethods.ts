@@ -1,7 +1,6 @@
 import { type Address, formatUnits, parseUnits } from "viem";
 import {
   COMET_FACTOR_DECIMALS,
-  NON_USD_BASE_SYMBOLS,
   PRICE_FEED_FACTOR_UNITS,
 } from "../constants";
 import type { ICurve } from "../curve";
@@ -42,12 +41,12 @@ export namespace UserMarketMethods {
   }
 
   export function tokenPrice(
-    symbol: string,
     tokenPrice: bigint,
     basePriceUsd: string,
+    usdToken = false,
     priceDecimals = PRICE_FEED_FACTOR_UNITS,
   ): number {
-    return NON_USD_BASE_SYMBOLS.has(symbol)
+    return !usdToken
       ? Number(formatUnits(tokenPrice, priceDecimals)) *
           Number(basePriceUsd)
       : Number(formatUnits(tokenPrice, priceDecimals));
@@ -67,7 +66,6 @@ export namespace UserMarketMethods {
             ),
           ) *
           tokenPrice(
-            collateral.symbol,
             DataUtils.toBigNumber(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           ),
@@ -95,7 +93,6 @@ export namespace UserMarketMethods {
           ) +
             Number(collateralData)) *
           tokenPrice(
-            collateral.symbol,
             DataUtils.toBigNumber(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           )
@@ -121,7 +118,6 @@ export namespace UserMarketMethods {
             formatUnits(collateral.liquidationFactor, scaleToDecimals(collateral.cometScale)),
           ) *
           tokenPrice(
-            collateral.symbol,
             DataUtils.toBigNumber(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           ),
@@ -152,7 +148,6 @@ export namespace UserMarketMethods {
             formatUnits(collateral.liquidationFactor, scaleToDecimals(collateral.cometScale)),
           ) *
           tokenPrice(
-            collateral.symbol,
             DataUtils.toBigNumber(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           )
@@ -261,7 +256,6 @@ export namespace UserMarketMethods {
             formatUnits(collateral.collateralFactor, scaleToDecimals(collateral.cometScale)),
           ) *
           tokenPrice(
-            collateral.symbol,
             parseUnits(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           ),
