@@ -1,5 +1,5 @@
 import { multicall } from "@wagmi/core";
-import { Collateral } from "@woof-software/comet-sdk";
+import { Collateral, COMET_FACTOR_SCALE } from "@woof-software/comet-sdk";
 import {
   type Address,
   type ContractFunctionParameters,
@@ -282,7 +282,7 @@ export async function fetchCollaterals(
       priceFeedAddress: config.priceFeed,
       collateralFactor: config.borrowCollateralFactor,
       liquidationFactor: config.liquidateCollateralFactor,
-      liquidationPenalty: config.scale - config.liquidationFactor,
+      liquidationPenalty: COMET_FACTOR_SCALE - config.liquidationFactor,
       cometScale: config.scale,
       supplyCap: config.supplyCap,
     });
