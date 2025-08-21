@@ -308,7 +308,10 @@ export namespace UserMarketMethods {
   ) {
     const totalSupply =
       totalSupplied +
-      DataUtils.toBigNumber(userSupplyValue, Number(baseToken.priceFeedDecimals));
+      DataUtils.toBigNumber(
+        userSupplyValue,
+        Number(baseToken.priceFeedDecimals),
+      );
 
     const utilization = calculateUtilization(totalBorrowed, totalSupply);
 
@@ -379,7 +382,8 @@ export namespace UserMarketMethods {
   ): number[] {
     return MarketMethods.netEarnAprs(
       baseToken,
-      totalSupplied + parseUnits(userSupplyValue, Number(baseToken.priceFeedDecimals)),
+      totalSupplied +
+        parseUnits(userSupplyValue, Number(baseToken.priceFeedDecimals)),
       compToken,
       rewardTokens,
       supplyApr,
@@ -396,7 +400,8 @@ export namespace UserMarketMethods {
   ): number[] {
     return MarketMethods.netBorrowAprs(
       baseToken,
-      totalBorrowed + parseUnits(userBorrowValue, Number(baseToken.priceFeedDecimals)),
+      totalBorrowed +
+        parseUnits(userBorrowValue, Number(baseToken.priceFeedDecimals)),
       compToken,
       rewardTokens,
       borrowApr,

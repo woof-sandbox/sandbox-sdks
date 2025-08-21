@@ -528,7 +528,8 @@ export class UserMarketWrapper extends UserMarket {
     for (const action of actions) {
       const collateralData = this.findMarketCollateralByAddress(action.address);
 
-      const decimals = collateralData?.priceFeedDecimals ?? this.baseToken.priceFeedDecimals;
+      const decimals =
+        collateralData?.priceFeedDecimals ?? this.baseToken.priceFeedDecimals;
 
       if (action.isMax) {
         await this.ensureBulkerAllowed(userAddress);
@@ -655,7 +656,10 @@ export class UserMarketWrapper extends UserMarket {
     const abiEncodeData = this._encodeSupplyOrWithdrawWithToken(
       userAddress,
       this.baseToken.tokenAddress,
-      DataUtils.toBigNumber(inputValue, Number(this.baseToken.priceFeedDecimals)),
+      DataUtils.toBigNumber(
+        inputValue,
+        Number(this.baseToken.priceFeedDecimals),
+      ),
     );
 
     try {
@@ -904,7 +908,10 @@ export class UserMarketWrapper extends UserMarket {
     const abiEncodeData = this._encodeSupplyOrWithdrawWithToken(
       userAddress,
       this.baseToken.tokenAddress,
-      DataUtils.toBigNumber(inputValue, Number(this.baseToken.priceFeedDecimals)),
+      DataUtils.toBigNumber(
+        inputValue,
+        Number(this.baseToken.priceFeedDecimals),
+      ),
     );
 
     collateralsActions.push(ACTION_WITHDRAW_ASSET);

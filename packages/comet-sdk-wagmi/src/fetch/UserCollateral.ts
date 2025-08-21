@@ -55,7 +55,9 @@ export async function fetchUserCollaterals(
 
     const symbol = WagmiUtils.resultOrThrow<string>(assetsData[index]!);
     ++index;
-    const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
+    const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(
+      assetsData[index]!,
+    );
     ++index;
     const userBalance = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;

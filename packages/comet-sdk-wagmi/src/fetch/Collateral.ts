@@ -256,7 +256,9 @@ export async function fetchCollaterals(
 
     const symbol = WagmiUtils.resultOrThrow<string>(assetsData[index]!);
     ++index;
-    const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
+    const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(
+      assetsData[index]!,
+    );
     ++index;
     const rawPrice = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;

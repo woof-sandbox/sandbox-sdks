@@ -314,12 +314,18 @@ export namespace MarketMethods {
   ) {
     const totalBorrowedUSD =
       Number(
-        DataUtils.fromBigNumber(totalBorrowed, Number(baseToken.priceFeedDecimals)),
+        DataUtils.fromBigNumber(
+          totalBorrowed,
+          Number(baseToken.priceFeedDecimals),
+        ),
       ) * Number(baseToken.price);
 
     const totalSuppliedUSD =
       Number(
-        DataUtils.fromBigNumber(totalSupplied, Number(baseToken.priceFeedDecimals)),
+        DataUtils.fromBigNumber(
+          totalSupplied,
+          Number(baseToken.priceFeedDecimals),
+        ),
       ) * Number(baseToken.price);
 
     return (totalSuppliedUSD / totalBorrowedUSD) * 100;
@@ -337,8 +343,12 @@ export namespace MarketMethods {
     baseToken: IBase,
   ): number {
     return (
-      Number(DataUtils.fromBigNumber(totalBorrow, Number(baseToken.priceFeedDecimals))) *
-      Number(baseToken.price)
+      Number(
+        DataUtils.fromBigNumber(
+          totalBorrow,
+          Number(baseToken.priceFeedDecimals),
+        ),
+      ) * Number(baseToken.price)
     );
   }
 
@@ -347,8 +357,12 @@ export namespace MarketMethods {
     baseToken: IBase,
   ): number {
     return (
-      Number(DataUtils.fromBigNumber(totalSupply, Number(baseToken.priceFeedDecimals))) *
-      Number(baseToken.price)
+      Number(
+        DataUtils.fromBigNumber(
+          totalSupply,
+          Number(baseToken.priceFeedDecimals),
+        ),
+      ) * Number(baseToken.price)
     );
   }
 
@@ -358,7 +372,10 @@ export namespace MarketMethods {
   ): number {
     return (
       Number(
-        DataUtils.fromBigNumber(totalReserves, Number(baseToken.priceFeedDecimals)),
+        DataUtils.fromBigNumber(
+          totalReserves,
+          Number(baseToken.priceFeedDecimals),
+        ),
       ) * Number(baseToken.price)
     );
   }
