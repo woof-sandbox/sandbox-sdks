@@ -19,7 +19,7 @@ export async function fetchBaseMock(
   // for USDt comet
   const tokenAddress = "0xdac17f958d2ee523a2206206994597c13d831ec7";
   const symbol = "USDT";
-  const decimals = 6n;
+  const priceFeedDecimals = 6n;
   const price = "1";
   const priceFeedAddress = "0x3e7d1eab13ad0104d2750b8863b489d65364e32d"; // comet -> baseTokenPriceFeed
 
@@ -34,7 +34,7 @@ export async function fetchBaseMock(
     //
     tokenAddress,
     symbol,
-    decimals,
+    priceFeedDecimals,
     price,
     priceFeedAddress,
   });
@@ -78,7 +78,7 @@ export async function fetchBase(
   });
 
   const priceRaw = WagmiUtils.resultOrThrow<bigint>(baseData[0]);
-  const decimals = WagmiUtils.resultOrThrow<bigint>(baseData[1]);
+  const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(baseData[1]);
   const symbol = WagmiUtils.resultOrThrow<string>(baseData[2]);
   //
   const baseMinForRewards = WagmiUtils.resultOrThrow<bigint>(baseData[3]);
@@ -97,8 +97,8 @@ export async function fetchBase(
     //
     tokenAddress,
     symbol,
-    decimals,
-    price: formatUnits(priceRaw, Number(decimals)),
+    priceFeedDecimals,
+    price: formatUnits(priceRaw, Number(priceFeedDecimals)),
     priceFeedAddress,
   });
 }

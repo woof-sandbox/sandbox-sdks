@@ -34,7 +34,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0xc00e94Cb662C3520282E6f5717214004A7f26888",
       symbol: "COMP",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "42.59",
       priceFeedAddress: "0xdbd020CAeF83eFd542f4De03e3cF0C28A4428bd5",
     }),
@@ -50,7 +50,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       symbol: "WETH",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "2093.59",
       priceFeedAddress: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
     }),
@@ -66,7 +66,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
       symbol: "WBTC",
-      decimals: 8n,
+      priceFeedDecimals: 8n,
       price: "80784.02",
       priceFeedAddress: "0x4E64E54c9f0313852a230782B3ba4B3B0952B499",
     }),
@@ -82,7 +82,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
       symbol: "UNI",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "7",
       priceFeedAddress: "0x553303d460EE0afB37EdFf9bE42922D8FF63220e",
     }),
@@ -98,7 +98,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
       symbol: "LINK",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "15.27",
       priceFeedAddress: "0x2c1d072e956AFFC0D435Cb7AC38EF18d24d9127c",
     }),
@@ -114,7 +114,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
       symbol: "wstETH",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "2506.29",
       priceFeedAddress: "0x023ee795361B28cDbB94e302983578486A0A5f1B",
     }),
@@ -130,7 +130,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
       symbol: "cbBTC",
-      decimals: 8n,
+      priceFeedDecimals: 8n,
       price: "87777.03",
       priceFeedAddress: "0x2D09142Eae60Fd8BD454a276E95AeBdFFD05722d",
     }),
@@ -146,7 +146,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0x18084fbA666a33d37592fA2633fD49a74DD93a88",
       symbol: "tBTC",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "87261.1",
       priceFeedAddress: "0x7b03a016dBC36dB8e05C480192faDcdB0a06bC37",
     }),
@@ -162,7 +162,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0x57F5E098CaD7A3D1Eed53991D4d66C45C9AF7812",
       symbol: "wUSDM",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "1.07",
       priceFeedAddress: "0xe3a409eD15CD53aFdEFdd191ad945cEC528A2496",
     }),
@@ -178,7 +178,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0xA663B02CF0a4b149d2aD41910CB81e23e1c41c32",
       symbol: "sFRAX",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "1.12",
       priceFeedAddress: "0x403F2083B6E220147f8a8832f0B284B4Ed5777d1",
     }),
@@ -194,7 +194,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa",
       symbol: "mETH",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "2118.67",
       priceFeedAddress: "0x2f7439252Da796Ab9A93f7E478E70DED43Db5B89",
     }),
@@ -210,7 +210,7 @@ export async function fetchCollateralsMocks(
       //
       tokenAddress: "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
       symbol: "weETH",
-      decimals: 18n,
+      priceFeedDecimals: 18n,
       price: "2229.28",
       priceFeedAddress: "0x9e0e0C58AA8287F9f6E2666a21fbF2adEeAD3fef",
     }),
@@ -256,7 +256,7 @@ export async function fetchCollaterals(
 
     const symbol = WagmiUtils.resultOrThrow<string>(assetsData[index]!);
     ++index;
-    const decimals = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
+    const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
     const rawPrice = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
@@ -275,10 +275,10 @@ export async function fetchCollaterals(
       cometBalance,
       tokenAddress: config.collateralToken,
       symbol,
-      decimals,
+      priceFeedDecimals,
       totalSupplyAsset,
       collateralReserves,
-      price: formatUnits(rawPrice, Number(decimals)),
+      price: formatUnits(rawPrice, Number(priceFeedDecimals)),
       priceFeedAddress: config.priceFeed,
       collateralFactor: config.borrowCollateralFactor,
       liquidationFactor: config.liquidateCollateralFactor,

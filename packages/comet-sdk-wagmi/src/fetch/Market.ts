@@ -39,7 +39,7 @@ export async function fetchMarketMock(
   const comp = new Token({
     tokenAddress: "0xc00e94Cb662C3520282E6f5717214004A7f26888",
     symbol: "COMP",
-    decimals: 18n,
+    priceFeedDecimals: 18n,
     price: "42.59",
     priceFeedAddress: "0xdbd020CAeF83eFd542f4De03e3cF0C28A4428bd5",
   });

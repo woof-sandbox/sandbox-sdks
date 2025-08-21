@@ -23,7 +23,7 @@ export class UserMarket extends Market implements IUserMarket {
   get borrowBalanceUSD(): number {
     return UserMarketMethods.borrowBalanceUsd(
       this.borrowBalance,
-      this.baseToken.decimals,
+      this.baseToken.priceFeedDecimals,
       this.price,
     );
   }
@@ -31,7 +31,7 @@ export class UserMarket extends Market implements IUserMarket {
   get supplyBalanceUSD(): number {
     return UserMarketMethods.supplyBalanceUsd(
       this.supplyBalance,
-      this.baseToken.decimals,
+      this.baseToken.priceFeedDecimals,
       this.price,
     );
   }
@@ -75,7 +75,7 @@ export class UserMarket extends Market implements IUserMarket {
       this.borrowCapacityMarketUSD,
       this.supplyBalance,
       this.borrowBalance,
-      this.baseToken.decimals,
+      this.baseToken.priceFeedDecimals,
       this.price,
     );
   }

@@ -55,7 +55,7 @@ export async function fetchUserCollaterals(
 
     const symbol = WagmiUtils.resultOrThrow<string>(assetsData[index]!);
     ++index;
-    const decimals = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
+    const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
     const userBalance = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
@@ -82,13 +82,13 @@ export async function fetchUserCollaterals(
     results[i] = new UserCollateral({
       tokenAddress: config.collateralToken,
       symbol,
-      decimals,
+      priceFeedDecimals,
       userBalance,
       userSupplyBalance,
       cometBalance,
       totalSupplyAsset,
       collateralReserves,
-      price: formatUnits(rawPrice, Number(decimals)),
+      price: formatUnits(rawPrice, Number(priceFeedDecimals)),
       priceFeedAddress: config.priceFeed,
       collateralFactor: config.borrowCollateralFactor,
       liquidationFactor: config.liquidateCollateralFactor,

@@ -11,7 +11,7 @@ const mockCollateral = (data = {}) =>
   new UserCollateral({
     tokenAddress: mockAddress1,
     symbol: "ETH",
-    decimals: BigInt(18),
+    priceFeedDecimals: BigInt(18),
     price: "2000",
     priceFeedAddress: "0xFeed",
     userBalance: 0n,
