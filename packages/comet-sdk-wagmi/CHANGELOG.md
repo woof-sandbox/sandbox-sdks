@@ -1,8 +1,8 @@
 # @woof-software/comet-sdk-wagmi
 
-## 0.1.0
+## 2.0.0
 
-### Minor Changes
+### Major Changes
 
 - Changed contract interaction and ABIs, removed deprecated contract methods, updated augment queries and fetchers.
 
@@ -10,6 +10,7 @@
   - Removed deprecated contract methods and updated code that called them.
   - Replaced contract ABIs — this is a breaking change for consumers using ABI/type exports.
   - Added/updated augment queries and fetchers to match new contract interfaces.
+  - Updated UserMarket
 
 ### Patch Changes
 
