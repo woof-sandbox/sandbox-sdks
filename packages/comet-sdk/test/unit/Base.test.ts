@@ -4,6 +4,7 @@ import { Base, type IBase } from "../../src/token/base";
 const mockBaseData: IBase = {
   tokenAddress: "0xBase",
   symbol: "BASE",
+  decimals: 18n,
   priceFeedDecimals: 18n,
   price: "1.0",
   priceFeedAddress: "0xFeed",

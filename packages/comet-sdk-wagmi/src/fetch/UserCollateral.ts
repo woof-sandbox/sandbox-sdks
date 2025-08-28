@@ -32,6 +32,7 @@ export async function fetchUserCollaterals(
     );
     multicallBatch.push(
       asset.getSymbolCall(),
+      asset.getDecimalsCall(),
       chainlinkPriceFeed.getDecimalsCall(),
       asset.getBalanceOfCall(userAddress),
       comet.getPriceCall(config.priceFeed),
@@ -54,6 +55,8 @@ export async function fetchUserCollaterals(
     const config = cometConfig.assetConfigs[i]!;
 
     const symbol = WagmiUtils.resultOrThrow<string>(assetsData[index]!);
+    ++index;
+    const decimals = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
     const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(
       assetsData[index]!,
@@ -84,6 +87,7 @@ export async function fetchUserCollaterals(
     results[i] = new UserCollateral({
       tokenAddress: config.collateralToken,
       symbol,
+      decimals,
       priceFeedDecimals,
       userBalance,
       userSupplyBalance,
