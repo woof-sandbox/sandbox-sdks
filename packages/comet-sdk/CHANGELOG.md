@@ -1,5 +1,11 @@
 # @woof-software/comet-sdk
 
+## 3.0.0
+
+### Major Changes
+
+- e1a4213: removed rewards fields on sdk types and update data saving
+
 ## 2.0.1
 
 ### Patch Changes
