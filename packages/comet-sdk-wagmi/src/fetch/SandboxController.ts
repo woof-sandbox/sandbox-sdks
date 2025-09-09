@@ -3,11 +3,27 @@ import { SandboxController } from "@woof-software/comet-sdk";
 import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
 import { ControllerContract, wagmiConfig } from "../contracts";
-import type { ControllerConfiguration } from "../contracts/entities/controller-configuration";
+import type {
+  ControllerConfiguration,
+  ControllerConfigurationResponse,
+} from "../contracts/entities";
 import { WagmiUtils } from "../utils";
 import { SandboxControllerWrapper } from "../wrappers";
 
-export async function fetchSandboxControllerData(
+function controllerConfigurationToObj(
+  data: ControllerConfigurationResponse,
+): ControllerConfiguration {
+  return {
+    targetPercent: data[0],
+    storeFrontPriceFactor: data[1],
+    minUpdateTime: data[2],
+    maxUpdateTime: data[3],
+    suggestedLockTimeOfSeedReserves: data[4],
+    suggestedAmountOfSeedReserves: data[5],
+  };
+}
+
+export async function fetchSandboxController(
   controllerAddress: Address,
   chainId: WagmiChainId,
   config: Config = wagmiConfig,
@@ -20,7 +36,7 @@ export async function fetchSandboxControllerData(
       controller.daoCall(),
       controller.treasuryCall(),
       controller.feeEnabledCall(),
-      controller.controllerConfigurationCall(),
+      controller._controllerConfigurationCall(),
     ],
   });
 
@@ -29,9 +45,11 @@ export async function fetchSandboxControllerData(
     controllerBaseData[1],
   );
   const feeEnabled = WagmiUtils.resultOrThrow<boolean>(controllerBaseData[2]);
-  const controllerConfig = WagmiUtils.resultOrThrow<ControllerConfiguration>(
-    controllerBaseData[3],
-  );
+  const controllerConfigList =
+    WagmiUtils.resultOrThrow<ControllerConfigurationResponse>(
+      controllerBaseData[3],
+    );
+  const controllerConfig = controllerConfigurationToObj(controllerConfigList);
 
   const sandboxController = new SandboxController({
     address: controllerAddress,
@@ -45,8 +63,6 @@ export async function fetchSandboxControllerData(
     feeEnabled,
     treasuryAddress,
     storeFrontPriceFactor: Number(controllerConfig.storeFrontPriceFactor),
-    baseWhitelist: [], // TODO
-    collateralsWhitelist: [], // TODO
   });
 
   return new SandboxControllerWrapper(sandboxController, chainId, config);

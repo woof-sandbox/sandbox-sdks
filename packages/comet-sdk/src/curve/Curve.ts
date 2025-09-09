@@ -1,7 +1,6 @@
 import type { ICurve } from "./ICurve";
 
 export class Curve implements ICurve {
-  public id: string;
   public supplyKink: bigint; // percents
   public supplyPerYearInterestRateSlopeLow: bigint; // percents
   public supplyPerYearInterestRateSlopeHigh: bigint; // percents
@@ -12,7 +11,6 @@ export class Curve implements ICurve {
   public borrowPerYearInterestRateBase: bigint; // percents
 
   constructor(curveData: ICurve) {
-    this.id = curveData.id;
     this.supplyKink = curveData.supplyKink;
     this.supplyPerYearInterestRateSlopeLow =
       curveData.supplyPerYearInterestRateSlopeLow;
