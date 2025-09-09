@@ -1,5 +1,11 @@
 # @woof-software/comet-sdk
 
+## 2.0.1
+
+### Patch Changes
+
+- Auto-generated changeset from CI
+
 ## 2.0.0
 
 ### Major Changes
