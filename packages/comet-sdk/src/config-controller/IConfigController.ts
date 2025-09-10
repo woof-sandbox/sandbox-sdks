@@ -6,6 +6,4 @@ export interface IConfigController {
   guardian: Address;
   curator: Address;
   curatorFee: number;
-  marketsLength: number;
-  revenueTokensLength: number;
 }

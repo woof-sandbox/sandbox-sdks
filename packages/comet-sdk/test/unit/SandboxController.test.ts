@@ -1,7 +1,9 @@
 import type { Address } from "viem";
 import { describe, expect, it } from "vitest";
-import type { ISandboxController } from "../../src";
-import { SandboxController } from "../../src/sandbox-controller/SandboxController";
+import {
+  type ISandboxController,
+  SandboxController,
+} from "../../src/sandbox-controller";
 
 describe("SandboxController", () => {
   it("should assign all properties from constructor", () => {
@@ -14,8 +16,6 @@ describe("SandboxController", () => {
       minUpdateTime: 300n,
       feeEnabled: true,
       treasuryAddress: "0xTreasury",
-      baseWhitelist: [],
-      collateralsWhitelist: [],
       storeFrontPriceFactor: 42,
     };
     const controller = new SandboxController(data);
@@ -31,8 +31,6 @@ describe("SandboxController", () => {
     expect(controller.minUpdateTime).toBe(data.minUpdateTime);
     expect(controller.feeEnabled).toBe(data.feeEnabled);
     expect(controller.treasuryAddress).toBe(data.treasuryAddress);
-    expect(controller.baseWhitelist).toBe(data.baseWhitelist);
-    expect(controller.collateralsWhitelist).toBe(data.collateralsWhitelist);
     expect(controller.storeFrontPriceFactor).toBe(data.storeFrontPriceFactor);
   });
 });

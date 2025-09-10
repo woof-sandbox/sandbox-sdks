@@ -6,6 +6,7 @@ import { CometContract, Erc20Contract } from "../contracts";
 import { WagmiUtils } from "../utils";
 import { UserMarketWrapper } from "../wrappers";
 import { fetchBase, fetchBaseMock } from "./Base";
+import { fetchConfigController } from "./ConfigController";
 import { fetchUserCollaterals } from "./UserCollateral";
 
 export async function fetchUserMarkets(
@@ -74,25 +75,11 @@ export async function fetchUserMarkets(
             contracts: [
               baseTokenContract.getBalanceOfCall(userAddress),
               baseTokenContract.getBalanceOfCall(cometProxyAddress),
-              comet.getDecimalsCall(), // ?: not in use
-              comet.getBaseScaleCall(), // ?: not in use
               comet.getTotalSupplyCall(),
               comet.getTotalBorrowCall(),
-              comet.getPriceCall(baseTokenPriceFeed), // ?: not in use
-              comet.getBaseTrackingSupplySpeedCall(), // ?: not in use
-              comet.getBaseTrackingBorrowSpeedCall(), // ?: not in use
               comet.getSupplyRateCall(utilization),
               comet.getBorrowRateCall(utilization),
-              //
-              comet.getSupplyKinkCall(), // ?: not in use
-              comet.getSupplyPerSecondInterestRateBaseCall(), // ?: not in use
-              comet.getSupplyPerSecondInterestRateSlopeLowCall(), // ?: not in use
-              comet.getSupplyPerSecondInterestRateSlopeHighCall(), // ?: not in use
-              //
-              comet.getBorrowKinkCall(), // ?: not in use
-              comet.getBorrowPerSecondInterestRateBaseCall(), // ?: not in use
-              comet.getBorrowPerSecondInterestRateSlopeLowCall(), // ?: not in use
-              comet.getBorrowPerSecondInterestRateSlopeHighCall(), // ?: not in use
+              comet.getConfigControllerCall(),
             ],
           });
 
@@ -102,11 +89,19 @@ export async function fetchUserMarkets(
           const availableLiquidity = WagmiUtils.resultOrThrow<bigint>(
             fullData[1],
           );
-          const totalSupply = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
-          const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[5]);
-          const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
-          const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[10]);
+          const totalSupply = WagmiUtils.resultOrThrow<bigint>(fullData[2]);
+          const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[3]);
+          const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
+          const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[5]);
+          const configControllerAddress = WagmiUtils.resultOrThrow<Address>(
+            fullData[6],
+          );
 
+          const configController = await fetchConfigController(
+            configControllerAddress,
+            chain,
+            config,
+          );
           const baseToken = await fetchBase(cometProxyAddress, chain, config);
 
           const collaterals = await fetchUserCollaterals(
@@ -131,13 +126,11 @@ export async function fetchUserMarkets(
             baseToken,
             collaterals: collaterals,
             availableLiquidity,
-            // TODO: update after contracts
-            configControllerAddress:
-              "0x0000000000000000000000000000000000000000", // TODO
-            ownerAddress: "0x0000000000000000000000000000000000000000", // TODO
-            guardianAddress: "0x0000000000000000000000000000000000000000", // TODO
-            curatorAddress: "0x0000000000000000000000000000000000000000", // TODO
-            curatorFee: 0, // TODO
+            configControllerAddress,
+            ownerAddress: configController.owner,
+            guardianAddress: configController.guardian,
+            curatorAddress: configController.curator,
+            curatorFee: configController.curatorFee,
             //
             proposals: [], // TODO
             //
@@ -167,7 +160,6 @@ export async function fetchUserMarket(
     chainId,
     contracts: [
       comet.getBaseTokenCall(),
-      comet.getBaseTokenPriceFeedCall(),
       comet.getUtilizationCall(),
       comet.getBalanceOfCall(userAddress),
       comet.getBorrowBalanceOfCall(userAddress),
@@ -177,14 +169,11 @@ export async function fetchUserMarket(
   });
 
   const baseTokenAddress = WagmiUtils.resultOrThrow<Address>(cometBaseData[0]);
-  const baseTokenPriceFeed = WagmiUtils.resultOrThrow<Address>(
-    cometBaseData[1],
-  );
-  const utilization = WagmiUtils.resultOrThrow<bigint>(cometBaseData[2]);
-  const supplyBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[3]);
-  const borrowBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[4]);
-  const totalReserves = WagmiUtils.resultOrThrow<bigint>(cometBaseData[5]);
-  const borrowMinAmount = WagmiUtils.resultOrThrow<bigint>(cometBaseData[6]);
+  const utilization = WagmiUtils.resultOrThrow<bigint>(cometBaseData[1]);
+  const supplyBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[2]);
+  const borrowBalance = WagmiUtils.resultOrThrow<bigint>(cometBaseData[3]);
+  const totalReserves = WagmiUtils.resultOrThrow<bigint>(cometBaseData[4]);
+  const borrowMinAmount = WagmiUtils.resultOrThrow<bigint>(cometBaseData[5]);
 
   const baseTokenContract = new Erc20Contract(baseTokenAddress, chainId);
 
@@ -193,35 +182,29 @@ export async function fetchUserMarket(
     contracts: [
       baseTokenContract.getBalanceOfCall(userAddress),
       baseTokenContract.getBalanceOfCall(cometProxyAddress),
-      comet.getDecimalsCall(), // ?: not in use
-      comet.getBaseScaleCall(), // ?: not in use
       comet.getTotalSupplyCall(),
       comet.getTotalBorrowCall(),
-      comet.getPriceCall(baseTokenPriceFeed), // ?: not in use
-      comet.getBaseTrackingSupplySpeedCall(), // ?: not in use
-      comet.getBaseTrackingBorrowSpeedCall(), // ?: not in use
       comet.getSupplyRateCall(utilization),
       comet.getBorrowRateCall(utilization),
-      //
-      comet.getSupplyKinkCall(), // ?: not in use
-      comet.getSupplyPerSecondInterestRateBaseCall(), // ?: not in use
-      comet.getSupplyPerSecondInterestRateSlopeLowCall(), // ?: not in use
-      comet.getSupplyPerSecondInterestRateSlopeHighCall(), // ?: not in use
-      //
-      comet.getBorrowKinkCall(), // ?: not in use
-      comet.getBorrowPerSecondInterestRateBaseCall(), // ?: not in use
-      comet.getBorrowPerSecondInterestRateSlopeLowCall(), // ?: not in use
-      comet.getBorrowPerSecondInterestRateSlopeHighCall(), // ?: not in use
+      comet.getConfigControllerCall(),
     ],
   });
 
   const baseTokenBalance = WagmiUtils.resultOrThrow<bigint>(fullData[0]);
   const availableLiquidity = WagmiUtils.resultOrThrow<bigint>(fullData[1]);
-  const totalSupply = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
-  const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[5]);
-  const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[9]);
-  const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[10]);
+  const totalSupply = WagmiUtils.resultOrThrow<bigint>(fullData[2]);
+  const totalBorrow = WagmiUtils.resultOrThrow<bigint>(fullData[3]);
+  const supplyRate = WagmiUtils.resultOrThrow<bigint>(fullData[4]);
+  const borrowRate = WagmiUtils.resultOrThrow<bigint>(fullData[5]);
+  const configControllerAddress = WagmiUtils.resultOrThrow<Address>(
+    fullData[6],
+  );
 
+  const configController = await fetchConfigController(
+    configControllerAddress,
+    chainId,
+    config,
+  );
   const baseToken = await fetchBase(cometProxyAddress, chainId, config);
 
   const collaterals = await fetchUserCollaterals(
@@ -246,12 +229,11 @@ export async function fetchUserMarket(
     baseToken,
     collaterals: collaterals,
     availableLiquidity,
-    // TODO: update after contracts
-    configControllerAddress: "0x0000000000000000000000000000000000000000", // TODO
-    ownerAddress: "0x0000000000000000000000000000000000000000", // TODO
-    guardianAddress: "0x0000000000000000000000000000000000000000", // TODO
-    curatorAddress: "0x0000000000000000000000000000000000000000", // TODO
-    curatorFee: 0, // TODO
+    configControllerAddress,
+    ownerAddress: configController.owner,
+    guardianAddress: configController.guardian,
+    curatorAddress: configController.curator,
+    curatorFee: configController.curatorFee,
     //
     proposals: [], // TODO
     //

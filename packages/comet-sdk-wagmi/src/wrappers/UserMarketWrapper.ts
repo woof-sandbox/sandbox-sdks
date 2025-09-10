@@ -1,5 +1,8 @@
-import { DataUtils, type IUserMarket } from "@woof-software/comet-sdk";
-import { UserMarket } from "../augment";
+import {
+  DataUtils,
+  type IUserMarket,
+  UserMarket,
+} from "@woof-software/comet-sdk";
 
 import {
   type Config,
@@ -26,11 +29,14 @@ import {
   Erc20Contract,
   MigratorContract,
 } from "../contracts";
-import type {
-  MultiAllowanceCallType,
-  MultiAllowanceCallTypeBigInt,
-  MultiMigrateCollaterals,
-} from "../contracts/entities/multi-allowance-call";
+import {
+  type ActionData,
+  ActionType,
+  type MigrateArgs,
+  type MultiAllowanceCallType,
+  type MultiAllowanceCallTypeBigInt,
+  type MultiMigrateCollaterals,
+} from "../contracts/entities";
 import {
   ACTION_FAILED,
   ALLOW_FAILED,
@@ -57,10 +63,14 @@ import {
 } from "../errors/wrappers/user-market-wrapper.errors";
 
 import { sepolia } from "viem/chains";
-import { type ActionData, ActionType } from "../contracts/entities/actions";
-import type { MigrateArgs } from "../contracts/entities/migrate-args";
+import {
+  fetchUserMarket as fetchUserMarketFn,
+  fetchUserMarkets as fetchUserMarketsFn,
+} from "../fetch/UserMarket";
 
 export class UserMarketWrapper extends UserMarket {
+  static fetchUserMarket = fetchUserMarketFn;
+  static fetchUserMarkets = fetchUserMarketsFn;
   private readonly config: Config;
   private readonly chainId?: WagmiChainId;
 
@@ -518,7 +528,8 @@ export class UserMarketWrapper extends UserMarket {
     for (const action of actions) {
       const collateralData = this.findMarketCollateralByAddress(action.address);
 
-      const decimals = collateralData?.decimals ?? this.baseToken.decimals;
+      const decimals =
+        collateralData?.decimals ?? this.baseToken.decimals;
 
       if (action.isMax) {
         await this.ensureBulkerAllowed(userAddress);
@@ -645,7 +656,10 @@ export class UserMarketWrapper extends UserMarket {
     const abiEncodeData = this._encodeSupplyOrWithdrawWithToken(
       userAddress,
       this.baseToken.tokenAddress,
-      DataUtils.toBigNumber(inputValue, Number(this.baseToken.decimals)),
+      DataUtils.toBigNumber(
+        inputValue,
+        Number(this.baseToken.decimals),
+      ),
     );
 
     try {
@@ -894,7 +908,10 @@ export class UserMarketWrapper extends UserMarket {
     const abiEncodeData = this._encodeSupplyOrWithdrawWithToken(
       userAddress,
       this.baseToken.tokenAddress,
-      DataUtils.toBigNumber(inputValue, Number(this.baseToken.decimals)),
+      DataUtils.toBigNumber(
+        inputValue,
+        Number(this.baseToken.decimals),
+      ),
     );
 
     collateralsActions.push(ACTION_WITHDRAW_ASSET);

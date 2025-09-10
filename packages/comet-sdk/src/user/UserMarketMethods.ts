@@ -1,14 +1,11 @@
 import { type Address, formatUnits, parseUnits } from "viem";
-import {
-  COMET_FACTOR_DECIMALS,
-  NON_USD_BASE_SYMBOLS,
-  PRICE_FEED_FACTOR_UNITS,
-} from "../constants";
+import { COMET_FACTOR_DECIMALS, PRICE_FEED_FACTOR_UNITS } from "../constants";
 import type { ICurve } from "../curve";
 import { MISSING_COLLATERAL_DATA } from "../errors/methods/user-market-methods.errors";
 import { MarketMethods } from "../market";
 import type { IBase, IToken } from "../token";
 import { DataUtils } from "../utils";
+import { scaleToDecimals } from "../utils";
 import type { ICustomCollateral } from "./ICustomCollateral";
 import type { UserCollateral } from "./UserCollateral";
 import type { MultiAllowanceResponseType } from "./entities/multi-allowance-result";
@@ -41,14 +38,14 @@ export namespace UserMarketMethods {
   }
 
   export function tokenPrice(
-    symbol: string,
     tokenPrice: bigint,
     basePriceUsd: string,
+    usdToken = false,
+    priceDecimals = PRICE_FEED_FACTOR_UNITS,
   ): number {
-    return NON_USD_BASE_SYMBOLS.has(symbol)
-      ? Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS)) *
-          Number(basePriceUsd)
-      : Number(formatUnits(tokenPrice, PRICE_FEED_FACTOR_UNITS));
+    return !usdToken
+      ? Number(formatUnits(tokenPrice, priceDecimals)) * Number(basePriceUsd)
+      : Number(formatUnits(tokenPrice, priceDecimals));
   }
 
   export function borrowCollateralValueUSD(
@@ -65,8 +62,10 @@ export namespace UserMarketMethods {
             ),
           ) *
           tokenPrice(
-            collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            DataUtils.toBigNumber(
+              collateral.price,
+              Number(collateral.decimals),
+            ),
             basePriceUsd,
           ),
       )
@@ -93,8 +92,10 @@ export namespace UserMarketMethods {
           ) +
             Number(collateralData)) *
           tokenPrice(
-            collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            DataUtils.toBigNumber(
+              collateral.price,
+              Number(collateral.decimals),
+            ),
             basePriceUsd,
           )
         );
@@ -116,11 +117,16 @@ export namespace UserMarketMethods {
             ),
           ) *
           Number(
-            formatUnits(collateral.liquidationFactor, COMET_FACTOR_DECIMALS),
+            formatUnits(
+              collateral.liquidationFactor,
+              scaleToDecimals(collateral.cometScale),
+            ),
           ) *
           tokenPrice(
-            collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            DataUtils.toBigNumber(
+              collateral.price,
+              Number(collateral.decimals),
+            ),
             basePriceUsd,
           ),
       )
@@ -147,11 +153,16 @@ export namespace UserMarketMethods {
           ) +
             Number(collateralData)) *
           Number(
-            formatUnits(collateral.liquidationFactor, COMET_FACTOR_DECIMALS),
+            formatUnits(
+              collateral.liquidationFactor,
+              scaleToDecimals(collateral.cometScale),
+            ),
           ) *
           tokenPrice(
-            collateral.symbol,
-            DataUtils.toBigNumber(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            DataUtils.toBigNumber(
+              collateral.price,
+              Number(collateral.decimals),
+            ),
             basePriceUsd,
           )
         );
@@ -256,11 +267,13 @@ export namespace UserMarketMethods {
             ),
           ) *
           Number(
-            formatUnits(collateral.collateralFactor, COMET_FACTOR_DECIMALS),
+            formatUnits(
+              collateral.collateralFactor,
+              scaleToDecimals(collateral.cometScale),
+            ),
           ) *
           tokenPrice(
-            collateral.symbol,
-            parseUnits(collateral.price, PRICE_FEED_FACTOR_UNITS),
+            parseUnits(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           ),
       )
@@ -295,7 +308,10 @@ export namespace UserMarketMethods {
   ) {
     const totalSupply =
       totalSupplied +
-      DataUtils.toBigNumber(userSupplyValue, Number(baseToken.decimals));
+      DataUtils.toBigNumber(
+        userSupplyValue,
+        Number(baseToken.decimals),
+      );
 
     const utilization = calculateUtilization(totalBorrowed, totalSupply);
 
@@ -366,7 +382,8 @@ export namespace UserMarketMethods {
   ): number[] {
     return MarketMethods.netEarnAprs(
       baseToken,
-      totalSupplied + parseUnits(userSupplyValue, Number(baseToken.decimals)),
+      totalSupplied +
+        parseUnits(userSupplyValue, Number(baseToken.decimals)),
       compToken,
       rewardTokens,
       supplyApr,
@@ -383,7 +400,8 @@ export namespace UserMarketMethods {
   ): number[] {
     return MarketMethods.netBorrowAprs(
       baseToken,
-      totalBorrowed + parseUnits(userBorrowValue, Number(baseToken.decimals)),
+      totalBorrowed +
+        parseUnits(userBorrowValue, Number(baseToken.decimals)),
       compToken,
       rewardTokens,
       borrowApr,

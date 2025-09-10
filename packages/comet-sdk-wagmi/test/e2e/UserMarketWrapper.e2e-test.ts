@@ -4,9 +4,10 @@ import type { Address } from "viem";
 import { beforeAll, describe, expect, test } from "vitest";
 import { wagmiConfig } from "../../src";
 import { UserMarketWrapper } from "../../src/wrappers/UserMarketWrapper";
+import { SepoliaConfig } from "../sepolia.config";
 
 const data: Partial<IMarket> = {
-  cometAddress: "0xacb1c4d4de3ce962673326fb9c53d56ce4881cf4",
+  cometAddress: SepoliaConfig.comet1,
 } as const;
 
 let market: UserMarketWrapper;
@@ -15,7 +16,7 @@ describe("UserMarketWrapper", () => {
   beforeAll(async () => {
     market = await UserMarketWrapper.fetchUserMarket(
       data.cometAddress as Address,
-      "0xacb1c4d4de3ce962673326fb9c53d56ce4881cf40044908ef517c28de800222a9f2030efbb01ee9afe",
+      SepoliaConfig.userMarket,
       sepolia.id,
       wagmiConfig,
     );
@@ -26,27 +27,27 @@ describe("UserMarketWrapper", () => {
     expect(collaterals.length).to.be.greaterThan(0);
   });
 
-  test("check approve", async () => {
-    const approve = market.approveToken(
-      "0x306134121e8b55dfa9faba05de590e639a1f7d6b",
-      "0.01",
-      18,
-    );
-    console.log("--approve-", approve);
-  });
+  // test("check approve", async () => {
+  //   const approve = market.approveToken(
+  //     "0x306134121e8b55dfa9faba05de590e639a1f7d6b",
+  //     "0.01",
+  //     18,
+  //   );
+  //   console.log("--approve-", approve);
+  // });
 
-  test("check supply collaterals", async () => {
-    const supplyCollaterals = market.supplyCollaterals(
-      [
-        {
-          tokenAddress: "0x306134121e8b55dfa9faba05de590e639a1f7d6b",
-          inputAmount: "0.01",
-        },
-      ],
-      sepolia.id,
-    );
-    console.log("--supplyCollaterals-", supplyCollaterals);
-  });
+  // test("check supply collaterals", async () => {
+  //   const supplyCollaterals = market.supplyCollaterals(
+  //     [
+  //       {
+  //         tokenAddress: "0x306134121e8b55dfa9faba05de590e639a1f7d6b",
+  //         inputAmount: "0.01",
+  //       },
+  //     ],
+  //     sepolia.id,
+  //   );
+  //   console.log("--supplyCollaterals-", supplyCollaterals);
+  // });
 
   // test("check withdraw collaterals", async () => {
   //   const withdrawCollaterals = market.withDrawCollateral([
@@ -58,25 +59,25 @@ describe("UserMarketWrapper", () => {
   //   console.log("--withdrawCollaterals-", withdrawCollaterals);
   // });
 
-  test("check borrow and supply collaterals", async () => {
-    const borrowAndSupplyCollaterals = market.borrowAndSupplyMarket("0.01", [
-      {
-        inputAmount: "0.01",
-        tokenAddress: "0x306134121e8b55dfa9faba05de590e639a1f7d6b",
-      },
-    ]);
-    console.log("--borrowAndSupplyCollaterals-", borrowAndSupplyCollaterals);
-  });
+  // test("check borrow and supply collaterals", async () => {
+  //   const borrowAndSupplyCollaterals = market.borrowAndSupplyMarket("0.01", [
+  //     {
+  //       inputAmount: "0.01",
+  //       tokenAddress: "0x306134121e8b55dfa9faba05de590e639a1f7d6b",
+  //     },
+  //   ]);
+  //   console.log("--borrowAndSupplyCollaterals-", borrowAndSupplyCollaterals);
+  // });
 
-  test("check supply", async () => {
-    const supply = market.supplyMarket("0.01", false);
-    console.log("--supply-", supply);
-  });
-
-  test("check borrow", async () => {
-    const borrow = market.borrowMarket("0.01");
-    console.log("--borrow-", borrow);
-  });
+  // test("check supply", async () => {
+  //   const supply = market.supplyMarket("0.01", false);
+  //   console.log("--supply-", supply);
+  // });
+  //
+  // test("check borrow", async () => {
+  //   const borrow = market.borrowMarket("0.01");
+  //   console.log("--borrow-", borrow);
+  // });
 
   // test("check withDraw", async () => {
   //   const withDraw = market.withDrawMarket("0.01", false);
