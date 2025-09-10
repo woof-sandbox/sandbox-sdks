@@ -88,10 +88,6 @@ export class CometContract extends WagmiContract {
     return this.getCall("getAssetInfo", [index]);
   }
 
-  getDecimalsCall(): ContractFunctionParameters {
-    return this.getCall("decimals");
-  }
-
   getBorrowRateCall(utilization: bigint): ContractFunctionParameters {
     return this.getCall("getBorrowRate", [utilization]);
   }
@@ -119,6 +115,10 @@ export class CometContract extends WagmiContract {
 
   getBaseTokenCall(): ContractFunctionParameters {
     return this.getCall("baseToken");
+  }
+
+  getConfigControllerCall(): ContractFunctionParameters {
+    return this.getCall("configController");
   }
 
   async getContractName(): Promise<string> {
@@ -270,10 +270,6 @@ export class CometContract extends WagmiContract {
 
   getCollateralBalanceOfCall(userAddress: Address): ContractFunctionParameters {
     return this.getCall("collateralBalanceOf", [userAddress]);
-  }
-
-  getLiquidationFactorCall(): ContractFunctionParameters {
-    return this.getCall("getLiquidationFactor");
   }
 
   // CURVE

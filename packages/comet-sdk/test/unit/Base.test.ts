@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { Base } from "../../src/token/base/Base";
+import { Base, type IBase } from "../../src/token/base";
 
-const mockBaseData = {
+const mockBaseData: IBase = {
   tokenAddress: "0xBase",
   symbol: "BASE",
   decimals: 18n,
+  priceFeedDecimals: 18n,
   price: "1.0",
   priceFeedAddress: "0xFeed",
-  baseMinBorrow: 100n,
   baseMinForRewards: 200n,
   baseTrackingBorrowSpeed: 300n,
   baseTrackingSupplySpeed: 400n,
@@ -20,10 +20,9 @@ describe("Base", () => {
     const base = new Base(mockBaseData);
     expect(base.tokenAddress).toBe(mockBaseData.tokenAddress);
     expect(base.symbol).toBe(mockBaseData.symbol);
-    expect(base.decimals).toBe(mockBaseData.decimals);
+    expect(base.priceFeedDecimals).toBe(mockBaseData.priceFeedDecimals);
     expect(base.price).toBe(mockBaseData.price);
     expect(base.priceFeedAddress).toBe(mockBaseData.priceFeedAddress);
-    expect(base.baseMinBorrow).toBe(mockBaseData.baseMinBorrow);
     expect(base.baseMinForRewards).toBe(mockBaseData.baseMinForRewards);
     expect(base.baseTrackingBorrowSpeed).toBe(
       mockBaseData.baseTrackingBorrowSpeed,

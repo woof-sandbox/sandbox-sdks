@@ -1,4 +1,5 @@
 import { bulkerAbi } from "./bulker.abi";
+import { chainlinkPriceFeedAbi } from "./chainlink-price-feed.abi";
 import { cometAbi } from "./comet.abi";
 import { configControllerAbi } from "./config-controller.abi";
 import { controllerAbi } from "./controller.abi";
@@ -12,4 +13,5 @@ export {
   erc20Abi,
   controllerAbi,
   configControllerAbi,
+  chainlinkPriceFeedAbi,
 };

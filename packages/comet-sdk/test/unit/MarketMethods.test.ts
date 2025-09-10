@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   Collateral,
   type IBase,
+  type ICollateral,
   type IToken,
   Market,
   MarketMethods,
@@ -17,19 +18,18 @@ const mockBaseTotalBorrow = 500000000000000000000n; // 5e20
 const mockCompToken: IToken = {
   tokenAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   symbol: "USDT",
-  decimals: BigInt(6n),
+  priceFeedDecimals: BigInt(6n),
   price: "1.0",
   priceFeedAddress: "0x3E7d1eAB13ad0104d2750B8863b489D65364e32D",
 };
 const mockRewardToken: IToken = {
   tokenAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   symbol: "USDT",
-  decimals: BigInt(6n),
+  priceFeedDecimals: BigInt(6n),
   price: "1.0",
   priceFeedAddress: "0x3E7d1eAB13ad0104d2750B8863b489D65364e32D",
 };
 const mockBaseToken: IBase = {
-  baseMinBorrow: BigInt(100000000000),
   baseMinForRewards: BigInt(100000000000), // 1e9
   baseTrackingBorrowSpeed: BigInt(578703703703),
   baseTrackingSupplySpeed: BigInt(810185185185),
@@ -204,11 +204,11 @@ describe("MarketMethods", () => {
   it("should calculate TVL correctly", () => {
     const cometBalance = 1000n;
     const baseToken = { ...mockBaseToken, price: "2.0", decimals: BigInt(6) };
-    const collaterals = [
+    const collaterals: ICollateral[] = [
       {
         tokenAddress: "0x1",
         symbol: "COL1",
-        decimals: BigInt(6),
+        priceFeedDecimals: BigInt(6),
         price: "1.5",
         priceFeedAddress: "0xfeed1",
         totalSupplyAsset: 100n,
@@ -217,12 +217,13 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
       {
         tokenAddress: "0x2",
         symbol: "COL2",
-        decimals: BigInt(6),
+        priceFeedDecimals: BigInt(6),
         price: "3.0",
         priceFeedAddress: "0xfeed2",
         totalSupplyAsset: 200n,
@@ -231,6 +232,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
     ];
@@ -298,11 +300,11 @@ describe("MarketMethods", () => {
   });
 
   it("should calculate total collaterals supply", () => {
-    const collaterals = [
+    const collaterals: ICollateral[] = [
       {
         tokenAddress: "0x1",
         symbol: "COL1",
-        decimals: BigInt(6),
+        priceFeedDecimals: BigInt(6),
         price: "1.5",
         priceFeedAddress: "0xfeed1",
         totalSupplyAsset: 1000n,
@@ -311,12 +313,13 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
       {
         tokenAddress: "0x2",
         symbol: "COL2",
-        decimals: BigInt(8),
+        priceFeedDecimals: BigInt(8),
         price: "3.0",
         priceFeedAddress: "0xfeed2",
         totalSupplyAsset: 2000n,
@@ -325,6 +328,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
     ];
@@ -355,7 +359,7 @@ describe("MarketMethods", () => {
           new Collateral({
             tokenAddress: "0x1",
             symbol: "COL1",
-            decimals: BigInt(6),
+            priceFeedDecimals: BigInt(6),
             price: "1.5",
             priceFeedAddress: "0xfeed1",
             totalSupplyAsset: 1000n,
@@ -364,6 +368,7 @@ describe("MarketMethods", () => {
             collateralFactor: 500000000000000000n,
             liquidationFactor: 700000000000000000n,
             liquidationPenalty: 250000000000000000n,
+            cometScale: 8n,
             supplyCap: 100000000000000000000000n,
           }),
         ],
@@ -392,7 +397,7 @@ describe("MarketMethods", () => {
           new Collateral({
             tokenAddress: "0x1",
             symbol: "COL1",
-            decimals: BigInt(6),
+            priceFeedDecimals: BigInt(6),
             price: "1.5",
             priceFeedAddress: "0xfeed1",
             totalSupplyAsset: 1000n,
@@ -401,6 +406,7 @@ describe("MarketMethods", () => {
             collateralFactor: 500000000000000000n,
             liquidationFactor: 700000000000000000n,
             liquidationPenalty: 250000000000000000n,
+            cometScale: 8n,
             supplyCap: 100000000000000000000000n,
           }),
         ],
@@ -429,7 +435,7 @@ describe("MarketMethods", () => {
           new Collateral({
             tokenAddress: "0x2",
             symbol: "COL2",
-            decimals: BigInt(6),
+            priceFeedDecimals: BigInt(6),
             price: "3.0",
             priceFeedAddress: "0xfeed2",
             totalSupplyAsset: 2000n,
@@ -438,6 +444,7 @@ describe("MarketMethods", () => {
             collateralFactor: 500000000000000000n,
             liquidationFactor: 700000000000000000n,
             liquidationPenalty: 250000000000000000n,
+            cometScale: 8n,
             supplyCap: 100000000000000000000000n,
           }),
         ],
@@ -456,7 +463,7 @@ describe("MarketMethods", () => {
       new Collateral({
         tokenAddress: "0x1",
         symbol: "COL1",
-        decimals: BigInt(6),
+        priceFeedDecimals: BigInt(6),
         price: "1.5",
         priceFeedAddress: "0xfeed1",
         totalSupplyAsset: 1000n,
@@ -465,6 +472,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       }),
     ];
@@ -497,7 +505,7 @@ describe("MarketMethods", () => {
           new Collateral({
             tokenAddress: "0x2",
             symbol: "COL2",
-            decimals: BigInt(6),
+            priceFeedDecimals: BigInt(6),
             price: "3.0",
             priceFeedAddress: "0xfeed2",
             totalSupplyAsset: 2000n,
@@ -506,6 +514,7 @@ describe("MarketMethods", () => {
             collateralFactor: 500000000000000000n,
             liquidationFactor: 700000000000000000n,
             liquidationPenalty: 250000000000000000n,
+            cometScale: 8n,
             supplyCap: 100000000000000000000000n,
           }),
         ],
@@ -520,11 +529,11 @@ describe("MarketMethods", () => {
         rewardTokens: [mockRewardToken],
       }),
     ];
-    const collaterals = [
+    const collaterals: ICollateral[] = [
       {
         tokenAddress: "0x1",
         symbol: "COL1",
-        decimals: BigInt(6),
+        priceFeedDecimals: BigInt(6),
         price: "1.5",
         priceFeedAddress: "0xfeed1",
         totalSupplyAsset: 1000n,
@@ -533,6 +542,7 @@ describe("MarketMethods", () => {
         collateralFactor: 500000000000000000n,
         liquidationFactor: 700000000000000000n,
         liquidationPenalty: 250000000000000000n,
+        cometScale: 8n,
         supplyCap: 100000000000000000000000n,
       },
     ];

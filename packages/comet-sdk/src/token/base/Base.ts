@@ -3,7 +3,6 @@ import { Token } from "../Token";
 import type { IBase } from "./IBase";
 
 export class Base extends Token implements IBase {
-  public baseMinBorrow: bigint;
   public baseMinForRewards: bigint;
   public baseTrackingBorrowSpeed: bigint;
   public baseTrackingSupplySpeed: bigint;
@@ -12,7 +11,6 @@ export class Base extends Token implements IBase {
 
   constructor(baseData: IBase) {
     super(baseData);
-    this.baseMinBorrow = baseData.baseMinBorrow;
     this.baseMinForRewards = baseData.baseMinForRewards;
     this.baseTrackingBorrowSpeed = baseData.baseTrackingBorrowSpeed;
     this.baseTrackingSupplySpeed = baseData.baseTrackingSupplySpeed;

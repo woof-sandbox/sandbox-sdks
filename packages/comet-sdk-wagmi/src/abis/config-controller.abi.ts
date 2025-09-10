@@ -1,144 +1,83 @@
 export const configControllerAbi = [
-  {
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
+  { inputs: [], name: "AlreadyInitialized", type: "error" },
   {
     inputs: [],
     name: "BaseTokenNotWhitelisted",
     type: "error",
   },
-  {
-    inputs: [],
-    name: "BorrowCollateralFactorTooHigh",
-    type: "error",
-  },
+  { inputs: [], name: "BorrowCollateralFactorTooHigh", type: "error" },
   {
     inputs: [],
     name: "BorrowCollateralFactorTooLow",
     type: "error",
   },
-  {
-    inputs: [],
-    name: "CollateralTokenAlreadyAdded",
-    type: "error",
-  },
+  { inputs: [], name: "CollateralTokenAlreadyAdded", type: "error" },
   {
     inputs: [],
     name: "CollateralTokenNotWhitelisted",
     type: "error",
   },
-  {
-    inputs: [],
-    name: "InsufficientBalance",
-    type: "error",
-  },
+  { inputs: [], name: "IncorrectValue", type: "error" },
   {
     inputs: [],
     name: "InvalidCurator",
     type: "error",
   },
+  { inputs: [], name: "InvalidCurveId", type: "error" },
   {
     inputs: [],
     name: "InvalidFeePercentage",
     type: "error",
   },
-  {
-    inputs: [],
-    name: "InvalidInitialization",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "LiquidateCollateralFactorTooHigh",
-    type: "error",
-  },
+  { inputs: [], name: "LiquidateCollateralFactorTooHigh", type: "error" },
   {
     inputs: [],
     name: "LiquidateCollateralFactorTooLow",
     type: "error",
   },
-  {
-    inputs: [],
-    name: "LiquidationFactorTooHigh",
-    type: "error",
-  },
+  { inputs: [], name: "LiquidationFactorTooHigh", type: "error" },
   {
     inputs: [],
     name: "LiquidationFactorTooLow",
     type: "error",
   },
+  { inputs: [], name: "NoActiveProposal", type: "error" },
   {
     inputs: [],
-    name: "NoActiveProposal",
+    name: "NoCurveRegistered",
     type: "error",
   },
-  {
-    inputs: [],
-    name: "NotInitializing",
-    type: "error",
-  },
+  { inputs: [], name: "ProposalDurationTooLong", type: "error" },
   {
     inputs: [],
     name: "ProposalDurationTooShort",
     type: "error",
   },
+  { inputs: [], name: "ProposalExpired", type: "error" },
   {
-    inputs: [],
-    name: "ProposalExists",
+    inputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+    ],
+    name: "SafeERC20FailedOperation",
     type: "error",
   },
-  {
-    inputs: [],
-    name: "ProposalExpired",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "ProposalNotExpired",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "SupplyCapCantBeZero",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "TokenNotRevenue",
-    type: "error",
-  },
+  { inputs: [], name: "SupplyCapCantBeZero", type: "error" },
   {
     inputs: [],
     name: "Unauthorized",
     type: "error",
   },
+  { inputs: [], name: "UnknownComet", type: "error" },
   {
     inputs: [],
     name: "WrongCollateralTokenSettings",
     type: "error",
   },
-  {
-    inputs: [],
-    name: "WrongCurveParams",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "WrongPriceFeed",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "ZeroAddress",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "ZeroAmount",
-    type: "error",
-  },
+  { inputs: [], name: "ZeroAddress", type: "error" },
   {
     inputs: [],
     name: "ZeroCollateralAssets",
@@ -149,69 +88,14 @@ export const configControllerAbi = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint64",
-        name: "supplyKink",
-        type: "uint64",
+        internalType: "address",
+        name: "comet",
+        type: "address",
       },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "supplyPerSecondInterestRateSlopeLow",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "supplyPerSecondInterestRateSlopeHigh",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "supplyPerSecondInterestRateBase",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "borrowKink",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "borrowPerSecondInterestRateSlopeLow",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "borrowPerSecondInterestRateSlopeHigh",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "borrowPerSecondInterestRateBase",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "storeFrontPriceFactor",
-        type: "uint64",
-      },
-    ],
-    name: "AddedBaseTokenConfig",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
       {
         indexed: false,
         internalType: "address",
-        name: "asset",
+        name: "baseToken",
         type: "address",
       },
       {
@@ -222,36 +106,38 @@ export const configControllerAbi = [
       },
       {
         indexed: false,
-        internalType: "uint8",
-        name: "decimals",
-        type: "uint8",
+        internalType: "uint256",
+        name: "cometId",
+        type: "uint256",
       },
       {
         indexed: false,
-        internalType: "uint64",
-        name: "borrowCollateralFactor",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "liquidateCollateralFactor",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "liquidationFactor",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint128",
-        name: "supplyCap",
-        type: "uint128",
+        internalType: "uint256",
+        name: "baseTokenCurveId",
+        type: "uint256",
       },
     ],
-    name: "AddedCollateralTokenConfig",
+    name: "CometCreated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "controller",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "comet",
+        type: "address",
+      },
+      { indexed: false, internalType: "bool", name: "enabled", type: "bool" },
+    ],
+    name: "CometFeeEnabled",
     type: "event",
   },
   {
@@ -290,25 +176,6 @@ export const configControllerAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "oldFee",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "newFee",
-        type: "uint256",
-      },
-    ],
-    name: "CuratorFeeUpdated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: true,
         internalType: "address",
         name: "proposedCurator",
@@ -335,9 +202,9 @@ export const configControllerAbi = [
       },
       {
         indexed: false,
-        internalType: "uint256",
+        internalType: "uint64",
         name: "expiry",
-        type: "uint256",
+        type: "uint64",
       },
     ],
     name: "CuratorProposed",
@@ -366,76 +233,19 @@ export const configControllerAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "uint64",
-        name: "version",
-        type: "uint64",
-      },
-    ],
-    name: "Initialized",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: true,
         internalType: "address",
-        name: "market",
+        name: "oldOwner",
         type: "address",
       },
       {
         indexed: true,
         internalType: "address",
-        name: "cancelledBy",
+        name: "newOwner",
         type: "address",
       },
     ],
-    name: "MarketConfigProposalCancelled",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "executedBy",
-        type: "address",
-      },
-    ],
-    name: "MarketConfigProposalExecuted",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "proposer",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "expiration",
-        type: "uint256",
-      },
-    ],
-    name: "MarketConfigProposed",
+    name: "OwnershipGranted",
     type: "event",
   },
   {
@@ -443,303 +253,42 @@ export const configControllerAbi = [
     inputs: [
       {
         indexed: false,
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "baseToken",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "priceFeed",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "baseTokenId",
-        type: "uint256",
-      },
-    ],
-    name: "MarketConfigurationCreated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "oldController",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newController",
-        type: "address",
-      },
-    ],
-    name: "MarketTransferProposalAccepted",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "cancelledBy",
-        type: "address",
-      },
-    ],
-    name: "MarketTransferProposalCancelled",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newController",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "expiration",
-        type: "uint256",
-      },
-    ],
-    name: "MarketTransferProposed",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
+        internalType: "uint40",
         name: "oldCuratorDuration",
-        type: "uint256",
+        type: "uint40",
       },
       {
         indexed: false,
-        internalType: "uint256",
+        internalType: "uint40",
         name: "newCuratorDuration",
-        type: "uint256",
+        type: "uint40",
       },
       {
         indexed: false,
-        internalType: "uint256",
+        internalType: "uint40",
         name: "oldProposalDuration",
-        type: "uint256",
+        type: "uint40",
       },
       {
         indexed: false,
-        internalType: "uint256",
+        internalType: "uint40",
         name: "newProposalDuration",
-        type: "uint256",
+        type: "uint40",
       },
     ],
     name: "ProposalDurationsUpdated",
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "RevenueAccumulated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "recipient",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "RevenueClaimed",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "curatorAmount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "ownerAmount",
-        type: "uint256",
-      },
-    ],
-    name: "RevenueDistributed",
-    type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "_marketProposals",
-    outputs: [
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "expiration",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "proposer",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "isActive",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "_marketTransferProposals",
-    outputs: [
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "newController",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "expiration",
-        type: "uint256",
-      },
-      {
-        internalType: "bool",
-        name: "isActive",
-        type: "bool",
-      },
-    ],
+    inputs: [],
+    name: "FEE_DIVISOR",
+    outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "acceptCuratorRole",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-    ],
-    name: "acceptMarketTransferProposal",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "accumulateRevenue",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -752,61 +301,44 @@ export const configControllerAbi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-    ],
-    name: "cancelMarketConfigProposal",
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [],
+    name: "cometFactory",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-    ],
-    name: "cancelMarketTransferProposal",
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "cometFeeEnabled",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "cometId",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "comets",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "claimAllRevenue",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-    ],
-    name: "claimRevenue",
-    outputs: [],
-    stateMutability: "nonpayable",
+    name: "cometsLength",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "configControllerFactory",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
@@ -820,9 +352,9 @@ export const configControllerAbi = [
             type: "address",
           },
           {
-            internalType: "address",
-            name: "priceFeed",
-            type: "address",
+            internalType: "uint256",
+            name: "baseTokenCurveId",
+            type: "uint256",
           },
           {
             components: [
@@ -831,11 +363,7 @@ export const configControllerAbi = [
                 name: "collateralToken",
                 type: "address",
               },
-              {
-                internalType: "address",
-                name: "priceFeed",
-                type: "address",
-              },
+              { internalType: "uint128", name: "supplyCap", type: "uint128" },
               {
                 internalType: "uint64",
                 name: "borrowCollateralFactor",
@@ -851,135 +379,67 @@ export const configControllerAbi = [
                 name: "liquidationFactor",
                 type: "uint64",
               },
-              {
-                internalType: "uint128",
-                name: "supplyCap",
-                type: "uint128",
-              },
             ],
             internalType: "struct IConfigController.CollateralTokenConfig[]",
-            name: "collateraTokens",
+            name: "collateralTokens",
             type: "tuple[]",
           },
-          {
-            internalType: "uint256",
-            name: "baseTokenCurveId",
-            type: "uint256",
-          },
+          { internalType: "string", name: "name", type: "string" },
         ],
-        internalType: "struct IConfigController.MarketConfig",
-        name: "_marketConfig",
+        internalType: "struct IConfigController.CometConfig",
+        name: "_cometConfig",
         type: "tuple",
       },
     ],
-    name: "createMarket",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    name: "createComet",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
     name: "curator",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "curatorFee",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "curatorProposalDuration",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint40", name: "", type: "uint40" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "curatorProposalExpiry",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint64", name: "", type: "uint64" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
+      { internalType: "address", name: "comet", type: "address" },
       {
         internalType: "address",
-        name: "market",
+        name: "asset",
         type: "address",
       },
     ],
-    name: "executeMarketConfigProposal",
+    name: "extractFees",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "getUnclaimedRevenue",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_newOwner",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "_newOwner", type: "address" }],
     name: "grantOwnership",
     outputs: [],
     stateMutability: "nonpayable",
@@ -988,62 +448,39 @@ export const configControllerAbi = [
   {
     inputs: [],
     name: "guardian",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
+      { internalType: "address", name: "_owner", type: "address" },
       {
         internalType: "address",
-        name: "_owner",
+        name: "_curator",
         type: "address",
       },
+      { internalType: "address", name: "_guardian", type: "address" },
       {
         internalType: "address",
-        name: "_guardian",
+        name: "_cometFactory",
         type: "address",
       },
-      {
-        internalType: "address",
-        name: "_sandboxController",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_marketFactory",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_curatorFee",
-        type: "uint256",
-      },
+      { internalType: "uint32", name: "_curatorFee", type: "uint32" },
       {
         internalType: "string",
         name: "_name",
         type: "string",
       },
       {
-        internalType: "uint256",
+        internalType: "uint40",
         name: "_curatorProposalDuration",
-        type: "uint256",
+        type: "uint40",
       },
       {
-        internalType: "uint256",
+        internalType: "uint40",
         name: "_proposalDuration",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_configControllerFactory",
-        type: "address",
+        type: "uint40",
       },
     ],
     name: "initialize",
@@ -1053,233 +490,28 @@ export const configControllerAbi = [
   },
   {
     inputs: [],
-    name: "marketFactory",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "marketId",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-    ],
-    name: "marketProposals",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "market",
-            type: "address",
-          },
-          {
-            components: [
-              {
-                internalType: "address",
-                name: "collateralToken",
-                type: "address",
-              },
-              {
-                internalType: "address",
-                name: "priceFeed",
-                type: "address",
-              },
-              {
-                internalType: "uint64",
-                name: "borrowCollateralFactor",
-                type: "uint64",
-              },
-              {
-                internalType: "uint64",
-                name: "liquidateCollateralFactor",
-                type: "uint64",
-              },
-              {
-                internalType: "uint64",
-                name: "liquidationFactor",
-                type: "uint64",
-              },
-              {
-                internalType: "uint128",
-                name: "supplyCap",
-                type: "uint128",
-              },
-            ],
-            internalType: "struct IConfigController.CollateralTokenConfig[]",
-            name: "collateralTokens",
-            type: "tuple[]",
-          },
-          {
-            internalType: "uint256",
-            name: "expiration",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "proposer",
-            type: "address",
-          },
-          {
-            internalType: "bool",
-            name: "isActive",
-            type: "bool",
-          },
-        ],
-        internalType: "struct IConfigController.MarketConfigProposal",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-    ],
-    name: "marketTransferProposals",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "market",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "newController",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "expiration",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "isActive",
-            type: "bool",
-          },
-        ],
-        internalType: "struct IConfigController.MarketTransferProposal",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "markets",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "marketsLength",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "name",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "proposalDuration",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint40", name: "", type: "uint40" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_proposedCurator",
-        type: "address",
-      },
+      { internalType: "address", name: "_proposedCurator", type: "address" },
     ],
     name: "proposeCurator",
     outputs: [],
@@ -1287,97 +519,10 @@ export const configControllerAbi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "collateralToken",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "priceFeed",
-            type: "address",
-          },
-          {
-            internalType: "uint64",
-            name: "borrowCollateralFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "liquidateCollateralFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "liquidationFactor",
-            type: "uint64",
-          },
-          {
-            internalType: "uint128",
-            name: "supplyCap",
-            type: "uint128",
-          },
-        ],
-        internalType: "struct IConfigController.CollateralTokenConfig[]",
-        name: "_collateralTokens",
-        type: "tuple[]",
-      },
-    ],
-    name: "proposeMarketCollateralTokens",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "market",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "newController",
-        type: "address",
-      },
-    ],
-    name: "proposeMarketTransfer",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "proposedCurator",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-    ],
-    name: "removeClaimRevenueToken",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -1388,89 +533,29 @@ export const configControllerAbi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "revenueTokenIndex",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "revenueTokens",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "revenueTokensLength",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "sandboxController",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
+      { internalType: "address", name: "comet", type: "address" },
       {
-        internalType: "uint256",
-        name: "_curatorFee",
-        type: "uint256",
+        internalType: "bool",
+        name: "feeEnabled",
+        type: "bool",
       },
     ],
-    name: "setCuratorFee",
+    name: "setCometFee",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_newGuardian",
-        type: "address",
-      },
+      { internalType: "address", name: "_newGuardian", type: "address" },
     ],
     name: "setGuardian",
     outputs: [],
@@ -1480,43 +565,15 @@ export const configControllerAbi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint40",
         name: "_curatorProposalDuration",
-        type: "uint256",
+        type: "uint40",
       },
-      {
-        internalType: "uint256",
-        name: "_proposalDuration",
-        type: "uint256",
-      },
+      { internalType: "uint40", name: "_proposalDuration", type: "uint40" },
     ],
     name: "setProposalDurations",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "unclaimedRevenue",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ] as const;
