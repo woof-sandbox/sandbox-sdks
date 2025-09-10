@@ -1,11 +1,5 @@
 # @woof-software/comet-sdk
 
-## 5.0.0
-
-### Major Changes
-
-- 180821d: Revert PR 79 to stabilize comet operations. (borrow, supply, withdraw, lend)
-
 ## 4.0.0
 
 ### Major Changes
