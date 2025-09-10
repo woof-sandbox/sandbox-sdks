@@ -380,15 +380,14 @@ export namespace UserMarketMethods {
     rewardTokens: IToken[],
     supplyApr: number,
   ): number[] {
-    return [0];
-    // return MarketMethods.netEarnAprs(
-    //   baseToken,
-    //   totalSupplied +
-    //     parseUnits(userSupplyValue, Number(baseToken.priceFeedDecimals)),
-    //   compToken,
-    //   rewardTokens,
-    //   supplyApr,
-    // );
+    return MarketMethods.netEarnAprs(
+      baseToken,
+      totalSupplied +
+        parseUnits(userSupplyValue, Number(baseToken.priceFeedDecimals)),
+      compToken,
+      rewardTokens,
+      supplyApr,
+    );
   }
 
   export function netBorrowAprsCustom(
@@ -399,15 +398,13 @@ export namespace UserMarketMethods {
     rewardTokens: IToken[],
     borrowApr: number,
   ): number[] {
-    return [0];
-
-    // return MarketMethods.netBorrowAprs(
-    //   baseToken,
-    //   totalBorrowed +
-    //     parseUnits(userBorrowValue, Number(baseToken.priceFeedDecimals)),
-    //   compToken,
-    //   rewardTokens,
-    //   borrowApr,
-    // );
+    return MarketMethods.netBorrowAprs(
+      baseToken,
+      totalBorrowed +
+        parseUnits(userBorrowValue, Number(baseToken.priceFeedDecimals)),
+      compToken,
+      rewardTokens,
+      borrowApr,
+    );
   }
 }
