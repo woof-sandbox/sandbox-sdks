@@ -1,12 +1,12 @@
 import { SandboxController } from "@woof-software/comet-sdk";
-import { fetchSandboxController } from "../fetch";
+import { fetchSandboxControllerData } from "../fetch";
 
 declare module "@woof-software/comet-sdk" {
   namespace SandboxController {
-    let fetch: typeof fetchSandboxController;
+    let fetch: typeof fetchSandboxControllerData;
   }
 }
 
-SandboxController.fetch = fetchSandboxController;
+SandboxController.fetch = fetchSandboxControllerData;
 
 export { SandboxController };

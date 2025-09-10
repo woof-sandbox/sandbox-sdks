@@ -1,3 +1,6 @@
+export const ADD_CURVE_FAILED = () =>
+  new Error("Failed to add base asset curve.");
+
 export const CHANGE_CURVE_FAILED = () =>
   new Error("Failed to change base asset curve.");
 
@@ -14,6 +17,9 @@ export const TRANSFER_OWNER_FAILED = () =>
 
 export const SET_TREASURY_FAILED = () =>
   new Error("Failed to set treasury address.");
+
+export const SET_THRESHOLDS_FAILED = () =>
+  new Error("Failed to set thresholds.");
 
 export const WHITELIST_BASE_ASSET_FAILED = () =>
   new Error("Failed to whitelist base asset.");

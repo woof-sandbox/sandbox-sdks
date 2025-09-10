@@ -11,7 +11,7 @@ const mockCollateral = (data = {}) =>
   new UserCollateral({
     tokenAddress: mockAddress1,
     symbol: "ETH",
-    priceFeedDecimals: BigInt(18),
+    decimals: BigInt(18),
     price: "2000",
     priceFeedAddress: "0xFeed",
     userBalance: 0n,
@@ -22,7 +22,6 @@ const mockCollateral = (data = {}) =>
     collateralFactor: BigInt("500000000000000000"),
     liquidationFactor: BigInt("700000000000000000"),
     liquidationPenalty: BigInt("250000000000000000"),
-    cometScale: BigInt("18"),
     supplyCap: BigInt("100000000000000000000000"),
     ...data,
   });
@@ -92,8 +91,8 @@ describe("UserMarketMethods", () => {
 
   it("tokenPrice: counts correctly for USD and non-USD", () => {
     const price = DataUtils.toBigNumber("2000", PRICE_FEED_FACTOR_UNITS);
-    expect(UserMarketMethods.tokenPrice(price, "1")).toBeCloseTo(2000);
-    expect(UserMarketMethods.tokenPrice(price, "2")).toBeCloseTo(4000);
+    expect(UserMarketMethods.tokenPrice("USDC", price, "1")).toBeCloseTo(2000);
+    expect(UserMarketMethods.tokenPrice("ETH", price, "2")).toBeCloseTo(4000);
   });
 
   it("borrowCollateralValueUSD: counts the sum of all collaterals", () => {

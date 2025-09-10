@@ -7,6 +7,8 @@ export class ConfigController implements IConfigController {
   guardian: Address;
   curator: Address;
   curatorFee: number;
+  marketsLength: number;
+  revenueTokensLength: number;
 
   constructor(configControllerData: IConfigController) {
     this.address = configControllerData.address;
@@ -14,5 +16,7 @@ export class ConfigController implements IConfigController {
     this.guardian = configControllerData.guardian;
     this.curator = configControllerData.curator;
     this.curatorFee = configControllerData.curatorFee;
+    this.marketsLength = configControllerData.marketsLength;
+    this.revenueTokensLength = configControllerData.revenueTokensLength;
   }
 }

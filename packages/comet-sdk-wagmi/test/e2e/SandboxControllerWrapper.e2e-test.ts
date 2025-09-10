@@ -1,13 +1,12 @@
 import { sepolia } from "@wagmi/core/chains";
-import { beforeAll, describe, expect, test } from "vitest";
-import { SandboxController } from "../../src/augment";
+import { SandboxController } from "@woof-software/comet-sdk";
+import { beforeAll, describe, test } from "vitest";
 import { SandboxControllerWrapper } from "../../src/wrappers/SandboxControllerWrapper";
-import { SepoliaConfig } from "../sepolia.config";
 
 let controller: SandboxControllerWrapper;
 
-const controllerAddress = SepoliaConfig.sandboxController;
-const token = SepoliaConfig.TokenAddresses.usdc;
+const controllerAddress = "0x989c545362a6ad8534f91b970cf2ac5d97fa8dff";
+const token = "0x306134121e8b55dfa9faba05de590e639a1f7d6b";
 
 describe("SandboxControllerWrapper", () => {
   beforeAll(async () => {
@@ -18,25 +17,37 @@ describe("SandboxControllerWrapper", () => {
     controller = new SandboxControllerWrapper(sandBoxController, sepolia.id);
   });
 
-  test("check controller method", async () => {
-    expect(controller.minUpdateTime).to.be.greaterThan(0);
+  test("addBaseAssetCurve", async () => {
+    const addBaseAssetCurve = controller.addBaseAssetCurve(token, {
+      id: "1",
+      supplyKink: BigInt(0),
+      borrowKink: BigInt(0),
+      borrowPerYearInterestRateBase: BigInt(0),
+      borrowPerYearInterestRateSlopeLow: BigInt(0),
+      supplyPerYearInterestRateBase: BigInt(0),
+      supplyPerYearInterestRateSlopeHigh: BigInt(0),
+      supplyPerYearInterestRateSlopeLow: BigInt(0),
+      borrowPerYearInterestRateSlopeHigh: BigInt(0),
+    });
+    console.log("--addBaseAssetCurve-", addBaseAssetCurve);
   });
 
-  // test("changeBaseAssetCurve", async () => {
-  //   const changeBaseAssetCurve = controller.changeBaseAssetCurve(
-  //     token,
-  //     BigInt(1),
-  //     {
-  //       supplyKink: BigInt(0),
-  //       borrowKink: BigInt(0),
-  //       borrowPerYearInterestRateBase: BigInt(0),
-  //       borrowPerYearInterestRateSlopeLow: BigInt(0),
-  //       supplyPerYearInterestRateBase: BigInt(0),
-  //       supplyPerYearInterestRateSlopeHigh: BigInt(0),
-  //       supplyPerYearInterestRateSlopeLow: BigInt(0),
-  //       borrowPerYearInterestRateSlopeHigh: BigInt(0),
-  //     },
-  //   );
-  //   console.log("--changeBaseAssetCurve-", changeBaseAssetCurve);
-  // });
+  test("changeBaseAssetCurve", async () => {
+    const changeBaseAssetCurve = controller.changeBaseAssetCurve(
+      token,
+      BigInt(1),
+      {
+        id: "1",
+        supplyKink: BigInt(0),
+        borrowKink: BigInt(0),
+        borrowPerYearInterestRateBase: BigInt(0),
+        borrowPerYearInterestRateSlopeLow: BigInt(0),
+        supplyPerYearInterestRateBase: BigInt(0),
+        supplyPerYearInterestRateSlopeHigh: BigInt(0),
+        supplyPerYearInterestRateSlopeLow: BigInt(0),
+        borrowPerYearInterestRateSlopeHigh: BigInt(0),
+      },
+    );
+    console.log("--changeBaseAssetCurve-", changeBaseAssetCurve);
+  });
 });

@@ -7,7 +7,7 @@ import { ConfigControllerContract } from "../contracts";
 import { WagmiUtils } from "../utils";
 import { ConfigControllerWrapper } from "../wrappers";
 
-export async function fetchConfigController(
+export async function fetchConfigControllerData(
   controllerAddress: Address,
   chainId: WagmiChainId,
   config: Config,
@@ -21,6 +21,8 @@ export async function fetchConfigController(
       controller.getGuardianCall(),
       controller.getCuratorCall(),
       controller.getCuratorFeeCall(),
+      controller.getMarketsLengthCall(),
+      controller.getRevenueTokensLengthCall(),
     ],
   });
 
@@ -28,6 +30,8 @@ export async function fetchConfigController(
   const guardian = WagmiUtils.resultOrThrow<Address>(baseData[1]);
   const curator = WagmiUtils.resultOrThrow<Address>(baseData[2]);
   const curatorFee = WagmiUtils.resultOrThrow<bigint>(baseData[3]);
+  const marketsLength = WagmiUtils.resultOrThrow<bigint>(baseData[4]);
+  const revenueTokensLength = WagmiUtils.resultOrThrow<bigint>(baseData[5]);
 
   const configController = new ConfigController({
     address: controllerAddress,
@@ -35,6 +39,8 @@ export async function fetchConfigController(
     guardian,
     curator,
     curatorFee: Number(curatorFee),
+    marketsLength: Number(marketsLength),
+    revenueTokensLength: Number(revenueTokensLength),
   });
 
   return new ConfigControllerWrapper(configController, chainId, config);

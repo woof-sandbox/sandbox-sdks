@@ -5,9 +5,11 @@ import type { Address } from "viem";
 import type { WagmiChainId } from "../config";
 import { ControllerContract, wagmiConfig } from "../contracts";
 import {
+  ADD_CURVE_FAILED,
   CHANGE_CURVE_FAILED,
   SET_CONFIG_FAILED,
   SET_FEE_FAILED,
+  SET_THRESHOLDS_FAILED,
   SET_TREASURY_FAILED,
   TRANSFER_DAO_FAILED,
   TRANSFER_OWNER_FAILED,
@@ -32,6 +34,21 @@ export class SandboxControllerWrapper extends SandboxController {
     );
     this.chainId = chainId;
     this.config = config;
+  }
+
+  async addBaseAssetCurve(
+    token: Address,
+    baseAssetCurve: ICurve,
+  ): Promise<WriteContractReturnType> {
+    try {
+      return await this.controllerContract.addBaseAssetCurve(
+        token,
+        baseAssetCurve,
+        this.chainId,
+      );
+    } catch {
+      throw ADD_CURVE_FAILED();
+    }
   }
 
   async changeBaseAssetCurve(
@@ -102,6 +119,19 @@ export class SandboxControllerWrapper extends SandboxController {
       return await this.controllerContract.setTreasury(treasury, this.chainId);
     } catch {
       throw SET_TREASURY_FAILED();
+    }
+  }
+
+  async setThresholds(
+    thresholds: [bigint, bigint, bigint],
+  ): Promise<WriteContractReturnType> {
+    try {
+      return await this.controllerContract.setThresholds(
+        thresholds,
+        this.chainId,
+      );
+    } catch {
+      throw SET_THRESHOLDS_FAILED();
     }
   }
 

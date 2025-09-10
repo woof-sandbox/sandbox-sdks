@@ -115,19 +115,23 @@ export namespace MarketMethods {
   export function totalEarned(
     baseTokenPrice: string,
     marketTotalSupply: bigint, // or base total supply (takes from market)
-    priceDecimals = PRICE_FEED_FACTOR_UNITS,
   ): bigint {
-    const priceInBigInt = parseUnits(baseTokenPrice, priceDecimals);
-    return (marketTotalSupply * priceInBigInt) / BigInt(10 ** priceDecimals);
+    const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_FACTOR_UNITS);
+    return (
+      (marketTotalSupply * priceInBigInt) /
+      BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
+    );
   }
 
   export function totalBorrowed(
     baseTokenPrice: string,
     marketTotalBorrow: bigint,
-    priceDecimals = PRICE_FEED_FACTOR_UNITS,
   ): bigint {
-    const priceInBigInt = parseUnits(baseTokenPrice, priceDecimals);
-    return (marketTotalBorrow * priceInBigInt) / BigInt(10 ** priceDecimals);
+    const priceInBigInt = parseUnits(baseTokenPrice, PRICE_FEED_FACTOR_UNITS);
+    return (
+      (marketTotalBorrow * priceInBigInt) /
+      BigInt(10 ** PRICE_FEED_FACTOR_UNITS)
+    );
   }
 
   //
@@ -199,21 +203,21 @@ export namespace MarketMethods {
 
     const compApr = tokenRewardApr(
       Number(compToken.price),
-      compToken.priceFeedDecimals,
+      compToken.decimals,
       tokenToUsers,
       baseTotalBorrowOrSupply,
       Number(baseToken.price),
-      baseToken.priceFeedDecimals,
+      baseToken.decimals,
     );
 
     const tokenRewardAprs = rewardTokens.map((token) =>
       tokenRewardApr(
         Number(token.price),
-        token.priceFeedDecimals,
+        token.decimals,
         tokenToUsers,
         baseTotalBorrowOrSupply,
         Number(baseToken.price),
-        baseToken.priceFeedDecimals,
+        baseToken.decimals,
       ),
     );
 
@@ -289,7 +293,7 @@ export namespace MarketMethods {
   ): number {
     const baseTokenAmount = DataUtils.fromBigNumber(
       cometBalance,
-      Number(baseToken.priceFeedDecimals),
+      Number(baseToken.decimals),
     );
 
     const collateralsSum = collaterals.reduce((acc, collateral) => {
@@ -298,7 +302,7 @@ export namespace MarketMethods {
         Number(
           DataUtils.fromBigNumber(
             collateral.cometBalance,
-            Number(collateral.priceFeedDecimals),
+            Number(collateral.decimals),
           ),
         ) *
           Number(collateral.price)
@@ -314,18 +318,12 @@ export namespace MarketMethods {
   ) {
     const totalBorrowedUSD =
       Number(
-        DataUtils.fromBigNumber(
-          totalBorrowed,
-          Number(baseToken.priceFeedDecimals),
-        ),
+        DataUtils.fromBigNumber(totalBorrowed, Number(baseToken.decimals)),
       ) * Number(baseToken.price);
 
     const totalSuppliedUSD =
       Number(
-        DataUtils.fromBigNumber(
-          totalSupplied,
-          Number(baseToken.priceFeedDecimals),
-        ),
+        DataUtils.fromBigNumber(totalSupplied, Number(baseToken.decimals)),
       ) * Number(baseToken.price);
 
     return (totalSuppliedUSD / totalBorrowedUSD) * 100;
@@ -343,12 +341,8 @@ export namespace MarketMethods {
     baseToken: IBase,
   ): number {
     return (
-      Number(
-        DataUtils.fromBigNumber(
-          totalBorrow,
-          Number(baseToken.priceFeedDecimals),
-        ),
-      ) * Number(baseToken.price)
+      Number(DataUtils.fromBigNumber(totalBorrow, Number(baseToken.decimals))) *
+      Number(baseToken.price)
     );
   }
 
@@ -357,12 +351,8 @@ export namespace MarketMethods {
     baseToken: IBase,
   ): number {
     return (
-      Number(
-        DataUtils.fromBigNumber(
-          totalSupply,
-          Number(baseToken.priceFeedDecimals),
-        ),
-      ) * Number(baseToken.price)
+      Number(DataUtils.fromBigNumber(totalSupply, Number(baseToken.decimals))) *
+      Number(baseToken.price)
     );
   }
 
@@ -372,10 +362,7 @@ export namespace MarketMethods {
   ): number {
     return (
       Number(
-        DataUtils.fromBigNumber(
-          totalReserves,
-          Number(baseToken.priceFeedDecimals),
-        ),
+        DataUtils.fromBigNumber(totalReserves, Number(baseToken.decimals)),
       ) * Number(baseToken.price)
     );
   }
@@ -389,7 +376,7 @@ export namespace MarketMethods {
         Number(
           DataUtils.fromBigNumber(
             collateral.totalSupplyAsset,
-            Number(collateral.priceFeedDecimals),
+            Number(collateral.decimals),
           ),
         )
       );

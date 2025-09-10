@@ -1,109 +1,143 @@
 export const controllerAbi = [
   {
     inputs: [
-      { internalType: "address", name: "_owner", type: "address" },
+      {
+        internalType: "address",
+        name: "_owner",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "_dao",
         type: "address",
       },
-      { internalType: "address", name: "_treasury", type: "address" },
       {
         internalType: "bool",
         name: "_feeEnabled",
         type: "bool",
       },
       {
-        components: [
-          { internalType: "uint64", name: "targetPercent", type: "uint64" },
-          {
-            internalType: "uint64",
-            name: "storeFrontPriceFactor",
-            type: "uint64",
-          },
-          { internalType: "uint40", name: "minUpdateTime", type: "uint40" },
-          {
-            internalType: "uint40",
-            name: "maxUpdateTime",
-            type: "uint40",
-          },
-          {
-            internalType: "uint40",
-            name: "suggestedLockTimeOfSeedReserves",
-            type: "uint40",
-          },
-          {
-            internalType: "uint256",
-            name: "suggestedAmountOfSeedReserves",
-            type: "uint256",
-          },
-        ],
-        internalType:
-          "struct ISandboxController.SandboxControllerConfiguration",
-        name: "_config",
-        type: "tuple",
+        internalType: "uint256",
+        name: "_protocolFactorBorrow",
+        type: "uint256",
       },
       {
-        internalType: "uint64[3]",
-        name: "_reserveCommissions",
-        type: "uint64[3]",
+        internalType: "uint256",
+        name: "_reserveFactorBorrow",
+        type: "uint256",
       },
       {
-        internalType: "uint64[3]",
-        name: "_protocolCommissions",
-        type: "uint64[3]",
+        internalType: "uint256",
+        name: "_protocolFactorLiquidation",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_reserveFactorLiquidation",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_maxCollateralAssets",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_targetReserves",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_storeFrontPriceFactor",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_minUpdateTime",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_suggestedAmountOfSeedReserves",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_suggestedLockTimeOfSeedReserves",
+        type: "uint256",
       },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
   },
-  { inputs: [], name: "BaseTokenAlreadyWhitelisted", type: "error" },
-  {
-    inputs: [],
-    name: "BaseTokenNotWhitelisted",
-    type: "error",
-  },
-  { inputs: [], name: "CollateralTokenAlreadyWhitelisted", type: "error" },
-  {
-    inputs: [],
-    name: "DifferentPriceFeedAlreadyUsedForToken",
-    type: "error",
-  },
-  { inputs: [], name: "IncorrectIndex", type: "error" },
-  {
-    inputs: [],
-    name: "IncorrectSetting",
-    type: "error",
-  },
-  { inputs: [], name: "InvalidCommissions", type: "error" },
   {
     inputs: [],
     name: "InvalidCurveConfiguration",
     type: "error",
   },
-  { inputs: [], name: "InvalidFactors", type: "error" },
+  {
+    inputs: [],
+    name: "InvalidFactors",
+    type: "error",
+  },
   {
     inputs: [],
     name: "InvalidPriceFeed",
     type: "error",
   },
   {
-    inputs: [{ internalType: "address", name: "caller", type: "address" }],
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "NotAuthorized",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
     name: "NotDao",
     type: "error",
   },
   {
-    inputs: [{ internalType: "address", name: "caller", type: "address" }],
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
     name: "NotOwner",
     type: "error",
   },
-  { inputs: [], name: "Unauthorized", type: "error" },
   {
     inputs: [],
-    name: "WrongPriceFeedUnderlying",
+    name: "PriceFeedAlreadyWhitelisted",
     type: "error",
   },
-  { inputs: [], name: "ZeroAddress", type: "error" },
+  {
+    inputs: [],
+    name: "TokenAlreadyWhitelisted",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "TokenNotWhitelisted",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "ZeroAddress",
+    type: "error",
+  },
   {
     anonymous: false,
     inputs: [
@@ -115,7 +149,11 @@ export const controllerAbi = [
       },
       {
         components: [
-          { internalType: "uint64", name: "supplyKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "supplyKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "supplyPerYearInterestRateBase",
@@ -131,7 +169,11 @@ export const controllerAbi = [
             name: "supplyPerYearInterestRateSlopeHigh",
             type: "uint64",
           },
-          { internalType: "uint64", name: "borrowKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "borrowKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "borrowPerYearInterestRateBase",
@@ -153,12 +195,6 @@ export const controllerAbi = [
         name: "baseAssetCurve",
         type: "tuple",
       },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "curveIndex",
-        type: "uint256",
-      },
     ],
     name: "BaseAssetCurveAdded",
     type: "event",
@@ -174,7 +210,11 @@ export const controllerAbi = [
       },
       {
         components: [
-          { internalType: "uint64", name: "supplyKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "supplyKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "supplyPerYearInterestRateBase",
@@ -190,7 +230,11 @@ export const controllerAbi = [
             name: "supplyPerYearInterestRateSlopeHigh",
             type: "uint64",
           },
-          { internalType: "uint64", name: "borrowKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "borrowKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "borrowPerYearInterestRateBase",
@@ -214,7 +258,11 @@ export const controllerAbi = [
       },
       {
         components: [
-          { internalType: "uint64", name: "supplyKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "supplyKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "supplyPerYearInterestRateBase",
@@ -230,7 +278,11 @@ export const controllerAbi = [
             name: "supplyPerYearInterestRateSlopeHigh",
             type: "uint64",
           },
-          { internalType: "uint64", name: "borrowKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "borrowKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "borrowPerYearInterestRateBase",
@@ -251,12 +303,6 @@ export const controllerAbi = [
         internalType: "struct ISandboxController.BaseAssetCurve",
         name: "newCurve",
         type: "tuple",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "curveIndex",
-        type: "uint256",
       },
     ],
     name: "BaseAssetCurveChanged",
@@ -283,6 +329,60 @@ export const controllerAbi = [
         name: "decimals",
         type: "uint8",
       },
+      {
+        components: [
+          {
+            internalType: "uint64",
+            name: "supplyKink",
+            type: "uint64",
+          },
+          {
+            internalType: "uint64",
+            name: "supplyPerYearInterestRateBase",
+            type: "uint64",
+          },
+          {
+            internalType: "uint64",
+            name: "supplyPerYearInterestRateSlopeLow",
+            type: "uint64",
+          },
+          {
+            internalType: "uint64",
+            name: "supplyPerYearInterestRateSlopeHigh",
+            type: "uint64",
+          },
+          {
+            internalType: "uint64",
+            name: "borrowKink",
+            type: "uint64",
+          },
+          {
+            internalType: "uint64",
+            name: "borrowPerYearInterestRateBase",
+            type: "uint64",
+          },
+          {
+            internalType: "uint64",
+            name: "borrowPerYearInterestRateSlopeLow",
+            type: "uint64",
+          },
+          {
+            internalType: "uint64",
+            name: "borrowPerYearInterestRateSlopeHigh",
+            type: "uint64",
+          },
+        ],
+        indexed: false,
+        internalType: "struct ISandboxController.BaseAssetCurve",
+        name: "baseAssetCurve",
+        type: "tuple",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "minBorrow",
+        type: "uint256",
+      },
     ],
     name: "BaseAssetWhitelisted",
     type: "event",
@@ -308,6 +408,42 @@ export const controllerAbi = [
         name: "decimals",
         type: "uint256",
       },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "maxBorrowCollateralFactor",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "minBorrowCollateralFactor",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "minLiquidateCollateralFactor",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "maxLiquidateCollateralFactor",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "minLiquidationFactor",
+        type: "uint64",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "maxLiquidationFactor",
+        type: "uint64",
+      },
     ],
     name: "CollateralAssetWhitelisted",
     type: "event",
@@ -316,68 +452,25 @@ export const controllerAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "enum ISandboxController.MarketState",
-        name: "state",
-        type: "uint8",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "oldReserve",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "newReserve",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "oldProtocol",
-        type: "uint64",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "newProtocol",
-        type: "uint64",
-      },
-    ],
-    name: "CommissionChanged",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         components: [
           {
-            internalType: "uint64",
-            name: "targetPercent",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
+            internalType: "uint256",
             name: "storeFrontPriceFactor",
-            type: "uint64",
+            type: "uint256",
           },
           {
-            internalType: "uint40",
+            internalType: "uint256",
             name: "minUpdateTime",
-            type: "uint40",
-          },
-          { internalType: "uint40", name: "maxUpdateTime", type: "uint40" },
-          {
-            internalType: "uint40",
-            name: "suggestedLockTimeOfSeedReserves",
-            type: "uint40",
+            type: "uint256",
           },
           {
             internalType: "uint256",
             name: "suggestedAmountOfSeedReserves",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "suggestedLockTimeOfSeedReserves",
             type: "uint256",
           },
         ],
@@ -389,26 +482,24 @@ export const controllerAbi = [
       },
       {
         components: [
-          { internalType: "uint64", name: "targetPercent", type: "uint64" },
           {
-            internalType: "uint64",
+            internalType: "uint256",
             name: "storeFrontPriceFactor",
-            type: "uint64",
-          },
-          { internalType: "uint40", name: "minUpdateTime", type: "uint40" },
-          {
-            internalType: "uint40",
-            name: "maxUpdateTime",
-            type: "uint40",
+            type: "uint256",
           },
           {
-            internalType: "uint40",
-            name: "suggestedLockTimeOfSeedReserves",
-            type: "uint40",
+            internalType: "uint256",
+            name: "minUpdateTime",
+            type: "uint256",
           },
           {
             internalType: "uint256",
             name: "suggestedAmountOfSeedReserves",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "suggestedLockTimeOfSeedReserves",
             type: "uint256",
           },
         ],
@@ -478,6 +569,100 @@ export const controllerAbi = [
     inputs: [
       {
         indexed: false,
+        internalType: "enum ISandboxController.MarketState",
+        name: "state",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "oldValue",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newValue",
+        type: "uint256",
+      },
+    ],
+    name: "ProtocolCommissionChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "enum ISandboxController.MarketState",
+        name: "state",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "oldValue",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newValue",
+        type: "uint256",
+      },
+    ],
+    name: "ReserveCommissionChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "oldTargetReserves",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newTargetReserves",
+        type: "uint256",
+      },
+    ],
+    name: "TargetReservesChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "enum ISandboxController.MarketState",
+        name: "state",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "oldValue",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newValue",
+        type: "uint256",
+      },
+    ],
+    name: "ThresholdChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: "address",
         name: "oldTreasury",
         type: "address",
@@ -494,63 +679,26 @@ export const controllerAbi = [
   },
   {
     inputs: [],
-    name: "MARKET_STATES",
-    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "MAX_COMMISSIONS",
-    outputs: [{ internalType: "uint64", name: "", type: "uint64" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "MAX_TARGET_PERCENT",
-    outputs: [{ internalType: "uint64", name: "", type: "uint64" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "MIN_FACTOR",
-    outputs: [{ internalType: "uint64", name: "", type: "uint64" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "PARAMETERS_SCALE",
-    outputs: [{ internalType: "uint64", name: "", type: "uint64" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "_controllerConfiguration",
     outputs: [
-      { internalType: "uint64", name: "targetPercent", type: "uint64" },
       {
-        internalType: "uint64",
+        internalType: "uint256",
         name: "storeFrontPriceFactor",
-        type: "uint64",
-      },
-      { internalType: "uint40", name: "minUpdateTime", type: "uint40" },
-      {
-        internalType: "uint40",
-        name: "maxUpdateTime",
-        type: "uint40",
+        type: "uint256",
       },
       {
-        internalType: "uint40",
-        name: "suggestedLockTimeOfSeedReserves",
-        type: "uint40",
+        internalType: "uint256",
+        name: "minUpdateTime",
+        type: "uint256",
       },
       {
         internalType: "uint256",
         name: "suggestedAmountOfSeedReserves",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "suggestedLockTimeOfSeedReserves",
         type: "uint256",
       },
     ],
@@ -566,7 +714,11 @@ export const controllerAbi = [
       },
       {
         components: [
-          { internalType: "uint64", name: "supplyKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "supplyKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "supplyPerYearInterestRateBase",
@@ -582,7 +734,11 @@ export const controllerAbi = [
             name: "supplyPerYearInterestRateSlopeHigh",
             type: "uint64",
           },
-          { internalType: "uint64", name: "borrowKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "borrowKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "borrowPerYearInterestRateBase",
@@ -610,12 +766,54 @@ export const controllerAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "token", type: "address" }],
+    inputs: [],
+    name: "baseAssetCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "baseAssetTokens",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+    ],
     name: "baseAssets",
     outputs: [
       {
         components: [
-          { internalType: "address", name: "priceFeed", type: "address" },
+          {
+            internalType: "address",
+            name: "priceFeed",
+            type: "address",
+          },
           {
             internalType: "uint8",
             name: "decimals",
@@ -648,7 +846,11 @@ export const controllerAbi = [
                 name: "supplyPerYearInterestRateSlopeHigh",
                 type: "uint64",
               },
-              { internalType: "uint64", name: "borrowKink", type: "uint64" },
+              {
+                internalType: "uint64",
+                name: "borrowKink",
+                type: "uint64",
+              },
               {
                 internalType: "uint64",
                 name: "borrowPerYearInterestRateBase",
@@ -679,15 +881,12 @@ export const controllerAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "token", type: "address" }],
-    name: "borrowMin",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
-      { internalType: "address", name: "token", type: "address" },
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
       {
         internalType: "uint256",
         name: "curveIndex",
@@ -695,7 +894,11 @@ export const controllerAbi = [
       },
       {
         components: [
-          { internalType: "uint64", name: "supplyKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "supplyKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "supplyPerYearInterestRateBase",
@@ -711,7 +914,11 @@ export const controllerAbi = [
             name: "supplyPerYearInterestRateSlopeHigh",
             type: "uint64",
           },
-          { internalType: "uint64", name: "borrowKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "borrowKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "borrowPerYearInterestRateBase",
@@ -739,7 +946,45 @@ export const controllerAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "token", type: "address" }],
+    inputs: [],
+    name: "collateralAssetCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "collateralAssetTokens",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+    ],
     name: "collateralAssets",
     outputs: [
       {
@@ -749,7 +994,11 @@ export const controllerAbi = [
             name: "collateralToken",
             type: "address",
           },
-          { internalType: "address", name: "priceFeed", type: "address" },
+          {
+            internalType: "address",
+            name: "priceFeed",
+            type: "address",
+          },
           {
             internalType: "uint8",
             name: "decimals",
@@ -796,34 +1045,28 @@ export const controllerAbi = [
   },
   {
     inputs: [],
-    name: "config",
+    name: "controllerConfiguration",
     outputs: [
       {
         components: [
           {
-            internalType: "uint64",
-            name: "targetPercent",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
+            internalType: "uint256",
             name: "storeFrontPriceFactor",
-            type: "uint64",
+            type: "uint256",
           },
           {
-            internalType: "uint40",
+            internalType: "uint256",
             name: "minUpdateTime",
-            type: "uint40",
-          },
-          { internalType: "uint40", name: "maxUpdateTime", type: "uint40" },
-          {
-            internalType: "uint40",
-            name: "suggestedLockTimeOfSeedReserves",
-            type: "uint40",
+            type: "uint256",
           },
           {
             internalType: "uint256",
             name: "suggestedAmountOfSeedReserves",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "suggestedLockTimeOfSeedReserves",
             type: "uint256",
           },
         ],
@@ -837,8 +1080,40 @@ export const controllerAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "token", type: "address" }],
-    name: "curves",
+    inputs: [],
+    name: "dao",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "feeEnabled",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+    ],
+    name: "getBaseAssetCurves",
     outputs: [
       {
         components: [
@@ -862,7 +1137,11 @@ export const controllerAbi = [
             name: "supplyPerYearInterestRateSlopeHigh",
             type: "uint64",
           },
-          { internalType: "uint64", name: "borrowKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "borrowKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "borrowPerYearInterestRateBase",
@@ -888,52 +1167,40 @@ export const controllerAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "dao",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "feeEnabled",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    inputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+    ],
+    name: "isBaseTokenWhitelisted",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "uint256", name: "_currentReserves", type: "uint256" },
       {
-        internalType: "uint256",
-        name: "_seedReserves",
-        type: "uint256",
-      },
-      { internalType: "uint256", name: "_targetReserves", type: "uint256" },
-    ],
-    name: "getCommissions",
-    outputs: [
-      { internalType: "uint64", name: "_reserveCommission", type: "uint64" },
-      {
-        internalType: "uint64",
-        name: "_protocolCommission",
-        type: "uint64",
+        internalType: "address",
+        name: "token",
+        type: "address",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "token", type: "address" }],
-    name: "isBaseTokenWhitelisted",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "address", name: "token", type: "address" }],
     name: "isCollateralTokenWhitelisted",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -961,7 +1228,11 @@ export const controllerAbi = [
             name: "supplyPerYearInterestRateSlopeHigh",
             type: "uint64",
           },
-          { internalType: "uint64", name: "borrowKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "borrowKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "borrowPerYearInterestRateBase",
@@ -984,42 +1255,148 @@ export const controllerAbi = [
       },
     ],
     name: "isCurveConfigurationValid",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "pure",
     type: "function",
   },
   {
-    inputs: [],
-    name: "owner",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "proposalBoundaries",
-    outputs: [
-      { internalType: "uint40", name: "", type: "uint40" },
+    inputs: [
       {
-        internalType: "uint40",
+        internalType: "address",
         name: "",
-        type: "uint40",
+        type: "address",
+      },
+    ],
+    name: "isPriceFeedWhitelisted",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    name: "protocolCommission",
-    outputs: [{ internalType: "uint64", name: "", type: "uint64" }],
+    inputs: [],
+    name: "maxCollateralAssets",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "enum ISandboxController.MarketState",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    name: "protocolCommission",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "protocolFactorBorrow",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "protocolFactorLiquidation",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "enum ISandboxController.MarketState",
+        name: "",
+        type: "uint8",
+      },
+    ],
     name: "reserveCommission",
-    outputs: [{ internalType: "uint64", name: "", type: "uint64" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "reserveFactorBorrow",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "reserveFactorLiquidation",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -1028,29 +1405,23 @@ export const controllerAbi = [
       {
         components: [
           {
-            internalType: "uint64",
-            name: "targetPercent",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
+            internalType: "uint256",
             name: "storeFrontPriceFactor",
-            type: "uint64",
+            type: "uint256",
           },
           {
-            internalType: "uint40",
+            internalType: "uint256",
             name: "minUpdateTime",
-            type: "uint40",
-          },
-          { internalType: "uint40", name: "maxUpdateTime", type: "uint40" },
-          {
-            internalType: "uint40",
-            name: "suggestedLockTimeOfSeedReserves",
-            type: "uint40",
+            type: "uint256",
           },
           {
             internalType: "uint256",
             name: "suggestedAmountOfSeedReserves",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "suggestedLockTimeOfSeedReserves",
             type: "uint256",
           },
         ],
@@ -1066,7 +1437,13 @@ export const controllerAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "bool", name: "_feeEnabled", type: "bool" }],
+    inputs: [
+      {
+        internalType: "bool",
+        name: "_feeEnabled",
+        type: "bool",
+      },
+    ],
     name: "setFeeEnabled",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1074,42 +1451,122 @@ export const controllerAbi = [
   },
   {
     inputs: [
-      { internalType: "uint8", name: "_index", type: "uint8" },
       {
-        internalType: "uint64",
-        name: "_reserveCommission",
-        type: "uint64",
+        internalType: "uint256[3]",
+        name: "protocolCommissions",
+        type: "uint256[3]",
       },
-      { internalType: "uint64", name: "_protocolCommission", type: "uint64" },
     ],
-    name: "setMarketStateCommissions",
+    name: "setProtocolCommissions",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "_treasury", type: "address" }],
+    inputs: [
+      {
+        internalType: "uint256[3]",
+        name: "reserveCommissions",
+        type: "uint256[3]",
+      },
+    ],
+    name: "setReserveCommissions",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_targetReserves",
+        type: "uint256",
+      },
+    ],
+    name: "setTargetReserves",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256[3]",
+        name: "thresholds",
+        type: "uint256[3]",
+      },
+    ],
+    name: "setThresholds",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_treasury",
+        type: "address",
+      },
+    ],
     name: "setTreasury",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "", type: "address" }],
-    name: "tokenToPriceFeed",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
+    inputs: [],
+    name: "targetReserves",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "newDao", type: "address" }],
+    inputs: [
+      {
+        internalType: "enum ISandboxController.MarketState",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    name: "threshold",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newDao",
+        type: "address",
+      },
+    ],
     name: "transferDao",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
     name: "transferOwner",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1118,13 +1575,23 @@ export const controllerAbi = [
   {
     inputs: [],
     name: "treasury",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "address", name: "token", type: "address" },
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "priceFeed",
@@ -1132,7 +1599,11 @@ export const controllerAbi = [
       },
       {
         components: [
-          { internalType: "uint64", name: "supplyKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "supplyKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "supplyPerYearInterestRateBase",
@@ -1148,7 +1619,11 @@ export const controllerAbi = [
             name: "supplyPerYearInterestRateSlopeHigh",
             type: "uint64",
           },
-          { internalType: "uint64", name: "borrowKink", type: "uint64" },
+          {
+            internalType: "uint64",
+            name: "borrowKink",
+            type: "uint64",
+          },
           {
             internalType: "uint64",
             name: "borrowPerYearInterestRateBase",
@@ -1169,7 +1644,11 @@ export const controllerAbi = [
         name: "baseAssetCurve",
         type: "tuple",
       },
-      { internalType: "uint256", name: "minBorrow", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "minBorrow",
+        type: "uint256",
+      },
     ],
     name: "whitelistBaseAsset",
     outputs: [],
@@ -1178,7 +1657,11 @@ export const controllerAbi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "token", type: "address" },
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "priceFeed",
@@ -1204,7 +1687,11 @@ export const controllerAbi = [
         name: "maxLiquidateCollateralFactor",
         type: "uint64",
       },
-      { internalType: "uint64", name: "minLiquidationFactor", type: "uint64" },
+      {
+        internalType: "uint64",
+        name: "minLiquidationFactor",
+        type: "uint64",
+      },
       {
         internalType: "uint64",
         name: "maxLiquidationFactor",

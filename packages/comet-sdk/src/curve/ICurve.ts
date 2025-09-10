@@ -1,5 +1,7 @@
 export interface ICurve {
-  supplyKink: bigint; // percents 900000000000000000 //
+  id: string; // will be in sandbox
+  //
+  supplyKink: bigint; // percents 900000000000000000 // todo: find factor
   supplyPerYearInterestRateSlopeLow: bigint; // percents 1712328767 * SecPerYear
   supplyPerYearInterestRateSlopeHigh: bigint; // percents 96207508878 * SecPerYear
   supplyPerYearInterestRateBase: bigint; // percents 0
