@@ -1,5 +1,16 @@
 # @woof-software/comet-sdk-wagmi
 
+## 2.0.0
+
+### Major Changes
+
+- e5e4532: Undo updates of PR 80 (markets update) and checkout back to the PR 79 (refactoring)
+
+### Patch Changes
+
+- Updated dependencies [e5e4532]
+  - @woof-software/comet-sdk@4.0.0
+
 ## 1.0.0
 
 ### Major Changes
