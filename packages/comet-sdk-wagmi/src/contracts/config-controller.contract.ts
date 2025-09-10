@@ -30,10 +30,33 @@ export class ConfigControllerContract extends WagmiContract {
     return this.getCall("curatorFee");
   }
 
+  getMarketsLengthCall(): ContractFunctionParameters {
+    return this.getCall("marketsLength");
+  }
+
+  getRevenueTokensLengthCall(): ContractFunctionParameters {
+    return this.getCall("revenueTokensLength");
+  }
+
   async acceptCuratorRole(
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("acceptCuratorRole", chainId);
+  }
+
+  async acceptMarketTransferProposal(
+    market: Address,
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("acceptMarketTransferProposal", chainId, [market]);
+  }
+
+  async accumulateRevenue(
+    token: Address,
+    amount: bigint,
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("accumulateRevenue", chainId, [token, amount]);
   }
 
   async cancelCuratorProposal(
@@ -42,11 +65,57 @@ export class ConfigControllerContract extends WagmiContract {
     return this.write("cancelCuratorProposal", chainId);
   }
 
+  async cancelMarketConfigProposal(
+    market: Address,
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("cancelMarketConfigProposal", chainId, [market]);
+  }
+
+  async cancelMarketTransferProposal(
+    market: Address,
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("cancelMarketTransferProposal", chainId, [market]);
+  }
+
+  async claimAllRevenue(
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("claimAllRevenue", chainId);
+  }
+
   async claimRevenue(
     token: Address,
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("claimRevenue", chainId, [token]);
+  }
+
+  async createMarket(
+    marketConfig: {
+      baseToken: Address;
+      priceFeed: Address;
+      collateralTokens: {
+        collateralToken: Address;
+        priceFeed: Address;
+        borrowCollateralFactor: bigint;
+        liquidateCollateralFactor: bigint;
+        liquidationFactor: bigint;
+        supplyCap: bigint;
+      }[];
+      baseTokenCurveId: bigint;
+    },
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("createMarket", chainId, [marketConfig]);
+  }
+
+  async executeMarketConfigProposal(
+    market: Address,
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("executeMarketConfigProposal", chainId, [market]);
   }
 
   async grantOwnership(
@@ -88,10 +157,53 @@ export class ConfigControllerContract extends WagmiContract {
     return this.write("proposeCurator", chainId, [proposedCurator]);
   }
 
+  async proposeMarketCollateralTokens(
+    market: Address,
+    collateralTokens: {
+      collateralToken: Address;
+      priceFeed: Address;
+      borrowCollateralFactor: bigint;
+      liquidateCollateralFactor: bigint;
+      liquidationFactor: bigint;
+      supplyCap: bigint;
+    }[],
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("proposeMarketCollateralTokens", chainId, [
+      market,
+      collateralTokens,
+    ]);
+  }
+
+  async proposeMarketTransfer(
+    market: Address,
+    newController: Address,
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("proposeMarketTransfer", chainId, [
+      market,
+      newController,
+    ]);
+  }
+
+  async removeClaimRevenueToken(
+    token: Address,
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("removeClaimRevenueToken", chainId, [token]);
+  }
+
   async removeCurator(
     chainId?: WagmiChainId,
   ): Promise<WriteContractReturnType> {
     return this.write("removeCurator", chainId);
+  }
+
+  async setCuratorFee(
+    fee: bigint,
+    chainId?: WagmiChainId,
+  ): Promise<WriteContractReturnType> {
+    return this.write("setCuratorFee", chainId, [fee]);
   }
 
   async setGuardian(

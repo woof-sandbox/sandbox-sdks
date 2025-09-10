@@ -1,17 +1,15 @@
 import { multicall } from "@wagmi/core";
-import { COMET_FACTOR_SCALE, UserCollateral } from "@woof-software/comet-sdk";
+import {
+  PRICE_FEED_FACTOR_UNITS,
+  UserCollateral,
+} from "@woof-software/comet-sdk";
 import {
   type Address,
   type ContractFunctionParameters,
   formatUnits,
 } from "viem";
 import type { WagmiChainId } from "../config";
-import {
-  ChainlinkPriceFeedContract,
-  CometContract,
-  Erc20Contract,
-  wagmiConfig,
-} from "../contracts";
+import { CometContract, Erc20Contract, wagmiConfig } from "../contracts";
 import { WagmiUtils } from "../utils";
 
 export async function fetchUserCollaterals(
@@ -26,14 +24,9 @@ export async function fetchUserCollaterals(
   const multicallBatch: ContractFunctionParameters[] = [];
   for (const config of cometConfig.assetConfigs) {
     const asset = new Erc20Contract(config.collateralToken, chainId);
-    const chainlinkPriceFeed = new ChainlinkPriceFeedContract(
-      config.priceFeed,
-      chainId,
-    );
     multicallBatch.push(
       asset.getSymbolCall(),
       asset.getDecimalsCall(),
-      chainlinkPriceFeed.getDecimalsCall(),
       asset.getBalanceOfCall(userAddress),
       comet.getPriceCall(config.priceFeed),
       comet.getUserCollateralCall(userAddress, config.collateralToken),
@@ -57,10 +50,6 @@ export async function fetchUserCollaterals(
     const symbol = WagmiUtils.resultOrThrow<string>(assetsData[index]!);
     ++index;
     const decimals = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
-    ++index;
-    const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(
-      assetsData[index]!,
-    );
     ++index;
     const userBalance = WagmiUtils.resultOrThrow<bigint>(assetsData[index]!);
     ++index;
@@ -88,18 +77,16 @@ export async function fetchUserCollaterals(
       tokenAddress: config.collateralToken,
       symbol,
       decimals,
-      priceFeedDecimals,
       userBalance,
       userSupplyBalance,
       cometBalance,
       totalSupplyAsset,
       collateralReserves,
-      price: formatUnits(rawPrice, Number(priceFeedDecimals)),
+      price: formatUnits(rawPrice, PRICE_FEED_FACTOR_UNITS),
       priceFeedAddress: config.priceFeed,
       collateralFactor: config.borrowCollateralFactor,
       liquidationFactor: config.liquidateCollateralFactor,
-      liquidationPenalty: COMET_FACTOR_SCALE - config.liquidationFactor,
-      cometScale: config.scale,
+      liquidationPenalty: BigInt(1e18) - config.liquidationFactor,
       supplyCap: config.supplyCap,
     });
   }

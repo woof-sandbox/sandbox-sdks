@@ -23,9 +23,10 @@ const mockCurve = {
 const mockBaseToken: IBase = {
   tokenAddress: "0xBase",
   symbol: "BASE",
-  priceFeedDecimals: 18n,
+  decimals: 18n,
   price: "1.0",
   priceFeedAddress: "0xFeed",
+  baseMinBorrow: 1n,
   baseMinForRewards: 2n,
   baseTrackingBorrowSpeed: 3n,
   baseTrackingSupplySpeed: 4n,
@@ -36,7 +37,7 @@ const mockBaseToken: IBase = {
 const mockCollateralData: ICollateral = {
   tokenAddress: "0xCol",
   symbol: "COL",
-  priceFeedDecimals: 18n,
+  decimals: 18n,
   price: "2.0",
   priceFeedAddress: "0xFeed",
   totalSupplyAsset: 100n,
@@ -45,7 +46,6 @@ const mockCollateralData: ICollateral = {
   collateralFactor: 1n,
   liquidationFactor: 1n,
   liquidationPenalty: 1n,
-  cometScale: 8n,
   supplyCap: 1000n,
 };
 const mockCollateral = new Collateral(mockCollateralData);
@@ -53,7 +53,7 @@ const mockCollateral = new Collateral(mockCollateralData);
 const mockCompToken: IToken = {
   tokenAddress: "0xComp",
   symbol: "COMP",
-  priceFeedDecimals: 18n,
+  decimals: 18n,
   price: "1.5",
   priceFeedAddress: "0xFeed",
 };
@@ -61,7 +61,7 @@ const mockCompToken: IToken = {
 const mockRewardToken: IToken = {
   tokenAddress: "0xReward",
   symbol: "RWD",
-  priceFeedDecimals: 18n,
+  decimals: 18n,
   price: "2.0",
   priceFeedAddress: "0xFeed",
 };

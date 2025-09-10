@@ -1,4 +1,5 @@
 import type { Address } from "viem";
+import type { IBase, ICollateral } from "../token";
 import type { ISandboxController } from "./ISandboxController";
 
 export class SandboxController implements ISandboxController {
@@ -12,6 +13,8 @@ export class SandboxController implements ISandboxController {
   feeEnabled: boolean; // is commission gathering from the whole protocol enabled
   treasuryAddress: string; // (still not available - mock with r address)
 
+  baseWhitelist: IBase[];
+  collateralsWhitelist: ICollateral[];
   storeFrontPriceFactor: number; // percents (1e18 == 100%)
 
   constructor(controllerData: ISandboxController) {
@@ -27,6 +30,8 @@ export class SandboxController implements ISandboxController {
     this.feeEnabled = controllerData.feeEnabled;
     this.treasuryAddress = controllerData.treasuryAddress;
 
+    this.baseWhitelist = controllerData.baseWhitelist;
+    this.collateralsWhitelist = controllerData.collateralsWhitelist;
     this.storeFrontPriceFactor = controllerData.storeFrontPriceFactor;
   }
 }

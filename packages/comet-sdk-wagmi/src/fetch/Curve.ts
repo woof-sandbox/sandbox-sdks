@@ -16,6 +16,7 @@ export async function fetchCurvesMocks(
 
   return [
     new Curve({
+      id: "42",
       supplyKink: 900000000000000000n,
       supplyPerYearInterestRateSlopeLow: 1712328767n * secsPerYear,
       supplyPerYearInterestRateSlopeHigh: 96207508878n * secsPerYear,
@@ -61,6 +62,7 @@ export async function fetchCurves(
 
   return [
     new Curve({
+      id: "42", // TODO: sandbox functionality
       supplyKink,
       supplyPerYearInterestRateSlopeLow: supplySlopeLow * secsPerYear,
       supplyPerYearInterestRateSlopeHigh: supplySlopeHigh * secsPerYear,

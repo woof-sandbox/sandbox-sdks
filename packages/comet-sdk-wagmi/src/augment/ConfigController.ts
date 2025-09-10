@@ -1,12 +1,12 @@
 import { ConfigController } from "@woof-software/comet-sdk";
-import { fetchConfigController } from "../fetch";
+import { fetchConfigControllerData } from "../fetch";
 
 declare module "@woof-software/comet-sdk" {
   namespace ConfigController {
-    let fetch: typeof fetchConfigController;
+    let fetch: typeof fetchConfigControllerData;
   }
 }
 
-ConfigController.fetch = fetchConfigController;
+ConfigController.fetch = fetchConfigControllerData;
 
 export { ConfigController };

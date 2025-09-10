@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { Curve, type ICurve } from "../../src/curve";
+import { Curve } from "../../src/curve/Curve";
 
-const mockCurveData: ICurve = {
+const mockCurveData = {
+  id: "curve1",
   supplyKink: 80n,
   supplyPerYearInterestRateSlopeLow: 10n,
   supplyPerYearInterestRateSlopeHigh: 20n,
@@ -15,6 +16,7 @@ const mockCurveData: ICurve = {
 describe("Curve", () => {
   it("should assign all properties from constructor", () => {
     const curve = new Curve(mockCurveData);
+    expect(curve.id).toBe(mockCurveData.id);
     expect(curve.supplyKink).toBe(mockCurveData.supplyKink);
     expect(curve.supplyPerYearInterestRateSlopeLow).toBe(
       mockCurveData.supplyPerYearInterestRateSlopeLow,

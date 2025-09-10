@@ -23,7 +23,7 @@ export class UserMarket extends Market implements IUserMarket {
   get borrowBalanceUSD(): number {
     return UserMarketMethods.borrowBalanceUsd(
       this.borrowBalance,
-      this.baseToken.priceFeedDecimals,
+      this.baseToken.decimals,
       this.price,
     );
   }
@@ -31,13 +31,13 @@ export class UserMarket extends Market implements IUserMarket {
   get supplyBalanceUSD(): number {
     return UserMarketMethods.supplyBalanceUsd(
       this.supplyBalance,
-      this.baseToken.priceFeedDecimals,
+      this.baseToken.decimals,
       this.price,
     );
   }
 
-  getTokenPrice(tokenPrice: bigint, usdToken = false): number {
-    return UserMarketMethods.tokenPrice(tokenPrice, this.price, usdToken);
+  getTokenPrice(symbol: string, tokenPrice: bigint): number {
+    return UserMarketMethods.tokenPrice(symbol, tokenPrice, this.price);
   }
 
   get borrowCollateralValueUSD(): number {
@@ -75,7 +75,7 @@ export class UserMarket extends Market implements IUserMarket {
       this.borrowCapacityMarketUSD,
       this.supplyBalance,
       this.borrowBalance,
-      this.baseToken.priceFeedDecimals,
+      this.baseToken.decimals,
       this.price,
     );
   }
