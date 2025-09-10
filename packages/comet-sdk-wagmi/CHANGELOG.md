@@ -1,5 +1,16 @@
 # @woof-software/comet-sdk-wagmi
 
+## 4.0.0
+
+### Major Changes
+
+- d2a03c7: replace priceFeedDecimals to decimals, changed contract interaction and ABIs, removed deprecated contract methods, updated augment queries and fetchers. Added and updated e2e tests.
+
+### Patch Changes
+
+- Updated dependencies [d2a03c7]
+  - @woof-software/comet-sdk@6.0.0
+
 ## 3.0.0
 
 ### Major Changes
