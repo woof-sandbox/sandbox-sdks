@@ -1,5 +1,29 @@
 # @woof-software/comet-sdk
 
+## 5.0.0
+
+### Major Changes
+
+- 180821d: Revert PR 79 to stabilize comet operations. (borrow, supply, withdraw, lend)
+
+## 4.0.0
+
+### Major Changes
+
+- e5e4532: Undo updates of PR 80 (markets update) and checkout back to the PR 79 (refactoring)
+
+## 3.0.0
+
+### Major Changes
+
+- e1a4213: removed rewards fields on sdk types and update data saving
+
+## 2.0.1
+
+### Patch Changes
+
+- Auto-generated changeset from CI
+
 ## 2.0.0
 
 ### Major Changes
