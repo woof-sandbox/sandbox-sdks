@@ -1,5 +1,16 @@
 # @woof-software/comet-sdk-wagmi
 
+## 3.0.0
+
+### Major Changes
+
+- 180821d: Revert PR 79 to stabilize comet operations. (borrow, supply, withdraw, lend)
+
+### Patch Changes
+
+- Updated dependencies [180821d]
+  - @woof-software/comet-sdk@5.0.0
+
 ## 2.0.0
 
 ### Major Changes
