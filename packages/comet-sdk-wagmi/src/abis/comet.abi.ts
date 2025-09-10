@@ -3460,6 +3460,26 @@ export const cometAbi = [
             type: "uint64",
           },
           {
+            internalType: "uint64",
+            name: "trackingIndexScale",
+            type: "uint64",
+          },
+          {
+            internalType: "uint64",
+            name: "baseTrackingSupplySpeed",
+            type: "uint64",
+          },
+          {
+            internalType: "uint64",
+            name: "baseTrackingBorrowSpeed",
+            type: "uint64",
+          },
+          {
+            internalType: "uint104",
+            name: "baseMinForRewards",
+            type: "uint104",
+          },
+          {
             internalType: "uint104",
             name: "baseBorrowMin",
             type: "uint104",

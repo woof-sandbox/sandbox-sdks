@@ -27,6 +27,10 @@ export async function fetchBaseMock(
   const curves = await fetchCurvesMocks(cometProxyAddress, chainId);
 
   return new Base({
+    baseMinForRewards: 900000000000000000n,
+    baseTrackingBorrowSpeed: 1712328767n * secsPerYear,
+    baseTrackingSupplySpeed: 96207508878n * secsPerYear,
+    baseIndexScale: 0n,
     curvePresets: curves,
     //
     tokenAddress,
@@ -69,6 +73,10 @@ export async function fetchBase(
       chainlinkPricefeed.getDecimalsCall(),
       erc20.getSymbolCall(),
       //
+      comet.getBaseMinForRewardsCall(),
+      comet.getBaseTrackingBorrowSpeedCall(),
+      comet.getBaseTrackingSupplySpeedCall(),
+      comet.getBaseScaleCall(),
     ],
   });
 
@@ -77,10 +85,18 @@ export async function fetchBase(
   const priceFeedDecimals = WagmiUtils.resultOrThrow<bigint>(baseData[2]);
   const symbol = WagmiUtils.resultOrThrow<string>(baseData[3]);
   //
+  const baseMinForRewards = WagmiUtils.resultOrThrow<bigint>(baseData[4]);
+  const baseTrackingBorrowSpeed = WagmiUtils.resultOrThrow<bigint>(baseData[5]);
+  const baseTrackingSupplySpeed = WagmiUtils.resultOrThrow<bigint>(baseData[6]);
+  const baseIndexScale = WagmiUtils.resultOrThrow<bigint>(baseData[7]);
 
   const curves = await fetchCurves(cometProxyAddress, chainId);
 
   return new Base({
+    baseMinForRewards,
+    baseTrackingBorrowSpeed: baseTrackingBorrowSpeed * secsPerYear,
+    baseTrackingSupplySpeed: baseTrackingSupplySpeed * secsPerYear,
+    baseIndexScale,
     curvePresets: curves,
     //
     tokenAddress,

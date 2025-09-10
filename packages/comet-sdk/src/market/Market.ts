@@ -120,25 +120,23 @@ export class Market implements IMarket {
   }
 
   get netEarnAprs(): number[] {
-    return [MarketMethods.calcApr(this.supplyRate)];
-    // return MarketMethods.netEarnAprs(
-    //   this.baseToken,
-    //   this.totalEarned,
-    //   this.compToken,
-    //   this.rewardTokens,
-    //   this.supplyApr,
-    // );
+    return MarketMethods.netEarnAprs(
+      this.baseToken,
+      this.totalEarned,
+      this.compToken,
+      this.rewardTokens,
+      this.supplyApr,
+    );
   }
 
   get netBorrowAprs(): number[] {
-    return [MarketMethods.calcApr(this.borrowRate)];
-    // return MarketMethods.netBorrowAprs(
-    //   this.baseToken,
-    //   this.totalBorrowed,
-    //   this.compToken,
-    //   this.rewardTokens,
-    //   this.borrowApr,
-    // );
+    return MarketMethods.netBorrowAprs(
+      this.baseToken,
+      this.totalBorrowed,
+      this.compToken,
+      this.rewardTokens,
+      this.borrowApr,
+    );
   }
 
   get totalCollateralsSupplyUSD(): number {
