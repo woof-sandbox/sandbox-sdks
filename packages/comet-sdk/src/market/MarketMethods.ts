@@ -184,41 +184,41 @@ export namespace MarketMethods {
    *   - The second element is the APR for the compound token (compApr).
    *   - The subsequent elements are the APRs for each reward token (tokenRewardAprs[]).
    */
-  // export function calcNetAprs(
-  //   baseToken: IBase,
-  //   baseTrackingBorrowOrSupplySpeed: bigint,
-  //   baseTotalBorrowOrSupply: bigint, // Market totalBorrowed or totalSupplied
-  //   compToken: IToken,
-  //   rewardTokens: IToken[],
-  //   borrowOrSupplyApr: number,
-  // ): number[] {
-  //   const tokenToUsers = tokensToUsersPerDay(
-  //     baseTrackingBorrowOrSupplySpeed,
-  //     baseToken.baseIndexScale,
-  //   ); // ?: same for rewards and comp?
-  //
-  //   const compApr = tokenRewardApr(
-  //     Number(compToken.price),
-  //     compToken.priceFeedDecimals,
-  //     tokenToUsers,
-  //     baseTotalBorrowOrSupply,
-  //     Number(baseToken.price),
-  //     baseToken.priceFeedDecimals,
-  //   );
-  //
-  //   const tokenRewardAprs = rewardTokens.map((token) =>
-  //     tokenRewardApr(
-  //       Number(token.price),
-  //       token.priceFeedDecimals,
-  //       tokenToUsers,
-  //       baseTotalBorrowOrSupply,
-  //       Number(baseToken.price),
-  //       baseToken.priceFeedDecimals,
-  //     ),
-  //   );
-  //
-  //   return [borrowOrSupplyApr, compApr, ...tokenRewardAprs];
-  // }
+  export function calcNetAprs(
+    baseToken: IBase,
+    baseTrackingBorrowOrSupplySpeed: bigint,
+    baseTotalBorrowOrSupply: bigint, // Market totalBorrowed or totalSupplied
+    compToken: IToken,
+    rewardTokens: IToken[],
+    borrowOrSupplyApr: number,
+  ): number[] {
+    const tokenToUsers = tokensToUsersPerDay(
+      baseTrackingBorrowOrSupplySpeed,
+      baseToken.baseIndexScale,
+    ); // ?: same for rewards and comp?
+
+    const compApr = tokenRewardApr(
+      Number(compToken.price),
+      compToken.priceFeedDecimals,
+      tokenToUsers,
+      baseTotalBorrowOrSupply,
+      Number(baseToken.price),
+      baseToken.priceFeedDecimals,
+    );
+
+    const tokenRewardAprs = rewardTokens.map((token) =>
+      tokenRewardApr(
+        Number(token.price),
+        token.priceFeedDecimals,
+        tokenToUsers,
+        baseTotalBorrowOrSupply,
+        Number(baseToken.price),
+        baseToken.priceFeedDecimals,
+      ),
+    );
+
+    return [borrowOrSupplyApr, compApr, ...tokenRewardAprs];
+  }
 
   /**
    * Calculates the net earned APR for supplied tokens, including the compound token and reward tokens.
@@ -234,22 +234,22 @@ export namespace MarketMethods {
    *   - The second element is the APR for the compound token (compApr).
    *   - The subsequent elements are the APRs for each reward token (tokenRewardAprs[]).
    */
-  // export function netEarnAprs(
-  //   baseToken: IBase,
-  //   totalSupplied: bigint,
-  //   compToken: IToken,
-  //   rewardTokens: IToken[],
-  //   supplyApr: number,
-  // ): number[] {
-  //   return calcNetAprs(
-  //     baseToken,
-  //     baseToken.baseTrackingSupplySpeed,
-  //     totalSupplied,
-  //     compToken,
-  //     rewardTokens,
-  //     supplyApr,
-  //   );
-  // }
+  export function netEarnAprs(
+    baseToken: IBase,
+    totalSupplied: bigint,
+    compToken: IToken,
+    rewardTokens: IToken[],
+    supplyApr: number,
+  ): number[] {
+    return calcNetAprs(
+      baseToken,
+      baseToken.baseTrackingSupplySpeed,
+      totalSupplied,
+      compToken,
+      rewardTokens,
+      supplyApr,
+    );
+  }
 
   /**
    * Calculates the net earned APR for borrowed tokens, including the compound token and reward tokens.
@@ -265,22 +265,22 @@ export namespace MarketMethods {
    *   - The second element is the APR for the compound token (compApr).
    *   - The subsequent elements are the APRs for each reward token (tokenRewardAprs[]).
    */
-  // export function netBorrowAprs(
-  //   baseToken: IBase,
-  //   totalBorrowed: bigint,
-  //   compToken: IToken,
-  //   rewardTokens: IToken[],
-  //   borrowApr: number,
-  // ): number[] {
-  //   return calcNetAprs(
-  //     baseToken,
-  //     baseToken.baseTrackingSupplySpeed,
-  //     totalBorrowed,
-  //     compToken,
-  //     rewardTokens,
-  //     borrowApr,
-  //   );
-  // }
+  export function netBorrowAprs(
+    baseToken: IBase,
+    totalBorrowed: bigint,
+    compToken: IToken,
+    rewardTokens: IToken[],
+    borrowApr: number,
+  ): number[] {
+    return calcNetAprs(
+      baseToken,
+      baseToken.baseTrackingSupplySpeed,
+      totalBorrowed,
+      compToken,
+      rewardTokens,
+      borrowApr,
+    );
+  }
 
   export function getTVL(
     cometBalance: bigint,
