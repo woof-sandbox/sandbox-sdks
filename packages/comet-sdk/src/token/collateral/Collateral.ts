@@ -26,7 +26,7 @@ export class Collateral extends Token implements ICollateral {
 
   get totalSupplyAssetUSD(): number {
     return CollateralMethods.getTotalSupplyUSD(
-      this.priceFeedDecimals,
+      this.decimals,
       this.price,
       this.totalSupplyAsset,
     );
@@ -35,7 +35,7 @@ export class Collateral extends Token implements ICollateral {
   get supplyCapUSD(): number {
     return CollateralMethods.getSupplyCapUSD(
       this.supplyCap,
-      this.priceFeedDecimals,
+      this.decimals,
       this.price,
     );
   }
@@ -57,7 +57,7 @@ export class Collateral extends Token implements ICollateral {
   get collateralReservesUSD(): number {
     return CollateralMethods.getCollateralReservesUSD(
       this.collateralReserves,
-      this.priceFeedDecimals,
+      this.decimals,
       this.price,
     );
   }

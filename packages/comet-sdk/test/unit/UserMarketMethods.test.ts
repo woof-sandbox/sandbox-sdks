@@ -13,6 +13,7 @@ const mockCollateral = (data = {}) =>
     symbol: "ETH",
     priceFeedDecimals: BigInt(18),
     price: "2000",
+    decimals: BigInt(18),
     priceFeedAddress: "0xFeed",
     userBalance: 0n,
     userSupplyBalance: DataUtils.toBigNumber("1", 18),
@@ -44,6 +45,7 @@ const mockBaseToken = {
   tokenAddress: "0xBase" as Address,
   symbol: "USDC",
   decimals: BigInt(6),
+  priceFeedDecimals: BigInt(6),
   price: "1",
   priceFeedAddress: "0xFeed",
   baseMinBorrow: 0n,
@@ -57,6 +59,7 @@ const mockCompToken = {
   tokenAddress: "0xComp" as Address,
   symbol: "COMP",
   decimals: BigInt(18),
+  priceFeedDecimals: BigInt(18),
   price: "50",
   priceFeedAddress: "0xFeed",
 };
@@ -64,6 +67,7 @@ const mockRewardToken = {
   tokenAddress: "0xReward" as Address,
   symbol: "RWD",
   decimals: BigInt(18),
+  priceFeedDecimals: BigInt(18),
   price: "2",
   priceFeedAddress: "0xFeed",
 };

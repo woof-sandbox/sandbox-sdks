@@ -18,6 +18,7 @@ const mockBaseTotalBorrow = 500000000000000000000n; // 5e20
 const mockCompToken: IToken = {
   tokenAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   symbol: "USDT",
+  decimals: BigInt(6n),
   priceFeedDecimals: BigInt(6n),
   price: "1.0",
   priceFeedAddress: "0x3E7d1eAB13ad0104d2750B8863b489D65364e32D",
@@ -25,6 +26,7 @@ const mockCompToken: IToken = {
 const mockRewardToken: IToken = {
   tokenAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   symbol: "USDT",
+    decimals: BigInt(6n),
   priceFeedDecimals: BigInt(6n),
   price: "1.0",
   priceFeedAddress: "0x3E7d1eAB13ad0104d2750B8863b489D65364e32D",
@@ -208,6 +210,7 @@ describe("MarketMethods", () => {
       {
         tokenAddress: "0x1",
         symbol: "COL1",
+        decimals: BigInt(6),
         priceFeedDecimals: BigInt(6),
         price: "1.5",
         priceFeedAddress: "0xfeed1",
@@ -223,6 +226,7 @@ describe("MarketMethods", () => {
       {
         tokenAddress: "0x2",
         symbol: "COL2",
+        decimals: BigInt(6),
         priceFeedDecimals: BigInt(6),
         price: "3.0",
         priceFeedAddress: "0xfeed2",
@@ -304,6 +308,7 @@ describe("MarketMethods", () => {
       {
         tokenAddress: "0x1",
         symbol: "COL1",
+        decimals: BigInt(6),
         priceFeedDecimals: BigInt(6),
         price: "1.5",
         priceFeedAddress: "0xfeed1",
@@ -319,6 +324,7 @@ describe("MarketMethods", () => {
       {
         tokenAddress: "0x2",
         symbol: "COL2",
+        decimals: BigInt(8),
         priceFeedDecimals: BigInt(8),
         price: "3.0",
         priceFeedAddress: "0xfeed2",
@@ -359,6 +365,7 @@ describe("MarketMethods", () => {
           new Collateral({
             tokenAddress: "0x1",
             symbol: "COL1",
+            decimals: BigInt(6),
             priceFeedDecimals: BigInt(6),
             price: "1.5",
             priceFeedAddress: "0xfeed1",
@@ -397,6 +404,7 @@ describe("MarketMethods", () => {
           new Collateral({
             tokenAddress: "0x1",
             symbol: "COL1",
+            decimals: BigInt(6),
             priceFeedDecimals: BigInt(6),
             price: "1.5",
             priceFeedAddress: "0xfeed1",
@@ -435,6 +443,7 @@ describe("MarketMethods", () => {
           new Collateral({
             tokenAddress: "0x2",
             symbol: "COL2",
+            decimals: BigInt(6),
             priceFeedDecimals: BigInt(6),
             price: "3.0",
             priceFeedAddress: "0xfeed2",
@@ -463,6 +472,7 @@ describe("MarketMethods", () => {
       new Collateral({
         tokenAddress: "0x1",
         symbol: "COL1",
+        decimals: BigInt(6),
         priceFeedDecimals: BigInt(6),
         price: "1.5",
         priceFeedAddress: "0xfeed1",
@@ -505,6 +515,7 @@ describe("MarketMethods", () => {
           new Collateral({
             tokenAddress: "0x2",
             symbol: "COL2",
+            decimals: BigInt(6),
             priceFeedDecimals: BigInt(6),
             price: "3.0",
             priceFeedAddress: "0xfeed2",
@@ -533,6 +544,7 @@ describe("MarketMethods", () => {
       {
         tokenAddress: "0x1",
         symbol: "COL1",
+        decimals: BigInt(6),
         priceFeedDecimals: BigInt(6),
         price: "1.5",
         priceFeedAddress: "0xfeed1",

@@ -392,7 +392,7 @@ export class UserMarketWrapper extends UserMarket {
     try {
       return await this.baseTokenContract.approve(
         this.cometAddress as Address,
-        DataUtils.toBigNumber(amount, Number(this.baseToken.priceFeedDecimals)),
+        DataUtils.toBigNumber(amount, Number(this.baseToken.decimals)),
       );
     } catch (e) {
       throw APPROVE_FAILED();
@@ -510,7 +510,7 @@ export class UserMarketWrapper extends UserMarket {
     if (totalLendRepay !== "0") {
       const requiredAllowance = DataUtils.toBigNumber(
         totalLendRepay,
-        Number(this.baseToken.priceFeedDecimals),
+        Number(this.baseToken.decimals),
       );
       const currentAllowance = await this.getTokenAllowance(
         this.baseToken.tokenAddress as Address,
@@ -529,7 +529,7 @@ export class UserMarketWrapper extends UserMarket {
       const collateralData = this.findMarketCollateralByAddress(action.address);
 
       const decimals =
-        collateralData?.priceFeedDecimals ?? this.baseToken.priceFeedDecimals;
+        collateralData?.decimals ?? this.baseToken.decimals;
 
       if (action.isMax) {
         await this.ensureBulkerAllowed(userAddress);
@@ -589,7 +589,7 @@ export class UserMarketWrapper extends UserMarket {
 
     const supplyValue = DataUtils.toBigNumber(
       inputValue,
-      Number(this.baseToken.priceFeedDecimals),
+      Number(this.baseToken.decimals),
     );
 
     await this.ensureBulkerAllowedToken(
@@ -633,7 +633,7 @@ export class UserMarketWrapper extends UserMarket {
 
     const borrowValue = DataUtils.toBigNumber(
       inputValue,
-      Number(this.baseToken.priceFeedDecimals),
+      Number(this.baseToken.decimals),
     );
 
     await this.ensureBulkerAllowedToken(
@@ -648,7 +648,7 @@ export class UserMarketWrapper extends UserMarket {
 
     const availableToBorrow = DataUtils.toBigNumber(
       this.availableToBorrow,
-      Number(this.baseToken.priceFeedDecimals),
+      Number(this.baseToken.decimals),
     );
 
     if (availableToBorrow <= borrowValue) throw INSUFFICIENT_COLLATERAL();
@@ -658,7 +658,7 @@ export class UserMarketWrapper extends UserMarket {
       this.baseToken.tokenAddress,
       DataUtils.toBigNumber(
         inputValue,
-        Number(this.baseToken.priceFeedDecimals),
+        Number(this.baseToken.decimals),
       ),
     );
 
@@ -683,7 +683,7 @@ export class UserMarketWrapper extends UserMarket {
 
     const supplyValue = DataUtils.toBigNumber(
       inputValue,
-      Number(this.baseToken.priceFeedDecimals),
+      Number(this.baseToken.decimals),
     );
 
     await this.ensureBulkerAllowedToken(
@@ -731,7 +731,7 @@ export class UserMarketWrapper extends UserMarket {
           collateral.tokenAddress,
           DataUtils.toBigNumber(
             collateral.inputAmount,
-            Number(currentCollateralData.priceFeedDecimals),
+            Number(currentCollateralData.decimals),
           ),
         );
       })();
@@ -739,7 +739,7 @@ export class UserMarketWrapper extends UserMarket {
       if (collateral.isNative) {
         nativeTokenAmount = DataUtils.toBigNumber(
           collateral.inputAmount,
-          Number(currentCollateralData.priceFeedDecimals),
+          Number(currentCollateralData.decimals),
         );
       }
 
@@ -748,7 +748,7 @@ export class UserMarketWrapper extends UserMarket {
             userAddress,
             DataUtils.toBigNumber(
               collateral.inputAmount,
-              Number(currentCollateralData.priceFeedDecimals),
+              Number(currentCollateralData.decimals),
             ),
           )
         : this._encodeSupplyOrWithdrawWithToken(
@@ -756,7 +756,7 @@ export class UserMarketWrapper extends UserMarket {
             collateral.tokenAddress,
             DataUtils.toBigNumber(
               collateral.inputAmount,
-              Number(currentCollateralData.priceFeedDecimals),
+              Number(currentCollateralData.decimals),
             ),
           );
     });
@@ -816,7 +816,7 @@ export class UserMarketWrapper extends UserMarket {
 
     const borrowValue = DataUtils.toBigNumber(
       inputValue,
-      Number(this.baseToken.priceFeedDecimals),
+      Number(this.baseToken.decimals),
     );
 
     await this.ensureBulkerAllowedToken(
@@ -864,7 +864,7 @@ export class UserMarketWrapper extends UserMarket {
           collateral.tokenAddress,
           DataUtils.toBigNumber(
             collateral.inputAmount,
-            Number(currentCollateralData.priceFeedDecimals),
+            Number(currentCollateralData.decimals),
           ),
         );
       })();
@@ -872,7 +872,7 @@ export class UserMarketWrapper extends UserMarket {
       if (collateral.isNative) {
         nativeTokenAmount = DataUtils.toBigNumber(
           collateral.inputAmount,
-          Number(currentCollateralData.priceFeedDecimals),
+          Number(currentCollateralData.decimals),
         );
       }
 
@@ -881,7 +881,7 @@ export class UserMarketWrapper extends UserMarket {
             userAddress,
             DataUtils.toBigNumber(
               collateral.inputAmount,
-              Number(currentCollateralData.priceFeedDecimals),
+              Number(currentCollateralData.decimals),
             ),
           )
         : this._encodeSupplyOrWithdrawWithToken(
@@ -889,7 +889,7 @@ export class UserMarketWrapper extends UserMarket {
             collateral.tokenAddress,
             DataUtils.toBigNumber(
               collateral.inputAmount,
-              Number(currentCollateralData.priceFeedDecimals),
+              Number(currentCollateralData.decimals),
             ),
           );
     });
@@ -900,7 +900,7 @@ export class UserMarketWrapper extends UserMarket {
 
     const borrowCapacityUSD = DataUtils.toBigNumber(
       this.getBorrowCapacityMarketUSD(supplyCollaterals).toString(),
-      Number(this.baseToken.priceFeedDecimals),
+      Number(this.baseToken.decimals),
     );
 
     if (borrowCapacityUSD <= borrowValue) throw INSUFFICIENT_COLLATERAL();
@@ -910,7 +910,7 @@ export class UserMarketWrapper extends UserMarket {
       this.baseToken.tokenAddress,
       DataUtils.toBigNumber(
         inputValue,
-        Number(this.baseToken.priceFeedDecimals),
+        Number(this.baseToken.decimals),
       ),
     );
 
@@ -941,7 +941,7 @@ export class UserMarketWrapper extends UserMarket {
 
     const inputAmount = DataUtils.toBigNumber(
       inputValue,
-      Number(this.baseToken.priceFeedDecimals),
+      Number(this.baseToken.decimals),
     );
 
     if (isMax) {
@@ -1030,7 +1030,7 @@ export class UserMarketWrapper extends UserMarket {
 
       const inputValue = DataUtils.toBigNumber(
         collateral.inputAmount,
-        Number(currentCollateralData?.priceFeedDecimals),
+        Number(currentCollateralData?.decimals),
       );
 
       (async () => {
@@ -1088,7 +1088,7 @@ export class UserMarketWrapper extends UserMarket {
         acc +
         DataUtils.toBigNumber(
           collateral.inputAmount,
-          Number(currentCollateralData?.priceFeedDecimals),
+          Number(currentCollateralData?.decimals),
         )
       );
     }, 0n);
@@ -1112,7 +1112,7 @@ export class UserMarketWrapper extends UserMarket {
 
       const withdrawAmount = DataUtils.toBigNumber(
         collateral.inputAmount,
-        Number(currentCollateralData?.priceFeedDecimals),
+        Number(currentCollateralData?.decimals),
       );
 
       (async () => {

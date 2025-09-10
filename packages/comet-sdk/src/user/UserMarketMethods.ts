@@ -58,13 +58,13 @@ export namespace UserMarketMethods {
           Number(
             formatUnits(
               collateral.userSupplyBalance ?? 0n,
-              Number(collateral.priceFeedDecimals),
+              Number(collateral.decimals),
             ),
           ) *
           tokenPrice(
             DataUtils.toBigNumber(
               collateral.price,
-              Number(collateral.priceFeedDecimals),
+              Number(collateral.decimals),
             ),
             basePriceUsd,
           ),
@@ -87,14 +87,14 @@ export namespace UserMarketMethods {
           (Number(
             formatUnits(
               collateral.userSupplyBalance ?? 0n,
-              Number(collateral.priceFeedDecimals),
+              Number(collateral.decimals),
             ),
           ) +
             Number(collateralData)) *
           tokenPrice(
             DataUtils.toBigNumber(
               collateral.price,
-              Number(collateral.priceFeedDecimals),
+              Number(collateral.decimals),
             ),
             basePriceUsd,
           )
@@ -113,7 +113,7 @@ export namespace UserMarketMethods {
           Number(
             formatUnits(
               collateral.userSupplyBalance ?? 0n,
-              Number(collateral.priceFeedDecimals),
+              Number(collateral.decimals),
             ),
           ) *
           Number(
@@ -125,7 +125,7 @@ export namespace UserMarketMethods {
           tokenPrice(
             DataUtils.toBigNumber(
               collateral.price,
-              Number(collateral.priceFeedDecimals),
+              Number(collateral.decimals),
             ),
             basePriceUsd,
           ),
@@ -148,7 +148,7 @@ export namespace UserMarketMethods {
           (Number(
             formatUnits(
               collateral.userSupplyBalance ?? 0n,
-              Number(collateral.priceFeedDecimals),
+              Number(collateral.decimals),
             ),
           ) +
             Number(collateralData)) *
@@ -161,7 +161,7 @@ export namespace UserMarketMethods {
           tokenPrice(
             DataUtils.toBigNumber(
               collateral.price,
-              Number(collateral.priceFeedDecimals),
+              Number(collateral.decimals),
             ),
             basePriceUsd,
           )
@@ -230,7 +230,7 @@ export namespace UserMarketMethods {
         return isTokenAllowanceTooSmall(
           DataUtils.toBigNumber(
             collateral.inputAmount,
-            Number(currentCollateralData.priceFeedDecimals),
+            Number(currentCollateralData.decimals),
           ),
           collateral.allowance,
         );
@@ -263,7 +263,7 @@ export namespace UserMarketMethods {
           Number(
             formatUnits(
               collateral.userSupplyBalance ?? 0n,
-              Number(collateral.priceFeedDecimals),
+              Number(collateral.decimals),
             ),
           ) *
           Number(
@@ -273,14 +273,14 @@ export namespace UserMarketMethods {
             ),
           ) *
           tokenPrice(
-            parseUnits(collateral.price, Number(collateral.priceFeedDecimals)),
+            parseUnits(collateral.price, Number(collateral.decimals)),
             basePriceUsd,
           ),
       )
       .reduce((a: number, b: number) => a + b);
 
-    const decimals = collaterals[0]?.priceFeedDecimals
-      ? Number(collaterals[0].priceFeedDecimals)
+    const decimals = collaterals[0]?.decimals
+      ? Number(collaterals[0].decimals)
       : COMET_FACTOR_DECIMALS;
     const borrow =
       Number(formatUnits(borrowBalance, decimals)) * Number(basePriceUsd);
@@ -310,7 +310,7 @@ export namespace UserMarketMethods {
       totalSupplied +
       DataUtils.toBigNumber(
         userSupplyValue,
-        Number(baseToken.priceFeedDecimals),
+        Number(baseToken.decimals),
       );
 
     const utilization = calculateUtilization(totalBorrowed, totalSupply);
@@ -353,7 +353,7 @@ export namespace UserMarketMethods {
   ): number {
     const userBorrowAmount = DataUtils.toBigNumber(
       userBorrowValue,
-      Number(baseToken.priceFeedDecimals),
+      Number(baseToken.decimals),
     );
 
     const updatedTotalBorrowed = totalBorrowed + userBorrowAmount;
@@ -383,7 +383,7 @@ export namespace UserMarketMethods {
     return MarketMethods.netEarnAprs(
       baseToken,
       totalSupplied +
-        parseUnits(userSupplyValue, Number(baseToken.priceFeedDecimals)),
+        parseUnits(userSupplyValue, Number(baseToken.decimals)),
       compToken,
       rewardTokens,
       supplyApr,
@@ -401,7 +401,7 @@ export namespace UserMarketMethods {
     return MarketMethods.netBorrowAprs(
       baseToken,
       totalBorrowed +
-        parseUnits(userBorrowValue, Number(baseToken.priceFeedDecimals)),
+        parseUnits(userBorrowValue, Number(baseToken.decimals)),
       compToken,
       rewardTokens,
       borrowApr,
