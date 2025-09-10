@@ -1,16 +1,5 @@
 # @woof-software/comet-sdk-wagmi
 
-## 1.0.0
-
-### Major Changes
-
-- 69a27e2: removed rewards fields on sdk types and update data saving
-
-### Patch Changes
-
-- Updated dependencies [e1a4213]
-  - @woof-software/comet-sdk@3.0.0
-
 ## 0.1.1
 
 ### Patch Changes
