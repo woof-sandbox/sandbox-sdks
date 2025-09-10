@@ -1,11 +1,5 @@
 # @woof-software/comet-sdk
 
-## 4.0.0
-
-### Major Changes
-
-- e5e4532: Undo updates of PR 80 (markets update) and checkout back to the PR 79 (refactoring)
-
 ## 3.0.0
 
 ### Major Changes
