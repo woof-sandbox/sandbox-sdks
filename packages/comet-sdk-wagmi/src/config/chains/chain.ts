@@ -6,6 +6,6 @@ export enum Chain {
   Base = 8453,
   Optimism = 10,
   // Testnets
-  Sepolia = 11155111,
+  Sepolia = 111555111,
   Anvil = 31337,
 }
