@@ -222,7 +222,9 @@ export class UserMarketWrapper extends UserMarket {
 
     const nonce = await this.cometContract.getUserNonce(userAddress);
 
-    const expiry = BigInt(Math.floor(Date.now() / 1000) + 3600);
+    // TODO: hotfix for tenderly, revert on real net
+    // const expiry = BigInt(Math.floor(Date.now() / 1000) + 3600);
+    const expiry = BigInt(Math.floor(Date.now() / 1000) + 36000000);
 
     const message = {
       owner: userAddress,
