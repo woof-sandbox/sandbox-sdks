@@ -42,7 +42,9 @@ export const Addresses: Record<Chain, IAddresses> = {
   //
   [Chain.Sepolia]: {
     configurator: "0xc28ad44975c614eabe0ed090207314549e1c6624",
-    sandboxController: "0xaf39746d87b067267b23c2169bf727f237f303b9",
+    // TODO: commented address for real sepolia
+    // sandboxController: "0xaf39746d87b067267b23c2169bf727f237f303b9",
+    sandboxController: "0x8c9C64Fc4C471Cf501D22aD2cca6ae375346452b",
     bulker: "0x469b5fe7bdb82f93f3a11a6c62e94b99d3c728c2",
     migrator: "0xf8b22a1d29b962b42f5e43169fe133b4bbae60dc",
   },
