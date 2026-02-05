@@ -1,5 +1,11 @@
 # @woof-software/comet-sdk-wagmi
 
+## 4.0.4
+
+### Patch Changes
+
+- Auto-generated changeset from CI
+
 ## 4.0.3
 
 ### Patch Changes
