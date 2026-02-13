@@ -8,6 +8,6 @@ export const wagmiConfig = createConfig({
     [mainnet.id]: http("https://rpc.ankr.com/eth/e1d0a2568ebc983c815a7a7190b3d2bb39d859b8186ae0dd32a4354f71601591"),
     [arbitrum.id]: http("https://rpc.ankr.com/arbitrum/e1d0a2568ebc983c815a7a7190b3d2bb39d859b8186ae0dd32a4354f71601591"),
     // [sepolia.id]: http("https://rpc.ankr.com/eth_sepolia/e1d0a2568ebc983c815a7a7190b3d2bb39d859b8186ae0dd32a4354f71601591"),
-    [fakeSepolia.id]: http("https://virtual.sepolia.eu.rpc.tenderly.co/be13bd77-e574-49da-86c9-e3d2422cea28"),
+    [fakeSepolia.id]: http("https://virtual.sepolia.eu.rpc.tenderly.co/392a16b4-65b6-43e4-9a75-27ff50e9f92c"),
   },
 });
